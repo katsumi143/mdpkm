@@ -35,7 +35,6 @@ fn main() {
 }
 
 use std::collections::HashMap;
-use std::os::windows::process::CommandExt;
 use tauri::api::http::{ClientBuilder, HttpRequestBuilder, ResponseData, ResponseType};
 
 use std::net::{ TcpListener, TcpStream };
@@ -311,10 +310,8 @@ fn extract_files(
     return Ok("yay".into());
 }
 
-use std::io::{ BufRead, BufReader };
-use std::process::{ Stdio, Command };
 #[tauri::command]
-fn launch_minecraft(window: tauri::window::Window, cwd: String, java_path: String, args: Vec<String>) {
+fn launch_minecraft(_window: tauri::window::Window, cwd: String, java_path: String, args: Vec<String>) {
     std::thread::spawn(move || {
         //TODO: send logs to window
         windows_runner::run(&java_path, &args.join(" "), &cwd);
@@ -327,9 +324,9 @@ fn launch_java(java_path: String, args: Vec<String>, cwd: String) {
 }
 
 mod windows_runner{
-    use std::{thread, time, str};
-    use std::process::{Command, Stdio};
-    use std::io::Write;
+    use std::str;
+    use std::process::{ Command, Stdio };
+    use std::os::windows::process::CommandExt;
     use std::io::{ BufRead, BufReader };
     pub fn run (program: &str, arguments: &str, cwd: &str) {
         let launcher = "powershell.exe";
