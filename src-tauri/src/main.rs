@@ -316,39 +316,8 @@ use std::process::{ Stdio, Command };
 #[tauri::command]
 fn launch_minecraft(window: tauri::window::Window, cwd: String, java_path: String, args: Vec<String>) {
     std::thread::spawn(move || {
+        //TODO: send logs to window
         windows_runner::run(&java_path, &args.join(" "), &cwd);
-        //windows_runner::run("cmd", &format!("/d \"{}\" /k start {} {}", &cwd, &java_path, &args.join(" ")), &cwd);
-        /*println!("starting minecraft");
-        println!("\\");
-        println!("\\\\");
-        let child = Command::new("cmd")
-        //.creation_flags(0x08000000)
-        .current_dir(cwd)
-        .args(&["/c", "start", "echo", "\"\"test\"\"", &java_path])
-        .arg("\"\"yes\"\"")
-        //.args(args.iter().map(| x | snailquote::unescape(x).unwrap()).collect::<Vec<String>>())
-        .args(args.iter().map(| x | str::replace(x, "\\", "")).collect::<Vec<String>>())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .stdin(Stdio::null())
-        .spawn()
-        .unwrap();
-        println!("started minecraft");
-
-        BufReader::new(child.stdout.unwrap())
-            .lines()
-            .filter_map(| line | line.ok())
-            .for_each(| line | {
-                println!("stdout {}", &line);
-                window.emit("minecraft_log", ["info", &line]).unwrap();
-            });
-        BufReader::new(child.stderr.unwrap())
-            .lines()
-            .filter_map(| line | line.ok())
-            .for_each(| line | {
-                println!("stderr {}", &line);
-                window.emit("minecraft_log", ["info", &line]).unwrap();
-            });*/
     });
 }
 
@@ -382,10 +351,11 @@ mod windows_runner{
 
         println!("{:?}", launch_command);
         let child = Command::new(launcher)
+            .creation_flags(0x08000000)
             .current_dir(cwd)
             .args(launch_command)
             .stdout(Stdio::piped())
-            .stderr(Stdio::piped()) // if you want to collect stderr instead of displaying to user
+            .stderr(Stdio::piped())
             .spawn()
             .expect("failed to run child program");
 

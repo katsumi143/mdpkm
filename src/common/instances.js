@@ -688,7 +688,7 @@ export default class Instances extends EventEmitter {
                             const forgeMatch = str.match(/(.*)(forge-\d)(.*)(\d)/g);
                             if(forgeMatch)
                                 str = [...forgeMatch, "-universal.jar"].join("");
-                            if(str.startsWith("https://files.minecraftforge"))
+                            if(str.startsWith("https://files.minecraftforge.net/"))
                                 str = str.replace("files.", "maven.");
                             return str;
                         };
