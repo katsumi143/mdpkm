@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from '@stitches/react';
-import { PlusLg, PlayFill, GearFill, ArrowLeft, Folder2Open, XCircleFill, CheckCircleFill } from 'react-bootstrap-icons';
+import { Tag, App as AppIcon, PlusLg, PlayFill, GearFill, ArrowLeft, Folder2Open, XCircleFill, CheckCircleFill } from 'react-bootstrap-icons';
 
 import App from '../components/uiblox/App';
 import Main from '../components/uiblox/Main';
@@ -263,14 +263,14 @@ export default class Home extends React.Component {
                                             </Grid>
                                             <Grid margin="8px 0 0 0" spacing="24px" direction="horizontal">
                                                 <Grid spacing="12px" direction="horizontal" alignItems="center">
-                                                    <Typography className="bi bi-app" color="#cbcbcb" size="1.3rem" />
+                                                    <AppIcon color="#cbcbcb" size="1.3rem"/>
                                                     <Grid direction="vertical" alignItems="flex-start">
                                                         <Typography text="Loader" size="0.9rem" color="#cbcbcb" weight={600} />
                                                         <Typography text={instance.config.loader.type} size="0.9rem" className="inter" />
                                                     </Grid>
                                                 </Grid>
                                                 <Grid spacing="12px" direction="horizontal" alignItems="center">
-                                                    <Typography className="bi bi-tag" color="#cbcbcb" size="1.3rem" />
+                                                    <Tag color="#cbcbcb" size="1.3rem"/>
                                                     <Grid direction="vertical" alignItems="flex-start">
                                                         <Typography text="Game Version" size="0.9rem" color="#cbcbcb" weight={600} />
                                                         <Typography text={instance.config.loader.game} size="0.9rem" className="inter" />

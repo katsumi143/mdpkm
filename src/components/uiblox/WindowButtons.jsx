@@ -1,6 +1,7 @@
 import React from 'react';
 import { styled } from '@stitches/react';
 import { window } from '@tauri-apps/api';
+import { XLg, Fullscreen, FullscreenExit } from 'react-bootstrap-icons';
 
 import Grid from './Grid';
 
@@ -47,13 +48,13 @@ export default class WindowButtons extends React.Component {
                         color: "#ff7070"
                     }
                 }}>
-                    <i className="bi bi-x-lg" />
+                    <XLg/>
                 </WindowButtonComponent>
                 <WindowButtonComponent onClick={this.maximizeWindow.bind(this)}>
-                    <i className="bi bi-fullscreen" />
+                    <Fullscreen/>
                 </WindowButtonComponent>
                 <WindowButtonComponent onClick={this.minimizeWindow.bind(this)}>
-                    <i className="bi bi-fullscreen-exit" />
+                    <FullscreenExit/>
                 </WindowButtonComponent>
             </StyledWindowButtons>
         );

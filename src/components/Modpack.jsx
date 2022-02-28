@@ -1,5 +1,6 @@
 import React from 'react';
 import { styled } from '@stitches/react';
+import { Tag, Download, Calendar3 } from 'react-bootstrap-icons';
 
 import Util from '../common/util';
 
@@ -83,7 +84,7 @@ export default class Modpack extends React.Component {
                                 </Grid>
                                 <Grid spacing="16px" direction="horizontal" alignItems="center">
                                     <Grid spacing="12px" direction="horizontal" alignItems="center">
-                                        <Typography className="bi bi-download" color="#cbcbcb" size="1.2rem" />
+                                        <Download color="#cbcbcb" size="1.2rem"/>
                                         <Grid direction="vertical" alignItems="flex-start">
                                             <Typography text="Downloads" size="0.9rem" color="#cbcbcb" weight={600} />
                                             <Typography text={
@@ -92,7 +93,7 @@ export default class Modpack extends React.Component {
                                         </Grid>
                                     </Grid>
                                     <Grid spacing="12px" direction="horizontal" alignItems="center">
-                                        <Typography className="bi bi-calendar3" color="#cbcbcb" size="1.2rem" />
+                                        <Calendar3 color="#cbcbcb" size="1.2rem" />
                                         <Grid direction="vertical" alignItems="flex-start">
                                             <Typography text="Created" size="0.9rem" color="#cbcbcb" weight={600} />
                                             <Typography text={data.dateCreated === 0 ? "N/A"
@@ -110,7 +111,7 @@ export default class Modpack extends React.Component {
                                         </Grid>
                                     </Grid>
                                     <Grid spacing="12px" direction="horizontal" alignItems="center">
-                                        <Typography className="bi bi-tag" color="#cbcbcb" size="1.2rem" />
+                                        <Tag color="#cbcbcb" size="1.2rem" />
                                         <Grid direction="vertical" alignItems="flex-start">
                                             <Typography text="Available For" size="0.9rem" color="#cbcbcb" weight={600} />
                                             <Typography text={data.latestGameVersion} size="0.9rem" className="inter" />
