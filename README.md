@@ -7,6 +7,7 @@
 **mdpkm is yet another instance manager for Minecraft Java Edition.**</br>
 
 ### ‼️ mdpkm is highly unstable and incomplete, primary use is not recommended.
+heart to gdlauncher, a bunch of code is based off it.
 incomplete description
 
 <br/>
@@ -44,6 +45,7 @@ not yet
 
 ## 🥰 Contributing
 do whatever for now
+i'm quite aware of the gigantic mess that exists right now, i'm trying.
 <br/>
 
 ## 🔗 Links
