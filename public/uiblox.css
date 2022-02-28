@@ -1,0 +1,116 @@
+@import url("./font/bootstrap-icons.css");
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200..1000&display=swap');
+html {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+strong,
+b {
+    font-weight: 700;
+}
+
+body {
+    color: #FFFFFF;
+    margin: 0;
+    font-size: 1rem;
+    font-family: HCo Gotham SSm, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+    font-weight: 500;
+    line-height: 1.43;
+    background-color: #1D1D1D;
+}
+
+body.body-tauri {
+    background-color: transparent;
+}
+
+.root-tauri {
+    height: 100vh;
+    overflow: hidden;
+    border-radius: 8px;
+    background-color: #1D1D1D;
+}
+
+#root {
+    overflow-y: scroll;
+}
+
+.gotham {
+    font-family: HCo Gotham SSm, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif !important;
+}
+.inter {
+    font-family: 'Inter', sans-serif !important;
+}
+
+@media print {
+    body {
+        background-color: #fff;
+    }
+}
+
+body::backdrop {
+    background-color: #1D1D1D;
+}
+
+@font-face {
+    font-family: HCo Gotham SSm;
+    src: url("./font/GothamSSm-Light.woff2") format('woff2');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: HCo Gotham SSm;
+    src: url("./font/GothamSSm-Book.woff2") format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: HCo Gotham SSm;
+    src: url("./font/GothamSSm-Medium.woff2") format('woff2');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: HCo Gotham SSm;
+    src: url("./font/GothamSSm-Bold.woff2") format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: HCo Gotham SSm;
+    src: url("./font/GothamSSm-Black.woff2") format('woff2');
+    font-weight: 800;
+    font-style: normal;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+  
+/* Track */
+::-webkit-scrollbar-track {
+    background: #222222;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #ffffffcc;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

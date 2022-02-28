@@ -1,0 +1,28 @@
+[package]
+name = "app"
+version = "0.1.0"
+description = "A Tauri App"
+authors = ["you"]
+license = ""
+repository = ""
+default-run = "app"
+edition = "2021"
+rust-version = "1.57"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = { version = "1.0.0-rc.3", features = [] }
+
+[dependencies]
+events_emitter = "0.1.3"
+snailquote = "0.3.1"
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "1.0.0-rc.3", features = ["fs-all", "http-all", "notification-all", "os-all", "path-all", "shell-all", "window-all"] }
+url = "2.2.2"
+zip = "0.5"
+
+[features]
+default = [ "custom-protocol" ]
+custom-protocol = [ "tauri/custom-protocol" ]

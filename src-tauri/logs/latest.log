@@ -1,0 +1,14 @@
+[21:48:11] [main/INFO]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLTweaker
+[21:48:11] [main/ERROR]: Unable to launch
+java.lang.ClassNotFoundException: net.minecraftforge.fml.common.launcher.FMLTweaker
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:387) ~[?:1.8.0_322]
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:418) ~[?:1.8.0_322]
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:352) ~[?:1.8.0_322]
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:351) ~[?:1.8.0_322]
+	at net.minecraft.launchwrapper.LaunchClassLoader.findClass(LaunchClassLoader.java:106) ~[launchwrapper-1.12.jar:?]
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:418) ~[?:1.8.0_322]
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:351) ~[?:1.8.0_322]
+	at java.lang.Class.forName0(Native Method) ~[?:1.8.0_322]
+	at java.lang.Class.forName(Class.java:348) ~[?:1.8.0_322]
+	at net.minecraft.launchwrapper.Launch.launch(Launch.java:98) [launchwrapper-1.12.jar:?]
+	at net.minecraft.launchwrapper.Launch.main(Launch.java:28) [launchwrapper-1.12.jar:?]

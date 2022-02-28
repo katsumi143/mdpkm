@@ -1,0 +1,119 @@
+{
+    "package": {
+        "productName": "mdpkm",
+        "version": "0.0.1"
+    },
+    "build": {
+        "distDir": "../build",
+        "devPath": "http://localhost:3000",
+        "withGlobalTauri": true,
+        "beforeDevCommand": "",
+        "beforeBuildCommand": ""
+    },
+    "tauri": {
+        "bundle": {
+            "active": true,
+            "targets": "all",
+            "identifier": "io.github.blookers.mdpkm",
+            "icon": [
+                "icons/32x32.png",
+                "icons/128x128.png",
+                "icons/128x128@2x.png",
+                "icons/icon.icns",
+                "icons/icon.ico"
+            ],
+            "resources": [],
+            "externalBin": [],
+            "copyright": "",
+            "category": "Utility",
+            "shortDescription": "minecraft modpack manager",
+            "longDescription": "goggle trans, messing up sentences for your own enjoyment.",
+            "deb": {
+                "depends": [],
+                "useBootstrapper": false
+            },
+            "macOS": {
+                "frameworks": [],
+                "minimumSystemVersion": "",
+                "useBootstrapper": false,
+                "exceptionDomain": "",
+                "signingIdentity": null,
+                "entitlements": null
+            },
+            "windows": {
+                "certificateThumbprint": null,
+                "digestAlgorithm": "sha256",
+                "timestampUrl": ""
+            }
+        },
+        "updater": {
+            "active": false
+        },
+        "allowlist": {
+            "notification": {
+                "all": true
+            },
+            "window": {
+                "all": true
+            },
+            "fs": {
+                "all": true,
+                "scope": [
+                    "$APP/*"
+                ]
+            },
+            "path": {
+                "all": true
+            },
+            "http": {
+                "all": true
+            },
+            "os": {
+                "all": true
+            },
+            "shell": {
+                "all": true,
+                "scope": [
+                    {
+                        "name": "curl",
+                        "cmd": "curl",
+                        "args": true
+                    },
+                    {
+                        "name": "tar",
+                        "cmd": "tar",
+                        "args": true
+                    }
+                ]
+            }
+        },
+        "windows": [
+            {
+                "title": "mdpkm",
+                "width": 1000,
+                "height": 600,
+                "center": true,
+                "focus": true,
+                "resizable": true,
+                "fullscreen": false,
+                "decorations": false,
+                "transparent": true
+            },
+            {
+                "url": "https://mdpkm.voxelified.com/redirect",
+                "label": "msLogin",
+                "title": "Microsoft Login",
+                "width": 1000,
+                "height": 600,
+                "center": true,
+                "focus": true,
+                "visible": false,
+                "resizable": true,
+                "fullscreen": false
+            }
+        ],
+        "security": {
+            "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: asset: token: 'unsafe-eval' 'unsafe-inline' 'self' img-src: 'self'"
+        }
+    }
+}
