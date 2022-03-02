@@ -28,7 +28,8 @@ fn main() {
             launch_minecraft,
             fs_read_text_file,
             fs_create_dir_all,
-            fs_read_file_in_zip
+            fs_read_file_in_zip,
+            fs_read_binary_in_zip
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -197,6 +198,29 @@ fn fs_read_file_in_zip(path: String, file_path: String) -> Result<String, String
                 if file.name().contains(&*file_path) {
                     let mut buf = String::new();
                     file.read_to_string(&mut buf).unwrap();
+                    return Ok(buf);
+                }
+            }
+            return Err("File does not exist".to_string());
+        }
+        return Err(archiv.unwrap_err().to_string());
+    }
+    return Err(file.unwrap_err().to_string());
+}
+
+#[tauri::command]
+fn fs_read_binary_in_zip(path: String, file_path: String) -> Result<Vec<u8>, String> {
+    let file = std::fs::File::open(std::path::Path::new(&*path));
+
+    if file.is_ok() {
+        let archiv = zip::ZipArchive::new(file.as_ref().unwrap());
+        if archiv.is_ok() {
+            let mut archive = archiv.unwrap();
+            for i in 0..archive.len() {
+                let mut file = archive.by_index(i).unwrap();
+                if file.name().contains(&*file_path) {
+                    let mut buf = Vec::<u8>::new();
+                    file.read_to_end(&mut buf).unwrap();
                     return Ok(buf);
                 }
             }

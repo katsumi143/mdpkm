@@ -167,6 +167,12 @@ export default class Util {
         });
     }
 
+    static readBinaryInZip(path, filePath) {
+        return tauri.invoke("fs_read_binary_in_zip", {
+            path, filePath
+        });
+    }
+
     static createDir(path) {
         return tauri.invoke("fs_create_dir_all", { path });
     }

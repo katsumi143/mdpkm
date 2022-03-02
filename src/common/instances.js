@@ -70,7 +70,7 @@ export class Instance extends EventEmitter {
         const modCachePath = `${this.path}/modcache.json`;
         const modCache = await Util.fileExists(modCachePath) ?
             await Util.readTextFile(modCachePath).then(JSON.parse) :
-            await Util.writeFile(modCachePath, "{}").then(_ => {});
+            await Util.writeFile(modCachePath, "{}").then(_ => ({}));
 
         const files = await Util.readDir(`${this.path}/mods`);
         const mods = [];
@@ -84,7 +84,7 @@ export class Instance extends EventEmitter {
             if (forgeData)
                 try {
                     const parsedData = JSON.parse(forgeData);
-                    const { modid, name: modName, description, version } = parsedData.modList?.[0] ?? parsedData[0];
+                    const { logoFile, modid, name: modName, description, version } = parsedData.modList?.[0] ?? parsedData[0];
                     const mod = {
                         id: modid,
                         name: modName,
@@ -92,6 +92,10 @@ export class Instance extends EventEmitter {
                         description,
                         version
                     };
+                    const image = await Util.readBinaryInZip(path, logoFile).catch(console.warn);
+                    if (image)
+                        mod.icon = Buffer.from(image).toString('base64');
+
                     mods.unshift(mod);
                     modCache[name] = mod;
                     continue;
@@ -100,7 +104,7 @@ export class Instance extends EventEmitter {
             const fabricData = await Util.readFileInZip(path, "fabric.mod.json").catch(_ => null);
             if(fabricData)
                 try {
-                    const { id, name: modName, description, version } = JSON.parse(fabricData);
+                    const { id, icon, name: modName, description, version } = JSON.parse(fabricData);
                     const mod = {
                         id,
                         name: modName,
@@ -108,6 +112,11 @@ export class Instance extends EventEmitter {
                         description,
                         version
                     };
+                    console.log(icon);
+                    const image = await Util.readBinaryInZip(path, icon).catch(console.warn);
+                    if (image)
+                        mod.icon = Buffer.from(image).toString('base64');
+
                     mods.unshift(mod);
                     modCache[name] = mod;
                     continue;

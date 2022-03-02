@@ -312,8 +312,13 @@ export default class Home extends React.Component {
                                                                         <tbody>
                                                                             {mods.map((mod, index) =>
                                                                                 <tr key={index}>
-                                                                                    <td>
-                                                                                        {mod.name}
+                                                                                    <td style={{
+                                                                                        gap: "1rem",
+                                                                                        display: "flex",
+                                                                                        alignItems: "center"
+                                                                                    }}>
+                                                                                        <Image src={mod.icon ? `data:image/png;base64,${mod.icon}` : ""} size={32} background="#ffffff12" borderRadius="8.33333333%"/>
+                                                                                        {mod.name ?? mod.id}
                                                                                     </td>
                                                                                     <td>
                                                                                         {mod.version}
