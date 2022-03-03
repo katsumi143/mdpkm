@@ -268,13 +268,13 @@ export default class Util {
                         val = manifest.id;
                         break;
                     case 'game_directory':
-                        val = instancePath;
+                        val = `"${instancePath}"`;
                         break;
                     case 'assets_root':
-                        val = assetsPath;
+                        val = `"${assetsPath}"`;
                         break;
                     case 'game_assets':
-                        val = `${path.join(assetsPath, 'virtual', 'legacy')}`;
+                        val = `"${assetsPath}/virtual/legacy"`;
                         break;
                     case 'assets_index_name':
                         val = manifest.assets;

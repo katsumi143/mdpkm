@@ -148,7 +148,7 @@ export class Instance extends EventEmitter {
         if (!await Util.fileExists(this.getClientPath()))
             await this.instances.installMinecraft(loader.game, this, updateToastState);
 
-        updateToastState("Reading Manifest Files");
+        updateToastState("Reading Minecraft Manifest");
 
         const manifest = JSON.parse(
             await Util.readTextFile(`${this.instances.getPath('mcVersions')}/${loader.game}.json`)
@@ -176,11 +176,13 @@ export class Instance extends EventEmitter {
 
         let libraries = [];
         if (loader.type === 'fabric') {
+            updateToastState("Reading Fabric Manifest");
             const { mainClass, libraries: flibraries } = await this.instances.getFabricManifest(loader);
             const fabricLibraries = Util.mapLibraries(flibraries, this.instances.getPath("libraries"));
             libraries = libraries.concat(fabricLibraries);
             manifest.mainClass = mainClass;
         } else if (loader.type === 'forge') {
+            updateToastState("Reading Forge Manifest");
             const manifestPath = `${this.instances.getPath('libraries')}/net/minecraftforge/${loader.game}-${loader.version}/${loader.game}-${loader.version}.json`;
             if(!await Util.fileExists(manifestPath))
                 await this.instances.installLoader(this, toastId, toastHead, true);
@@ -275,7 +277,7 @@ export class Instance extends EventEmitter {
             gte(coerce(manifest.assets), coerce('1.13')) ?
             Util.modernGetJVMArguments : Util.getJVMArguments;
 
-        updateToastState("Checking Authorization");
+        updateToastState("Authorizing");
         const account = await API.Minecraft.getAccount();
 
         updateToastState("Launching Minecraft");
@@ -294,6 +296,7 @@ export class Instance extends EventEmitter {
             false,
             javaArguments
         ).map(v => v.toString().replaceAll(this.instances.dataController.dataPath, "../../"));
+        console.log(jvmArguments);
 
         const window = tauri.window.getCurrent();
 
@@ -340,7 +343,7 @@ export class Instance extends EventEmitter {
         }, 5000);
 
         let log4jString = "";
-        window.listen(logger, ({ payload }) => {
+        window.listen(logger, async ({ payload }) => {
             if(/.*<log4j:Event/.test(payload))
                 log4jString = payload;
             else if(/.*<log4j:Message>/.test(payload))
@@ -353,20 +356,21 @@ export class Instance extends EventEmitter {
                 const message = object["log4j:Event"]["log4j:Message"];
                 console.log(message);
 
-                if(message.startsWith("Loading Minecraft ") && message.includes(" with Fabric "))
-                    updateText(`Loading Fabric ${message.split(" ")[6]} for ${message.split(" ")[2]}`);
-                else if(message.startsWith("Forge Mod Loader version "))
-                    updateText(`Loading Forge ${message.split(" ")[4]} for ${message.split(" ")[7]}`);
-                else if(message.startsWith("Preparing ") || message.startsWith("Initializing ") || message.startsWith("Initialized "))
-                    updateText(`${message.split(" ")[0]} ${message.split(" ")[1]}`);
-                else if(message.startsWith("Bootstrap start"))
-                    updateText("Starting Bootstrap");
-                else if(message.startsWith("Bootstrap in "))
-                    updateText("Started Bootstrap");
-                else if(message.startsWith("Setting user"))
-                    updateText("Setting User");
-                else if(message.toLowerCase().includes("lwjgl version") || message.toLowerCase().includes("crashed"))
-                    splashWindow.close();
+                if(await splashWindow.isVisible())
+                    if(message.startsWith("Loading Minecraft ") && message.includes(" with Fabric "))
+                        updateText(`Loading Fabric ${message.split(" ")[6]} for ${message.split(" ")[2]}`);
+                    else if(message.startsWith("Forge Mod Loader version "))
+                        updateText(`Loading Forge ${message.split(" ")[4]} for ${message.split(" ")[7]}`);
+                    else if(message.startsWith("Preparing ") || message.startsWith("Initializing ") || message.startsWith("Initialized "))
+                        updateText(`${message.split(" ")[0]} ${message.split(" ")[1]}`);
+                    else if(message.startsWith("Bootstrap start"))
+                        updateText("Starting Bootstrap");
+                    else if(message.startsWith("Bootstrap in "))
+                        updateText("Started Bootstrap");
+                    else if(message.startsWith("Setting user"))
+                        updateText("Setting User");
+                    else if(message.toLowerCase().includes("lwjgl version") || message.toLowerCase().includes("crashed"))
+                        splashWindow.close();
             }
         });
         
