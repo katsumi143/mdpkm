@@ -15,7 +15,8 @@ export default class Main extends React.Component {
     render() {
         return (
             <StyledMain style={{
-                width: this.props.width
+                width: this.props.width,
+                ...this.props.style
             }}>
                 {this.props.children}
             </StyledMain>

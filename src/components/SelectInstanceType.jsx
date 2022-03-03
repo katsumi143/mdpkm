@@ -21,6 +21,7 @@ export default class SelectInstanceType extends React.Component {
         const { types, backButton, settingUp } = this.props;
         return (
             <Grid width="100%" padding="24px 0" spacing="16px" direction="vertical" alignItems="center" style={{
+                pointerEvents: settingUp ? "none" : "unset",
                 animationName: settingUp ? FadeAnimation : "none",
                 animationDuration: "250ms",
                 animationFillMode: "forwards",
@@ -36,8 +37,19 @@ export default class SelectInstanceType extends React.Component {
                     </Typography>
                 </Grid>
                 {types.map((type, index) =>
-                    type === "divide" ?
-                        <Grid key={index} width="60%" height="2px" margin="8px 0" background="#ffffff0d" borderRadius="1px"/>
+                    typeof type === "string" && type.startsWith("divide") ?
+                        <Grid key={index} width="60%" height="2px" margin="8px 0" background="#ffffff0d" borderRadius="1px">
+                            <Typography size=".9rem" color="#ffffff80" weight={600} family="Nunito, sans-serif" style={{
+                                top: 0,
+                                left: "50%",
+                                padding: "0 8px",
+                                position: "relative",
+                                transform: "translateX(-50%)",
+                                background: "#1d1d1d"
+                            }}>
+                                {type.split(":")[1]}
+                            </Typography>
+                        </Grid>
                     :
                     <Grid key={index} width="60%" padding="16px 24px" background="#0000001a" borderRadius="4px" alignItems="center" justifyContent="space-between">
                         <Grid alignItems="center">

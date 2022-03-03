@@ -16,6 +16,7 @@ import Spinner from '../components/uiblox/Spinner';
 import Typography from '../components/uiblox/Typography';
 import SelectItem from '../components/uiblox/Input/SelectItem';
 import LoaderSetup from '../components/LoaderSetup';
+import BasicSpinner from '../components/uiblox/BasicSpinner';
 
 import Modpack from '../components/Modpack';
 import Instance from '../components/Instance';
@@ -30,12 +31,6 @@ import { FORGE_VERSION_MANIFEST, FABRIC_API_BASE } from '../common/constants';
 import toast, { Toaster } from 'react-hot-toast';
 
 const Tauri = window.__TAURI__;
-const ModpackList = styled(Grid, {
-    height: "calc(100vh - 64px)",
-    overflow: "hidden",
-    overflowY: "auto",
-    backgroundColor: "#181818"
-});
 
 const ModpackListing = styled(Grid, {
     overflow: "hidden auto"
@@ -45,14 +40,14 @@ export default class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            sidePage: 0,
             settingUp: '',
             instances: null,
-            sideWidth: "35%",
             searching: false,
             instanceTab: 0,
             modpackSearch: '',
-            instanceModTab: 0
+            hideInstances: false,
+            instanceModTab: 0,
+            selectingInstance: false
         };
     }
 
@@ -61,42 +56,43 @@ export default class Home extends React.Component {
             <App>
                 <Header icon="/text.png" />
                 <Grid height="100%" direction="horizontal">
-                    <ModpackList height="100%" direction="horizontal" style={{
-                        minWidth: this.state.sideWidth,
-                        maxWidth: this.state.sideWidth,
-                        background: "#0000001c",
-                        transition: "min-width 300ms cubic-bezier(0.4, 0, 0.2, 1), max-width 300ms cubic-bezier(0.4, 0, 0.2, 1)"
+                    <Grid width="35%" height="100%" direction="vertical" background="#0000001c" justifyContent="space-between" style={{
+                        opacity: this.state.hideInstances ? 0 : 1,
+                        maxWidth: this.state.hideInstances ? "0%" : "35%",
+                        maxHeight: "calc(100vh - 64px)",
+                        transition: "max-width 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 300ms cubic-bezier(0.4, 0, 0.2, 1)",
+                        pointerEvents: this.state.hideInstances ? "none" : "unset"
                     }}>
-                        <ModpackListPage page={0} state={this.state.sidePage} width={this.state.sideWidth}>
-                            <Grid spacing="8px" direction="vertical" alignItems="center">
-                                <Grid width="100%" height="48px" background="#0000002e" alignItems="center" justifyContent="center">
-                                    <Typography text="Instances" size="1.1rem" weight={400}/>
-                                </Grid>
-                                {this.state.instances && this.state.instances.map((instance, index) => {
-                                    return (
-                                        <Instance key={index} data={instance} onView={_ => this.selectInstance(index)} />
-                                    );
-                                })}
-                                {!this.state.instances && <Spinner/>}
+                        <Grid spacing="8px" direction="vertical" alignItems="center" style={{
+                            overflowY: "auto"
+                        }}>
+                            <Grid width="100%" height="48px" background="#0000002e" alignItems="center" justifyContent="center">
+                                <Typography text="Instances" size="1.1rem" weight={400}/>
                             </Grid>
-                            <Grid width="100%" height="64px" spacing="1rem" background="#0000002e" alignItems="center" justifyContent="center">
-                                <Button onClick={_ => this.addNewInstance()}>
-                                    <PlusLg/>
-                                    Add New Instance
-                                </Button>
-                                <Button theme="secondary" disabled>
-                                    <GearFill/>
-                                    Settings
-                                </Button>
-                            </Grid>
-                        </ModpackListPage>
-                    </ModpackList>
-                    <Main width={`calc(100vw - ${this.state.sideWidth})`} style={{
+                            {this.state.instances && this.state.instances.map((instance, index) => {
+                                return (
+                                    <Instance key={index} data={instance} onView={_ => this.selectInstance(index)} />
+                                );
+                            })}
+                            {!this.state.instances && <Spinner/>}
+                        </Grid>
+                        <Grid width="100%" height="64px" spacing="1rem" background="#0000002e" alignItems="center" justifyContent="center">
+                            <Button onClick={_ => this.addNewInstance()}>
+                                <PlusLg/>
+                                Add New Instance
+                            </Button>
+                            <Button theme="secondary" disabled>
+                                <GearFill/>
+                                Settings
+                            </Button>
+                        </Grid>
+                    </Grid>
+                    <Main width={`calc(100vw - ${this.state.hideInstances ? "0%" : "35%"})`} style={{
                         overflow: "hidden auto"
                     }}>
                         {
                             this.state.searchAPI &&
-                            <ModpackListing width={`calc(100vw - ${this.state.sideWidth})`} padding="0 16px" direction="vertical" spacing="8px" alignItems="center">
+                            <ModpackListing width="inherit" padding="0 16px" direction="vertical" spacing="8px" alignItems="center">
                                 <Grid width="100%" margin="8px 0 0 0" alignItems="center" justifyContent="space-between">
                                     <Grid margin="16px" spacing="1rem" alignItems="center">
                                         <Image src={{ CurseForge: "/curseforge-icon.svg" }[this.state.settingUp]} size="2rem"/>
@@ -164,61 +160,82 @@ export default class Home extends React.Component {
                             </ModpackListing>
                         }
                         {
-                            !this.state.modpacks && this.state.sidePage === 1 &&
+                            this.state.selectingInstance &&
                             <SelectInstanceType settingUp={this.state.settingUp} types={[
+                                "divide:Supported by Mojang Studios",
+                                ["Minecraft Java Edition", "Simply Vanilla Minecraft, no mods or anything special.",
+                                    "/minecraft-icon.png",
+                                    <React.Fragment>
+                                        <Button onClick={_ => this.setupLoader("forge")} disabled>
+                                            {this.state.loading && <BasicSpinner size={16}/>}
+                                            Continue
+                                        </Button>
+                                    </React.Fragment>,
+                                    "coming soon"
+                                ],
+                                "divide:Third Party Modpacks",
                                 ["CurseForge Modpacks", "Modpacks created by CurseForge Users.",
                                     "/curseforge-icon.svg",
                                     <React.Fragment>
                                         <Button theme="secondary" disabled>Import ZIP</Button>
-                                        <Button onClick={_ => this.setSPU("CurseForge").loadModpackSearch(API.CurseForge.Modpacks)}>Search</Button>
+                                        <Button onClick={_ => this.setSPU("CurseForge").loadModpackSearch(API.CurseForge.Modpacks)} disabled={this.state.loading}>
+                                            {this.state.loading && <BasicSpinner size={16}/>}
+                                            Search
+                                        </Button>
                                     </React.Fragment>
                                 ],
                                 ["Feed The Beast Modpacks", "Modpacks created by the FTB Group.",
                                     "/ftb-icon.png",
                                     <React.Fragment>
-                                        <Button onClick={_ => this.setSPU("FeedTheBeast").loadModpackSearch(API.FeedTheBeast.Modpacks)}>Search</Button>
+                                        <Button onClick={_ => this.setSPU("FeedTheBeast").loadModpackSearch(API.FeedTheBeast.Modpacks)} disabled={this.state.loading}>
+                                            {this.state.loading && <BasicSpinner size={16}/>}
+                                            Search
+                                        </Button>
                                     </React.Fragment>,
                                     "experimental"
                                 ],
                                 ["Modrinth Modpacks", "Modpacks created by Modrinth Users.",
                                     "/modrinth-icon.svg",
                                     <React.Fragment>
-                                        <Button onClick={_ => this.setSPU("Modrinth")} disabled>Search</Button>
+                                        <Button onClick={_ => this.setSPU("Modrinth")} disabled>
+                                            {this.state.loading && <BasicSpinner size={16}/>}
+                                            Search
+                                        </Button>
                                     </React.Fragment>,
                                     "coming soon"
                                 ],
-                                "divide",
-                                ["Minecraft Java Edition", "Simply Vanilla Minecraft, no mods or anything special.",
-                                    "/minecraft-icon.png",
-                                    <React.Fragment>
-                                        <Button onClick={_ => this.setupLoader("forge")} disabled>Continue</Button>
-                                    </React.Fragment>,
-                                    "coming soon"
-                                ],
-                                "divide",
+                                "divide:Third Party Modloaders",
                                 ["Forge Modloader", "Forge Description",
                                     "/forge-icon.svg",
                                     <React.Fragment>
-                                        <Button onClick={_ => this.setupLoader("forge")}>Continue</Button>
+                                        <Button onClick={_ => this.setupLoader("forge")} disabled={this.state.loading}>
+                                            {this.state.loading && <BasicSpinner size={16}/>}
+                                            Continue
+                                        </Button>
                                     </React.Fragment>,
                                     "unstable"
                                 ],
                                 ["Fabric Loader", "Fabric is a lightweight, experimental modding toolchain.",
                                     "/fabric-icon.png",
                                     <React.Fragment>
-                                        <Button onClick={_ => this.setupLoader("fabric")}>Continue</Button>
+                                        <Button onClick={_ => this.setupLoader("fabric")} disabled={this.state.loading}>
+                                            {this.state.loading && <BasicSpinner size={16}/>}
+                                            Continue
+                                        </Button>
                                     </React.Fragment>,
                                     "experimental"
                                 ],
                                 ["Quilt Loader", "The Quilt project is a community-driven modding toolchain.",
                                     "/quilt-icon.svg",
                                     <React.Fragment>
-                                        <Button onClick={_ => this.setupLoader("quilt")} disabled>Continue</Button>
+                                        <Button onClick={_ => this.setupLoader("quilt")} disabled>
+                                            Continue
+                                        </Button>
                                     </React.Fragment>,
                                     "coming soon"
                                 ],
                             ]} backButton={
-                                <Button theme="secondary" style={{ left: 16, bottom: 16, position: "fixed" }} onClick={_ => this.setState({ sidePage: 0, sideWidth: "35%" })}>
+                                <Button theme="secondary" style={{ left: 16, bottom: 16, position: "fixed" }} onClick={_ => this.setState({ hideInstances: false, selectingInstance: false })}>
                                     <ArrowLeft/>
                                     Back To Instances
                                 </Button>
@@ -227,7 +244,7 @@ export default class Home extends React.Component {
                         {
                             this.state.loaderVersions && this.state.settingUp &&
                             <LoaderSetup loader={this.state.settingUp} install={this.installLoader.bind(this)} versions={this.state.loaderVersions} backButton={
-                                <Button theme="secondary" style={{ left: 16, bottom: 16, position: "fixed" }} onClick={_ => this.setSPU(undefined).setState({ sidePage: 0, sideWidth: "35%" })}>
+                                <Button theme="secondary" style={{ left: 16, bottom: 16, position: "fixed" }} onClick={_ => this.setSPU(undefined).setState({ hideInstances: false, selectingInstance: false })}>
                                     <ArrowLeft/>
                                     Back To Instances
                                 </Button>
@@ -255,8 +272,8 @@ export default class Home extends React.Component {
                                                         <Folder2Open/>
                                                         Open
                                                     </Button>
-                                                    <Button onClick={_ => this.launchInstance(instance)}>
-                                                        <PlayFill/>
+                                                    <Button onClick={_ => this.launchInstance(instance)} disabled={!!instance.state}>
+                                                        {!instance.state ? <PlayFill/> : <BasicSpinner size={16}/>}
                                                         Launch
                                                     </Button>
                                                 </Grid>
@@ -425,14 +442,10 @@ export default class Home extends React.Component {
         return this;
     }
 
-    setSidePage(number) {
-        this.setState({
-            sidePage: number,
-            sideWidth: [null, "0%"][number] ?? "35%"
-        });
-    }
-
     async setupLoader(name) {
+        this.setState({
+            loading: true
+        });
         const versions = await API.makeRequest({
             fabric: `${FABRIC_API_BASE}/versions`,
             forge: FORGE_VERSION_MANIFEST
@@ -448,8 +461,8 @@ export default class Home extends React.Component {
                 }
                 break;
         }
-        console.log(ver);
         this.setState({
+            loading: false,
             settingUp: name,
             loaderVersions: ver
         });
@@ -478,8 +491,8 @@ export default class Home extends React.Component {
         console.log(versions, categories);
         this.setState({
             searchAPI: api,
-            sideWidth: "0%",
             modpackSearch: "",
+            hideInstances: true,
             modpackSearchVersion: -1,
             modpackSearchVersions: [{
                 id: -1,
@@ -507,8 +520,7 @@ export default class Home extends React.Component {
         const value = this.state.instances[instance];
         await value.getConfig();
         this.setState({
-            sidePage: 0,
-            sideWidth: "35%",
+            hideInstances: false,
             selectedInstance: this.state.selectedInstance === instance ? undefined : instance
         });
     }
@@ -526,8 +538,7 @@ export default class Home extends React.Component {
     installModpack(modpack) {
         this.closeModpackBrowser();
         this.setState({
-            sidePage: 0,
-            sideWidth: "35%",
+            hideInstances: false,
             selectedModpack: undefined
         });
         this.instances.installModpack(modpack);
@@ -612,9 +623,9 @@ export default class Home extends React.Component {
 
     addNewInstance() {
         this.setState({
-            sidePage: 1,
-            sideWidth: "0%",
-            selectedInstance: undefined
+            hideInstances: true,
+            selectedInstance: undefined,
+            selectingInstance: true
         });
     }
 
@@ -625,9 +636,8 @@ export default class Home extends React.Component {
     installLoader(name, loader, gameVersion, loaderVersion) {
         this.setState({
             loader: undefined,
-            sidePage: 0,
-            sideWidth: "35%",
             settingUp: undefined,
+            hideInstances: false,
             loaderVersions: undefined
         });
         return this.instances.installInstanceWithLoader(name, loader, gameVersion, loaderVersion);

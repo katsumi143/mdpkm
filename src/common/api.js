@@ -50,8 +50,8 @@ export default class API {
                     query: {
                         gameId: 432,
                         sectionId: 4471,
-                        categoryId: options.category ? options.category == -1 ? 0 : options.category : 0,
-                        gameVersion: options.version ?? undefined,
+                        categoryId: options.category ? options.category === -1 ? 0 : options.category : 0,
+                        gameVersion: options.version === -1 ? undefined : options.version,
                         searchFilter: options.query
                     }
                 }).then(modpacks => modpacks.map(modpack => new API.CurseForge.Modpack(modpack)));
@@ -70,7 +70,7 @@ export default class API {
             static getVersions() {
                 return API.makeRequest(`${CURSEFORGE_API_BASE}/minecraft/version`).then(versions =>
                     versions.map(({ id, versionString }) => ({
-                        id,
+                        id: versionString,
                         name: versionString,
                         icon: null
                     }))

@@ -238,14 +238,15 @@ export default class Util {
         args.push(
             [...libraries, minecraftArtifact]
                 .filter(l => !l.natives)
-                .map(l => l.path.replace(/\/+|\\+/g, "/"))
+                .map(l => `"${l.path.replace(/\/+|\\+/g, "/")}"`)
                 .join(Util.platform === 'win32' ? ';' : ':')
         );
 
         args.push(`-Xmx${memory}m`);
         args.push(`-Xms${memory}m`);
         args.push(...jvmOptions);
-        args.push(`-Djava.library.path=${instancePath}/natives`);
+
+        args.push(`-Djava.library.path="${instancePath}/natives"`);
         args.push(`-Dminecraft.applet.TargetDirectory="${instancePath}"`);
         if (manifest.logging)
             args.push(manifest?.logging?.client?.argument || '');
@@ -330,13 +331,6 @@ export default class Util {
         const argDiscovery = /\${*(.*)}/;
         // eslint-disable-next-line no-template-curly-in-string
         let args = manifest.arguments.jvm.filter(value => !Util.skipLibrary(value));
-
-        //const index = args.indexOf('-cp');
-        //args.splice(index + 2, 0, manifest.mainClass);
-        /*args.unshift(manifest.mainClass);
-        args.unshift(args[args.indexOf('-cp') + 1]);
-        args.splice(args.indexOf('-cp'), 2);
-        args.unshift('-cp');*/
 
         args.push(`-Xmx${memory}m`);
         args.push(`-Xms${memory}m`);

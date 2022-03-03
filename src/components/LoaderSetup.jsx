@@ -125,7 +125,7 @@ export default class LoaderSetup extends React.Component {
 
                     <Button style={{
                         minWidth: 210
-                    }} onClick={_ => install(this.state.instanceName, loader, this.state.gameVersion, this.state.loaderVersion)}>
+                    }} onClick={_ => install(this.state.instanceName, loader, this.state.gameVersion, this.state.loaderVersion)} disabled={!this.state.instanceName}>
                         Install {capit(loader)}
                     </Button>
                 </Grid>

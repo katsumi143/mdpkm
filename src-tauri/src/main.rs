@@ -6,10 +6,16 @@
 fn main() {
     tauri::Builder::default()
         .on_page_load(| window: tauri::window::Window, _ | {
+            println!("page {} loaded", window.label());
             let _window = window.clone();
+            let __window = window.clone();
             window.listen("msAuth", move |_| {
                 let url = redirect_uri().unwrap();
                 _window.emit("msCode", url).unwrap();
+            });
+            window.listen("text", move | event | {
+                println!("got text from window");
+                __window.emit("text", event.payload().unwrap()).unwrap();
             });
         })
         .invoke_handler(tauri::generate_handler![
@@ -29,7 +35,8 @@ fn main() {
             fs_read_text_file,
             fs_create_dir_all,
             fs_read_file_in_zip,
-            fs_read_binary_in_zip
+            fs_read_binary_in_zip,
+            send_window_event
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -334,25 +341,61 @@ fn extract_files(
     return Ok("yay".into());
 }
 
+use rand::{ distributions::Alphanumeric, Rng };
+
+fn gen_log_str() -> String {
+    return format!("java_logger_{}", rand::thread_rng()
+        .sample_iter(&Alphanumeric)
+        .take(8)
+        .map(char::from)
+        .collect::<String>());
+}
+
+use std::io::{ BufRead, BufReader };
+use std::process::{ Stdio };
+
 #[tauri::command]
-fn launch_minecraft(_window: tauri::window::Window, cwd: String, java_path: String, args: Vec<String>) {
+fn launch_minecraft(window: tauri::window::Window, cwd: String, java_path: String, args: Vec<String>) -> String {
+    let logger = gen_log_str();
+    let _logger = logger.clone();
     std::thread::spawn(move || {
         //TODO: send logs to window
-        windows_runner::run(&java_path, &args.join(" "), &cwd);
+        let child = windows_runner::run(&java_path, &args.join(" "), &cwd, Stdio::piped(), Stdio::piped());
+        BufReader::new(child.stdout.unwrap())
+            .lines()
+            .filter_map(| line | line.ok())
+            .for_each(| line | {
+                window.emit(&_logger, &line);
+                //println!("stdout {}", &line);
+            });
+        BufReader::new(child.stderr.unwrap())
+            .lines()
+            .filter_map(| line | line.ok())
+            .for_each(| line | {
+                println!("stderr {}", &line);
+            });
     });
+    return logger;
 }
 
 #[tauri::command]
 fn launch_java(java_path: String, args: Vec<String>, cwd: String) {
-    windows_runner::run(&java_path, &args.join(" "), &cwd);
+    windows_runner::run(&java_path, &args.join(" "), &cwd, Stdio::null(), Stdio::null());
+}
+
+use tauri::Manager;
+
+#[tauri::command]
+fn send_window_event(window: tauri::window::Window, label: String, event: String, payload: String) {
+    println!("emitting {} to {}", event, label);
+    window.get_window(&label).unwrap().emit(&event, payload).unwrap();
 }
 
 mod windows_runner{
     use std::str;
     use std::process::{ Command, Stdio };
     use std::os::windows::process::CommandExt;
-    use std::io::{ BufRead, BufReader };
-    pub fn run (program: &str, arguments: &str, cwd: &str) {
+    pub fn run (program: &str, arguments: &str, cwd: &str, out: Stdio, err: Stdio) -> std::process::Child {
         let launcher = "powershell.exe";
         let build_string: String;
         {
@@ -370,27 +413,15 @@ mod windows_runner{
         }
         let launch_command: &[String] = &[build_string];
 
-        println!("{:?}", launch_command);
         let child = Command::new(launcher)
             .creation_flags(0x08000000)
             .current_dir(cwd)
             .args(launch_command)
-            .stdout(Stdio::piped())
-            .stderr(Stdio::piped())
+            .stdout(out)
+            .stderr(err)
             .spawn()
             .expect("failed to run child program");
 
-        BufReader::new(child.stdout.unwrap())
-            .lines()
-            .filter_map(| line | line.ok())
-            .for_each(| line | {
-                println!("stdout {}", &line);
-            });
-        BufReader::new(child.stderr.unwrap())
-            .lines()
-            .filter_map(| line | line.ok())
-            .for_each(| line | {
-                println!("stderr {}", &line);
-            });
+        child
     }
 }

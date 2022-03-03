@@ -3,6 +3,7 @@ import { Buffer } from 'buffer/';
 import * as tauri from '@tauri-apps/api';
 import path from 'path-browserify';
 import toast from 'react-hot-toast';
+import { XMLParser } from 'fast-xml-parser';
 
 import lt from 'semver/functions/lt';
 import gt from 'semver/functions/gt';
@@ -296,13 +297,8 @@ export class Instance extends EventEmitter {
 
         const window = tauri.window.getCurrent();
 
-        console.log(javaPath, jvmArguments.map(value =>
-            value.toString()
-        ).join(" "));
-
         const { sha1: loggingHash, id: loggingId } = manifest?.logging?.client?.file ?? {};
-        console.log(this.instances.dataController.dataPath);
-        await tauri.invoke('launch_minecraft', {
+        const logger = await tauri.invoke('launch_minecraft', {
             cwd: this.path,
             window,
             javaPath: javaPath.replace(/\/+|\\+/g, "\\"),
@@ -315,6 +311,63 @@ export class Instance extends EventEmitter {
                         `-Dlog4j.configurationFile="${this.instances.getPath('mcAssets')}/objects/${loggingHash.substring(0, 2)}/${loggingId}"`
                     )
             )
+        });
+
+        const splashWindow = new tauri.window.WebviewWindow(logger, {
+            url: '/instance-splash',
+            title: `Starting ${this.name}`,
+            width: 350,
+            focus: true,
+            height: 200,
+            center: true,
+            resizable: false,
+            decorations: false,
+            transparent: true
+        });
+
+        const updateText = text => tauri.invoke('send_window_event', {
+            label: splashWindow.label,
+            event: "text",
+            payload: text
+        });
+        setTimeout(_ => {
+            tauri.invoke('send_window_event', {
+                label: splashWindow.label,
+                event: "name",
+                payload: this.name
+            });
+            updateText("Starting Instance");
+        }, 5000);
+
+        let log4jString = "";
+        window.listen(logger, ({ payload }) => {
+            if(/.*<log4j:Event/.test(payload))
+                log4jString = payload;
+            else if(/.*<log4j:Message>/.test(payload))
+                log4jString += payload;
+            else if(/.*<\/log4j:Event>/.test(payload) && log4jString) {
+                const parser = new XMLParser();
+                const object = parser.parse(log4jString + payload);
+                log4jString = "";
+
+                const message = object["log4j:Event"]["log4j:Message"];
+                console.log(message);
+
+                if(message.startsWith("Loading Minecraft ") && message.includes(" with Fabric "))
+                    updateText(`Loading Fabric ${message.split(" ")[6]} for ${message.split(" ")[2]}`);
+                else if(message.startsWith("Forge Mod Loader version "))
+                    updateText(`Loading Forge ${message.split(" ")[4]} for ${message.split(" ")[7]}`);
+                else if(message.startsWith("Preparing ") || message.startsWith("Initializing ") || message.startsWith("Initialized "))
+                    updateText(`${message.split(" ")[0]} ${message.split(" ")[1]}`);
+                else if(message.startsWith("Bootstrap start"))
+                    updateText("Starting Bootstrap");
+                else if(message.startsWith("Bootstrap in "))
+                    updateText("Started Bootstrap");
+                else if(message.startsWith("Setting user"))
+                    updateText("Setting User");
+                else if(message.toLowerCase().includes("lwjgl version") || message.toLowerCase().includes("crashed"))
+                    splashWindow.close();
+            }
         });
         
         this.setState(null);
@@ -832,6 +885,8 @@ export default class Instances extends EventEmitter {
         const instances = this.instances;
         for (const file of directory) {
             if (!instances.find(inst => inst.name === file.name)) {
+                if(!await Util.fileExists(`${file.path}/config.json`))
+                    continue;
                 const instance = await Instance.build(file, this);
                 instance.init();
                 instance.mods = await instance.getMods().catch(console.error);

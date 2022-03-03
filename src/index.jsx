@@ -2,15 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { Home, NotFound } from './pages';
+import { Home, NotFound, InstanceSplash } from './pages';
 
 const Tauri = window.__TAURI__;
 const rootElement = document.getElementById('root');
 ReactDOM.render(
     <BrowserRouter>
         <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route path="/*" element={<NotFound />} />
+            <Route exact path="/" element={<Home/>}/>
+            <Route exact path="/instance-splash" element={<InstanceSplash/>}/>
+            <Route path="/*" element={<NotFound/>}/>
         </Routes>
     </BrowserRouter>,
     rootElement
