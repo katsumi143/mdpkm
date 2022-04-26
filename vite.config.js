@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
-import reactRefresh from '@vitejs/plugin-react-refresh';
-import svgrPlugin from 'vite-plugin-svgr';
+import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -8,12 +7,12 @@ export default defineConfig({
         outDir: 'build',
         target: 'esnext'
     },
+    server: {
+        hmr: {
+            overlay: false
+        }
+    },
     plugins: [
-        reactRefresh(),
-        svgrPlugin({
-            svgrOptions: {
-                icon: true
-            }
-        })
+        react()
     ]
 });
