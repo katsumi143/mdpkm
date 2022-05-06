@@ -1,12 +1,11 @@
 {
     "package": {
         "productName": "mdpkm",
-        "version": "0.0.1"
+        "version": "1.0.0"
     },
     "build": {
         "distDir": "../build",
         "devPath": "http://localhost:3000",
-        "withGlobalTauri": true,
         "beforeDevCommand": "",
         "beforeBuildCommand": ""
     },
@@ -14,7 +13,7 @@
         "bundle": {
             "active": true,
             "targets": "all",
-            "identifier": "io.github.blookers.mdpkm",
+            "identifier": "io.blookers.mdpkm",
             "icon": [
                 "icons/32x32.png",
                 "icons/128x128.png",
@@ -27,15 +26,13 @@
             "copyright": "",
             "category": "Utility",
             "shortDescription": "minecraft modpack manager",
-            "longDescription": "goggle trans, messing up sentences for your own enjoyment.",
+            "longDescription": "",
             "deb": {
-                "depends": [],
-                "useBootstrapper": false
+                "depends": []
             },
             "macOS": {
                 "frameworks": [],
                 "minimumSystemVersion": "",
-                "useBootstrapper": false,
                 "exceptionDomain": "",
                 "signingIdentity": null,
                 "entitlements": null
@@ -50,17 +47,20 @@
             "active": false
         },
         "allowlist": {
-            "notification": {
-                "all": true
+            "clipboard": {
+                "writeText": true
             },
             "window": {
-                "all": true
+                "close": true,
+                "create": true,
+                "setFocus": true
             },
-            "fs": {
-                "all": true,
-                "scope": [
-                    "$APP/*"
-                ]
+            "process": {
+                "exit": true
+            },
+            "dialog": {
+                "open": true,
+                "save": true
             },
             "path": {
                 "all": true
@@ -72,13 +72,8 @@
                 "all": true
             },
             "shell": {
-                "all": true,
+                "open": true,
                 "scope": [
-                    {
-                        "name": "curl",
-                        "cmd": "curl",
-                        "args": true
-                    },
                     {
                         "name": "tar",
                         "cmd": "tar",
