@@ -6,7 +6,6 @@
 fn main() {
     tauri::Builder::default()
         .on_page_load(| window: tauri::window::Window, _ | {
-            println!("page {} loaded", window.label());
             let _window = window.clone();
             let __window = window.clone();
             window.listen("msAuth", move |_| {
@@ -14,7 +13,6 @@ fn main() {
                 _window.emit("msCode", url).unwrap();
             });
             window.listen("text", move | event | {
-                println!("got text from window");
                 __window.emit("text", event.payload().unwrap()).unwrap();
             });
         })
@@ -22,19 +20,26 @@ fn main() {
             web_request,
             move_dir,
             fs_copy,
+            create_zip,
             launch_java,
             fs_read_dir,
             fs_read_file,
             extract_file,
             extract_files,
+            download_file,
             fs_write_file,
             fs_remove_dir,
             fs_remove_file,
             fs_file_exists,
+            launch_package,
+            fs_write_binary,
             launch_minecraft,
             fs_read_text_file,
             fs_create_dir_all,
+            reregister_package,
             fs_read_file_in_zip,
+            get_microsoft_account,
+            fs_read_dir_recursive,
             fs_read_binary_in_zip,
             send_window_event
         ])
@@ -157,7 +162,7 @@ fn fs_copy(path: String, target: String) -> Result<u64, String> {
     if let Ok(res) = result {
         return Ok(*res);
     }
-    return Err("oh no".into());
+    return Err(result.as_ref().unwrap_err().to_string());
 }
 
 #[tauri::command]
@@ -238,17 +243,60 @@ fn fs_read_binary_in_zip(path: String, file_path: String) -> Result<Vec<u8>, Str
     return Err(file.unwrap_err().to_string());
 }
 
+use walkdir::{ WalkDir };
+
 #[tauri::command]
-fn fs_read_dir(path: String) -> Result<Vec<String>, String> {
+fn create_zip(path: String, prefix: String, files: Vec<String>) {
+    let mut zip = zip::ZipWriter::new(std::fs::File::create(&path).unwrap());
+    let options = zip::write::FileOptions::default();
+
+    let mut buffer = Vec::new();
+    for entry in files {
+        let path = std::path::Path::new(&entry);
+        let name = path.strip_prefix(std::path::Path::new(&prefix)).unwrap();
+
+        // Write file or directory explicitly
+        // Some unzip tools unzip files with directory paths correctly, some do not!
+        if path.is_file() {
+            println!("adding file {:?} as {:?} ...", path, name);
+            #[allow(deprecated)]
+            zip.start_file_from_path(name, options).unwrap();
+            let mut f = std::fs::File::open(path).unwrap();
+
+            f.read_to_end(&mut buffer).unwrap();
+            zip.write_all(&*buffer).unwrap();
+            buffer.clear();
+        } else if !name.as_os_str().is_empty() {
+            // Only if not root! Avoids path spec / warning
+            // and mapname conversion failed error on unzip
+            println!("adding dir {:?} as {:?} ...", path, name);
+            #[allow(deprecated)]
+            zip.add_directory_from_path(name, options).unwrap();
+        }
+    }
+}
+
+#[tauri::command]
+fn fs_read_dir(path: String) -> Result<Vec<Vec<String>>, String> {
     let read = std::fs::read_dir(path);
     if read.is_ok() {
         return Ok(read.unwrap().filter_map(| entry | {
             entry.ok().and_then(| e |
-                Some(e.path().into_os_string().into_string().unwrap())
+                Some(vec![e.path().into_os_string().into_string().unwrap(), e.file_type().unwrap().is_dir().to_string()])
             )
-        }).collect::<Vec<String>>());
+        }).collect::<Vec<Vec<String>>>());
     }
     return Err(read.unwrap_err().to_string());
+}
+
+#[tauri::command]
+fn fs_read_dir_recursive(path: String) -> Result<Vec<Vec<String>>, String> {
+    let walkdir = WalkDir::new(path);
+    return Ok(walkdir.into_iter().filter_map(| entry | {
+        entry.ok().and_then(| e |
+            Some(vec![e.path().to_str().unwrap().to_owned().to_string(), e.file_type().is_dir().to_string()])
+        )
+    }).collect::<Vec<Vec<String>>>());
 }
 
 #[tauri::command]
@@ -277,6 +325,14 @@ fn fs_write_file(path: String, contents: String) -> Result<(), String> {
         return Ok(result.unwrap());
     }
     return Err(result.unwrap_err().to_string());
+}
+
+#[tauri::command]
+fn fs_write_binary(path: String, contents: Vec<u8>) {
+    std::thread::spawn(move || {
+        std::fs::create_dir_all(std::path::Path::new(&path).parent().unwrap()).unwrap();
+        let _ = std::fs::write(path, contents);
+    });
 }
 
 #[tauri::command]
@@ -360,13 +416,13 @@ fn launch_minecraft(window: tauri::window::Window, cwd: String, java_path: Strin
     let _logger = logger.clone();
     std::thread::spawn(move || {
         //TODO: send logs to window
-        let child = windows_runner::run(&java_path, &args.join(" "), &cwd, Stdio::piped(), Stdio::piped());
+        let child = child_runner::run(&java_path, &args.join(" "), &cwd, Stdio::piped(), Stdio::piped());
         BufReader::new(child.stdout.unwrap())
             .lines()
             .filter_map(| line | line.ok())
             .for_each(| line | {
-                window.emit(&_logger, &line);
-                //println!("stdout {}", &line);
+                window.emit(&_logger, &line).unwrap();
+                println!("stdout {}", &line);
             });
         BufReader::new(child.stderr.unwrap())
             .lines()
@@ -380,7 +436,107 @@ fn launch_minecraft(window: tauri::window::Window, cwd: String, java_path: Strin
 
 #[tauri::command]
 fn launch_java(java_path: String, args: Vec<String>, cwd: String) {
-    windows_runner::run(&java_path, &args.join(" "), &cwd, Stdio::null(), Stdio::null());
+    let child = child_runner::run(&java_path, &args.join(" "), &cwd, Stdio::piped(), Stdio::piped());
+    BufReader::new(child.stdout.unwrap())
+        .lines()
+        .filter_map(| line | line.ok())
+        .for_each(| line | {
+            println!("stdout {}", &line);
+        });
+    BufReader::new(child.stderr.unwrap())
+        .lines()
+        .filter_map(| line | line.ok())
+        .for_each(| line | {
+            println!("stderr {}", &line);
+        });
+}
+
+extern crate reqwest;
+
+#[tauri::command]
+async fn download_file(url: String, path: String) {
+    let directory = &mut path.split("/").collect::<Vec<&str>>();
+    directory.pop();
+    std::fs::create_dir_all(directory.join("/")).ok();
+    /*let output = Command::new("curl")
+        .creation_flags(0x08000000)
+        .args(["-L", &url, "-o", &path, "--create-dirs"])
+        .output()
+        .expect("failed to execute process");
+    if !output.status.success() {
+        return Err(output.status.code().unwrap().to_string());
+    }
+    return Ok("success");*/
+    let response = reqwest::get(url).await.unwrap();
+    let mut file = std::fs::File::create(path).expect("failed to create file");
+    let mut content = std::io::Cursor::new(response.bytes().await.unwrap());
+    std::io::copy(&mut content, &mut file).unwrap();
+}
+
+use windows::core::HSTRING;
+use windows::Security::Authentication::Web::Core::{
+    WebTokenRequest,
+    WebAuthenticationCoreManager
+};
+
+#[tauri::command]
+async fn get_microsoft_account() -> String {
+    let account_provider = WebAuthenticationCoreManager::FindAccountProviderAsync(
+        HSTRING::from("https://login.microsoft.com")
+    ).unwrap().await.unwrap();
+    let request = WebTokenRequest::Create(
+        account_provider,
+        HSTRING::from("service::dcat.update.microsoft.com::MBI_SSL"),
+        HSTRING::from("be7dfb6a-789c-4622-8c97-dcd963ae0f89")
+    ).unwrap();
+    let result = WebAuthenticationCoreManager::GetTokenSilentlyAsync(request).unwrap().await.unwrap();
+
+    let token = result.ResponseData().unwrap().GetAt(0).unwrap().Token().unwrap();
+    return token.to_string();
+}
+
+use windows::System::{ AppDiagnosticInfo };
+use windows::Foundation::{ Uri };
+use windows::Management::Deployment::{ PackageManager, RegisterPackageOptions };
+
+#[tauri::command]
+async fn launch_package(family: String, game_dir: String) {
+    let game_path = std::path::Path::new(&game_dir);
+    let pkg = AppDiagnosticInfo::RequestInfoForPackageAsync(
+        HSTRING::from(family)
+    ).unwrap().await.unwrap();
+    println!("{}", &game_dir);
+    if pkg.Size().unwrap() > 0 {
+        for pk in pkg {
+            println!("{}", pk.AppInfo().unwrap().Package().unwrap().InstalledLocation().unwrap().Path().unwrap().to_string());
+            if std::path::Path::new(&pk.AppInfo().unwrap().Package().unwrap().InstalledLocation().unwrap().Path().unwrap().to_string()).eq(game_path) {
+                pk.LaunchAsync().unwrap();
+                break;
+            }
+        }
+    }
+}
+
+#[tauri::command]
+async fn reregister_package(family: String, game_dir: String) {
+    let game_path = std::path::Path::new(&game_dir);
+    /*for pkg in PackageManager::new().unwrap().FindPackagesByPackageFamilyName(HSTRING::from(family)).unwrap() {
+        let location = pkg.InstalledLocation().unwrap().Path().unwrap().to_string();
+        if std::path::Path::new(&location).eq(game_path) {
+            return;
+        }
+        PackageManager::new().unwrap().RemovePackageWithOptionsAsync(
+            pkg.Id().unwrap().FullName().unwrap(),
+            RemovalOptions::PreserveApplicationData
+        ).unwrap();
+    }*/
+    let manifest_path = game_path.join("AppxManifest.xml");
+    let options = RegisterPackageOptions::new().unwrap();
+    options.SetDeveloperMode(true).unwrap();
+    PackageManager::new().unwrap().RegisterPackageByUriAsync(
+        Uri::CreateUri(HSTRING::from(manifest_path.to_str().unwrap())).unwrap(),
+        options
+    ).unwrap().await.unwrap();
 }
 
 use tauri::Manager;
@@ -391,7 +547,8 @@ fn send_window_event(window: tauri::window::Window, label: String, event: String
     window.get_window(&label).unwrap().emit(&event, payload).unwrap();
 }
 
-mod windows_runner{
+#[cfg(windows)]
+mod child_runner {
     use std::str;
     use std::process::{ Command, Stdio };
     use std::os::windows::process::CommandExt;
@@ -417,6 +574,24 @@ mod windows_runner{
             .creation_flags(0x08000000)
             .current_dir(cwd)
             .args(launch_command)
+            .stdout(out)
+            .stderr(err)
+            .spawn()
+            .expect("failed to run child program");
+
+        child
+    }
+}
+
+#[cfg(unix)]
+mod child_runner {
+    use std::str;
+    use std::process::{ Command, Stdio };
+    pub fn run (program: &str, arguments: &str, cwd: &str, out: Stdio, err: Stdio) -> std::process::Child {
+        let launcher = "sh";
+        let child = Command::new(launcher)
+            .current_dir(cwd)
+            .arg(arguments)
             .stdout(out)
             .stderr(err)
             .spawn()
