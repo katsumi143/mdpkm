@@ -1,12 +1,32 @@
 import React from 'react';
 import path from 'path-browserify';
-import * as tauri from '@tauri-apps/api';
-import { Box } from 'react-bootstrap-icons';
-import { MINECRAFT_LIBRARIES_URL } from './constants';
+import { os, http, shell, invoke } from '@tauri-apps/api';
 
-import Image from '../components/uiblox/Image';
+import { LoaderNames, LoaderIcons, LoaderTypes, MINECRAFT_LIBRARIES_URL } from './constants';
+
+import Image from '/voxeliface/components/Image';
 
 export default class Util {
+    static async makeRequest(url, options = {}) {
+        if(options.query) {
+            const keys = Object.keys(options.query);
+            for (let i = 0; i < keys.length; i++) {
+                const value = options.query[keys[i]];
+                if (value !== undefined)
+                    options.query[keys[i]] = value.toString();
+            }
+        }
+        const response = await invoke("web_request", {
+            url,
+            body: options.body ?? http.Body.json({}),
+            method: options.method ?? "GET",
+            query: options.query ?? {},
+            headers: options.headers ?? {},
+            responseType: {JSON: 1, Text: 2, Binary: 3}[options.responseType] ?? 1
+        });
+        return response.data;
+    }
+
     static formatDateBetween(date, date2, style) {
         if (style === "x-ymhs-ago") {
             let temporary;
@@ -39,17 +59,10 @@ export default class Util {
             return outputFile;
 
         console.log(`Starting Download for ${url} in ${directory}`);
-        const response = await new tauri.shell.Command("curl",
-            [
-                '-L',
-                url,
-                '-o',
-                outputFile,
-                '--create-dirs'
-            ]
-        ).execute();
-        if (response.code !== 0)
-            throw new Error(`Download Error ${response.code}`);
+        await new invoke("download_file", {
+            url: url.replace(" ", "%20"),
+            path: outputFile
+        });
 
         console.log('Downloaded File');
         return outputFile;
@@ -60,17 +73,10 @@ export default class Util {
             return path;
 
         console.log(`Starting Download for ${url} as ${path}`);
-        const response = await new tauri.shell.Command("curl",
-            [
-                '-L',
-                url,
-                '-o',
-                path,
-                '--create-dirs'
-            ]
-        ).execute();
-        if (response.code !== 0)
-            throw new Error(`Download Error ${response.code}`);
+        await new invoke("download_file", {
+            url: url.replace(" ", "%20"),
+            path
+        });
 
         console.log('Downloaded File');
         return path;
@@ -78,7 +84,7 @@ export default class Util {
 
     static async readTextFile(path) {
         try {
-            return await tauri.invoke("fs_read_text_file", { path });
+            return await invoke("fs_read_text_file", { path });
         } catch (err) {
             console.error(`Failed to read ${path}`);
             throw err;
@@ -87,7 +93,7 @@ export default class Util {
 
     static async readBinaryFile(path) {
         try {
-            return await tauri.invoke("fs_read_file", { path });
+            return await invoke("fs_read_file", { path });
         } catch (err) {
             console.error(`Failed to read ${path}`);
             throw err;
@@ -95,19 +101,23 @@ export default class Util {
     }
 
     static writeFile(path, contents) {
-        return tauri.invoke("fs_write_file", { path, contents });
+        return invoke("fs_write_file", { path, contents });
+    }
+
+    static writeBinaryFile(path, contents) {
+        return invoke("fs_write_binary", { path, contents });
     }
 
     static removeFile(path) {
-        return tauri.invoke("fs_remove_file", { path });
+        return invoke("fs_remove_file", { path });
     }
 
     static fileExists(path) {
-        return tauri.invoke("fs_file_exists", { path });
+        return invoke("fs_file_exists", { path });
     }
 
     static extractZip(path, outputDir) {
-        return new tauri.shell.Command("tar",
+        return new shell.Command("tar",
             [
                 '-xf',
                 path,
@@ -118,21 +128,23 @@ export default class Util {
     }
 
     static async moveFolder(path, target) {
-        return tauri.invoke("move_dir", {
+        return invoke("move_dir", {
             path,
             target
         }).then(_ => target);
     }
 
     static copyFile(path, target) {
-        return tauri.invoke("fs_copy", {
-            path,
-            target
-        }).then(_ => target);
+        return Util.createDirAll(target.split(/\/+|\\+/g).slice(0, -1).join("/")).then(_ =>
+            invoke("fs_copy", {
+                path,
+                target
+            }).then(_ => target)
+        );
     }
 
     static extractFile(path, name, output) {
-        return tauri.invoke("extract_file", {
+        return invoke("extract_file", {
             path,
             fileName: name,
             output
@@ -140,7 +152,7 @@ export default class Util {
     }
 
     static extractFiles(zip, path, output, ignore) {
-        return tauri.invoke("extract_files", {
+        return invoke("extract_files", {
             zip,
             path,
             output,
@@ -149,36 +161,51 @@ export default class Util {
     }
 
     static createDirAll(path) {
-        return tauri.invoke("fs_create_dir_all", {
+        return invoke("fs_create_dir_all", {
             path
         }).then(_ => path);
     }
 
     static readDir(path) {
-        return tauri.invoke("fs_read_dir", { path }).then(paths => paths.map(path => ({
+        return invoke("fs_read_dir", { path }).then(paths => paths.map(([path, isDir]) => ({
             name: path.split(/\/+|\\+/).reverse()[0],
-            path
+            path,
+            isDir: isDir === 'true'
+        })));
+    }
+
+    static readDirRecursive(path) {
+        return invoke("fs_read_dir_recursive", { path }).then(paths => paths.map(([path, isDir]) => ({
+            name: path.split(/\/+|\\+/).reverse()[0],
+            path,
+            isDir: isDir === 'true'
         })));
     }
 
     static readFileInZip(path, filePath) {
-        return tauri.invoke("fs_read_file_in_zip", {
+        return invoke("fs_read_file_in_zip", {
             path, filePath
         });
     }
 
     static readBinaryInZip(path, filePath) {
-        return tauri.invoke("fs_read_binary_in_zip", {
+        return invoke("fs_read_binary_in_zip", {
             path, filePath
         });
     }
 
+    static createZip(path, prefix, files) {
+        return invoke("create_zip", {
+            path, prefix, files
+        });
+    }
+
     static createDir(path) {
-        return tauri.invoke("fs_create_dir_all", { path });
+        return invoke("fs_create_dir_all", { path });
     }
 
     static removeDir(path) {
-        return tauri.invoke("fs_remove_dir", { path });
+        return invoke("fs_remove_dir", { path });
     }
 
     static mavenToArray(s, nativeString, forceExt) {
@@ -280,13 +307,13 @@ export default class Util {
                         val = manifest.assets;
                         break;
                     case 'auth_uuid':
-                        val = account.profile.id;
+                        val = account.profile.uuid;
                         break;
                     case 'auth_access_token':
-                        val = hideAccessToken ? this.hiddenToken : account.accessToken;
+                        val = hideAccessToken ? this.hiddenToken : account.token;
                         break;
                     case 'auth_session':
-                        val = hideAccessToken ? this.hiddenToken : account.accessToken;
+                        val = hideAccessToken ? this.hiddenToken : account.token;
                         break;
                     case 'user_type':
                         val = 'mojang';
@@ -376,10 +403,10 @@ export default class Util {
                             val = manifest.assets;
                             break;
                         case 'auth_uuid':
-                            val = account.profile.id;
+                            val = account.profile.uuid;
                             break;
                         case 'auth_access_token':
-                            val = hideAccessToken ? this.hiddenToken : account.accessToken;
+                            val = hideAccessToken ? this.hiddenToken : account.token;
                             break;
                         case 'user_type':
                             val = 'mojang';
@@ -572,19 +599,54 @@ export default class Util {
         };
     }
 
-    static tryRust() {
-        return tauri.invoke("spawn");
+    static parseString(str) {
+        let args = [].slice.call(arguments, 1), i = 0;
+        return str.replace(/%s/g, () => args[i++]);
     }
 
-    static getInstanceIcon(instance, size) {
+    static tryRust() {
+        return invoke("spawn");
+    }
+
+    static getLoaderName(type) {
+        return LoaderNames[type] ?? type;
+    }
+
+    static getLoaderType(type) {
+        return LoaderTypes[type] ?? 'unknown';
+    }
+
+    static getInstanceIcon(instance, size, hideLoader, props) {
         size = `${size ?? "48"}px`;
-        return <Image src={instance.icon ? `data:image/png;base64,${instance.icon}` : ""} background="#ffffff12" borderRadius="8.33333333%" style={{
+        return <Image src={
+            instance.icon ? `data:image/png;base64,${instance.icon}` : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff99' viewBox='0 0 16 16'%3E%3Cpath d='M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z' /%3E%3C/svg%3E"
+        } background="$secondaryBackground" borderRadius="8.33333333%" {...props} css={{
+            width: 'fit-content',
+            height: 'fit-content',
+            display: 'block',
             minWidth: size,
-            minHeight: size
-        }}>
-            {!instance.icon && <Box size="1.4rem" color="#ffffff99"/>}
-        </Image>
+            minHeight: size,
+            backgroundSize: !instance.icon ? '50%' : 'contain',
+            
+            '&:after': hideLoader || !LoaderIcons[instance.config.loader.type] ? undefined : {
+                top: 0,
+                left: 0,
+                width: '1.2rem',
+                height: '1.2rem',
+                border: '#1e1e1e solid 2px',
+                content: '',
+                display: 'block',
+                position: 'relative',
+                transform: 'translate(175%, 175%)',
+                borderRadius: '50%',
+                backgroundSize: 'contain',
+                backgroundColor: '#1e1e1e',
+                backgroundImage: `url('${LoaderIcons[instance.config.loader.type]}')`,
+                backgroundRepeat: 'no-repeat'
+            },
+            ...props?.css
+        }}/>
     }
 };
 
-Util.platform = await tauri.os.platform();
+Util.platform = await os.platform();

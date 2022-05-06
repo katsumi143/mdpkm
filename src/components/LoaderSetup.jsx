@@ -1,14 +1,15 @@
-import React from 'react';
-import { keyframes } from '@stitches/react';
+import React, { useState } from 'react';
 
-import Grid from './uiblox/Grid';
-import Image from './uiblox/Image';
-import Input from './uiblox/Input';
-import Button from './uiblox/Button';
-import Select from './uiblox/Input/Select';
-import Typography from './uiblox/Typography';
-import SelectItem from './uiblox/Input/SelectItem';
+import Grid from '/voxeliface/components/Grid';
+import Image from '/voxeliface/components/Image';
+import Button from '/voxeliface/components/Button';
+import Select from '/voxeliface/components/Input/Select';
+import Spinner from '/voxeliface/components/Spinner';
+import TextInput from '/voxeliface/components/Input/Text';
+import Typography from '/voxeliface/components/Typography';
+import SelectItem from '/voxeliface/components/Input/SelectItem';
 
+import Util from '../common/util';
 function sortGame(a, b) {
     if (typeof a === 'string' && typeof b === 'string') {
         const versionA = a.split('.');
@@ -45,91 +46,147 @@ function sortForge(a, b) {
     return 0;
 }
 
-function capit(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
+export default function LoaderSetup({ loader, install, versions, backButton }) {
+    const loaderVersions = Array.isArray(versions) ? null : versions;
+    if(!Array.isArray(versions))
+        for (const [key, value] of Object.entries(loaderVersions)) {
+            loaderVersions[key] = value.sort(loader === "forge" ? sortForge : _ => 0);
+        }
 
-export default class LoaderSetup extends React.Component {
-    constructor(props) {
-        super(props);
-
-        const { versions } = props;
-        const gameVersions = Object.keys(versions).sort(sortGame);
-        const loaderVersions = versions;
-        this.state = {
-            gameVersion: gameVersions[0],
-            gameVersions,
-            instanceName: "",
-            loaderVersion: loaderVersions[gameVersions[0]].reverse()[0],
-            loaderVersions
-        };
-    }
-
-    render() {
-        const { loader, install, backButton } = this.props;
-        const sort = loader === "forge" ? sortForge : _ => 0;
-        return (
-            <Grid width="100%" padding="24px 0" spacing="16px" direction="vertical" alignItems="center" style={{
-                top: 64,
-                left: 0,
-                position: "absolute"
+    const [name, setName] = useState('');
+    const [gameType, setGameType] = useState(Array.isArray(versions) ? versions[0] : null);
+    const [installState, setInstallState] = useState();
+    const [gameVersions, setGameVersions] = useState(Array.isArray(versions) ?
+        versions[0].data :
+        Object.keys(versions).sort(sortGame));
+    const [gameVersion, setGameVersion] = useState(
+        Array.isArray(versions) ? gameVersions[0].value : gameVersions[0]
+    );
+    const [loaderVersion, setLoaderVersion] = useState(
+        Array.isArray(versions) ? null : loaderVersions[gameVersions[0]][0]
+    );
+    const installLoader = () => install(name, loader, gameVersion, loaderVersion, setInstallState);
+    return (
+        <Grid width="100%" direction="vertical" alignItems="center">
+            <Grid width="100%" height="-webkit-fill-available" direction="vertical" alignItems="center" justifyContent="center" css={{
+                overflow: 'auto'
             }}>
-                {backButton}
-                <Grid margin="2rem 0 0 0" direction="vertical" alignItems="center">
-                    <Image src={{ forge: "/forge-banner.png", fabric: "fabric-icon.png" }[loader]} width="100%" height="3rem" style={{
-                        marginTop: "4rem"
-                    }}/>
+                <Image src={{
+                    java: "java-banner.svg",
+                    forge: "forge-banner.png",
+                    quilt: "quilt-banner.svg",
+                    fabric: "fabric-icon.png",
+                    bedrock: "franchise-banner.svg"
+                }[loader]} width="100%" height="3.5rem"/>
+                {installState && <React.Fragment>
+                    <Typography size="1.1rem" color="$primaryColor" margin="1rem 0 0">
+                        Installing {Util.getLoaderName(loader)} for {gameVersion}
+                    </Typography>
+                    <Typography size=".9rem" color="$secondaryColor" weight={400} margin="4px 0 0">
+                        Your instance is called '{name}'
+                    </Typography>
+                </React.Fragment>}
 
-                    <Grid margin="24px 0 0 0" spacing="4px" direction="vertical">
-                        <Typography size="14px" color="#ffffff99" weight={400} family="Nunito, sans-serif">
-                            Instance Name
-                        </Typography>
-                        <Input
-                            width="210px"
-                            value={this.state.instanceName}
-                            onChange={event => this.setState({ instanceName: event.target.value })}
-                        />
-                    </Grid>
+                {!installState && <Grid margin="2rem 0 0 0" spacing="4px" direction="vertical">
+                    <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
+                        Instance Name
+                    </Typography>
+                    <TextInput
+                        width="210px"
+                        value={name}
+                        onChange={event => setName(event.target.value)}
+                    />
+                </Grid>}
 
+                {installState ? null : loaderVersions ?
                     <Grid margin="24px 0 0 0" spacing="4px" direction="vertical">
-                        <Typography size="14px" color="#ffffff99" weight={400} family="Nunito, sans-serif">
+                        <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
                             Minecraft Version
                         </Typography>
                         <Select
-                            value={this.state.gameVersion}
-                            onChange={event => this.setState({ gameVersion: event.target.value, loaderVersion: this.state.loaderVersions[event.target.value].reverse()[0] })}
+                            value={gameVersion}
+                            onChange={({ target }) => {
+                                setGameVersion(target.value);
+                                setLoaderVersion(loaderVersions[target.value][0]);
+                            }}
                         >
-                            {this.state.gameVersions.map((version, index) =>
+                            {gameVersions.map((version, index) =>
                                 <SelectItem key={index} value={version}>
                                     {version}
                                 </SelectItem>
                             )}
                         </Select>
-                    </Grid>
+                    </Grid> :
+                    <React.Fragment>
+                        <Grid margin="16px 0 0 0" spacing="4px" direction="vertical">
+                            <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
+                                Release Category
+                            </Typography>
+                            <Select
+                                value={gameType}
+                                onChange={({ target }) => {
+                                    setGameType(target.value);
+                                    setGameVersion(target.value.data[0].value);
+                                    setGameVersions(target.value.data);
+                                }}
+                            >
+                                {versions.map((type, index) =>
+                                    <SelectItem key={index} value={type}>
+                                        {type.name}
+                                    </SelectItem>
+                                )}
+                            </Select>
+                        </Grid>
+                        <Grid margin="16px 0 0 0" spacing="4px" direction="vertical">
+                            <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
+                                Minecraft Version
+                            </Typography>
+                            <Select
+                                value={gameVersion}
+                                onChange={({ target }) => setGameVersion(target.value)}
+                            >
+                                {gameVersions.map(({ name, value }, index) =>
+                                    <SelectItem key={index} value={value}>
+                                        {name}
+                                    </SelectItem>
+                                )}
+                            </Select>
+                        </Grid>
+                    </React.Fragment>
+                }
 
-                    <Grid margin="16px 0" spacing="4px" direction="vertical">
-                        <Typography size="14px" color="#ffffff99" weight={400} family="Nunito, sans-serif">
-                            {capit(loader)} Version
-                        </Typography>
-                        <Select
-                            value={this.state.loaderVersion}
-                            onChange={event => this.setState({ loaderVersion: event.target.value })}
-                        >
-                            {this.state.loaderVersions[this.state.gameVersion].sort(sort).map((version, index) =>
-                                <SelectItem key={index} value={version}>
-                                    {version.includes("-") ? version.split("-")[1] : version}
-                                </SelectItem>
-                            )}
-                        </Select>
-                    </Grid>
-
-                    <Button style={{
-                        minWidth: 210
-                    }} onClick={_ => install(this.state.instanceName, loader, this.state.gameVersion, this.state.loaderVersion)} disabled={!this.state.instanceName}>
-                        Install {capit(loader)}
+                {loaderVersions && <Grid margin="16px 0" spacing="4px" direction="vertical">
+                    <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
+                        Loader Version
+                    </Typography>
+                    <Select
+                        value={loaderVersion}
+                        onChange={({ target }) => setLoaderVersion(target.value)}
+                    >
+                        {loaderVersions[gameVersion].map((version, index) =>
+                            <SelectItem key={index} value={version}>
+                                {version.includes("-") ? version.split("-")[1] : version}
+                            </SelectItem>
+                        )}
+                    </Select>
+                </Grid>}
+            </Grid>
+            <Grid width="100%" padding={16} justifyContent="space-between" css={{
+                borderTop: `${installState ? 4 : 1}px solid $tagBorder`,
+                transition: 'border 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+                borderImage: installState ? `linear-gradient(to right, #73c280 50%, $headerBackground 50%) 100% 1` : null
+            }}>
+                {installState ?
+                    <Typography size="1.1rem" color="$primaryColor" weight={600} family="Nunito">
+                        {installState}
+                    </Typography>
+                : backButton}
+                <Grid spacing={8}>
+                    <Button onClick={installLoader} disabled={!name || !!installState}>
+                        Install {Util.getLoaderName(loader)}
                     </Button>
                 </Grid>
             </Grid>
-        );
-    }
+        </Grid>
+    );
 };

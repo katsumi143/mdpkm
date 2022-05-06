@@ -1,7 +1,7 @@
 import pMap from 'p-map-browser';
+import { create } from 'xmlbuilder2';
 import * as tauri from '@tauri-apps/api';
-
-import semverValid from 'semver/functions/valid';
+import { Body } from '@tauri-apps/api/http';
 
 import {
     AZURE_CLIENT_ID,
@@ -12,13 +12,18 @@ import {
 
     MICROSOFT_LOGIN_URL,
 
-    CURSEFORGE_API_BASE,
     FTB_API_BASE,
+    ESSENTIAL_BASE,
+    MODRINTH_API_BASE,
+    CURSEFORGE_API_BASE,
 
+    QUILT_API_BASE,
     FABRIC_API_BASE
 } from './constants';
 import Util from './util';
 import { Instance } from './instances';
+import MicrosoftStore from './msStore';
+import { writeAccount } from './slices/accounts';
 
 export default class API {
     static async makeRequest(url, options = {}) {
@@ -43,7 +48,60 @@ export default class API {
         return response.data;
     }
 
+    static Modrinth = class ModrinthAPI {
+        static projectCache = [];
+        static SOURCE_NUMBER = 0;
+        
+        static Mods = class Mods {
+            static search(query, options = {}) {
+                return API.Modrinth.search(query, {
+                    projectType: 'mod',
+                    ...options
+                });
+            }
+        }
+
+        static search(query, options = {}) {
+            const { facets = [], versions = [], categories = [], projectType } = options;
+            return API.makeRequest(`${MODRINTH_API_BASE}/search`, {
+                query: {
+                    query,
+                    facets: JSON.stringify([
+                        ...facets,
+                        ...versions.map(ver => [`versions:${ver}`]),
+                        ...categories.map(cat => [`categories:${cat}`]),
+                        ...[projectType && [`project_type:${projectType}`]]
+                    ])
+                }
+            });
+        }
+
+        static async getProject(id) {
+            return this.projectCache[id] ??
+                API.makeRequest(`${MODRINTH_API_BASE}/project/${id}`).then(project => {
+                    this.projectCache[id] = project;
+                    return project;
+                });
+        }
+
+        static getProjectVersion(id) {
+            return API.makeRequest(`${MODRINTH_API_BASE}/version/${id}`);
+        }
+
+        static getProjectVersions(id) {
+            return API.makeRequest(`${MODRINTH_API_BASE}/project/${id}/version`);
+        }
+
+        static getCompatibleVersion(versions) {
+            return versions.find(({ loaders, game_versions }) =>
+                loaders.some(l => l === config.loader.type) && game_versions.some(v => v === config.loader.game)
+            );
+        }
+    }
+
     static CurseForge = class CurseForgeAPI {
+        static SOURCE_NUMBER = 1;
+
         static Modpacks = class Modpacks {
             static get(options = {}) {
                 return API.makeRequest(`${CURSEFORGE_API_BASE}/addon/search`, {
@@ -74,6 +132,12 @@ export default class API {
                         name: versionString,
                         icon: null
                     }))
+                );
+            }
+
+            static getCompatibleVersion({ config }, versions) {
+                return versions.find(({ loaders, game_versions }) =>
+                    loaders.some(l => l === config.loader.type) && game_versions.some(v => v === config.loader.game)
                 );
             }
         };
@@ -134,7 +198,7 @@ export default class API {
                 config.modpack.project = this.id;
                 config.modpack.cachedName = this.name;
 
-                config.modifications = manifest.files.map(mod => [0, mod.projectID, mod.fileID]);
+                config.modifications = manifest.files.map(mod => [0, mod.projectID, mod.fileID, mod.slug]);
                 await instance.saveConfig(config);
 
                 instances.instances.unshift(instance);
@@ -234,9 +298,15 @@ export default class API {
                 );
             }
         }
+
+        static getProject(id) {
+            return API.makeRequest(`${CURSEFORGE_API_BASE}/addons/${id}`);
+        }
     }
 
     static FeedTheBeast = class FTBApi {
+        static SOURCE_NUMBER = 2;
+
         static Modpacks = class Modpacks {
             static modpacks;
 
@@ -422,7 +492,7 @@ export default class API {
                                 await new Promise(resolve => setTimeout(resolve, 5000));
                             try {
                                 const name = file[1], url = file[2], path = file[3];
-                                return Util.downloadFile(encodeURI(url), `${instance.path}/${path}`, true, name) // eslint-disable-next-line
+                                return Util.downloadFile(url, `${instance.path}/${path}`, true, name) // eslint-disable-next-line
                                     .then(_ => {
                                         const text = `Downloading Files (${downloaded += 1}/${config.files.length})`;
                                         instance.setState(text);
@@ -439,35 +509,143 @@ export default class API {
         };
     }
 
-    static Microsoft = class MicrosoftAPI {
-        static accessData;
+    static Internal = class InternalAPI {
+        static SOURCE_NUMBER = 3;
+        static INTERNAL_VERSIONS = [{
+            id: '189forge',
+            files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/6128d13e6b88c104dede042a/Essential-Forge-1.8.9.jar`, filename: 'essential-forge-1.8.9.jar' }],
+            loader: 'forge',
+            version: '1.8.9'
+        }, {
+            id: '1122forge',
+            files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/6128d13e6b88c104dede042a/Essential-Forge-1.12.2.jar`, filename: 'essential-forge-1.12.2.jar' }],
+            loader: 'forge',
+            version: '1.12.2'
+        }, {
+            id: '1171forge',
+            files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/61ead5dcbe87487a21aeaded/Essential-forge_1-17-1.jar`, filename: 'essential-forge-1.17.1.jar' }],
+            loader: 'forge',
+            version: '1.17.1'
+        }, {
+            id: '1171fabric',
+            files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/6128d13e6b88c104dede042a/Essential-Fabric-1.17.1.jar`, filename: 'essential-fabric-1.17.1.jar' }],
+            loader: 'fabric',
+            version: '1.17.1'
+        }, {
+            id: '1181fabric',
+            files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/61b4e1475b559418a4988419/Essential-fabric_1-18-1.jar`, filename: 'essential-fabric-1.18.1.jar' }],
+            loader: 'fabric',
+            version: '1.18.1'
+        }, {
+            id: '1182fabric',
+            files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/62307167d8793b3874ecb4ad/Essential-fabric_1-18-2.jar`, filename: 'essential-fabric-1.18.2.jar' }],
+            loader: 'fabric',
+            version: '1.18.2'
+        }];
+        static INTERNAL_PROJECTS = [{
+            id: 'essential-container',
+            slug: 'essential-container',
+            title: 'Essential',
+            author: 'Spark Universe',
+            source: this.SOURCE_NUMBER,
+            loaders: ['fabric', 'forge'],
+            icon_url: 'essential-bg.svg',
+            website_url: 'https://essential.gg',
+            client_side: 'required',
+            server_side: 'unsupported',
+            description: 'The essential multiplayer mod for Minecraft Java.'
+        }];
 
-        static async getAccessToken() {
-            if(this.accessData instanceof Object)
-                return this.accessData.access_token;
-            const code = await this.getAccessCode();
-            const tokenData = await API.makeRequest("https://mdpkm.voxelified.com/api/v1/oauth/token", {
+        static Mods = class Mods {
+            static async search(query) {
+                return {
+                    hits: API.Internal.INTERNAL_PROJECTS.filter(p =>
+                        !query ||
+                        p.title.toLowerCase().includes(query.toLowerCase()) ||
+                        p.description.toLowerCase().includes(query.toLowerCase())
+                    )
+                };
+            }
+        }
+
+        static async getProject(id) {
+            return this.INTERNAL_PROJECTS.find(p => p.id === id);
+        }
+
+        static async getProjectVersion(id) {
+            return this.INTERNAL_VERSIONS.find(v => v.id === id);
+        }
+
+        static async getProjectVersions() {
+            return this.INTERNAL_VERSIONS;
+        }
+
+        static getCompatibleVersion({ config }, versions) {
+            return versions.find(v => v.loader === config.loader.type && v.version === config.loader.game);
+        }
+    }
+
+    static GitHub = class GitHubAPI {
+        static SOURCE_NUMBER = 4;
+
+        static Mods = class Mods {
+            static async search(query) {
+                return {
+                    hits: []
+                };
+            }
+        }
+
+        static async getProject(id) {
+            return null;
+        }
+
+        static async getProjectVersion(id) {
+            return null;
+        }
+
+        static async getProjectVersions() {
+            return [];
+        }
+
+        static getCompatibleVersion({ config }, versions) {
+            return null;
+        }
+    }
+
+    static Microsoft = class MicrosoftAPI {
+        static async getAccessData(code) {
+            const { scope, expires_in, token_type, access_token, refresh_token } = await API.makeRequest("https://mdpkm.voxelified.com/api/v1/oauth/token", {
                 method: "POST",
                 body: tauri.http.Body.json({
                     code
                 })
             });
-            this.accessData = tokenData;
 
             console.warn("[API:Microsoft]: Signed into Microsoft successfully");
-            return this.accessData.access_token;
+            return {
+                scope,
+                token: access_token,
+                tokenType: token_type,
+                expireDate: Date.now() + expires_in * 1000,
+                refreshToken: refresh_token
+            };
         }
 
         static async refreshAccessToken() {
 
         }
 
-        static async getAccessCode() {
+        static async getAccessCode(select) {
             const url = new URL(MICROSOFT_LOGIN_URL);
             url.searchParams.set('client_id', AZURE_CLIENT_ID);
             url.searchParams.set('response_type', 'code');
             url.searchParams.set('redirect_uri', 'http://localhost:3432');
+            url.searchParams.set('cobrandid', '8058f65d-ce06-4c30-9559-473c9275a65d');
             url.searchParams.set('scope', AZURE_LOGIN_SCOPE);
+
+            if(select)
+                url.searchParams.set('prompt', 'select_account');
 
             tauri.shell.open(url.href);
 
@@ -487,13 +665,7 @@ export default class API {
     }
 
     static XboxLive = class XboxLiveAPI {
-        static xboxData;
-        static xstsData;
-
-        static async getToken() {
-            if(this.xboxData instanceof Object)
-                return this.xboxData.token;
-            const accessToken = await API.Microsoft.getAccessToken();
+        static async getAccessData(accessToken) {
             const xboxData = await API.makeRequest("https://user.auth.xboxlive.com/user/authenticate", {
                 method: "POST",
                 body: tauri.http.Body.json({
@@ -506,21 +678,16 @@ export default class API {
                     TokenType: "JWT"
                 })
             });
-            this.xboxData = {
-                token: xboxData.Token,
-                expires: xboxData.NotAfter,
-                user_hash: xboxData.DisplayClaims.xui[0].uhs
-            };
 
             console.warn("[API:XboxLive]: Signed into Xbox Live successfully");
-            return this.xboxData.token;
+            return {
+                token: xboxData.Token,
+                userHash: xboxData.DisplayClaims.xui[0].uhs,
+                expireDate: new Date(xboxData.NotAfter).getTime()
+            };
         }
 
-        static async getXSTSToken() {
-            if(this.xstsData instanceof Object)
-                return this.xstsData.token;
-
-            const token = await this.getToken();
+        static async getXSTSData(token) {
             const xstsData = await API.makeRequest("https://xsts.auth.xboxlive.com/xsts/authorize", {
                 method: "POST",
                 body: tauri.http.Body.json({
@@ -532,58 +699,146 @@ export default class API {
                     TokenType: "JWT"
                 })
             });
-            this.xstsData = {
-                token: xstsData.Token,
-                expires: xstsData.NotAfter,
-                user_hash: xstsData.DisplayClaims.xui[0].uhs
-            };
+            if(xstsData.XERR)
+                switch(xstsData.XERR) {
+                    case 2148916233:
+                        throw new Error('Xbox Account required, login on minecraft.net to create one.');
+                    case 2148916235:
+                        throw new Error('Xbox Live is unavailable in your region.');
+                    case 2148916236:
+                    case 2148916237:
+                        throw new Error('Adult verification required.');
+                    case 2148916238:
+                        throw new Error('Add Child to Family (This is a bug, please report!)');
+                }
 
             console.warn("[API:XboxLive]: Acquired XSTS Token");
-            return this.xstsData.token;
+            return {
+                token: xstsData.Token,
+                userHash: xstsData.DisplayClaims.xui[0].uhs,
+                expireDate: new Date(xstsData.NotAfter).getTime()
+            };
         }
     }
 
     static Minecraft = class MinecraftAPI {
         static accessData;
 
-        static async getAccount() {
-            const accessToken = await this.getAccessToken();
-            const profile = await API.makeRequest("https://api.minecraftservices.com/minecraft/profile", {
-                headers: {
-                    Authorization: `${this.accessData.token_type} ${accessToken}`
-                }
+        static async getNews() {
+            const data = await API.makeRequest('https://www.minecraft.net/en-us/feeds/community-content/rss', {
+                responseType: 'Text'
             });
+            const xml = create(data).toObject();
+            console.log(xml);
+
             return {
-                profile,
-                accessToken
+                news: xml.rss.channel.item,
+                version: xml.rss['@version'],
+                description: xml.rss.channel.description
             };
         }
 
-        static async getAccessToken() {
-            if(this.accessData instanceof Object)
-                return this.accessData.access_token;
+        static async verifyToken({ token, expireDate }) {
+            if(expireDate >= Date.now()) {
+                throw new Error('Tokens can not yet be refreshed.');
+            }
+            return token;
+        }
 
-            const xstsToken = await API.XboxLive.getXSTSToken();
-            const accessData = await API.makeRequest("https://api.minecraftservices.com/authentication/login_with_xbox", {
+        static async getAccount({ minecraft }) {
+            const { token, tokenType } = minecraft;
+            const { id, name } = await API.makeRequest("https://api.minecraftservices.com/minecraft/profile", {
+                headers: {
+                    Authorization: `${tokenType} ${token}`
+                }
+            });
+            return {
+                name,
+                uuid: id,
+                token
+            };
+        }
+
+        static async getAccessData({ token, userHash }) {
+            const { expires_in, token_type, access_token } = await API.makeRequest("https://api.minecraftservices.com/authentication/login_with_xbox", {
                 method: "POST",
                 body: tauri.http.Body.json({
-                    identityToken: `XBL3.0 x=${API.XboxLive.xstsData.user_hash};${xstsToken}`
+                    identityToken: `XBL3.0 x=${userHash};${token}`
                 })
             });
-            this.accessData = accessData;
 
             console.warn("[API:Minecraft]: Acquired Access Token");
-            return this.accessData.access_token;
+            return {
+                token: access_token,
+                tokenType: token_type,
+                expireDate: new Date().getTime() + expires_in * 1000
+            };
+        }
+
+        static async ownsMinecraft({ minecraft }) {
+            const { token, tokenType } = minecraft;
+            const { items } = await API.makeRequest('https://api.minecraftservices.com/entitlements/mcstore', {
+                headers: {
+                    Authorization: `${tokenType} ${token}`
+                }
+            });
+            if(!items.some(i => i.name === 'product_minecraft') || !items.some(i => i.name === 'game_minecraft'))
+                return false;
+            return items.length > 0;
         }
 
         static async getManifest() {
             return API.makeRequest(MINECRAFT_VERSION_MANIFEST);
+        }
+        
+        static Bedrock = class BedrockAPI {
+            static async getDownloadLink(version) {
+                const versions = await MicrosoftStore.getVersions();
+                const uuid = versions.find(v => v[0] === version)?.[1];
+                if(!uuid)
+                    throw new Error(`Couldn't find ${version}`);
+                
+                return MicrosoftStore.getDownloadLink(uuid, 1);
+            }
+
+            static async getLoaderVersions() {
+                const versions = await MicrosoftStore.getVersions();
+                versions.reverse();
+                return [{
+                    name: "Releases",
+                    data: versions.filter(v => v[2] === 0).map(v => ({ name: v[0], value: v[0] }))
+                }, {
+                    name: "Previews",
+                    data: versions.filter(v => v[2] === 2).map(v => ({ name: v[0], value: v[0] }))
+                }];
+            }
+
+            static async something() {
+                const configLastChanged = await MicrosoftStore.fetchConfigLastChanged();
+                console.log(configLastChanged);
+                const cookie = await MicrosoftStore.fetchCookie(configLastChanged);
+                console.log(cookie);
+                const versions = await MicrosoftStore.checkForVersions(cookie, []);
+                const versions64 = versions.filter(v => v.packageMoniker.includes('x64'));
+                console.log(versions, versions64);
+
+                const { serverId, updateId, packageMoniker } = versions64[0];
+                console.log(serverId, updateId, packageMoniker);
+                const link = await MicrosoftStore.getDownloadLink(updateId, 1);
+                console.log(link);
+            }
         }
     }
 
     static Forge = class ForgeAPI {
         static async getManifest() {
             return API.makeRequest(FORGE_VERSION_MANIFEST);
+        }
+    }
+
+    static Quilt = class QuiltAPI {
+        static async getVersionManifest(game, version) {
+            return API.makeRequest(`${QUILT_API_BASE}/versions/loader/${encodeURIComponent(game)}/${encodeURIComponent(version)}/profile/json`);
         }
     }
 

@@ -1,11 +1,11 @@
 import React from 'react';
 
-import App from '../components/uiblox/App';
-import Main from '../components/uiblox/Main';
-import Link from '../components/uiblox/Link';
-import Header from '../components/uiblox/Header';
-import Navigation from '../components/uiblox/Navigation';
-import Typography from '../components/uiblox/Typography';
+import App from '/src/components/App';
+import Main from '/voxeliface/components/Main';
+import Link from '/voxeliface/components/Link';
+import Header from '/src/components/Header';
+import Navigation from '/voxeliface/components/Navigation';
+import Typography from '/voxeliface/components/Typography';
 
 export default class UhOhPage extends React.Component {
     render() {

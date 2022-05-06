@@ -1,13 +1,13 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import DefaultApp from '/voxeliface/components/App/Tauri';
-
-export default class App extends React.Component {
-    render() {
-        return (
-            <DefaultApp
-                title="mdpkm"
-            {...this.props}/>
-        );
-    }
+export default function App(props) {
+    const theme = useSelector(state => state.settings.theme);
+    return (
+        <DefaultApp
+            title="mdpkm"
+            theme={theme}
+        {...props}/>
+    );
 };
