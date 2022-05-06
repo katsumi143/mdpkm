@@ -53,7 +53,7 @@ export default function Home() {
         setState('Preparing...');
         await Instances.installInstanceWithLoader(name, loader, gameVersion, loaderVersion, setState).catch(err => {
             console.error(err);
-            toast.error(`Instance Installation Failed!\n${err.message}`);
+            toast.error(`Instance Installation Failed!\n${err.message ?? 'Unknown Reason.'}`);
         });
         toast.success(`${name} was created successfully.`);
         setPage('home');
@@ -124,7 +124,6 @@ export default function Home() {
                 Instances.on('changed', () => {
                     setBruh(bruh => bruh + 1);
                     setInstances(Instances.instances);
-                    console.log('instances changed');
                 });
                 setInstances(i);
             });
@@ -218,11 +217,11 @@ export default function Home() {
                             ],
                             "divide:Other",
                             ["import",
-                                "/logo.svg",
+                                "img/icons/brand_default.svg",
                                 [["Import", importInstance]]
                             ],
                             ["import2",
-                                "/logo.svg",
+                                "img/icons/brand_default.svg",
                                 [["Import", () => null, true]]
                             ]
                         ]} backButton={

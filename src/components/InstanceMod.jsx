@@ -14,6 +14,7 @@ export default function InstanceMod({ mod, instance, embedded }) {
     const Instance = Instances.instances[instance];
     const [showEmbedded, setShowEmbedded] = useState(false);
     const toggleEmbedded = () => setShowEmbedded(!showEmbedded);
+    console.log(mod);
     return (
         <Grid direction="vertical">
             <Grid padding="8px" spacing="8px" direction="vertical" background="$secondaryBackground2" borderRadius={8} css={{

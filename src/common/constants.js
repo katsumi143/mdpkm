@@ -37,21 +37,21 @@ export const PlatformNames = {
 };
 export const PlatformIcons = {
     github: 'github-icon.svg',
-    internal: 'logo.svg',
+    internal: 'img/icons/brand_default.svg',
     modrinth: 'modrinth-icon.svg',
     curseforge: 'curseforge-icon.svg',
     feedthebeast: 'ftb-icon.png'
 };
 export const PlatformIndex = [
-    "curseforge",
     "modrinth",
+    "curseforge",
     "feedthebeast",
     "internal", // not a platform!!!
     "github" // mod downloads via releases w/ updating
 ];
 export const ModPlatforms = [
-    "curseforge",
     "modrinth",
+    "curseforge",
     "internal",
     "github"
 ];

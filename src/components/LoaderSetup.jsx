@@ -155,7 +155,7 @@ export default function LoaderSetup({ loader, install, versions, backButton }) {
                     </React.Fragment>
                 }
 
-                {loaderVersions && <Grid margin="16px 0" spacing="4px" direction="vertical">
+                {installState ? null : loaderVersions && <Grid margin="16px 0" spacing="4px" direction="vertical">
                     <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
                         Loader Version
                     </Typography>

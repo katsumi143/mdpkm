@@ -22,6 +22,7 @@ fn main() {
             fs_copy,
             create_zip,
             launch_java,
+            extract_zip,
             fs_read_dir,
             fs_read_file,
             extract_file,
@@ -350,6 +351,38 @@ fn fs_remove_dir(path: String) {
 }
 
 #[tauri::command]
+fn extract_zip(path: String, output: String) {
+    let fname = std::path::Path::new(&*path);
+    let file = std::fs::File::open(&fname).unwrap();
+    let mut archive = zip::ZipArchive::new(file).unwrap();
+    for i in 0..archive.len() {
+        let mut file = archive.by_index(i).unwrap();
+        let concat = format!(
+            "{}/{}",
+            output,
+            file.enclosed_name()
+                .unwrap()
+                .to_str()
+                .unwrap()
+        );
+        let outpath = std::path::Path::new(&concat);
+        println!("{} {}", outpath.display(), file.name());
+
+        if (&*file.name()).ends_with('/') {
+            std::fs::create_dir_all(&*outpath).unwrap();
+        } else {
+            if let Some(p) = outpath.parent() {
+                if !p.exists() {
+                    std::fs::create_dir_all(&p).unwrap();
+                }
+            }
+            let mut outfile = std::fs::File::create(&outpath).unwrap();
+            std::io::copy(&mut file, &mut outfile).unwrap();
+        }
+    }
+}
+
+#[tauri::command]
 fn extract_files(
     zip: String,
     path: String,
@@ -359,7 +392,7 @@ fn extract_files(
     let fname = std::path::Path::new(&*zip);
     let file = std::fs::File::open(&fname).unwrap();
     let mut archive = zip::ZipArchive::new(file).unwrap();
-    for i in 1..archive.len() {
+    for i in 0..archive.len() {
         let mut file = archive.by_index(i).unwrap();
         if !file.name().starts_with(&*path)
             && !file

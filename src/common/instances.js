@@ -72,7 +72,11 @@ export class Instance extends EventEmitter {
         const modCache = await Util.fileExists(modCachePath) ?
             await Util.readTextFile(modCachePath).then(JSON.parse) : {};
 
-        const files = await Util.readDir(`${this.path}/mods`);
+        const modsPath = `${this.path}/mods`;
+        if(!await Util.fileExists(modsPath))
+            return [];
+
+        const files = await Util.readDir(modsPath);
         const mods = [];
         for (const { name, path } of files) {
             if (!name.endsWith(".jar"))
@@ -247,7 +251,6 @@ export class Instance extends EventEmitter {
             };
 
             let libraries = [];
-            console.log(Util.getLoaderType(loader.type));
             if(!Util.getLoaderType(loader.type).includes('vanilla')) {
                 updateToastState(`Modifying Launch Info for ${Util.getLoaderName(loader.type)}`);
                 const loaderManifestPath = `${this.instances.getPath('versions')}/${loader.type}-${loader.game}-${loader.version}/manifest.json`;
@@ -368,7 +371,6 @@ export class Instance extends EventEmitter {
             for (const resource of [...libraries, ...assets])
                 if(!await Util.fileExists(resource.path) || (assetsJson.map_to_resources && resource.resourcesPath && !await Util.fileExists(resource.resourcesPath)))
                     missing.push(resource);
-            console.log(missing);
 
             if(missing.length > 0)
                 await this.instances.downloadLibraries(
@@ -401,7 +403,10 @@ export class Instance extends EventEmitter {
                 Util.modernGetJVMArguments : Util.getJVMArguments;
 
             updateToastState("Authorizing");
-            const ownsMinecraft = await API.Minecraft.ownsMinecraft(account);
+            const ownsMinecraft = await API.Minecraft.ownsMinecraft(account).catch(err => {
+                console.error(err);
+                throw new Error(`Failed to check your entitlements.\n${err.message ?? ''}`);
+            });
             if(!ownsMinecraft)
                 throw new Error('You do not own Minecraft Java Edition');
 
@@ -557,25 +562,41 @@ export class Instance extends EventEmitter {
         this.emit('changed');
 
         const config = await this.getConfig();
+        try {
+            const { slug, title } = await api.getProject(id);
+            const versions = await api.getProjectVersions(id);
+            const version = api.getCompatibleVersion(config, versions);
+            if(!version)
+                throw new Error(`'${title}' is incompatible with '${this.name}'.`);
 
-        const { slug, title } = await api.getProject(id);
-        const versions = await api.getProjectVersions(id);
-        const version = api.getCompatibleVersion(this, versions);
-        const file = version?.files.find(f => f.primary) ?? version?.files[0];
-        if(file)
-            await Util.downloadFilePath(file.url, `${this.path}/mods/${file.filename}`, true);
-        this.downloading.splice(this.downloading.findIndex(d => d.id === id), 1);
-        
-        const mod = await this.readMod(`${this.path}/mods/${file.filename}`);
-        if(mod)
-            this.mods.push({ source: api.SOURCE_NUMBER, ...(mod ?? {
-                id: "error",
-                name: file?.filename ?? title,
-                loader: "error",
-                description: "error",
-                version: "error"
-            })});
-        config.modifications.push([api.SOURCE_NUMBER, id, version.id, slug, mod?.id ?? slug]);
+            const file = version?.files.find(f => f.primary) ?? version?.files[0];
+            if(file)
+                await Util.downloadFilePath(file.url, `${this.path}/mods/${file.filename}`, true);
+
+            this.downloading.splice(this.downloading.findIndex(d => d.id === id), 1);
+            if(!file)
+                throw new Error('File invalid.');
+            
+            const mod = await this.readMod(`${this.path}/mods/${file.filename}`);
+            if(mod)
+                this.mods.push({ source: api.SOURCE_NUMBER, ...(mod ?? {
+                    id: "error",
+                    name: file?.filename ?? title,
+                    loader: "error",
+                    description: "error",
+                    version: "error"
+                })});
+            config.modifications.push([api.SOURCE_NUMBER, id, version.id, slug, mod?.id ?? slug]);
+        } catch(err) {
+            console.error(err);
+            toast.error(`Failed to download ${id}.\n${err.message ?? 'Unknown Reason.'}`);
+            
+            const index = this.downloading.findIndex(d => d.id === id);
+            if(index >= 0)
+                this.downloading.splice(index, 1);
+            this.emit('changed');
+            return false;
+        }
 
         await this.saveConfig(config);
         this.emit('changed');
@@ -933,7 +954,6 @@ class Instances extends EventEmitter {
             return arg;
         };
         const javaPath = await this.java.getExecutable(8, update);
-        console.log(javaPath);
 
         let counter = 1;
         console.log(counter, processors);
@@ -963,7 +983,7 @@ class Instances extends EventEmitter {
                         ...args
                     ],
                     cwd: librariesPath
-                });
+                }).catch(err => {throw err});
                 update(`Processing Forge (${counter}/${processors.length})`);
                 counter++;
             }
@@ -995,15 +1015,20 @@ class Instances extends EventEmitter {
 
         config.modifications = [];
         await instance.saveConfig(config);
-        this.instances.unshift(instance);
 
         if(loaderVersion)
             await Util.createDir(`${instance.path}/mods`);
 
-        setState?.(`Installing ${loader}...`);
-        await this.installLoader(instance, toastId, toastHead);
-        await this.installMinecraft(gameVersion, instance, setState);
+        setState?.(`Installing ${Util.getLoaderName(loader)}...`);
+        try {
+            await this.installLoader(instance, toastId, toastHead);
+            await this.installMinecraft(gameVersion, instance, setState);
+        } catch(err) {
+            console.error(err);
+            return toast.error(`Failed to install ${loader} ${gameVersion}\nInstallation cancelled.`);
+        }
 
+        this.instances.unshift(instance);
         instance.mods = [];
         instance.corrupt = false;
         instance.setState(null);

@@ -66,7 +66,7 @@ export default function InstancePage({ instance }) {
     const deleteInstance = () => Instance.delete();
     const launchInstance = () => Instance.launch(Account).catch(err => {
         console.error(err);
-        toast.error(`Failed to launch ${Instance.name}!\n${err.message}`, { position: 'bottom-right' });
+        toast.error(`Failed to launch ${Instance.name}!\n${err.message ?? 'Unknown Reason.'}`);
 
         Instance.setState();
     });
@@ -332,7 +332,7 @@ export default function InstancePage({ instance }) {
                 tabs={[
                     ["Modifications", 0, !Instance.isModded()],
                     [`Server List (${servers?.length ?? 0})`, 1, !Instance.isJava()],
-                    ["Essential Mod", 2, config.loader.type !== "fabric" && config.loader.type !== "forge"],
+                    ["Essential Mod", 2, config.loader.type !== "fabric" && config.loader.type !== "forge" && config.loader.type !== "quilt"],
                     ["Loader Options", 3],
                     ["Settings", 4],
                     ["Export", 5]

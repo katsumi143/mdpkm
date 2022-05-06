@@ -62,7 +62,7 @@ export default class Util {
         await new invoke("download_file", {
             url: url.replace(" ", "%20"),
             path: outputFile
-        });
+        }).catch(err => {throw new Error(err.stack)});
 
         console.log('Downloaded File');
         return outputFile;
@@ -76,62 +76,45 @@ export default class Util {
         await new invoke("download_file", {
             url: url.replace(" ", "%20"),
             path
-        });
+        }).catch(err => {throw new Error(err.stack)});
 
         console.log('Downloaded File');
         return path;
     }
 
     static async readTextFile(path) {
-        try {
-            return await invoke("fs_read_text_file", { path });
-        } catch (err) {
-            console.error(`Failed to read ${path}`);
-            throw err;
-        }
+        return invoke("fs_read_text_file", { path }).catch(err => {throw new Error(err.stack)});
     }
 
     static async readBinaryFile(path) {
-        try {
-            return await invoke("fs_read_file", { path });
-        } catch (err) {
-            console.error(`Failed to read ${path}`);
-            throw err;
-        }
+        return invoke("fs_read_file", { path }).catch(err => {throw new Error(err.stack)});
     }
 
     static writeFile(path, contents) {
-        return invoke("fs_write_file", { path, contents });
+        return invoke("fs_write_file", { path, contents }).catch(err => {throw new Error(err.stack)});
     }
 
     static writeBinaryFile(path, contents) {
-        return invoke("fs_write_binary", { path, contents });
+        return invoke("fs_write_binary", { path, contents }).catch(err => {throw new Error(err.stack)});
     }
 
     static removeFile(path) {
-        return invoke("fs_remove_file", { path });
+        return invoke("fs_remove_file", { path }).catch(err => {throw new Error(err.stack)});
     }
 
     static fileExists(path) {
-        return invoke("fs_file_exists", { path });
+        return invoke("fs_file_exists", { path }).catch(err => {throw new Error(err.stack)});
     }
 
-    static extractZip(path, outputDir) {
-        return new shell.Command("tar",
-            [
-                '-xf',
-                path,
-                '-C',
-                outputDir
-            ]
-        ).execute();
+    static extractZip(path, output) {
+        return invoke("extract_zip", { path, output }).catch(err => {throw new Error(err.stack)});
     }
 
     static async moveFolder(path, target) {
         return invoke("move_dir", {
             path,
             target
-        }).then(_ => target);
+        }).then(_ => target).catch(err => {throw new Error(err.stack)});
     }
 
     static copyFile(path, target) {
@@ -140,7 +123,7 @@ export default class Util {
                 path,
                 target
             }).then(_ => target)
-        );
+        ).catch(err => {throw new Error(err.stack)});
     }
 
     static extractFile(path, name, output) {
@@ -148,7 +131,7 @@ export default class Util {
             path,
             fileName: name,
             output
-        }).then(_ => output);
+        }).then(_ => output).catch(err => {throw new Error(err.stack)});
     }
 
     static extractFiles(zip, path, output, ignore) {
@@ -157,13 +140,13 @@ export default class Util {
             path,
             output,
             ignore: ignore ?? "~"
-        }).then(_ => output);
+        }).then(_ => output).catch(err => {throw new Error(err.stack)});
     }
 
     static createDirAll(path) {
         return invoke("fs_create_dir_all", {
             path
-        }).then(_ => path);
+        }).then(_ => path).catch(err => {throw new Error(err.stack)});
     }
 
     static readDir(path) {
@@ -171,7 +154,7 @@ export default class Util {
             name: path.split(/\/+|\\+/).reverse()[0],
             path,
             isDir: isDir === 'true'
-        })));
+        }))).catch(err => {throw new Error(err.stack)});
     }
 
     static readDirRecursive(path) {
@@ -179,33 +162,33 @@ export default class Util {
             name: path.split(/\/+|\\+/).reverse()[0],
             path,
             isDir: isDir === 'true'
-        })));
+        }))).catch(err => {throw new Error(err.stack)});
     }
 
     static readFileInZip(path, filePath) {
         return invoke("fs_read_file_in_zip", {
             path, filePath
-        });
+        }).catch(err => {throw new Error(err.stack)});
     }
 
     static readBinaryInZip(path, filePath) {
         return invoke("fs_read_binary_in_zip", {
             path, filePath
-        });
+        }).catch(err => {throw new Error(err.stack)});
     }
 
     static createZip(path, prefix, files) {
         return invoke("create_zip", {
             path, prefix, files
-        });
+        }).catch(err => {throw new Error(err.stack)});
     }
 
     static createDir(path) {
-        return invoke("fs_create_dir_all", { path });
+        return invoke("fs_create_dir_all", { path }).catch(err => {throw new Error(err.stack)});
     }
 
     static removeDir(path) {
-        return invoke("fs_remove_dir", { path });
+        return invoke("fs_remove_dir", { path }).catch(err => {throw new Error(err.stack)});
     }
 
     static mavenToArray(s, nativeString, forceExt) {
@@ -238,7 +221,6 @@ export default class Util {
 
     static async readJarManifest(jarPath, property) {
         const data = await this.readFileInZip(jarPath, "META-INF/MANIFEST.MF");
-        console.log(data);
         for (const value of data.match(/.*:.*/g)) {
             const [prop, val] = value.split(/ *: */);
             if (prop === property)

@@ -57,6 +57,12 @@ export default class API {
                 return API.Modrinth.search(query, {
                     projectType: 'mod',
                     ...options
+                }).then(data => {
+                    data.hits = data.hits.map(mod => {
+                        mod.source = 'Modrinth';
+                        return mod;
+                    });
+                    return data;
                 });
             }
         }
@@ -92,9 +98,9 @@ export default class API {
             return API.makeRequest(`${MODRINTH_API_BASE}/project/${id}/version`);
         }
 
-        static getCompatibleVersion(versions) {
+        static getCompatibleVersion({ loader }, versions) {
             return versions.find(({ loaders, game_versions }) =>
-                loaders.some(l => l === config.loader.type) && game_versions.some(v => v === config.loader.game)
+                loaders.some(l => l === loader.type) && game_versions.some(v => v === loader.game)
             );
         }
     }
@@ -514,32 +520,32 @@ export default class API {
         static INTERNAL_VERSIONS = [{
             id: '189forge',
             files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/6128d13e6b88c104dede042a/Essential-Forge-1.8.9.jar`, filename: 'essential-forge-1.8.9.jar' }],
-            loader: 'forge',
+            loaders: ['forge'],
             version: '1.8.9'
         }, {
             id: '1122forge',
             files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/6128d13e6b88c104dede042a/Essential-Forge-1.12.2.jar`, filename: 'essential-forge-1.12.2.jar' }],
-            loader: 'forge',
+            loaders: ['forge'],
             version: '1.12.2'
         }, {
             id: '1171forge',
             files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/61ead5dcbe87487a21aeaded/Essential-forge_1-17-1.jar`, filename: 'essential-forge-1.17.1.jar' }],
-            loader: 'forge',
+            loaders: ['forge'],
             version: '1.17.1'
         }, {
             id: '1171fabric',
             files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/6128d13e6b88c104dede042a/Essential-Fabric-1.17.1.jar`, filename: 'essential-fabric-1.17.1.jar' }],
-            loader: 'fabric',
+            loaders: ['fabric', 'quilt'],
             version: '1.17.1'
         }, {
             id: '1181fabric',
             files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/61b4e1475b559418a4988419/Essential-fabric_1-18-1.jar`, filename: 'essential-fabric-1.18.1.jar' }],
-            loader: 'fabric',
+            loaders: ['fabric', 'quilt'],
             version: '1.18.1'
         }, {
             id: '1182fabric',
             files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/62307167d8793b3874ecb4ad/Essential-fabric_1-18-2.jar`, filename: 'essential-fabric-1.18.2.jar' }],
-            loader: 'fabric',
+            loaders: ['fabric', 'quilt'],
             version: '1.18.2'
         }];
         static INTERNAL_PROJECTS = [{
@@ -547,8 +553,8 @@ export default class API {
             slug: 'essential-container',
             title: 'Essential',
             author: 'Spark Universe',
-            source: this.SOURCE_NUMBER,
-            loaders: ['fabric', 'forge'],
+            source: 'Internal',
+            loaders: ['fabric', 'forge', 'quilt'],
             icon_url: 'essential-bg.svg',
             website_url: 'https://essential.gg',
             client_side: 'required',
@@ -580,8 +586,8 @@ export default class API {
             return this.INTERNAL_VERSIONS;
         }
 
-        static getCompatibleVersion({ config }, versions) {
-            return versions.find(v => v.loader === config.loader.type && v.version === config.loader.game);
+        static getCompatibleVersion({ loader }, versions) {
+            return versions.find(v => v.loaders.some(l => l === loader.type) && v.version === loader.game);
         }
     }
 

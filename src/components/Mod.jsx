@@ -16,7 +16,7 @@ export default function Mod({ data, instance, featured, recommended }) {
     const { config, downloading } = Instance ?? {};
     const installed = config?.modifications.some(m => m[3] === data?.slug);
     const installing = downloading?.some(d => d.id === (data?.id ?? data?.project_id));
-    const installMod = () => Instance.downloadMod(data?.id ?? data?.project_id, data.source ? API[data.source] :API.Modrinth);
+    const installMod = () => Instance.downloadMod(data?.id ?? data?.project_id, data.source ? API[data.source] : API.Modrinth);
     return (
         <Grid padding="8px" background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
             {data ? <React.Fragment>
