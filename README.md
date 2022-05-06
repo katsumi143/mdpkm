@@ -1,14 +1,39 @@
 <dl>
-  <img src="./public/logo128@x2.png" alt="mdpkm" align="left" width="64" height="64"/>
-  <img src="./public/text.png" alt="mdpkm" align="left" height="64"/>
+  <img src="./public/img/banners/brand_text.svg#gh-dark-mode-only" alt="mdpkm Text" align="left" height="64"/>
+  <img src="./public/img/banners/brand_text_dark.svg#gh-light-mode-only" alt="mdpkm Text" align="left" height="64"/>
 </dl>
 <br/><br/><br/>
 
-**mdpkm is yet another instance manager for Minecraft Java Edition.**</br>
+**mdpkm is yet another instance manager for Minecraft.**</br>
 
 ### ‼️ mdpkm is highly unstable and incomplete, primary use is not recommended.
-heart to gdlauncher, a bunch of code is based off it.
 incomplete description
+
+## Features
+| Feature           | Status                    |
+|-------------------|---------------------------|
+| Modloader Support | ✅                        |
+| Bedrock Edition   | 🚧                        |
+| Mod Installation  | ✅ (Modrinth)             |
+| Mod Management    | ✅                        |
+| Modpacks          | 🚧 Being Revamped         |
+| Exporting         | ✅ (Custom Format)        |
+
+## Loader/Minecraft Support
+| Loader Name       | Status             |
+|-------------------|--------------------|
+| Java Edition      | ✅ (All Versions)  |
+| Bedrock Edition   | 🚧                 |
+| Fabric Loader     | ✅                 |
+| Forge Mod Loader  | ✅                 |
+| Quilt Loader      | ✅ (Beta Software) |
+
+## Translation
+| Language | Translators                                | Status  |
+|----------|--------------------------------------------|---------|
+| English  |                                            | ✅      |
+| Latvian  | [JanisNied](https://twitter.com/JanisNied) | Pending |
+| Russian  | [JanisNied](https://twitter.com/JanisNied) | Pending |
 
 <br/>
 
@@ -18,9 +43,11 @@ Download the latest release [here](https://github.com/Blookerss/goggle-trans/rel
 <dl>
   <img src="https://img.icons8.com/fluency/000000/windows-10.svg" align="left" width="32" height="32"/>
   
-  ## Microsoft Windows (msi)
+  ### Microsoft Windows (msi)
   
   > Windows is fully supported and available.
+  
+  > Officially Tested Versions: 11
   
   > You may need to install the WebView2 Runtime during installation on **Windows 7/8/10**,
   > this comes preinstalled on **Windows 11**.
@@ -28,13 +55,13 @@ Download the latest release [here](https://github.com/Blookerss/goggle-trans/rel
 <dl>
   <img src="https://img.icons8.com/color/32/000000/linux--v1" align="left" width="32" height="32"/>
   
-  ## Linux (deb)
+  ### Linux (deb)
   > Linux is currently unsupported and unavailable.
 </dl>
 <dl>
   <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/MacOS_logo.svg" align="left" width="32" height="32"/>
   
-  ## Apple MacOS (dmg)
+  ### Apple MacOS (dmg)
   > MacOS is currently unsupported and unavailable.
 </dl>
 <br/>
@@ -44,8 +71,7 @@ not yet
 <br/>
 
 ## 🥰 Contributing
-do whatever for now
-i'm quite aware of the gigantic mess that exists right now, i'm trying.
+pull requests.
 <br/>
 
 ## 🔗 Links
