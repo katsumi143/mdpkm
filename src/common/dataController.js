@@ -1,4 +1,4 @@
-import { path } from '@tauri-apps/api';
+import { appDir } from '@tauri-apps/api/path';
 
 import Util from './util';
 
@@ -109,7 +109,7 @@ export class DataController {
 
     static async build() {
         return new Promise(async(resolve, reject) => {
-            const dataPath = path ? await path.appDir() : "";
+            const dataPath = await appDir();
             if(!await Util.fileExists(dataPath))
                 await Util.createDir(dataPath);
             resolve(new DataController(dataPath.replace(/\/+|\\+/g, "/")));

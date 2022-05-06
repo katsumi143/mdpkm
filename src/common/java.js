@@ -1,8 +1,9 @@
+import { arch } from '@tauri-apps/api/os';
+
 import API from './api';
 import Util from './util';
 import DataController from './dataController'
 
-const { os } = window.__TAURI__;
 export default class Java {
     constructor(dataController, dataPath, data) {
         this.dataController = dataController;
@@ -27,7 +28,7 @@ export default class Java {
     async downloadJDK(version, updateToastState) {
         updateToastState(`Downloading OpenJDK ${version}`);
 
-        const arch = await os.arch();
+        const arch = await arch();
         const versions = await API.makeRequest(`https://api.adoptium.net/v3/assets/latest/${version}/hotspot?vendor=eclipse`);
         const latest = versions.find(({ binary }) =>
             binary.os === { win32: "windows" }[Util.platform] &&
