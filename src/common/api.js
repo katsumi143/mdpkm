@@ -23,7 +23,6 @@ import {
 import Util from './util';
 import { Instance } from './instances';
 import MicrosoftStore from './msStore';
-import { writeAccount } from './slices/accounts';
 
 export default class API {
     static async makeRequest(url, options = {}) {
@@ -38,13 +37,15 @@ export default class API {
         }
         const response = await tauri.invoke("web_request", {
             url,
-            body: options.body ?? tauri.http.Body.json({}),
+            body: options.body ?? Body.text(""),
             method: options.method ?? "GET",
             query: options.query ?? {},
             headers: options.headers ?? {},
-            responseType: {JSON: 1, Text: 2, Binary: 3}[options.responseType] ?? 1
-        });
+            responseType: {JSON: 1, Text: 2, Binary: 3}[options.responseType] ?? 2
+        }).catch(err => {throw new Error(err)});
         console.log(url, options, response);
+        if(response.headers['content-type'] === 'application/json')
+            return JSON.parse(response.data);
         return response.data;
     }
 
@@ -623,7 +624,7 @@ export default class API {
         static async getAccessData(code) {
             const { scope, expires_in, token_type, access_token, refresh_token } = await API.makeRequest("https://mdpkm.voxelified.com/api/v1/oauth/token", {
                 method: "POST",
-                body: tauri.http.Body.json({
+                body: Body.json({
                     code
                 })
             });
@@ -638,8 +639,34 @@ export default class API {
             };
         }
 
-        static async refreshAccessToken() {
+        static async refreshAccessToken(refreshToken) {
+            const { scope, expires_in, token_type, access_token, refresh_token } = await API.makeRequest("https://mdpkm.voxelified.com/api/v1/oauth/token", {
+                method: "POST",
+                body: Body.json({
+                    refreshToken
+                })
+            });
 
+            console.warn("[API:Microsoft]: Refreshed Access Token");
+            return {
+                scope,
+                token: access_token,
+                tokenType: token_type,
+                expireDate: Date.now() + expires_in * 1000,
+                refreshToken: refresh_token
+            };
+        }
+
+        static async verifyAccount(account) {
+            account = {...account};
+            const dateNow = Date.now();
+            const { expireDate } = account.microsoft;
+            if(dateNow >= expireDate) {
+                console.warn(`[API:Microsoft]: Token expired, refreshing...`);
+                account.microsoft = await this.getAccessData(account.xbox.token);
+                return [account, true];
+            }
+            return [account, false];
         }
 
         static async getAccessCode(select) {
@@ -674,7 +701,7 @@ export default class API {
         static async getAccessData(accessToken) {
             const xboxData = await API.makeRequest("https://user.auth.xboxlive.com/user/authenticate", {
                 method: "POST",
-                body: tauri.http.Body.json({
+                body: Body.json({
                     Properties: {
                         AuthMethod: "RPS",
                         SiteName: "user.auth.xboxlive.com",
@@ -693,10 +720,28 @@ export default class API {
             };
         }
 
+        static async verifyAccount(account) {
+            account = {...account};
+            const dateNow = Date.now();
+            const { expireDate } = account.xsts;
+            if(dateNow >= expireDate) {
+                console.warn(`[API:XboxLive]: XSTS Token expired, refreshing...`);
+                if(dateNow >= account.xbox.expireDate) {
+                    console.warn(`[API:XboxLive]: Token expired, refreshing...`);
+                    [account] = await API.Microsoft.verifyAccount(account);
+                    account.xbox = await this.getAccessData(account.microsoft.token);
+                }
+                console.log(account);
+                account.xsts = await this.getXSTSData(account.xbox.token);
+                return [account, true];
+            }
+            return [account, false];
+        }
+
         static async getXSTSData(token) {
             const xstsData = await API.makeRequest("https://xsts.auth.xboxlive.com/xsts/authorize", {
                 method: "POST",
-                body: tauri.http.Body.json({
+                body: Body.json({
                     Properties: {
                         SandboxId: "RETAIL",
                         UserTokens: [ token ]
@@ -744,31 +789,33 @@ export default class API {
             };
         }
 
-        static async verifyToken({ token, expireDate }) {
-            if(expireDate >= Date.now()) {
-                throw new Error('Tokens can not yet be refreshed.');
+        static async verifyAccount(account) {
+            account = {...account};
+            const dateNow = Date.now();
+            const { expireDate } = account.minecraft;
+            if(dateNow >= expireDate) {
+                console.warn(`[API:Minecraft]: Token expired, refreshing...`);
+                if(dateNow >= account.xsts.expireDate)
+                    [account] = await API.XboxLive.verifyAccount(account);
+                account.minecraft = await this.getAccessData(account.xsts);
+                return [account, true];
             }
-            return token;
+            return [account, false];
         }
 
-        static async getAccount({ minecraft }) {
-            const { token, tokenType } = minecraft;
+        static async getProfile({ token, tokenType }) {
             const { id, name } = await API.makeRequest("https://api.minecraftservices.com/minecraft/profile", {
                 headers: {
                     Authorization: `${tokenType} ${token}`
                 }
             });
-            return {
-                name,
-                uuid: id,
-                token
-            };
+            return { id, name };
         }
 
         static async getAccessData({ token, userHash }) {
             const { expires_in, token_type, access_token } = await API.makeRequest("https://api.minecraftservices.com/authentication/login_with_xbox", {
                 method: "POST",
-                body: tauri.http.Body.json({
+                body: Body.json({
                     identityToken: `XBL3.0 x=${userHash};${token}`
                 })
             });
@@ -781,8 +828,7 @@ export default class API {
             };
         }
 
-        static async ownsMinecraft({ minecraft }) {
-            const { token, tokenType } = minecraft;
+        static async ownsMinecraft({ token, tokenType }) {
             const { items } = await API.makeRequest('https://api.minecraftservices.com/entitlements/mcstore', {
                 headers: {
                     Authorization: `${tokenType} ${token}`

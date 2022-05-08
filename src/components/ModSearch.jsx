@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 import Mod from './Mod';
 import Grid from '/voxeliface/components/Grid';
@@ -24,7 +25,11 @@ export default function ModSearch({ instance }) {
     const [searching, setSearching] = useState(false);
     const search = api => {
         if(searching)
-            return;
+            return toast.error('Already searching');
+        if(!API[api].Mods) {
+            setMods([]);
+            return toast.error(`API.${api}.Mods is missing`);
+        }
         setSearching(true);
         API[api].Mods.search(query, {
             versions: [config.loader.game],
@@ -32,6 +37,10 @@ export default function ModSearch({ instance }) {
         }).then(({ hits }) => {
             setMods(hits);
             setSearching(false);
+        }).catch(err => {
+            setMods([]);
+            setSearching(false);
+            toast.error(`Mod Search failed!\n${err.message ?? 'Unknown Reason.'}`);
         });
     };
     const setAPI = api => {
@@ -43,10 +52,12 @@ export default function ModSearch({ instance }) {
             setMods();
             setSearching(false);
         }
-        if(!mods)
-            search(api);
         setInstance2(instance);
-    });
+    }, [instance]);
+    useEffect(() => {
+        if(!mods && !searching)
+            search(api);
+    }, [mods]);
     return (
         <Grid spacing="1rem" direction="vertical">
             <Grid justifyContent="space-between">
@@ -79,6 +90,14 @@ export default function ModSearch({ instance }) {
                 {mods && mods.map((mod, index) =>
                     <Mod key={index} data={mod} instance={instance}/>
                 )}
+                <Grid direction="vertical">
+                    <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
+                        There's nothing here!
+                    </Typography>
+                    <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                        Try searching again, or wait a few seconds!
+                    </Typography>
+                </Grid>
             </Grid>
         </Grid>
     );

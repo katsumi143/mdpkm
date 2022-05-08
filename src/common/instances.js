@@ -3,10 +3,8 @@ import { Buffer } from 'buffer/';
 import * as tauri from '@tauri-apps/api';
 import path from 'path-browserify';
 import toast from 'react-hot-toast';
-import { XMLParser } from 'fast-xml-parser';
+import { create } from 'xmlbuilder2';
 
-import lt from 'semver/functions/lt';
-import gt from 'semver/functions/gt';
 import gte from 'semver/functions/gte';
 import coerce from 'semver/functions/coerce';
 
@@ -204,6 +202,8 @@ export class Instance extends EventEmitter {
     async launch(account) {
         if(!account)
             throw new Error('Account Required');
+        this.launchLogs = [];
+
         const toastHead = `Launching ${this.name}`;
         const toastId = toast.loading(`${toastHead}\nPreparing`, {
             className: 'gotham',
@@ -403,12 +403,15 @@ export class Instance extends EventEmitter {
                 Util.modernGetJVMArguments : Util.getJVMArguments;
 
             updateToastState("Authorizing");
-            const ownsMinecraft = await API.Minecraft.ownsMinecraft(account).catch(err => {
+            const ownsMinecraft = await API.Minecraft.ownsMinecraft(account.minecraft).catch(err => {
                 console.error(err);
+                toast.dismiss(toastId);
                 throw new Error(`Failed to check your entitlements.\n${err.message ?? ''}`);
             });
-            if(!ownsMinecraft)
+            if(!ownsMinecraft) {
+                toast.dismiss(toastId);
                 throw new Error('You do not own Minecraft Java Edition');
+            }
 
             updateToastState("Launching Minecraft");
             const jvmArguments = getJvmArguments(
@@ -418,7 +421,7 @@ export class Instance extends EventEmitter {
                 this.instances.getPath('mcAssets'),
                 manifest,
                 {
-                    profile: await API.Minecraft.getAccount(account),
+                    profile: await API.Minecraft.getProfile(account),
                     ...account.minecraft
                 },
                 4000,
@@ -473,8 +476,19 @@ export class Instance extends EventEmitter {
                 updateText("Starting Instance");
             }, 5000);
 
-            const readOut = async(message, object) => {
+            const readOut = async(message, object, type) => {
                 console.log(message, object);
+                this.launchLogs.push(object ? {
+                    text: message,
+                    type: object['log4j:Event']['@level'],
+                    logger: object['log4j:Event']['@logger'],
+                    thread: object['log4j:Event']['@thread'],
+                    timestamp: object['log4j:Event']['@timestamp']
+                } : {
+                    type: {out: 'INFO', err: 'ERROR'}[type],
+                    text: message
+                });
+                this.emit('changed');
                 if(!windowClosed)
                     if(message.startsWith("Loading Minecraft ") && message.includes(" with Fabric "))
                         updateText(`Loading Fabric ${message.split(" ")[6]} for ${message.split(" ")[2]}`);
@@ -498,19 +512,24 @@ export class Instance extends EventEmitter {
 
             let log4jString = "";
             window.listen(logger, async ({ payload }) => {
-                if(/.*<log4j:Event/.test(payload))
-                    log4jString = payload;
-                else if(/.*<log4j:Message>/.test(payload))
-                    log4jString += payload;
-                else if(/.*<\/log4j:Event>/.test(payload) && log4jString) {
-                    const parser = new XMLParser();
-                    const object = parser.parse(log4jString + payload);
+                const [type, ...split] = payload.split(':');
+                const string = split.join(':');
+                if(/ *<log4j:Event/.test(string))
+                    log4jString = string;
+                else if(/ *<\/log4j:Event>/.test(string) && log4jString) {
+                    const object = create(log4jString + string).toObject({
+                        prettyPrint: true
+                    });
                     log4jString = "";
 
-                    const message = object["log4j:Event"]["log4j:Message"];
-                    readOut(message, object);
-                } else if(!/.*<log4j/.test(payload))
-                    readOut(payload);
+                    const message = object['log4j:Event']['log4j:Message']['$'];
+                    if(message)
+                        readOut(message, object, type);
+                    log4jString = "";
+                } else if(log4jString)
+                    log4jString += string;
+                else
+                    readOut(string, null, type);
             });
         } else if(isBedrock) {
             await tauri.invoke('reregister_package', {

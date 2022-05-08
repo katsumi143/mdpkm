@@ -6,6 +6,7 @@ import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Typography from '/voxeliface/components/Typography';
 import DefaultHeader from '/voxeliface/components/Header/Tauri';
+import ImageTransition from './Transition/Image';
 
 import { SKIN_API_BASE } from '../common/constants';
 export default function Header(props) {
@@ -16,8 +17,8 @@ export default function Header(props) {
             {props.image ??
                 <Image
                     src="img/banners/brand_text.svg"
-                    width={104}
-                    height={44}
+                    width={148}
+                    height={48}
                 />
             }
         </>} {...props}>
@@ -37,7 +38,7 @@ export default function Header(props) {
                         {profile.name}
                     </Typography>
                 </Grid>
-                <Image src={`${SKIN_API_BASE}/face/${uuid}`} size={24} borderRadius={4} css={{
+                <ImageTransition src={`${SKIN_API_BASE}/face/${uuid}`} size={24} borderRadius={4} css={{
                     backgroundColor: '$primaryBackground'
                 }}/>
             </Tag>}

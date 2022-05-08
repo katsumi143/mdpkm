@@ -40,31 +40,13 @@ incomplete description
 ## ![Install Image](https://img.icons8.com/fluency/24/000000/software-installer.png) Installation
 All installer files can be found through the [releases](https://github.com/Blookerss/goggle-trans/releases) page.<br/>
 Download the latest release [here](https://github.com/Blookerss/goggle-trans/releases/latest).
-<dl>
-  <img src="https://img.icons8.com/fluency/000000/windows-10.svg" align="left" width="32" height="32"/>
-  
-  ### Microsoft Windows (msi)
-  
-  > Windows is fully supported and available.
-  
-  > Officially Tested Versions: 11
-  
-  > You may need to install the WebView2 Runtime during installation on **Windows 7/8/10**,
-  > this comes preinstalled on **Windows 11**.
-</dl>
-<dl>
-  <img src="https://img.icons8.com/color/32/000000/linux--v1" align="left" width="32" height="32"/>
-  
-  ### Linux (deb)
-  > Linux is currently unsupported and unavailable.
-</dl>
-<dl>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/MacOS_logo.svg" align="left" width="32" height="32"/>
-  
-  ### Apple MacOS (dmg)
-  > MacOS is currently unsupported and unavailable.
-</dl>
-<br/>
+<br/><br/>
+<img src=".github/windows_support.svg" align="left" height="128"/>
+<br/><br/><br/><br/><br/><br/>
+<img src=".github/mac_support.svg" align="left" height="128"/>
+<br/><br/><br/><br/><br/><br/>
+<img src=".github/linux_support.svg" align="left" height="128"/>
+<br/><br/><br/><br/><br/><br/>
 
 ## 🤔 Usage
 not yet

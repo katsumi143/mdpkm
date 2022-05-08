@@ -61,12 +61,16 @@ export default function Settings({ close }) {
                 microsoft: accessData,
                 minecraft: minecraftData
             };
-            account.profile = await API.Minecraft.getAccount(account);
+            account.profile = await API.Minecraft.getProfile(account);
 
             const gameIsOwned = await API.Minecraft.ownsMinecraft(account);
             if(!gameIsOwned) {
                 dispatch(setAddingAccount(false));
                 return toast.error('Failed to add your account.\nYou do not own Minecraft Java Edition.\nXbox Game Pass is unsupported.');
+            }
+            if(accounts.find(a => a.profile.uuid === account.profile.uuid)) {
+                dispatch(setAddingAccount(false));
+                return toast.error(`Failed to add your account.\nYou already have '${account.profile.name} added.'`);
             }
             dispatch(addAccount(account));
             dispatch(saveAccounts());
