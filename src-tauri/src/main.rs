@@ -86,7 +86,6 @@ fn handle_connection(mut stream: TcpStream) -> Option<String> {
     match String::from_utf8(buffer.to_vec()) {
         Ok(request) => {
             let split: Vec<&str> = request.split_whitespace().collect();
-
             if split.len() > 1 {
                 respond_with_success(stream);
                 return Some(split[1].to_string());
@@ -256,10 +255,7 @@ fn create_zip(path: String, prefix: String, files: Vec<String>) {
         let path = std::path::Path::new(&entry);
         let name = path.strip_prefix(std::path::Path::new(&prefix)).unwrap();
 
-        // Write file or directory explicitly
-        // Some unzip tools unzip files with directory paths correctly, some do not!
         if path.is_file() {
-            println!("adding file {:?} as {:?} ...", path, name);
             #[allow(deprecated)]
             zip.start_file_from_path(name, options).unwrap();
             let mut f = std::fs::File::open(path).unwrap();
@@ -268,9 +264,6 @@ fn create_zip(path: String, prefix: String, files: Vec<String>) {
             zip.write_all(&*buffer).unwrap();
             buffer.clear();
         } else if !name.as_os_str().is_empty() {
-            // Only if not root! Avoids path spec / warning
-            // and mapname conversion failed error on unzip
-            println!("adding dir {:?} as {:?} ...", path, name);
             #[allow(deprecated)]
             zip.add_directory_from_path(name, options).unwrap();
         }
@@ -366,7 +359,6 @@ fn extract_zip(path: String, output: String) {
                 .unwrap()
         );
         let outpath = std::path::Path::new(&concat);
-        println!("{} {}", outpath.display(), file.name());
 
         if (&*file.name()).ends_with('/') {
             std::fs::create_dir_all(&*outpath).unwrap();
@@ -394,14 +386,7 @@ fn extract_files(
     let mut archive = zip::ZipArchive::new(file).unwrap();
     for i in 0..archive.len() {
         let mut file = archive.by_index(i).unwrap();
-        if !file.name().starts_with(&*path)
-            && !file
-                .enclosed_name()
-                .unwrap()
-                .to_str()
-                .unwrap()
-                .contains(&*ignore)
-        {
+        if !file.name().starts_with(&*path) && !file.enclosed_name().unwrap().to_str().unwrap().contains(&*ignore) {
             continue;
         }
         let concat = format!(
@@ -448,20 +433,18 @@ fn launch_minecraft(window: tauri::window::Window, cwd: String, java_path: Strin
     let logger = gen_log_str();
     let _logger = logger.clone();
     std::thread::spawn(move || {
-        //TODO: send logs to window
         let child = child_runner::run(&java_path, &args.join(" "), &cwd, Stdio::piped(), Stdio::piped());
         BufReader::new(child.stdout.unwrap())
             .lines()
             .filter_map(| line | line.ok())
             .for_each(| line | {
-                window.emit(&_logger, &line).unwrap();
-                println!("stdout {}", &line);
+                window.emit(&_logger, format!("out:{}", &line)).unwrap();
             });
         BufReader::new(child.stderr.unwrap())
             .lines()
             .filter_map(| line | line.ok())
             .for_each(| line | {
-                println!("stderr {}", &line);
+                window.emit(&_logger, format!("err:{}", &line)).unwrap();
             });
     });
     return logger;
@@ -491,15 +474,7 @@ async fn download_file(url: String, path: String) {
     let directory = &mut path.split("/").collect::<Vec<&str>>();
     directory.pop();
     std::fs::create_dir_all(directory.join("/")).ok();
-    /*let output = Command::new("curl")
-        .creation_flags(0x08000000)
-        .args(["-L", &url, "-o", &path, "--create-dirs"])
-        .output()
-        .expect("failed to execute process");
-    if !output.status.success() {
-        return Err(output.status.code().unwrap().to_string());
-    }
-    return Ok("success");*/
+
     let response = reqwest::get(url).await.unwrap();
     let mut file = std::fs::File::create(path).expect("failed to create file");
     let mut content = std::io::Cursor::new(response.bytes().await.unwrap());
@@ -553,16 +528,6 @@ async fn launch_package(family: String, game_dir: String) {
 #[tauri::command]
 async fn reregister_package(family: String, game_dir: String) {
     let game_path = std::path::Path::new(&game_dir);
-    /*for pkg in PackageManager::new().unwrap().FindPackagesByPackageFamilyName(HSTRING::from(family)).unwrap() {
-        let location = pkg.InstalledLocation().unwrap().Path().unwrap().to_string();
-        if std::path::Path::new(&location).eq(game_path) {
-            return;
-        }
-        PackageManager::new().unwrap().RemovePackageWithOptionsAsync(
-            pkg.Id().unwrap().FullName().unwrap(),
-            RemovalOptions::PreserveApplicationData
-        ).unwrap();
-    }*/
     let manifest_path = game_path.join("AppxManifest.xml");
     let options = RegisterPackageOptions::new().unwrap();
     options.SetDeveloperMode(true).unwrap();
@@ -576,7 +541,6 @@ use tauri::Manager;
 
 #[tauri::command]
 fn send_window_event(window: tauri::window::Window, label: String, event: String, payload: String) {
-    println!("emitting {} to {}", event, label);
     window.get_window(&label).unwrap().emit(&event, payload).unwrap();
 }
 
@@ -589,7 +553,7 @@ mod child_runner {
         let launcher = "powershell.exe";
         let build_string: String;
         {
-            if arguments.trim() == "" { // no arguments (powershell gets confused if you try to execute a program with an empty array as the argument set)
+            if arguments.trim() == "" {
                 build_string = format!(r#"& '{}'"#,program);
             }
             else {
@@ -598,21 +562,18 @@ mod child_runner {
                     arguments_reformatting.push(argument);
                 }
                 let arguments_reformatted = arguments_reformatting.join("','");
-                build_string = format!(r#"& '{}' @('{}')"#,program,arguments_reformatted); // powershell digests: & 'pro gram' @('argument1','argument2') => "pro gram" argument1 argument2
+                build_string = format!(r#"& '{}' @('{}')"#,program,arguments_reformatted);
             }
         }
-        let launch_command: &[String] = &[build_string];
 
-        let child = Command::new(launcher)
+        Command::new(launcher)
             .creation_flags(0x08000000)
             .current_dir(cwd)
-            .args(launch_command)
+            .args(&[build_string])
             .stdout(out)
             .stderr(err)
             .spawn()
-            .expect("failed to run child program");
-
-        child
+            .expect("failed to run child program")
     }
 }
 
@@ -621,15 +582,12 @@ mod child_runner {
     use std::str;
     use std::process::{ Command, Stdio };
     pub fn run (program: &str, arguments: &str, cwd: &str, out: Stdio, err: Stdio) -> std::process::Child {
-        let launcher = "sh";
-        let child = Command::new(launcher)
+        Command::new("sh")
             .current_dir(cwd)
             .arg(arguments)
             .stdout(out)
             .stderr(err)
             .spawn()
-            .expect("failed to run child program");
-
-        child
+            .expect("failed to run child program")
     }
 }
