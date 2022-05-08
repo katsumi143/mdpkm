@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import nbt from 'nbt';
 import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { keyframes } from '@stitches/react';
 import { open } from '@tauri-apps/api/shell';
 import { PlayFill, PencilFill, Trash3Fill, Folder2Open, FolderFill, FileTextFill, ExclamationCircleFill, FileEarmarkZip, Save2 } from 'react-bootstrap-icons';
@@ -28,6 +28,7 @@ import ImageTransition from './Transition/Image';
 import API from '../common/api';
 import Util from '../common/util';
 import Instances from '../common/instances';
+import { saveAccounts, writeAccount } from '../common/slices/accounts';
 import { LoaderData, LoaderNames, LoaderIcons, LoaderStates, PlatformNames, PlatformIndex, DisabledLoaders } from '../common/constants';
 
 export default function InstancePage({ instance }) {
@@ -39,6 +40,8 @@ export default function InstancePage({ instance }) {
 
     const uuid = useSelector(state => state.accounts.selected);
     const Account = useSelector(state => state.accounts.data).find(a => a.profile.uuid === uuid);
+    const dispatch = useDispatch();
+    const logErrors = Instance.launchLogs?.filter(({ type }) => type === 'ERROR');
     const [servers, setServers] = useState();
     const [tabPage, setTabPage] = useState(0);
     const [modPage, setModPage] = useState(0);
@@ -49,6 +52,7 @@ export default function InstancePage({ instance }) {
     const [launchable, setLaunchable] = useState();
     const [exportFiles, setExportFiles] = useState();
     const [deleteValue, setDeleteValue] = useState();
+    const [consoleOpen, setConsoleOpen] = useState(false);
     const [instanceName, setInstanceName] = useState(name);
     const [essentialMod, setEssentialMod] = useState();
     const saveInstanceName = () => {
@@ -64,12 +68,23 @@ export default function InstancePage({ instance }) {
     const viewModpackSite = () => open(modpack.websiteUrl);
     const exportInstance = () => Instances.exportInstance(Instance, exportFiles.filter(e => e.selected).map(e => e.path));
     const deleteInstance = () => Instance.delete();
-    const launchInstance = () => Instance.launch(Account).catch(err => {
-        console.error(err);
-        toast.error(`Failed to launch ${Instance.name}!\n${err.message ?? 'Unknown Reason.'}`);
+    const launchInstance = async() => {
+        const [verifiedAccount, changed] = await toast.promise(API.Minecraft.verifyAccount(Account), {
+            error: 'Failed to verify account',
+            success: 'Minecraft Account verified',
+            loading: `Verifying tokens for '${Account.profile.name}'`
+        });
+        if(changed) {
+            dispatch(writeAccount(verifiedAccount));
+            dispatch(saveAccounts());
+        }
+        Instance.launch(verifiedAccount).catch(err => {
+            console.error(err);
+            toast.error(`Failed to launch ${Instance.name}!\n${err.message ?? 'Unknown Reason.'}`);
 
-        Instance.setState();
-    });
+            Instance.setState();
+        });
+    }
     const getExportFiles = async() => {
         const files = await Util.readDirRecursive(Instance.path);
         setExportFiles(files.map(file => {
@@ -166,7 +181,7 @@ export default function InstancePage({ instance }) {
     });
 
     return (
-        <Grid margin="0 0 0 35%" height="100%" direction="vertical" css={{
+        <Grid width="-webkit-fill-available" margin="0 0 0 35%" height="100%" direction="vertical" css={{
             flex: 1
         }}>
             <Grid margin="1rem" padding="12px" background="$secondaryBackground2" borderRadius="1rem" css={{
@@ -178,7 +193,6 @@ export default function InstancePage({ instance }) {
                         transition: 'transform 250ms cubic-bezier(0.4, 0, 0.2, 1)',
 
                         '&:hover': {
-                            zIndex: 2,
                             transform: 'scale(2) translate(25%, 25%)'
                         }
                     }
@@ -219,6 +233,53 @@ export default function InstancePage({ instance }) {
                     </Typography>
                 </Tag>
             </Grid>
+            {Instance.launchLogs &&
+                <Grid width="auto" height={consoleOpen ? '40%' : 'auto'} margin="0 1rem 1rem" direction="vertical" background="$secondaryBackground2" borderRadius={8} css={{
+                    overflow: 'hidden',
+                    position: 'relative',
+                    maxHeight: '40%',
+                    flexShrink: 0
+                }}>
+                    <Grid padding="14px 10px" css={{
+                        borderBottom: consoleOpen ? '1px solid $secondaryBorder2' : null
+                    }}>
+                        <Typography color="$primaryColor" family="Nunito" lineheight={1}>
+                            Instance Console {logErrors.length && `(${logErrors.length} Errors!)`}
+                        </Typography>
+                    </Grid>
+                    <Button theme="secondary" onClick={() => setConsoleOpen(!consoleOpen)} css={{
+                        top: 8,
+                        right: 8,
+                        position: 'absolute'
+                    }}>
+                        {consoleOpen ? 'Hide' : 'Show'} Console
+                    </Button>
+                    {consoleOpen && <Grid width="100%" direction="vertical" css={{
+                        overflow: 'auto'
+                    }}>
+                        {Instance.launchLogs.map(({ text, type, thread, timestamp }, key) => {
+                            const date = new Date(parseInt(timestamp));
+                            return <Grid key={key} padding="4px 8px" spacing={8}>
+                                <Grid spacing={2} direction="vertical">
+                                    <Typography size=".8rem" color="$secondaryColor" family="Nunito" textalign="start" lineheight={1}>
+                                        [{thread ?? 'main'}/{type}]
+                                    </Typography>
+                                    <Typography size=".8rem" color="$secondaryColor" family="Nunito" textalign="start" lineheight={1}>
+                                        {date.toLocaleTimeString()}
+                                    </Typography>
+                                </Grid>
+                                <Typography color={{
+                                    ERROR: '#d39a9a'
+                                }[type] ?? '$primaryColor'} family="Nunito" textalign="start" lineheight={1} css={{
+                                    height: 'fit-content'
+                                }}>
+                                    {text}
+                                </Typography>
+                            </Grid>
+                        })}
+                    </Grid>}
+                </Grid>
+            }
             {!Account &&
                 <InstanceInfo animate css={{ alignItems: 'start' }}>
                     <ExclamationCircleFill size={24} color="var(--colors-primaryColor)"/>
@@ -233,7 +294,7 @@ export default function InstancePage({ instance }) {
                     </Grid>
                 </InstanceInfo>
             }
-            {versionBanner &&
+            {versionBanner && !Instance.launchLogs &&
                 <InstanceInfo css={{ justifyContent: 'space-between' }}>
                     <Grid spacing=".8rem">
                         <ImageTransition src={versionBanner[1]} size={48} width="8rem" css={{ imageRendering: '-webkit-optimize-contrast', backgroundPosition: 'left' }}/>
@@ -341,11 +402,22 @@ export default function InstancePage({ instance }) {
                     [0, <React.Fragment>
                         <Tabs 
                             tabs={[
-                                [`Installed (${mods?.length ?? 'Loading'})`, 0],
+                                [`Manage Mods`, 0],
                                 ["Mod Search", 1]
                             ]}
                             pages={[
-                                [0, <Grid spacing="8px" padding="1rem" direction="vertical">
+                                [0, <Grid spacing={8} padding="1rem" direction="vertical">
+                                    <Grid spacing={8} alignItems="center" justifyContent="space-between">
+                                        <Typography color="$primaryColor" family="Nunito" css={{ gap: 8 }}>
+                                            Mod Management
+                                            <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito">
+                                                {mods?.length} Installed
+                                            </Typography>
+                                        </Typography>
+                                        <Button theme="secondary" disabled>
+                                            Check for Updates
+                                        </Button>
+                                    </Grid>
                                     {mods ? mods.length === 0 ? <React.Fragment>
                                         <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
                                             There's nothing here!
