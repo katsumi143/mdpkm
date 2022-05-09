@@ -34,6 +34,10 @@ import { LoaderData, LoaderNames, LoaderIcons, LoaderStates, PlatformNames, Plat
 export default function InstancePage({ instance }) {
     const Instance = Instances.instances?.[instance];
     const { mods, name, path, state, config, modpack } = Instance ?? {};
+    const loaderMod = {
+        quilt: ['qsl', 0],
+        fabric: ['fabric-api', 0]
+    }[config?.loader?.type];
     const loaderData = LoaderData[config?.loader.type];
     const versionBanner = (loaderData?.versionBanners ?? LoaderData.java.versionBanners).find(v => v?.[0].test(config.loader.game));
     const loaderDisabled = DisabledLoaders.some(d => d === config?.loader.type);
@@ -45,13 +49,10 @@ export default function InstancePage({ instance }) {
     const [servers, setServers] = useState();
     const [tabPage, setTabPage] = useState(0);
     const [modPage, setModPage] = useState(0);
-    const [loading, setLoading] = useState(false);
     const [renaming, setRenaming] = useState(false);
     const [instance2, setInstance2] = useState();
-    const [optionsMod, setOptionsMod] = useState();
     const [launchable, setLaunchable] = useState();
     const [exportFiles, setExportFiles] = useState();
-    const [deleteValue, setDeleteValue] = useState();
     const [consoleOpen, setConsoleOpen] = useState(false);
     const [instanceName, setInstanceName] = useState(name);
     const [essentialMod, setEssentialMod] = useState();
@@ -118,6 +119,7 @@ export default function InstancePage({ instance }) {
     };
     const getServers = async() => {
         const path = `${Instance.path}/servers.dat`;
+        setServers('loading');
         if(await Util.fileExists(path)) {
             const data = await Util.readBinaryFile(path);
             nbt.parse(data, (error, data) => {
@@ -143,17 +145,6 @@ export default function InstancePage({ instance }) {
             getServers();
     }, [servers]);
     useEffect(() => {
-        const loaderMods = {
-            quilt: ['qsl', API.Modrinth],
-            fabric: ['fabric-api', API.Modrinth]
-        };
-        if(!optionsMod && loaderMods[config.loader.type]) {
-            const loaderMod = loaderMods[config.loader.type];
-            if(loaderMod)
-                loaderMod[1].getProject(loaderMod[0]).then(setOptionsMod);
-        }
-    }, [optionsMod]);
-    useEffect(() => {
         if(!essentialMod)
             API.Internal.getProject('essential-container').then(setEssentialMod);
     }, [essentialMod]);
@@ -172,9 +163,7 @@ export default function InstancePage({ instance }) {
         if(instance2 !== instance) {
             setServers();
             setLaunchable();
-            setOptionsMod();
             setExportFiles();
-            setDeleteValue();
             setInstanceName(name);
         }
         setInstance2(instance);
@@ -447,12 +436,12 @@ export default function InstancePage({ instance }) {
                                 <Button disabled>
                                     Add a Server
                                 </Button>
-                                <Button theme="secondary" onClick={getServers} disabled={loading}>
-                                    {loading && <BasicSpinner size={16}/>}
+                                <Button theme="secondary" onClick={getServers} disabled={servers === 'loading'}>
+                                    {servers === 'loading' && <BasicSpinner size={16}/>}
                                     Refresh
                                 </Button>
                             </Grid>
-                            {servers?.map((server, index) =>
+                            {Array.isArray(servers) && servers?.map((server, index) =>
                                 <Grid key={index} padding="8px" spacing="12px" alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{
                                     position: 'relative'
                                 }}>
@@ -524,8 +513,8 @@ export default function InstancePage({ instance }) {
                                 </Typography>
                             </Grid>
                         </Grid>
-                        {Instance.isModded() &&
-                            <Mod data={optionsMod} instance={instance} recommended/>
+                        {loaderMod &&
+                            <Mod id={loaderMod[0]} api={loaderMod[1]} instance={instance} recommended/>
                         }
                     </Grid>],
                     [4, <Grid spacing="1rem" direction="vertical">
