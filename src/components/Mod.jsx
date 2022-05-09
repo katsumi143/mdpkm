@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { open } from '@tauri-apps/api/shell';
 import { Download, BoxArrowUpRight } from 'react-bootstrap-icons';
 
@@ -11,16 +11,26 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
 import Instances from '../common/instances';
-export default function Mod({ data, instance, featured, recommended }) {
+import { PlatformIndex, PlatformNames } from '../common/constants';
+export default function Mod({ id, api, data, instance, featured, recommended }) {
     const Instance = Instances.instances?.[instance];
+    const [mod, setMod] = useState(data);
     const { config, downloading } = Instance ?? {};
-    const installed = config?.modifications.some(m => m[3] === data?.slug);
-    const installing = downloading?.some(d => d.id === (data?.id ?? data?.project_id));
-    const installMod = () => Instance.downloadMod(data?.id ?? data?.project_id, data.source ? API[data.source] : API.Modrinth);
+    const installed = config?.modifications.some(m => m[3] === mod?.slug);
+    const installing = downloading?.some(d => d.id === (mod?.id ?? mod?.project_id));
+    const installMod = () => Instance.downloadMod(mod?.id ?? mod?.project_id, mod.source ? API[mod.source] : API.Modrinth);
+    useEffect(() => {
+        if(id && typeof api === 'number' && !mod)
+            API[PlatformNames[PlatformIndex[api]]].getProject(id).then(setMod);
+    }, [id, api]);
+    useEffect(() => {
+        if(data && data !== mod)
+            setMod(data);
+    }, [data]);
     return (
         <Grid padding="8px" background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
-            {data ? <React.Fragment>
-                <Image src={data.icon_url} size={48} borderRadius={4} css={{
+            {mod ? <React.Fragment>
+                <Image src={mod.icon_url} size={48} borderRadius={4} css={{
                     minWidth: '48px',
                     transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
 
@@ -33,10 +43,10 @@ export default function Mod({ data, instance, featured, recommended }) {
                 }}/>
                 <Grid margin="4px 0 0 12px" padding="2px 0" spacing="2px" direction="vertical">
                     <Typography size="1.1rem" color="$primaryColor" family="Nunito" lineheight={1}>
-                        {data.title}
-                        {data.author && 
+                        {mod.title}
+                        {mod.author && 
                             <Typography size=".7rem" color="$secondaryColor" margin="4px 0 0 4px" lineheight={1}>
-                                by {data.author}
+                                by {mod.author}
                             </Typography>
                         }
                         {featured &&
@@ -51,39 +61,39 @@ export default function Mod({ data, instance, featured, recommended }) {
                         }
                     </Typography>
                     <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
-                        {(data.client_side !== "unsupported" &&
-                            data.server_side !== "unsupported") ?
+                        {(mod.client_side !== "unsupported" &&
+                            mod.server_side !== "unsupported") ?
                             "Universal mod"
-                        : data.client_side !== "unsupported" ?
+                        : mod.client_side !== "unsupported" ?
                             "Client mod" :
-                            data.server_side !== "unsupported" ?
+                            mod.server_side !== "unsupported" ?
                             "Server mod" : "Unavailable"
                         }
                     </Typography>
                     <Typography size=".9rem" color="$secondaryColor" family="Nunito" textalign="left">
-                        {data.description}
+                        {mod.description}
                     </Typography>
                 </Grid>
                 <Grid spacing="8px" css={{
                     right: 8,
                     position: 'absolute'
                 }}>
-                    {data.downloads && <Typography color="$primaryColor" margin="0 8px 0 0" family="Nunito">
-                        {Intl.NumberFormat('en-us', {}).format(data.downloads)}
+                    {mod.downloads && <Typography color="$primaryColor" margin="0 8px 0 0" family="Nunito">
+                        {Intl.NumberFormat('en-us', {}).format(mod.downloads)}
                         <Typography size=".8rem" text="Downloads" color="$secondaryColor" family="Nunito" margin="0 0 0 4px"/>
                     </Typography>}
-                    {data.website_url &&
-                        <Button theme="secondary" onClick={() => open(data.website_url)}>
+                    {mod.website_url &&
+                        <Button theme="secondary" onClick={() => open(mod.website_url)}>
                             <BoxArrowUpRight/>
                             Visit Website
                         </Button>
                     }
                     {typeof instance === "number" &&
-                        <Button onClick={installMod} disabled={data.client_side === "unsupported" || installing || downloading.length > 0 || installed}>
+                        <Button onClick={installMod} disabled={mod.client_side === "unsupported" || installing || downloading.length > 0 || installed}>
                             {(installing || downloading.length > 0) ?
                                 <BasicSpinner size={16}/> : <Download/>
                             }
-                            {installed ? "Installed" : data.client_side === "unsupported" ? "Unavailable" :
+                            {installed ? "Installed" : mod.client_side === "unsupported" ? "Unavailable" :
                                 installing ? "Installing" : downloading.length > 0 ? "Waiting" : "Install"
                             }
                         </Button>
