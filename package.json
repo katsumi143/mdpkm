@@ -41,7 +41,6 @@
         "react-text-transition": "^1.3.0",
         "redux": "^4.2.0",
         "semver": "^7.3.7",
-        "vite-plugin-compress": "^2.1.1",
         "xmlbuilder2": "^3.0.2"
     }
 }
