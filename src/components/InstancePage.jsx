@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { keyframes } from '@stitches/react';
 import { open } from '@tauri-apps/api/shell';
 import { useSelector, useDispatch } from 'react-redux';
-import { PlayFill, PencilFill, Trash3Fill, Folder2Open, FolderFill, FileTextFill, CloudArrowDown, ArrowClockwise, ExclamationCircleFill, FileEarmarkZip, Save2 } from 'react-bootstrap-icons';
+import { PlusLg, PlayFill, PencilFill, Trash3Fill, Folder2Open, FolderFill, FileTextFill, CloudArrowDown, ArrowClockwise, ExclamationCircleFill, FileEarmarkZip, Save2 } from 'react-bootstrap-icons';
 
 import Mod from './Mod';
 import Tag from './Tag';
@@ -52,6 +52,7 @@ export default function InstancePage({ instance }) {
     const [modPage, setModPage] = useState(0);
     const [renaming, setRenaming] = useState(false);
     const [instance2, setInstance2] = useState();
+    const [modFilter, setModFilter] = useState('');
     const [launchable, setLaunchable] = useState();
     const [exportFiles, setExportFiles] = useState();
     const [consoleOpen, setConsoleOpen] = useState(false);
@@ -405,20 +406,25 @@ export default function InstancePage({ instance }) {
                             ]}
                             pages={[
                                 [0, <Grid spacing={8} padding="1rem" direction="vertical">
-                                    <Grid spacing={8} alignItems="center" justifyContent="space-between">
-                                        <Typography color="$primaryColor" family="Nunito" css={{ gap: 8 }}>
-                                            Mod Management
-                                            <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito">
-                                                {mods?.length} Installed
+                                    <Grid spacing={8} justifyContent="space-between">
+                                        <Grid direction="vertical">
+                                            <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                                                Mod Management
                                             </Typography>
-                                        </Typography>
+                                            <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito">
+                                                <TextTransition inline>
+                                                    {mods === 'loading' ? 'Loading...' :`${mods?.length} Installed`}
+                                                </TextTransition>
+                                            </Typography>
+                                        </Grid>
                                         <Grid spacing={8}>
+                                            <TextInput width={144} value={modFilter} onChange={({ target }) => setModFilter(target.value)} placeholder="Search mods"/>
                                             <Button theme="secondary" onClick={refreshMods} disabled={mods === 'loading'}>
-                                                {mods === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise/>}
+                                                {mods === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
                                                 Refresh
                                             </Button>
-                                            <Button theme="secondary" disabled>
-                                                <CloudArrowDown/>
+                                            <Button theme="accent" disabled>
+                                                <CloudArrowDown size={14}/>
                                                 Get Updates
                                             </Button>
                                         </Grid>
@@ -432,7 +438,7 @@ export default function InstancePage({ instance }) {
                                                 Find some mods via the <b>Mod Search</b> tab!
                                             </Typography>
                                         </React.Fragment>
-                                    : mods.sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id)).map((mod, index) =>
+                                    : mods.filter(({ id, name }) => (id ?? name).toLowerCase().includes(modFilter)).sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id)).map((mod, index) =>
                                         <InstanceMod key={index} mod={mod} instance={instance}/>
                                     ) : <Spinner/>}
                                 </Grid>, true, true],
@@ -451,10 +457,11 @@ export default function InstancePage({ instance }) {
                         <Grid spacing="8px" direction="vertical">
                             <Grid spacing="8px">
                                 <Button disabled>
+                                    <PlusLg/>
                                     Add a Server
                                 </Button>
                                 <Button theme="secondary" onClick={getServers} disabled={servers === 'loading'}>
-                                    {servers === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise/>}
+                                    {servers === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
                                     Refresh
                                 </Button>
                             </Grid>
