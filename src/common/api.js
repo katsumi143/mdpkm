@@ -24,26 +24,11 @@ import {
 import Util from './util';
 import { Instance } from './instances';
 import MicrosoftStore from './msStore';
+import { MDPKM_API, ESSENTIAL_SITE, XSTS_AUTH_BASE, XBOX_AUTH_BASE, MINECRAFT_NEWS_RSS, MINECRAFT_SERVICES_API } from './constants';
 
 export default class API {
     static async makeRequest(url, options = {}) {
         console.log(options.method ?? "GET", url, options);
-        /*if(options.query) {
-            const keys = Object.keys(options.query);
-            for (let i = 0; i < keys.length; i++) {
-                const value = options.query[keys[i]];
-                if (value !== undefined)
-                    options.query[keys[i]] = value.toString();
-            }
-        }
-        const response = await tauri.invoke("web_request", {
-            url,
-            body: options.body ?? Body.text(""),
-            method: options.method ?? "GET",
-            query: options.query ?? {},
-            headers: options.headers ?? {},
-            responseType: {JSON: 1, Text: 2, Binary: 3}[options.responseType] ?? 2
-        }).catch(err => {throw new Error(err)});*/
         const response = await fetch(url, {
             body: options.body ?? Body.text(''),
             query: options.query ?? {},
@@ -565,7 +550,7 @@ export default class API {
             source: 'Internal',
             loaders: ['fabric', 'forge', 'quilt'],
             icon_url: 'essential-bg.svg',
-            website_url: 'https://essential.gg',
+            website_url: ESSENTIAL_SITE,
             client_side: 'required',
             server_side: 'unsupported',
             description: 'The essential multiplayer mod for Minecraft Java.'
@@ -630,7 +615,7 @@ export default class API {
 
     static Microsoft = class MicrosoftAPI {
         static async getAccessData(code) {
-            const { scope, expires_in, token_type, access_token, refresh_token } = await API.makeRequest("https://mdpkm.voxelified.com/api/v1/oauth/token", {
+            const { scope, expires_in, token_type, access_token, refresh_token } = await API.makeRequest(`${MDPKM_API}/v1/oauth/token`, {
                 method: "POST",
                 body: Body.json({
                     code
@@ -648,7 +633,7 @@ export default class API {
         }
 
         static async refreshAccessToken(refreshToken) {
-            const { scope, expires_in, token_type, access_token, refresh_token } = await API.makeRequest("https://mdpkm.voxelified.com/api/v1/oauth/token", {
+            const { scope, expires_in, token_type, access_token, refresh_token } = await API.makeRequest(`${MDPKM_API}/v1/oauth/token`, {
                 method: "POST",
                 body: Body.json({
                     refreshToken
@@ -709,7 +694,7 @@ export default class API {
         static async getAccessData(accessToken) {
             if(!accessToken)
                 throw new Error('Invalid Access Token');
-            const xboxData = await API.makeRequest("https://user.auth.xboxlive.com/user/authenticate", {
+            const xboxData = await API.makeRequest(`${XBOX_AUTH_BASE}/user/authenticate`, {
                 method: "POST",
                 body: Body.json({
                     Properties: {
@@ -751,7 +736,7 @@ export default class API {
         static async getXSTSData(token) {
             if(!token)
                 throw new Error('Invalid Token');
-            const xstsData = await API.makeRequest("https://xsts.auth.xboxlive.com/xsts/authorize", {
+            const xstsData = await API.makeRequest(`${XSTS_AUTH_BASE}/xsts/authorize`, {
                 method: "POST",
                 body: Body.json({
                     Properties: {
@@ -788,7 +773,7 @@ export default class API {
         static accessData;
 
         static async getNews() {
-            const data = await API.makeRequest('https://www.minecraft.net/en-us/feeds/community-content/rss', {
+            const data = await API.makeRequest(MINECRAFT_NEWS_RSS, {
                 responseType: 'Text'
             });
             const xml = create(data).toObject();
@@ -818,7 +803,7 @@ export default class API {
         static async getProfile({ token, tokenType }) {
             if(!token) throw new Error('Invalid Access Token');
             if(!tokenType) throw new Error('Invalid Token Type');
-            const { id, name } = await API.makeRequest("https://api.minecraftservices.com/minecraft/profile", {
+            const { id, name } = await API.makeRequest(`${MINECRAFT_SERVICES_API}/minecraft/profile`, {
                 headers: {
                     Authorization: `${tokenType} ${token}`
                 }
@@ -829,7 +814,7 @@ export default class API {
         static async getAccessData({ token, userHash }) {
             if(!token) throw new Error('Invalid Access Token');
             if(!userHash) throw new Error('Invalid User Hash');
-            const { expires_in, token_type, access_token } = await API.makeRequest("https://api.minecraftservices.com/authentication/login_with_xbox", {
+            const { expires_in, token_type, access_token } = await API.makeRequest(`${MINECRAFT_SERVICES_API}/authentication/login_with_xbox`, {
                 method: "POST",
                 body: Body.json({
                     identityToken: `XBL3.0 x=${userHash};${token}`
@@ -847,7 +832,7 @@ export default class API {
         static async ownsMinecraft({ token, tokenType }) {
             if(!token) throw new Error('Invalid Access Token');
             if(!tokenType) throw new Error('Invalid Token Type');
-            const { items } = await API.makeRequest('https://api.minecraftservices.com/entitlements/mcstore', {
+            const { items } = await API.makeRequest(`${MINECRAFT_SERVICES_API}/entitlements/mcstore`, {
                 headers: {
                     Authorization: `${tokenType} ${token}`
                 }

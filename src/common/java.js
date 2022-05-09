@@ -2,7 +2,8 @@ import { arch } from '@tauri-apps/api/os';
 
 import API from './api';
 import Util from './util';
-import DataController from './dataController'
+import { ADOPTIUM_API } from './constants';
+import DataController from './dataController';
 
 export default class Java {
     constructor(dataController, dataPath, data) {
@@ -26,14 +27,14 @@ export default class Java {
     }
 
     async downloadJDK(version, updateToastState) {
-        updateToastState(`Downloading OpenJDK ${version}`);
+        updateToastState(`Downloading OpenJDK ${version} (will take a while)`);
 
-        const arch = await arch();
-        const versions = await API.makeRequest(`https://api.adoptium.net/v3/assets/latest/${version}/hotspot?vendor=eclipse`);
+        const arc = await arch();
+        const versions = await API.makeRequest(`${ADOPTIUM_API}/assets/latest/${version}/hotspot?vendor=eclipse`);
         const latest = versions.find(({ binary }) =>
-            binary.os === { win32: "windows" }[Util.platform] &&
+            binary.os === { win32: 'windows' }[Util.platform] &&
             binary.image_type === 'jdk' &&
-            binary.architecture === this.convertArch(arch)
+            binary.architecture === this.convertArch(arc)
         );
 
         const zipPath = await Util.downloadFile(latest.binary.package.link, `${this.dataController.dataPath}/temp`);

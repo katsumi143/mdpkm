@@ -11,10 +11,18 @@ export const QUILT_API_BASE = "https://meta.quiltmc.org/v3";
 export const FABRIC_API_BASE = "https://meta.fabricmc.net/v2";
 export const MOJANG_API_BASE = "https://authserver.mojang.com";
 
+export const MDPKM_API = "https://mdpkm.voxelified.com/api";
 export const FTB_API_BASE = "https://api.modpacks.ch";
+export const ADOPTIUM_API = "https://api.adoptium.net/v3";
 export const ESSENTIAL_BASE = "https://cdn.essential.gg/mods";
+export const XBOX_AUTH_BASE = "https://user.auth.xboxlive.com";
+export const XSTS_AUTH_BASE = "https://xsts.auth.xboxlive.com";
 export const MODRINTH_API_BASE = "https://api.modrinth.com/v2";
 export const CURSEFORGE_API_BASE = "https://addons-ecs.forgesvc.net/api/v2";
+export const MINECRAFT_SERVICES_API = "https://api.minecraftservices.com";
+
+export const ESSENTIAL_SITE = "https://essential.gg";
+export const MINECRAFT_NEWS_RSS = "https://www.minecraft.net/en-us/feeds/community-content/rss";
 
 export const FORGE_MAVEN_BASE_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge";
 
