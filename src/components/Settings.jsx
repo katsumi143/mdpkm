@@ -2,7 +2,7 @@ import React from 'react';
 import toast from 'react-hot-toast';
 import { appWindow } from '@tauri-apps/api/window';
 import { useSelector, useDispatch } from 'react-redux';
-import { Gear, ArrowLeft } from 'react-bootstrap-icons';
+import { Gear, PlusLg, ArrowLeft } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -95,13 +95,15 @@ export default function Settings({ close }) {
                             <Select value={account} onChange={({ target }) => changeAccount(target.value)} placeholder="Select an Account">
                                 {accounts.map(({ profile }, key) =>
                                     <SelectItem key={key} value={profile.uuid}>
-                                        <Image src={`${SKIN_API_BASE}/face/${profile.uuid}`} size={32}/>
+                                        <Image src={`${SKIN_API_BASE}/face/${profile.uuid}`} size={24}/>
                                         {profile.name}
                                     </SelectItem>
                                 )}
                             </Select>
-                            <Button theme="secondary" onClick={addNewAccount} disabled={addingAccount} css={{ minWidth: 210 }}>
-                                {addingAccount && <BasicSpinner size={16}/>}
+                            <Button theme="accent" onClick={addNewAccount} disabled={addingAccount} css={{
+                                minWidth: 196
+                            }}>
+                                {addingAccount ? <BasicSpinner size={16}/> : <PlusLg/>}
                                 Add New Account
                             </Button>
                         </Setting>
