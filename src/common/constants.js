@@ -78,10 +78,11 @@ export const LoaderTypes = {
     bedrock: 'bedrock-vanilla'
 };
 export const LoaderStates = {
+    forge: 'Disabled',
     quilt: 'Beta Software',
     bedrock: 'Disabled'
 };
-export const DisabledLoaders = ['bedrock'];
+export const DisabledLoaders = ['forge', 'bedrock'];
 
 const JavaBanners = [
     [/^22w13oneblockatatime/, 'img/banners/minecraft_franchise.svg', 'One Block at a Time (April Fools)'],
