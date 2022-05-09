@@ -421,7 +421,7 @@ export class Instance extends EventEmitter {
                 this.instances.getPath('mcAssets'),
                 manifest,
                 {
-                    profile: await API.Minecraft.getProfile(account),
+                    profile: await API.Minecraft.getProfile(account.minecraft),
                     ...account.minecraft
                 },
                 4000,

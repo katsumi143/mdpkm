@@ -289,7 +289,7 @@ export default class Util {
                         val = manifest.assets;
                         break;
                     case 'auth_uuid':
-                        val = account.profile.uuid;
+                        val = account.profile.id;
                         break;
                     case 'auth_access_token':
                         val = hideAccessToken ? this.hiddenToken : account.token;
@@ -337,6 +337,7 @@ export default class Util {
         hideAccessToken,
         jvmOptions = []
     ) {
+        console.log(account);
         const argDiscovery = /\${*(.*)}/;
         // eslint-disable-next-line no-template-curly-in-string
         let args = manifest.arguments.jvm.filter(value => !Util.skipLibrary(value));
@@ -385,7 +386,7 @@ export default class Util {
                             val = manifest.assets;
                             break;
                         case 'auth_uuid':
-                            val = account.profile.uuid;
+                            val = account.profile.id;
                             break;
                         case 'auth_access_token':
                             val = hideAccessToken ? this.hiddenToken : account.token;
