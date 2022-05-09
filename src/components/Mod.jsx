@@ -78,10 +78,12 @@ export default function Mod({ id, api, data, instance, featured, recommended }) 
                     right: 8,
                     position: 'absolute'
                 }}>
-                    {mod.downloads && <Typography color="$primaryColor" margin="0 8px 0 0" family="Nunito">
-                        {Intl.NumberFormat('en-us', {}).format(mod.downloads)}
-                        <Typography size=".8rem" text="Downloads" color="$secondaryColor" family="Nunito" margin="0 0 0 4px"/>
-                    </Typography>}
+                    {typeof mod.downloads === 'number' &&
+                        <Typography color="$primaryColor" margin="0 8px 0 0" family="Nunito">
+                            {Intl.NumberFormat('en-us', {}).format(mod.downloads)}
+                            <Typography size=".8rem" text="Downloads" color="$secondaryColor" family="Nunito" margin="0 0 0 4px"/>
+                        </Typography>
+                    }
                     {mod.website_url &&
                         <Button theme="secondary" onClick={() => open(mod.website_url)}>
                             <BoxArrowUpRight/>
