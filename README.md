@@ -5,8 +5,6 @@
 <br/><br/><br/>
 
 **mdpkm is yet another instance manager for Minecraft.**</br>
-
-### ‼️ mdpkm is highly unstable and incomplete, primary use is not recommended.
 incomplete description
 
 ## Features
@@ -38,8 +36,8 @@ incomplete description
 <br/>
 
 ## ![Install Image](https://img.icons8.com/fluency/24/000000/software-installer.png) Installation
-All installer files can be found through the [releases](https://github.com/Blookerss/goggle-trans/releases) page.<br/>
-Download the latest release [here](https://github.com/Blookerss/goggle-trans/releases/latest).
+All installer files can be found through the [releases](https://github.com/Blookerss/mdpkm/releases) page.<br/>
+Download the latest release [here](https://github.com/Blookerss/mdpkm/releases/latest).
 <br/><br/>
 <img src=".github/windows_support.svg" align="left" height="128"/>
 <br/><br/><br/><br/><br/><br/>
