@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import nbt from 'nbt';
 import toast from 'react-hot-toast';
-import { useSelector, useDispatch } from 'react-redux';
 import { keyframes } from '@stitches/react';
 import { open } from '@tauri-apps/api/shell';
-import { PlayFill, PencilFill, Trash3Fill, Folder2Open, FolderFill, FileTextFill, ExclamationCircleFill, FileEarmarkZip, Save2 } from 'react-bootstrap-icons';
+import { useSelector, useDispatch } from 'react-redux';
+import { PlayFill, PencilFill, Trash3Fill, Folder2Open, FolderFill, FileTextFill, CloudArrowDown, ArrowClockwise, ExclamationCircleFill, FileEarmarkZip, Save2 } from 'react-bootstrap-icons';
 
 import Mod from './Mod';
 import Tag from './Tag';
@@ -33,7 +33,7 @@ import { LoaderData, LoaderNames, LoaderIcons, LoaderStates, PlatformNames, Plat
 
 export default function InstancePage({ instance }) {
     const Instance = Instances.instances?.[instance];
-    const { mods, name, path, state, config, modpack } = Instance ?? {};
+    const { name, path, state, config, modpack } = Instance ?? {};
     const loaderMod = {
         quilt: ['qsl', 0],
         fabric: ['fabric-api', 0]
@@ -46,6 +46,7 @@ export default function InstancePage({ instance }) {
     const Account = useSelector(state => state.accounts.data).find(a => a.profile.uuid === uuid);
     const dispatch = useDispatch();
     const logErrors = Instance.launchLogs?.filter(({ type }) => type === 'ERROR');
+    const [mods, setMods] = useState(Instance.mods);
     const [servers, setServers] = useState();
     const [tabPage, setTabPage] = useState(0);
     const [modPage, setModPage] = useState(0);
@@ -117,6 +118,13 @@ export default function InstancePage({ instance }) {
             return file;
         }));
     };
+    const refreshMods = () => {
+        setMods('loading');
+        Instance.getMods().then(mods => {
+            Instance.mods = mods;
+            setMods(mods);
+        });
+    };
     const getServers = async() => {
         const path = `${Instance.path}/servers.dat`;
         setServers('loading');
@@ -161,6 +169,7 @@ export default function InstancePage({ instance }) {
     }, [launchable]);
     useEffect(() => {
         if(instance2 !== instance) {
+            setMods(Instance.mods);
             setServers();
             setLaunchable();
             setExportFiles();
@@ -403,21 +412,29 @@ export default function InstancePage({ instance }) {
                                                 {mods?.length} Installed
                                             </Typography>
                                         </Typography>
-                                        <Button theme="secondary" disabled>
-                                            Check for Updates
-                                        </Button>
+                                        <Grid spacing={8}>
+                                            <Button theme="secondary" onClick={refreshMods} disabled={mods === 'loading'}>
+                                                {mods === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise/>}
+                                                Refresh
+                                            </Button>
+                                            <Button theme="secondary" disabled>
+                                                <CloudArrowDown/>
+                                                Get Updates
+                                            </Button>
+                                        </Grid>
                                     </Grid>
-                                    {mods ? mods.length === 0 ? <React.Fragment>
-                                        <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
-                                            There's nothing here!
-                                        </Typography>
-                                        <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" textalign="start" lineheight={0} css={{ display: 'block' }}>
-                                            Find some mods via the <b>Mod Search</b> tab!
-                                        </Typography>
-                                    </React.Fragment> : mods.sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id)).map((mod, index) =>
-                                            <InstanceMod key={index} mod={mod} instance={instance}/>
-                                        )
-                                    : <Spinner/>}
+                                    {Array.isArray(mods) ? mods.length === 0 ?
+                                        <React.Fragment>
+                                            <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
+                                                There's nothing here!
+                                            </Typography>
+                                            <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" textalign="start" lineheight={0} css={{ display: 'block' }}>
+                                                Find some mods via the <b>Mod Search</b> tab!
+                                            </Typography>
+                                        </React.Fragment>
+                                    : mods.sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id)).map((mod, index) =>
+                                        <InstanceMod key={index} mod={mod} instance={instance}/>
+                                    ) : <Spinner/>}
                                 </Grid>, true, true],
                                 [1, <React.Fragment>
                                     <ModSearch instance={instance}/>
@@ -437,7 +454,7 @@ export default function InstancePage({ instance }) {
                                     Add a Server
                                 </Button>
                                 <Button theme="secondary" onClick={getServers} disabled={servers === 'loading'}>
-                                    {servers === 'loading' && <BasicSpinner size={16}/>}
+                                    {servers === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise/>}
                                     Refresh
                                 </Button>
                             </Grid>
