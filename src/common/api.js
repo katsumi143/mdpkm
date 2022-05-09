@@ -1,7 +1,8 @@
 import pMap from 'p-map-browser';
 import { create } from 'xmlbuilder2';
-import * as tauri from '@tauri-apps/api';
-import { Body } from '@tauri-apps/api/http';
+import { open } from '@tauri-apps/api/shell';
+import { Body, fetch } from '@tauri-apps/api/http';
+import { getCurrent } from '@tauri-apps/api/window';
 
 import {
     AZURE_CLIENT_ID,
@@ -27,7 +28,7 @@ import MicrosoftStore from './msStore';
 export default class API {
     static async makeRequest(url, options = {}) {
         console.log(options.method ?? "GET", url, options);
-        if(options.query) {
+        /*if(options.query) {
             const keys = Object.keys(options.query);
             for (let i = 0; i < keys.length; i++) {
                 const value = options.query[keys[i]];
@@ -42,7 +43,14 @@ export default class API {
             query: options.query ?? {},
             headers: options.headers ?? {},
             responseType: {JSON: 1, Text: 2, Binary: 3}[options.responseType] ?? 2
-        }).catch(err => {throw new Error(err)});
+        }).catch(err => {throw new Error(err)});*/
+        const response = await fetch(url, {
+            body: options.body ?? Body.text(''),
+            query: options.query ?? {},
+            method: options.method ?? 'get',
+            headers: options.headers ?? {},
+            responseType: {JSON: 1, Text: 2, Binary: 3}[options.responseType] ?? 2
+        });
         console.log(url, options, response);
         if(response.headers['content-type'] === 'application/json')
             return JSON.parse(response.data);
@@ -680,9 +688,9 @@ export default class API {
             if(select)
                 url.searchParams.set('prompt', 'select_account');
 
-            tauri.shell.open(url.href);
+            open(url.href);
 
-            const window = tauri.window.getCurrent();
+            const window = getCurrent();
             window.emit('msAuth');
             
             return new Promise((resolve, reject) => {
@@ -699,6 +707,8 @@ export default class API {
 
     static XboxLive = class XboxLiveAPI {
         static async getAccessData(accessToken) {
+            if(!accessToken)
+                throw new Error('Invalid Access Token');
             const xboxData = await API.makeRequest("https://user.auth.xboxlive.com/user/authenticate", {
                 method: "POST",
                 body: Body.json({
@@ -739,6 +749,8 @@ export default class API {
         }
 
         static async getXSTSData(token) {
+            if(!token)
+                throw new Error('Invalid Token');
             const xstsData = await API.makeRequest("https://xsts.auth.xboxlive.com/xsts/authorize", {
                 method: "POST",
                 body: Body.json({
@@ -804,6 +816,8 @@ export default class API {
         }
 
         static async getProfile({ token, tokenType }) {
+            if(!token) throw new Error('Invalid Access Token');
+            if(!tokenType) throw new Error('Invalid Token Type');
             const { id, name } = await API.makeRequest("https://api.minecraftservices.com/minecraft/profile", {
                 headers: {
                     Authorization: `${tokenType} ${token}`
@@ -813,6 +827,8 @@ export default class API {
         }
 
         static async getAccessData({ token, userHash }) {
+            if(!token) throw new Error('Invalid Access Token');
+            if(!userHash) throw new Error('Invalid User Hash');
             const { expires_in, token_type, access_token } = await API.makeRequest("https://api.minecraftservices.com/authentication/login_with_xbox", {
                 method: "POST",
                 body: Body.json({
@@ -829,6 +845,8 @@ export default class API {
         }
 
         static async ownsMinecraft({ token, tokenType }) {
+            if(!token) throw new Error('Invalid Access Token');
+            if(!tokenType) throw new Error('Invalid Token Type');
             const { items } = await API.makeRequest('https://api.minecraftservices.com/entitlements/mcstore', {
                 headers: {
                     Authorization: `${tokenType} ${token}`

@@ -17,7 +17,7 @@ fn main() {
             });
         })
         .invoke_handler(tauri::generate_handler![
-            web_request,
+            //web_request,
             move_dir,
             fs_copy,
             create_zip,
@@ -49,7 +49,7 @@ fn main() {
 }
 
 use std::collections::HashMap;
-use tauri::api::http::{ClientBuilder, HttpRequestBuilder, ResponseData, ResponseType};
+//use tauri::api::http::{ClientBuilder, HttpRequestBuilder, ResponseData, ResponseType};
 
 use std::net::{ TcpListener, TcpStream };
 use std::io::{ Write, Read };
@@ -119,7 +119,7 @@ fn respond_with_error(error_message: String, mut stream: TcpStream) {
     stream.flush().unwrap();
 }
 
-#[tauri::command]
+/*#[tauri::command]
 async fn web_request(
     url: String,
     method: String,
@@ -129,8 +129,9 @@ async fn web_request(
     response_type: ResponseType,
 ) -> Result<ResponseData, String> {
     let method = &method;
+    let headers2 = reqwest::header::HeaderMap::new();
     let client = ClientBuilder::new().max_redirections(3).build().unwrap();
-    let mut request_builder = HttpRequestBuilder::new(method, url).unwrap().query(query).headers(headers);
+    let mut request_builder = HttpRequestBuilder::new(method, url).unwrap().query(query).headers(headers2);
 
     if method.eq("POST") {
         request_builder = request_builder.body(body);
@@ -144,7 +145,7 @@ async fn web_request(
         return Err("response read failed".into());
     }
     return Err("web request failed".into());
-}
+}*/
 
 #[tauri::command]
 fn move_dir(path: String, target: String) {

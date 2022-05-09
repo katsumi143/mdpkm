@@ -18,7 +18,7 @@ export const CURSEFORGE_API_BASE = "https://addons-ecs.forgesvc.net/api/v2";
 
 export const FORGE_MAVEN_BASE_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge";
 
-export const MINECRAFT_RESOURCES_URL = "http://resources.download.minecraft.net";
+export const MINECRAFT_RESOURCES_URL = "https://resources.download.minecraft.net";
 export const MINECRAFT_LIBRARIES_URL = "https://libraries.minecraft.net";
 
 export const APINames = {
