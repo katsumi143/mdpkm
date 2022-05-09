@@ -42,8 +42,7 @@ export default function InstancePage({ instance }) {
     const versionBanner = (loaderData?.versionBanners ?? LoaderData.java.versionBanners).find(v => v?.[0].test(config.loader.game));
     const loaderDisabled = DisabledLoaders.some(d => d === config?.loader.type);
 
-    const uuid = useSelector(state => state.accounts.selected);
-    const Account = useSelector(state => state.accounts.data).find(a => a.profile.uuid === uuid);
+    const Account = Util.getAccount(useSelector);
     const dispatch = useDispatch();
     const logErrors = Instance.launchLogs?.filter(({ type }) => type === 'ERROR');
     const [mods, setMods] = useState(Instance.mods);
@@ -56,8 +55,9 @@ export default function InstancePage({ instance }) {
     const [launchable, setLaunchable] = useState();
     const [exportFiles, setExportFiles] = useState();
     const [consoleOpen, setConsoleOpen] = useState(false);
-    const [instanceName, setInstanceName] = useState(name);
     const [essentialMod, setEssentialMod] = useState();
+    const [serverFilter, setServerFilter] = useState('');
+    const [instanceName, setInstanceName] = useState(name);
     const saveInstanceName = () => {
         setRenaming(true);
         const originalPath = path.toString();
@@ -438,7 +438,7 @@ export default function InstancePage({ instance }) {
                                                 Find some mods via the <b>Mod Search</b> tab!
                                             </Typography>
                                         </React.Fragment>
-                                    : mods.filter(({ id, name }) => (id ?? name).toLowerCase().includes(modFilter)).sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id)).map((mod, index) =>
+                                    : mods.filter(({ id, name }) => id?.toLowerCase().includes(modFilter) || name?.toLowerCase().includes(modFilter)).sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id)).map((mod, index) =>
                                         <InstanceMod key={index} mod={mod} instance={instance}/>
                                     ) : <Spinner/>}
                                 </Grid>, true, true],
@@ -455,17 +455,30 @@ export default function InstancePage({ instance }) {
                     </React.Fragment>, true],
                     [1, <React.Fragment>
                         <Grid spacing="8px" direction="vertical">
-                            <Grid spacing="8px">
-                                <Button disabled>
-                                    <PlusLg/>
-                                    Add a Server
-                                </Button>
-                                <Button theme="secondary" onClick={getServers} disabled={servers === 'loading'}>
-                                    {servers === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
-                                    Refresh
-                                </Button>
+                            <Grid margin="4px 0" spacing={8} justifyContent="space-between">
+                                <Grid direction="vertical">
+                                    <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                                        Server Management
+                                    </Typography>
+                                    <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito">
+                                        <TextTransition inline>
+                                            {servers === 'loading' ? 'Loading...' :`${servers?.length} Servers`}
+                                        </TextTransition>
+                                    </Typography>
+                                </Grid>
+                                <Grid spacing={8}>
+                                    <TextInput width={144} value={serverFilter} onChange={({ target }) => setServerFilter(target.value)} placeholder="Search servers"/>
+                                    <Button theme="secondary" onClick={getServers} disabled={servers === 'loading'}>
+                                        {servers === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
+                                        Refresh
+                                    </Button>
+                                    <Button theme="accent" disabled>
+                                        <PlusLg/>
+                                        Add Server
+                                    </Button>
+                                </Grid>
                             </Grid>
-                            {Array.isArray(servers) && servers?.map((server, index) =>
+                            {Array.isArray(servers) && servers?.filter(({ ip, name }) => ip?.value.toLowerCase().includes(serverFilter) || name?.value.toLowerCase().includes(serverFilter)).map((server, index) =>
                                 <Grid key={index} padding="8px" spacing="12px" alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{
                                     position: 'relative'
                                 }}>

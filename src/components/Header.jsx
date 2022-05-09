@@ -11,7 +11,7 @@ import ImageTransition from './Transition/Image';
 import { SKIN_API_BASE } from '../common/constants';
 export default function Header(props) {
     const uuid = useSelector(state => state.accounts.selected);
-    const { profile } = useSelector(state => state.accounts.data).find(a => a.profile.uuid === uuid) ?? {};
+    const { profile } = useSelector(state => state.accounts.data).find(a => a.profile.id === uuid) ?? {};
     return (
         <DefaultHeader brand={<>
             {props.image ??

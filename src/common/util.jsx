@@ -599,6 +599,11 @@ export default class Util {
         return LoaderTypes[type] ?? 'unknown';
     }
 
+    static getAccount(useSelector) {
+        const uuid = useSelector(state => state.accounts.selected);
+        return useSelector(state => state.accounts.data).find(({ profile }) => (profile.id ?? profile.uuid) === uuid)
+    }
+
     static getInstanceIcon(instance, size, hideLoader, props) {
         size = `${size ?? "48"}px`;
         return <Image src={

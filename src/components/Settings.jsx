@@ -61,9 +61,9 @@ export default function Settings({ close }) {
                 microsoft: accessData,
                 minecraft: minecraftData
             };
-            account.profile = await API.Minecraft.getProfile(account);
+            account.profile = await API.Minecraft.getProfile(minecraftData);
 
-            const gameIsOwned = await API.Minecraft.ownsMinecraft(account);
+            const gameIsOwned = await API.Minecraft.ownsMinecraft(minecraftData);
             if(!gameIsOwned) {
                 dispatch(setAddingAccount(false));
                 return toast.error('Failed to add your account.\nYou do not own Minecraft Java Edition.\nXbox Game Pass is unsupported.');
@@ -94,8 +94,8 @@ export default function Settings({ close }) {
                         <Setting name="general.account">
                             <Select value={account} onChange={({ target }) => changeAccount(target.value)} placeholder="Select an Account">
                                 {accounts.map(({ profile }, key) =>
-                                    <SelectItem key={key} value={profile.uuid}>
-                                        <Image src={`${SKIN_API_BASE}/face/${profile.uuid}`} size={24}/>
+                                    <SelectItem key={key} value={profile.id}>
+                                        <Image src={`${SKIN_API_BASE}/face/${profile.id}`} size={24}/>
                                         {profile.name}
                                     </SelectItem>
                                 )}

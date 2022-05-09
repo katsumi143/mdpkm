@@ -36,9 +36,9 @@ export default class API {
             headers: options.headers ?? {},
             responseType: {JSON: 1, Text: 2, Binary: 3}[options.responseType] ?? 2
         });
+        if(response.headers['content-type'].includes('application/json'))
+            response.data = JSON.parse(response.data);
         console.log(url, options, response);
-        if(response.headers['content-type'] === 'application/json')
-            return JSON.parse(response.data);
         return response.data;
     }
 
@@ -693,7 +693,7 @@ export default class API {
     static XboxLive = class XboxLiveAPI {
         static async getAccessData(accessToken) {
             if(!accessToken)
-                throw new Error('Invalid Access Token');
+                throw new Error(`Invalid Access Token: ${accessToken}`);
             const xboxData = await API.makeRequest(`${XBOX_AUTH_BASE}/user/authenticate`, {
                 method: "POST",
                 body: Body.json({
@@ -735,7 +735,7 @@ export default class API {
 
         static async getXSTSData(token) {
             if(!token)
-                throw new Error('Invalid Token');
+                throw new Error(`Invalid Access Token: ${token}`);
             const xstsData = await API.makeRequest(`${XSTS_AUTH_BASE}/xsts/authorize`, {
                 method: "POST",
                 body: Body.json({
@@ -747,8 +747,10 @@ export default class API {
                     TokenType: "JWT"
                 })
             });
-            if(xstsData.XERR)
-                switch(xstsData.XERR) {
+            if(xstsData.XErr) {
+                if(xstsData.Redirect)
+                    open(xstsData.Redirect);
+                switch(xstsData.XErr) {
                     case 2148916233:
                         throw new Error('Xbox Account required, login on minecraft.net to create one.');
                     case 2148916235:
@@ -759,6 +761,7 @@ export default class API {
                     case 2148916238:
                         throw new Error('Add Child to Family (This is a bug, please report!)');
                 }
+            }
 
             console.warn("[API:XboxLive]: Acquired XSTS Token");
             return {
@@ -801,8 +804,8 @@ export default class API {
         }
 
         static async getProfile({ token, tokenType }) {
-            if(!token) throw new Error('Invalid Access Token');
-            if(!tokenType) throw new Error('Invalid Token Type');
+            if(!token) throw new Error(`Invalid Access Token: ${token}`);
+            if(!tokenType) throw new Error(`Invalid Token Type: ${tokenType}`);
             const { id, name } = await API.makeRequest(`${MINECRAFT_SERVICES_API}/minecraft/profile`, {
                 headers: {
                     Authorization: `${tokenType} ${token}`
@@ -812,8 +815,8 @@ export default class API {
         }
 
         static async getAccessData({ token, userHash }) {
-            if(!token) throw new Error('Invalid Access Token');
-            if(!userHash) throw new Error('Invalid User Hash');
+            if(!token) throw new Error(`Invalid Access Token: ${token}`);
+            if(!userHash) throw new Error(`Invalid User Hash: ${userHash}`);
             const { expires_in, token_type, access_token } = await API.makeRequest(`${MINECRAFT_SERVICES_API}/authentication/login_with_xbox`, {
                 method: "POST",
                 body: Body.json({
@@ -830,8 +833,8 @@ export default class API {
         }
 
         static async ownsMinecraft({ token, tokenType }) {
-            if(!token) throw new Error('Invalid Access Token');
-            if(!tokenType) throw new Error('Invalid Token Type');
+            if(!token) throw new Error(`Invalid Access Token: ${token}`);
+            if(!tokenType) throw new Error(`Invalid Token Type: ${tokenType}`);
             const { items } = await API.makeRequest(`${MINECRAFT_SERVICES_API}/entitlements/mcstore`, {
                 headers: {
                     Authorization: `${tokenType} ${token}`
