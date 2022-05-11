@@ -25,6 +25,7 @@
         "@reduxjs/toolkit": "^1.8.1",
         "@stitches/react": "^1.2.6",
         "@tauri-apps/api": "1.0.0-rc.5",
+        "@yannichock/react-minecraft-skin-viewer": "^1.0.8",
         "buffer": "latest",
         "ky": "^0.29.0",
         "nbt": "^0.8.1",
