@@ -21,8 +21,8 @@ export default function InstanceList({ selected, onSelect, instances }) {
         setLoading(false);
     };
     return <React.Fragment>
-        <Grid width="100%" padding="1rem 1.2rem" alignItems="center" background="$secondaryBackground" justifyContent="space-between">
-            <Grid spacing="4px" direction="vertical">
+        <Grid width="100%" padding=".8rem 1.2rem" alignItems="center" background="$secondaryBackground" justifyContent="space-between">
+            <Grid spacing={4} direction="vertical">
                 <Typography color="$primaryColor" weight={600} family="Nunito" lineheight={1}>
                     <Archive size={20} style={{ marginRight: 12 }}/>
                     Your Instances
@@ -31,7 +31,7 @@ export default function InstanceList({ selected, onSelect, instances }) {
                     </Typography>
                 </Typography>
                 {typeof Instances.state === "string" &&
-                    <Typography size=".8rem" color="#ffffff80" weight={400} family="Nunito" lineheight={1}>
+                    <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
                         {Instances.state}
                     </Typography>
                 }

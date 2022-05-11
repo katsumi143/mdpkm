@@ -68,7 +68,7 @@ export default function Settings({ close }) {
                 dispatch(setAddingAccount(false));
                 return toast.error('Failed to add your account.\nYou do not own Minecraft Java Edition.\nXbox Game Pass is unsupported.');
             }
-            if(accounts.find(a => a.profile.uuid === account.profile.uuid)) {
+            if(accounts.find(a => a.profile.id === account.profile.id)) {
                 dispatch(setAddingAccount(false));
                 return toast.error(`Failed to add your account.\nYou already have '${account.profile.name} added.'`);
             }
@@ -95,7 +95,7 @@ export default function Settings({ close }) {
                             <Select value={account} onChange={({ target }) => changeAccount(target.value)} placeholder="Select an Account">
                                 {accounts.map(({ profile }, key) =>
                                     <SelectItem key={key} value={profile.id}>
-                                        <Image src={`${SKIN_API_BASE}/face/${profile.id}`} size={24}/>
+                                        <Image src={`${SKIN_API_BASE}/face/${profile.id}`} size={24} borderRadius={4}/>
                                         {profile.name}
                                     </SelectItem>
                                 )}
