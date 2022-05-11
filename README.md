@@ -4,10 +4,9 @@
 </dl>
 <br/><br/><br/>
 
-**mdpkm is yet another instance manager for Minecraft.**</br>
-
-### ‼️ mdpkm is highly unstable and incomplete, primary use is not recommended.
-incomplete description
+**mdpkm is yet another instance manager for Minecraft Java *and Bedrock!***</br>
+Minecraft instance management made a bit easier, plus a few other useful things too.</br>
+mdpkm is a work-in-progress project, issues should be expected, plus a bit of annoyances!
 
 ## Features
 | Feature           | Status                    |
@@ -22,7 +21,7 @@ incomplete description
 ## Loader/Minecraft Support
 | Loader Name       | Status             |
 |-------------------|--------------------|
-| Java Edition      | ✅ (All Versions)  |
+| Java Edition      | ✅                 |
 | Bedrock Edition   | 🚧                 |
 | Fabric Loader     | ✅                 |
 | Forge Mod Loader  | ✅                 |
@@ -38,14 +37,12 @@ incomplete description
 <br/>
 
 ## ![Install Image](https://img.icons8.com/fluency/24/000000/software-installer.png) Installation
-All installer files can be found through the [releases](https://github.com/Blookerss/goggle-trans/releases) page.<br/>
-Download the latest release [here](https://github.com/Blookerss/goggle-trans/releases/latest).
+All installer files can be found through the [releases](https://github.com/Blookerss/mdpkm/releases) page.<br/>
+Download the latest release [here](https://github.com/Blookerss/mdpkm/releases/latest).
 <br/><br/>
 <img src=".github/windows_support.svg" align="left" height="128"/>
 <br/><br/><br/><br/><br/><br/>
 <img src=".github/mac_support.svg" align="left" height="128"/>
-<br/><br/><br/><br/><br/><br/>
-<img src=".github/linux_support.svg" align="left" height="128"/>
 <br/><br/><br/><br/><br/><br/>
 
 ## 🤔 Usage
@@ -57,19 +54,12 @@ pull requests.
 <br/>
 
 ## 🔗 Links
-
-there arent any
+<dl>
+  <img src="https://img.icons8.com/fluency/48/000000/documents.png" align="left" width="24" height="24"/>
+  
+  [Documentation](https://blookers.gitbook.io/mdpkm/)
+</dl>
 
 ## 🧩 Building Blocks
-<dl>
-  <a href="https://tauri.studio"><img src="https://tauri.studio/en/img/tauri_with_wordmark_dark.svg" align="left" height="32" alt="Tauri"/></a>
-  
-  [![Github Icon](https://img.icons8.com/fluency/32/000000/github.svg)](https://github.com/tauri-apps)
-</dl>
-<dl>
-  
-  [![React Icon](https://img.icons8.com/cute-clipart/32/000000/react-native.svg)](https://reactjs.org)
-  [![Github Icon](https://img.icons8.com/fluency/32/000000/github.svg)](https://github.com/tauri-apps)
-</dl>
-incomplete
+**This list is incomplete!**
 <br/>
