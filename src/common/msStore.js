@@ -24,7 +24,7 @@ export default class MicrosoftStore {
     }
 
     static async getVersions() {
-        return API.makeRequest(this.VERSIONS_URL).catch(err => {
+        return API.makeRequest(this.VERSIONS_URL, { forceJson: true }).catch(err => {
             console.warn(err);
             return API.makeRequest(this.VERSIONS_URL2);
         });

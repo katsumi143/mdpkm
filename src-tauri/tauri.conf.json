@@ -73,6 +73,7 @@
                     "https://api.adoptium.net/*",
                     "https://api.modrinth.com/*",
                     "https://meta.quiltmc.org/*",
+                    "https://mrarm.io/r/w10-vdb",
                     "https://meta.fabricmc.net/*",
                     "https://cdn.essential.gg/mods/*",
                     "https://authserver.mojang.com/*",
@@ -82,6 +83,7 @@
                     "https://api.minecraftservices.com/*",
                     "https://addons-ecs.forgesvc.net/api/*",
                     "https://user.auth.xboxlive.com/user/authenticate",
+                    "https://raw.githubusercontent.com/MCMrARM/mc-w10-versiondb/*.json",
                     "https://files.minecraftforge.net/net/minecraftforge/forge/maven-metadata.json"
                 ],
                 "request": true

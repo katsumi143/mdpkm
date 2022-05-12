@@ -36,7 +36,7 @@ export default class API {
             headers: options.headers ?? {},
             responseType: {JSON: 1, Text: 2, Binary: 3}[options.responseType] ?? 2
         });
-        if(response.headers['content-type'].includes('application/json'))
+        if(response.headers['content-type'].includes('application/json') || options.forceJson)
             response.data = JSON.parse(response.data);
         console.log(url, options, response);
         return response.data;
