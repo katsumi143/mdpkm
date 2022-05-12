@@ -115,46 +115,51 @@ export default function Home() {
     };
     const chooseLoader = async loader => {
         setLoading(true);
-        if(loader === "bedrock") {
-            const versions = await API.Minecraft.Bedrock.getLoaderVersions();
-            console.log(versions);
+        try {
+            if(loader === "bedrock") {
+                const versions = await API.Minecraft.Bedrock.getLoaderVersions();
+                console.log(versions);
 
-            setLoaderVersions(versions);
-        } else {
-            const versions = await API.makeRequest({
-                java: MINECRAFT_VERSION_MANIFEST,
-                forge: FORGE_VERSION_MANIFEST,
-                quilt: `${QUILT_API_BASE}/versions`,
-                fabric: `${FABRIC_API_BASE}/versions`
-            }[loader]).then(versions => {
-                switch(loader) {
-                    case "java":
-                        return [{
-                            name: "Releases",
-                            data: versions.versions.filter(v => v.type == "release").map(v => ({ name: v.id, value: v.id }))
-                        }, {
-                            name: "Snapshots",
-                            data: versions.versions.filter(v => v.type == "snapshot").map(v => ({ name: v.id, value: v.id }))
-                        }, {
-                            name: "Old Betas",
-                            data: versions.versions.filter(v => v.type == "old_beta").map(v => ({ name: v.id, value: v.id }))
-                        }, {
-                            name: "Old Alphas",
-                            data: versions.versions.filter(v => v.type == "old_alpha").map(v => ({ name: v.id, value: v.id }))
-                        }];
-                    case "quilt":
-                    case "fabric":
-                        const fabric = {};
-                        const loaders = versions.loader.map(y => y.version);
-                        for (const { version } of versions.game) {
-                            fabric[version] = loaders;
-                        }
-                        return fabric;
-                    default:
-                        return versions;
-                }
-            });
-            setLoaderVersions(versions);
+                setLoaderVersions(versions);
+            } else {
+                const versions = await API.makeRequest({
+                    java: MINECRAFT_VERSION_MANIFEST,
+                    forge: FORGE_VERSION_MANIFEST,
+                    quilt: `${QUILT_API_BASE}/versions`,
+                    fabric: `${FABRIC_API_BASE}/versions`
+                }[loader]).then(versions => {
+                    switch(loader) {
+                        case "java":
+                            return [{
+                                name: "Releases",
+                                data: versions.versions.filter(v => v.type == "release").map(v => ({ name: v.id, value: v.id }))
+                            }, {
+                                name: "Snapshots",
+                                data: versions.versions.filter(v => v.type == "snapshot").map(v => ({ name: v.id, value: v.id }))
+                            }, {
+                                name: "Old Betas",
+                                data: versions.versions.filter(v => v.type == "old_beta").map(v => ({ name: v.id, value: v.id }))
+                            }, {
+                                name: "Old Alphas",
+                                data: versions.versions.filter(v => v.type == "old_alpha").map(v => ({ name: v.id, value: v.id }))
+                            }];
+                        case "quilt":
+                        case "fabric":
+                            const fabric = {};
+                            const loaders = versions.loader.map(y => y.version);
+                            for (const { version } of versions.game) {
+                                fabric[version] = loaders;
+                            }
+                            return fabric;
+                        default:
+                            return versions;
+                    }
+                });
+                setLoaderVersions(versions);
+            }
+        } catch(err) {
+            setLoading(false);
+            return toast.error(err.message);
         }
         setSettingUp(loader);
         setLoading(false);
@@ -203,9 +208,6 @@ export default function Home() {
                         }}>
                             <TopButton onClick={() => setFullPage('instances')} selected={fullPage === 'instances'}>
                                 Instances
-                            </TopButton>
-                            <TopButton onClick={() => setFullPage('servers')} selected={fullPage === 'servers'}>
-                                Servers
                             </TopButton>
                             <TopButton onClick={() => setFullPage('skins')} selected={fullPage === 'skins'}>
                                 Skins
