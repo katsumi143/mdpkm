@@ -40,6 +40,7 @@ export default function ModSearch({ instance }) {
         }).catch(err => {
             setMods([]);
             setSearching(false);
+            console.error(err);
             toast.error(`Mod Search failed!\n${err.message ?? 'Unknown Reason.'}`);
         });
     };
@@ -74,7 +75,7 @@ export default function ModSearch({ instance }) {
                 </Grid>
                 <Grid>
                     <Grid spacing="4px" direction="vertical">
-                        <Typography size=".9rem" text="Mod Platform" color="$secondaryColor" family="Nunito"/>
+                        <Typography size=".9rem" text="Platform" color="$secondaryColor" family="Nunito"/>
                         <Select value={api} onChange={event => setAPI(event.target.value)}>
                             {ModPlatforms.map((platform, index) =>
                                 <SelectItem key={index} value={APINames[platform]}>

@@ -84,59 +84,70 @@ export default function Settings({ close }) {
     return (
         <ThemeContext.Consumer>
             {({ setTheme }) => (
-                <Grid width="100%" padding="1rem 1.2rem" direction="vertical">
-                    <Typography size="1.3rem" color="$primaryColor" family="Nunito" css={{ gap: 8 }}>
-                        <Gear/>
-                        Settings
-                    </Typography>
-                    <TextDivider text="General Settings"/>
-                    <Grid padding="0 1rem" direction="vertical">
-                        <Setting name="general.account">
-                            <Select value={account} onChange={({ target }) => changeAccount(target.value)} placeholder="Select an Account">
-                                {accounts.map(({ profile }, key) =>
-                                    <SelectItem key={key} value={profile.id}>
-                                        <Image src={`${SKIN_API_BASE}/face/${profile.id}`} size={24} borderRadius={4}/>
-                                        {profile.name}
-                                    </SelectItem>
-                                )}
-                            </Select>
-                            <Button theme="accent" onClick={addNewAccount} disabled={addingAccount} css={{
-                                minWidth: 196
-                            }}>
-                                {addingAccount ? <BasicSpinner size={16}/> : <PlusLg/>}
-                                Add New Account
-                            </Button>
-                        </Setting>
-                        <Setting name="general.theme">
-                            <Select value={theme} onChange={({ target }) => changeTheme(target.value, setTheme)}>
-                                <SelectItem value="default">Default</SelectItem>
-                                <SelectItem value="light">Light</SelectItem>
-                                <SelectItem value="dark">Dark</SelectItem>
-                                <SelectItem value="purple">plow's puprle</SelectItem>
-                            </Select>
-                        </Setting>
-                        <Setting name="general.language">
-                            <Select value={language} onChange={({ target }) => changeLanguage(target.value)}>
-                                <SelectItem value="en">English</SelectItem>
-                                <SelectItem value="among">Among Us</SelectItem>
-                            </Select>
-                        </Setting>
+                <Grid width="100%" direction="vertical">
+                    <Grid width="100%" padding="1rem 1.5rem" spacing={4} direction="vertical" css={{
+                        borderBottom: '1px solid $tagBorder'
+                    }}>
+                        <Typography size="1.3rem" color="$primaryColor" family="Nunito" css={{ gap: 8 }}>
+                            <Gear/>
+                            Settings
+                        </Typography>
                     </Grid>
+                    <Grid width="100%" height="-webkit-fill-available" padding=".5rem 1rem" direction="vertical" css={{
+                        overflow: 'auto'
+                    }}>
+                        <TextDivider text="General Settings"/>
+                        <Grid padding="0 1rem" direction="vertical">
+                            <Setting name="general.account">
+                                <Select value={account} onChange={({ target }) => changeAccount(target.value)} placeholder="Select an Account">
+                                    {accounts.map(({ profile }, key) =>
+                                        <SelectItem key={key} value={profile.id}>
+                                            <Image src={`${SKIN_API_BASE}/face/${profile.id}`} size={24} borderRadius={4}/>
+                                            {profile.name}
+                                        </SelectItem>
+                                    )}
+                                </Select>
+                                <Button theme="accent" onClick={addNewAccount} disabled={addingAccount} css={{
+                                    minWidth: 196
+                                }}>
+                                    {addingAccount ? <BasicSpinner size={16}/> : <PlusLg/>}
+                                    Add New Account
+                                </Button>
+                            </Setting>
+                            <Setting name="general.theme">
+                                <Select value={theme} onChange={({ target }) => changeTheme(target.value, setTheme)}>
+                                    <SelectItem value="default">Default</SelectItem>
+                                    <SelectItem value="light">Light</SelectItem>
+                                    <SelectItem value="dark">Dark</SelectItem>
+                                    <SelectItem value="purple">plow's puprle</SelectItem>
+                                </Select>
+                            </Setting>
+                            <Setting name="general.language">
+                                <Select value={language} onChange={({ target }) => changeLanguage(target.value)}>
+                                    <SelectItem value="en">English</SelectItem>
+                                    <SelectItem value="among">Among Us</SelectItem>
+                                </Select>
+                            </Setting>
+                        </Grid>
 
-                    <TextDivider text="Instance Settings"/>
-                    <Grid padding="0 1rem" direction="vertical">
-                        <Setting/>
+                        <TextDivider text="Instance Settings"/>
+                        <Grid padding="0 1rem" direction="vertical">
+                            <Setting/>
+                        </Grid>
+
+                        <TextDivider text="Java Settings"/>
+                        <Grid padding="0 1rem" direction="vertical">
+                            <Setting/>
+                        </Grid>
                     </Grid>
-
-                    <TextDivider text="Java Settings"/>
-                    <Grid padding="0 1rem" direction="vertical">
-                        <Setting/>
+                    <Grid width="100%" padding={16} justifyContent="space-between" css={{
+                        borderTop: '1px solid $tagBorder',
+                    }}>
+                        <Button theme="secondary" onClick={close}>
+                            <ArrowLeft/>
+                            Back to Instances
+                        </Button>
                     </Grid>
-
-                    <Button theme="secondary" css={{ left: 16, bottom: 16, position: "fixed" }} onClick={close}>
-                        <ArrowLeft/>
-                        Back to Instances
-                    </Button>
                 </Grid>
             )}
         </ThemeContext.Consumer>
@@ -162,6 +173,9 @@ function Setting({ name, children }) {
 
 function TextDivider({ text }) {
     return <Divider width="100%" margin="2rem 0 1rem" css={{
+        position: 'relative',
+        minHeight: 2,
+
         '&:after': {
             color: '$secondaryColor',
             content: text,

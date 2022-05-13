@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { keyframes } from '@stitches/react';
 import { open } from '@tauri-apps/api/shell';
 import { useSelector, useDispatch } from 'react-redux';
-import { PlusLg, PlayFill, PencilFill, Trash3Fill, Folder2Open, FolderFill, FileTextFill, CloudArrowDown, ArrowClockwise, ExclamationCircleFill, FileEarmarkZip, Save2 } from 'react-bootstrap-icons';
+import { PlusLg, PlayFill, PencilFill, Trash3Fill, Folder2Open, FolderFill, FiletypePng, FiletypeTxt, FiletypeJson, FileTextFill, CloudArrowDown, ArrowClockwise, ExclamationCircleFill, FileEarmarkZip, Save2 } from 'react-bootstrap-icons';
 
 import Mod from './Mod';
 import Tag from './Tag';
@@ -16,6 +16,7 @@ import Button from '/voxeliface/components/Button';
 import * as Dialog from '/voxeliface/components/Dialog';
 import Spinner from '/voxeliface/components/Spinner';
 import Divider from '/voxeliface/components/Divider';
+import TabItem from '/voxeliface/components/Tabs/Item';
 import TextInput from '/voxeliface/components/Input/Text';
 import ModSearch from './ModSearch';
 import Typography from '/voxeliface/components/Typography';
@@ -55,7 +56,6 @@ export default function InstancePage({ instance }) {
     const [launchable, setLaunchable] = useState();
     const [exportFiles, setExportFiles] = useState();
     const [consoleOpen, setConsoleOpen] = useState(false);
-    const [essentialMod, setEssentialMod] = useState();
     const [serverFilter, setServerFilter] = useState('');
     const [instanceName, setInstanceName] = useState(name);
     const saveInstanceName = () => {
@@ -153,10 +153,6 @@ export default function InstancePage({ instance }) {
         if(!servers)
             getServers();
     }, [servers]);
-    useEffect(() => {
-        if(!essentialMod)
-            API.Internal.getProject('essential-container').then(setEssentialMod);
-    }, [essentialMod]);
     useEffect(() => {
         if(typeof launchable !== 'boolean') {
             const loaderType = Util.getLoaderType(config.loader.type);
@@ -397,225 +393,296 @@ export default function InstancePage({ instance }) {
                     ["Settings", 4],
                     ["Export", 5]
                 ]}
-                pages={[
-                    [0, <React.Fragment>
-                        <Tabs 
-                            tabs={[
-                                [`Manage Mods`, 0],
-                                ["Mod Search", 1]
-                            ]}
-                            pages={[
-                                [0, <Grid spacing={8} padding="1rem" direction="vertical">
-                                    <Grid spacing={8} justifyContent="space-between">
-                                        <Grid direction="vertical">
-                                            <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
-                                                Mod Management
-                                            </Typography>
-                                            <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito">
-                                                <TextTransition inline>
-                                                    {mods === 'loading' ? 'Loading...' :`${mods?.length} Installed`}
-                                                </TextTransition>
-                                            </Typography>
-                                        </Grid>
-                                        <Grid spacing={8}>
-                                            <TextInput width={144} value={modFilter} onChange={({ target }) => setModFilter(target.value)} placeholder="Search mods"/>
-                                            <Button theme="secondary" onClick={refreshMods} disabled={mods === 'loading'}>
-                                                {mods === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
-                                                Refresh
-                                            </Button>
-                                            <Button theme="accent" disabled>
-                                                <CloudArrowDown size={14}/>
-                                                Get Updates
-                                            </Button>
-                                        </Grid>
-                                    </Grid>
-                                    {Array.isArray(mods) ? mods.length === 0 ?
-                                        <React.Fragment>
-                                            <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
-                                                There's nothing here!
-                                            </Typography>
-                                            <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" textalign="start" lineheight={0} css={{ display: 'block' }}>
-                                                Find some mods via the <b>Mod Search</b> tab!
-                                            </Typography>
-                                        </React.Fragment>
-                                    : mods.filter(({ id, name }) => id?.toLowerCase().includes(modFilter) || name?.toLowerCase().includes(modFilter)).sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id)).map((mod, index) =>
-                                        <InstanceMod key={index} mod={mod} instance={instance}/>
-                                    ) : <Spinner/>}
-                                </Grid>, true, true],
-                                [1, <React.Fragment>
-                                    <ModSearch instance={instance}/>
-                                </React.Fragment>]
-                            ]}
-                            value={modPage}
-                            onChange={event => setModPage(event.target.value)}
-                            css={{
-                                height: '100%'
-                            }}
-                        />
-                    </React.Fragment>, true],
-                    [1, <React.Fragment>
-                        <Grid spacing="8px" direction="vertical">
+                value={tabPage}
+                onChange={event => setTabPage(event.target.value)}
+                css={{
+                    width: 'auto',
+                    height: '-webkit-fill-available',
+                    margin: '0 1rem 1rem'
+                }}
+            >
+                <TabItem name="Modifications" value={0} padding={0}>
+                    <Tabs
+                        value={modPage}
+                        onChange={event => setModPage(event.target.value)}
+                        borderRadius={0}
+                        css={{
+                            height: '100%'
+                        }}
+                    >
+                        <TabItem name="Manage Mods" value={0}>
                             <Grid margin="4px 0" spacing={8} justifyContent="space-between">
                                 <Grid direction="vertical">
                                     <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
-                                        Server Management
+                                        Mod Management
                                     </Typography>
                                     <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito">
                                         <TextTransition inline>
-                                            {servers === 'loading' ? 'Loading...' :`${servers?.length} Servers`}
+                                            {mods === 'loading' ? 'Loading...' : `${mods?.length} Installed ${mods?.length === 69 ? '(nice)' : ''}`}
                                         </TextTransition>
                                     </Typography>
                                 </Grid>
                                 <Grid spacing={8}>
-                                    <TextInput width={144} value={serverFilter} onChange={({ target }) => setServerFilter(target.value)} placeholder="Search servers"/>
-                                    <Button theme="secondary" onClick={getServers} disabled={servers === 'loading'}>
-                                        {servers === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
+                                    <TextInput width={144} value={modFilter} onChange={({ target }) => setModFilter(target.value)} placeholder="Search mods"/>
+                                    <Button theme="secondary" onClick={refreshMods} disabled={mods === 'loading'}>
+                                        {mods === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
                                         Refresh
                                     </Button>
                                     <Button theme="accent" disabled>
-                                        <PlusLg/>
-                                        Add Server
+                                        <CloudArrowDown size={14}/>
+                                        Get Updates
                                     </Button>
                                 </Grid>
                             </Grid>
-                            {Array.isArray(servers) && servers?.filter(({ ip, name }) => ip?.value.toLowerCase().includes(serverFilter) || name?.value.toLowerCase().includes(serverFilter)).map((server, index) =>
-                                <Grid key={index} padding="8px" spacing="12px" alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{
-                                    position: 'relative'
-                                }}>
-                                    {server.icon ?
-                                        <Image src={`data:image/png;base64,${server.icon.value}`} size={46} borderRadius={4}/>
-                                    : <Grid width={46} height={46} alignItems="center" background="$secondaryBackground" borderRadius={4} justifyContent="center">
-                                        <ExclamationCircleFill size={22} color="#ffffff80"/>
-                                    </Grid>}
-                                    <Grid spacing="4px" direction="vertical">
-                                        <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
-                                            {server.name?.value}
-                                            {server.acceptTextures?.value === 1 &&
-                                                <Typography size=".7rem" color="$secondaryColor" weight={300} family="Nunito" margin="4px 0 0 8px" lineheight={1}>
-                                                    Server Resource Pack Accepted
-                                                </Typography>
-                                            }
-                                        </Typography>
-                                        <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
-                                            {server.ip?.value}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid spacing="8px" css={{
-                                        right: 16,
-                                        position: 'absolute'
-                                    }}>
-                                        <Button theme="secondary" disabled>
-                                            <PencilFill/>
-                                            Edit
-                                        </Button>
-                                        <Button theme="secondary" disabled>
-                                            <Trash3Fill/>
-                                            Delete
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            )}
+                            {Array.isArray(mods) ? mods.length === 0 ?
+                                <React.Fragment>
+                                    <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
+                                        There's nothing here!
+                                    </Typography>
+                                    <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" textalign="start" lineheight={0} css={{ display: 'block' }}>
+                                        Find some mods via the <b>Mod Search</b> tab!
+                                    </Typography>
+                                </React.Fragment>
+                            : mods.filter(({ id, name }) => id?.toLowerCase().includes(modFilter) || name?.toLowerCase().includes(modFilter)).sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id)).map((mod, index) =>
+                                <InstanceMod key={index} mod={mod} instance={instance}/>
+                            ) : <Spinner/>}
+                        </TabItem>
+                        <TabItem name="Mod Search" value={1}>
+                            <ModSearch instance={instance}/>
+                        </TabItem>
+                    </Tabs>
+                </TabItem>
+                <TabItem name="Servers" value={1}>
+                    <Grid margin="4px 0" spacing={8} justifyContent="space-between">
+                        <Grid direction="vertical">
+                            <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                                Server Management
+                            </Typography>
+                            <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito">
+                                <TextTransition inline>
+                                    {servers === 'loading' ? 'Loading...' :`${servers?.length} Servers`}
+                                </TextTransition>
+                            </Typography>
                         </Grid>
-                    </React.Fragment>],
-                    [2, <Grid margin="1rem 0 .6rem 0.6rem" direction="vertical">
-                        <Image src="essential-banner.svg" width="100%" height="1.2rem" css={{
-                            backgroundPosition: "left center"
-                        }}/>
-                        <Typography size=".8rem" color="$secondaryColor" margin="4px 0 1rem" weight={600} family="Nunito" textalign="start">
-                            The essential multiplayer mod for Minecraft Java.<br/>
-                            mdpkm is not endorsed by Essential.
-                        </Typography>
-                        <Mod data={essentialMod} instance={instance} featured/>
-                    </Grid>],
-                    [3, <Grid direction="vertical">
-                        <Grid margin="0 0 1rem" spacing="8px">
-                            {LoaderIcons[config.loader.type] ?
-                                <Image src={LoaderIcons[config.loader.type]} size={48} borderRadius={4}/>
-                            : <Grid width={48} height={48} alignItems="center" background="$gray10" borderRadius={4} justifyContent="center">
-                                <ExclamationCircleFill size={24} color="#ffffff80"/>
-                            </Grid>}
-                            <Grid height="48px" spacing="4px" direction="vertical" justifyContent="center">
-                                <Typography size="1rem" color="$primaryColor" family="Nunito" lineheight={1}>
-                                    {LoaderNames[config.loader.type] ?? `${config.loader.type} (Unknown)`}
-                                    {LoaderStates[config.loader.type] &&
-                                        <Tag margin="0 8px">
-                                            <Typography size="0.7rem" color="$tagColor" weight={600} family="Nunito">
-                                                {LoaderStates[config.loader.type]}
-                                            </Typography>
-                                        </Tag>
+                        <Grid spacing={8}>
+                            <TextInput width={144} value={serverFilter} onChange={({ target }) => setServerFilter(target.value)} placeholder="Search servers"/>
+                            <Button theme="secondary" onClick={getServers} disabled={servers === 'loading'}>
+                                {servers === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
+                                Refresh
+                            </Button>
+                            <Button theme="accent" disabled>
+                                <PlusLg/>
+                                Add Server
+                            </Button>
+                        </Grid>
+                    </Grid>
+                    {Array.isArray(servers) && servers?.filter(({ ip, name }) => ip?.value.toLowerCase().includes(serverFilter) || name?.value.toLowerCase().includes(serverFilter)).map((server, index) =>
+                        <Grid key={index} padding="8px" spacing="12px" alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{
+                            position: 'relative'
+                        }}>
+                            <Image
+                                src={server.icon ? `data:image/png;base64,${server.icon.value}` : 'img/icons/minecraft/unknown_server.png'}
+                                size={46}
+                                borderRadius={4}
+                            />
+                            <Grid spacing="4px" direction="vertical">
+                                <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                                    {server.name?.value}
+                                    {server.acceptTextures?.value === 1 &&
+                                        <Typography size=".7rem" color="$secondaryColor" weight={300} family="Nunito" margin="4px 0 0 8px" lineheight={1}>
+                                            Server Resource Pack Accepted
+                                        </Typography>
                                     }
                                 </Typography>
-                                <Typography size=".7rem" color="$secondaryColor" family="Nunito" lineheight={1}>
-                                    {config.loader.game}{config.loader.version && `-${config.loader.version}`}
+                                <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                                    {server.ip?.value}
                                 </Typography>
                             </Grid>
-                        </Grid>
-                        {loaderMod &&
-                            <Mod id={loaderMod[0]} api={loaderMod[1]} instance={instance} recommended/>
-                        }
-                    </Grid>],
-                    [4, <Grid spacing="1rem" direction="vertical">
-                        <Grid spacing="4px" direction="vertical">
-                            <Typography size=".9rem" text="Instance Name" color="$secondaryColor" family="Nunito"/>
-                            <TextInput value={instanceName} onChange={event => setInstanceName(event.target.value)}>
-                                <Button theme="secondary" onClick={saveInstanceName} disabled={renaming || instanceName === name}>
+                            <Grid spacing="8px" css={{
+                                right: 16,
+                                position: 'absolute'
+                            }}>
+                                <Button theme="secondary" disabled>
                                     <PencilFill/>
-                                    Save Changes
-                                </Button>
-                            </TextInput>
-                        </Grid>
-                        <Grid width="fit-content" spacing="4px" direction="vertical">
-                            <Typography size=".9rem" text="Delete Instance" color="$secondaryColor" family="Nunito"/>
-                            <Dialog.Root>
-                                <Dialog.Trigger asChild>
-                                    <Button theme="secondary">
-                                        <Trash3Fill/>
-                                        Delete
-                                    </Button>
-                                </Dialog.Trigger>
-                                <Dialog.Content>
-                                    <Dialog.Title>Are you absolutely sure?</Dialog.Title>
-                                    <Dialog.Description>
-                                        This action cannot be undone.<br/>
-                                        '{Instance.name}' will be lost forever! (A long time!)
-                                    </Dialog.Description>
-                                    <Grid margin="25 0 0" justifyContent="end">
-                                        <Dialog.Close asChild>
-                                            <Button size="medium" theme="alert" onClick={deleteInstance}>
-                                                Yes, delete Instance
-                                            </Button>
-                                        </Dialog.Close>
-                                    </Grid>
-                                </Dialog.Content>
-                            </Dialog.Root>
-                        </Grid>
-                        <Button onClick={_ => Tauri.path.resolve(path).then(Tauri.clipboard.writeText)}>
-                            Copy Folder Path
-                        </Button>
-                    </Grid>],
-                    [5, <React.Fragment>
-                        <Grid width="fit-content" margin="0 0 1rem" spacing={4} direction="vertical">
-                            <Typography size=".9rem" text="Export Instance" color="$secondaryColor" family="Nunito"/>
-                            <Grid spacing="8px">
-                                <Button onClick={exportInstance}>
-                                    <Save2/>
-                                    Export as .mdpki
+                                    Edit
                                 </Button>
                                 <Button theme="secondary" disabled>
-                                    <FileEarmarkZip/>
-                                    Export as ZIP (CurseForge)
+                                    <Trash3Fill/>
+                                    Delete
                                 </Button>
                             </Grid>
                         </Grid>
-                        <Grid direction="vertical" background="#00000040" borderRadius={8} css={{ overflow: 'hidden auto' }}>
-                            <Typography size=".9rem" color="$secondaryColor" margin="8px 12px" family="Nunito">
-                                Choose files to export
+                    )}
+                </TabItem>
+                <TabItem name="Resource Packs" value={2}>
+                    <Grid margin="4px 0" spacing={8} justifyContent="space-between">
+                        <Grid direction="vertical">
+                            <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                                Server Management
                             </Typography>
-                            <Divider width="100%" css={{ minHeight: 1 }}/>
-                            {exportFiles && exportFiles.filter(({ path }) => path.replace(/\/+|\\+/g, '/').replace(Instance.path.replace(/\/+|\\+/g, '/'), '').match(/\/+|\\+/g)?.length === 1)
-                            .sort((a, b) => b.name.localeCompare(a.name))
-                            .sort(({ isDir }, { isDir2 }) => isDir === isDir2 ? 0 : isDir ? -1 : 1)
-                            .map(({ name, isDir, banned, selected, sensitive }, index) => <React.Fragment key={index}>
+                            <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito">
+                                <TextTransition inline>
+                                    {servers === 'loading' ? 'Loading...' :`${servers?.length} Servers`}
+                                </TextTransition>
+                            </Typography>
+                        </Grid>
+                        <Grid spacing={8}>
+                            <TextInput width={144} value={serverFilter} onChange={({ target }) => setServerFilter(target.value)} placeholder="Search servers"/>
+                            <Button theme="secondary" onClick={getServers} disabled={servers === 'loading'}>
+                                {servers === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
+                                Refresh
+                            </Button>
+                            <Button theme="accent" disabled>
+                                <PlusLg/>
+                                Add Server
+                            </Button>
+                        </Grid>
+                    </Grid>
+                    {Array.isArray(servers) && servers?.filter(({ ip, name }) => ip?.value.toLowerCase().includes(serverFilter) || name?.value.toLowerCase().includes(serverFilter)).map((server, index) =>
+                        <Grid key={index} padding="8px" spacing="12px" alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{
+                            position: 'relative'
+                        }}>
+                            <Image
+                                src={server.icon ? `data:image/png;base64,${server.icon.value}` : 'img/icons/minecraft/unknown_server.png'}
+                                size={46}
+                                borderRadius={4}
+                            />
+                            <Grid spacing="4px" direction="vertical">
+                                <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                                    {server.name?.value}
+                                    {server.acceptTextures?.value === 1 &&
+                                        <Typography size=".7rem" color="$secondaryColor" weight={300} family="Nunito" margin="4px 0 0 8px" lineheight={1}>
+                                            Server Resource Pack Accepted
+                                        </Typography>
+                                    }
+                                </Typography>
+                                <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                                    {server.ip?.value}
+                                </Typography>
+                            </Grid>
+                            <Grid spacing="8px" css={{
+                                right: 16,
+                                position: 'absolute'
+                            }}>
+                                <Button theme="secondary" disabled>
+                                    <PencilFill/>
+                                    Edit
+                                </Button>
+                                <Button theme="secondary" disabled>
+                                    <Trash3Fill/>
+                                    Delete
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    )}
+                </TabItem>
+                <TabItem name="Essential" value={3} spacing={6}>
+                    <Image src="essential-banner.svg" width="100%" height="1.2rem" margin="8px 0 0" css={{
+                        backgroundPosition: "left center"
+                    }}/>
+                    <Typography size=".8rem" color="$secondaryColor" margin="0 0 8px" weight={600} family="Nunito" textalign="start">
+                        The essential multiplayer mod for Minecraft Java.<br/>
+                        mdpkm is not endorsed by Essential.
+                    </Typography>
+                    <Mod id="essential-container" api={3} instance={instance} featured/>
+                </TabItem>
+                <TabItem name="Game Loader" value={4}>
+                    <Grid spacing={8}>
+                        {LoaderIcons[config.loader.type] ?
+                            <Image src={LoaderIcons[config.loader.type]} size={48} borderRadius={4}/>
+                        : <Grid width={48} height={48} alignItems="center" background="$gray10" borderRadius={4} justifyContent="center">
+                            <ExclamationCircleFill size={24} color="#ffffff80"/>
+                        </Grid>}
+                        <Grid height={48} spacing={4} direction="vertical" justifyContent="center">
+                            <Typography size="1rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                                {LoaderNames[config.loader.type] ?? `${config.loader.type} (Unknown)`}
+                                {LoaderStates[config.loader.type] &&
+                                    <Tag margin="0 8px">
+                                        <Typography size="0.7rem" color="$tagColor" weight={600} family="Nunito">
+                                            {LoaderStates[config.loader.type]}
+                                        </Typography>
+                                    </Tag>
+                                }
+                            </Typography>
+                            <Typography size=".7rem" color="$secondaryColor" family="Nunito" lineheight={1}>
+                                {config.loader.game}{config.loader.version && `-${config.loader.version}`}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    {loaderMod &&
+                        <Mod id={loaderMod[0]} api={loaderMod[1]} instance={instance} recommended/>
+                    }
+                </TabItem>
+                <TabItem name="Settings" value={5}>
+                    <Grid spacing={4} direction="vertical">
+                        <Typography size=".9rem" text="Instance Name" color="$secondaryColor" family="Nunito"/>
+                        <TextInput value={instanceName} onChange={event => setInstanceName(event.target.value)}>
+                            <Button theme="secondary" onClick={saveInstanceName} disabled={renaming || instanceName === name}>
+                                <PencilFill/>
+                                Save Changes
+                            </Button>
+                        </TextInput>
+                    </Grid>
+                    <Grid width="fit-content" spacing={4} direction="vertical">
+                        <Typography size=".9rem" text="Delete Instance" color="$secondaryColor" family="Nunito"/>
+                        <Dialog.Root>
+                            <Dialog.Trigger asChild>
+                                <Button theme="secondary">
+                                    <Trash3Fill/>
+                                    Delete
+                                </Button>
+                            </Dialog.Trigger>
+                            <Dialog.Content>
+                                <Dialog.Title>Are you absolutely sure?</Dialog.Title>
+                                <Dialog.Description>
+                                    This action cannot be undone.<br/>
+                                    '{Instance.name}' will be lost forever! (A long time!)
+                                </Dialog.Description>
+                                <Grid margin="25 0 0" justifyContent="end">
+                                    <Dialog.Close asChild>
+                                        <Button size="medium" theme="alert" onClick={deleteInstance}>
+                                            Yes, delete Instance
+                                        </Button>
+                                    </Dialog.Close>
+                                </Grid>
+                            </Dialog.Content>
+                        </Dialog.Root>
+                    </Grid>
+                    <Button onClick={_ => Tauri.path.resolve(path).then(Tauri.clipboard.writeText)}>
+                        Copy Folder Path
+                    </Button>
+                </TabItem>
+                <TabItem name="Export" value={6}>
+                    <Grid width="fit-content" spacing={4} direction="vertical">
+                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                            Export Instance
+                        </Typography>
+                        <Grid spacing="8px">
+                            <Button onClick={exportInstance}>
+                                <Save2/>
+                                Export as .mdpki
+                            </Button>
+                            <Button theme="secondary" disabled>
+                                <FileEarmarkZip/>
+                                Export as ZIP (CurseForge)
+                            </Button>
+                        </Grid>
+                    </Grid>
+                    <Grid direction="vertical" background="#00000040" borderRadius={8} css={{ overflow: 'hidden auto' }}>
+                        <Typography size=".9rem" color="$secondaryColor" margin="8px 12px" family="Nunito">
+                            Choose files to export
+                        </Typography>
+                        <Divider width="100%" css={{ minHeight: 1 }}/>
+                        {exportFiles && exportFiles.filter(({ path }) => path.replace(/\/+|\\+/g, '/').replace(Instance.path.replace(/\/+|\\+/g, '/'), '').match(/\/+|\\+/g)?.length === 1)
+                        .sort((a, b) => b.name.localeCompare(a.name))
+                        .sort(({ isDir }, { isDir2 }) => isDir === isDir2 ? 0 : isDir ? -1 : 1)
+                        .map(({ name, isDir, banned, selected, sensitive }, index) => {
+                            const Icon = Object.entries({
+                                '\\.txt$': FiletypeTxt,
+                                '\\.png$': FiletypePng,
+                                '\\.json$': FiletypeJson,
+                            }).find(([reg]) => new RegExp(reg).test(name))?.[1] ?? (isDir ? FolderFill : FileTextFill);
+                            return <React.Fragment key={index}>
                                 <Grid spacing="8px" padding="4px 8px" alignItems="center">
                                     <Toggle size="small" value={selected} disabled={banned} onChange={event => {
                                         exportFiles.find(f => f.name === name).selected = event.target.value;
@@ -625,10 +692,7 @@ export default function InstancePage({ instance }) {
                                                     file.selected = event.target.value;
                                         setExportFiles(exportFiles);
                                     }}/>
-                                    {isDir ?
-                                        <FolderFill color={banned ? "var(--colors-secondaryColor)" : "var(--colors-primaryColor)"}/> :
-                                        <FileTextFill color={banned ? "var(--colors-secondaryColor)": "var(--colors-primaryColor)"}/>
-                                    }
+                                    <Icon color={banned ? "var(--colors-secondaryColor)" : "var(--colors-primaryColor)"}/>
                                     <Typography color={banned ? "$secondaryColor" : "$primaryColor"} family="Nunito">
                                         {name}
                                         {sensitive && <Typography size=".7rem" color="$secondaryColor" weight={400} margin="0 0 0 8px" family="Nunito" lineheight={1}>
@@ -637,18 +701,11 @@ export default function InstancePage({ instance }) {
                                     </Typography>
                                 </Grid>
                                 {index < exportFiles.length - 1 && <Divider width="100%" css={{ minHeight: 1 }}/>}
-                            </React.Fragment>)}
-                        </Grid>
-                    </React.Fragment>]
-                ]}
-                value={tabPage}
-                onChange={event => setTabPage(event.target.value)}
-                css={{
-                    width: 'auto',
-                    height: '-webkit-fill-available',
-                    margin: '0 1rem 1rem'
-                }}
-            />
+                            </React.Fragment>;
+                        })}
+                    </Grid>
+                </TabItem>
+            </Tabs>
         </Grid>
     );
 };
