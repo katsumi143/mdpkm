@@ -10,13 +10,13 @@ import App from '/src/components/App';
 import News from '../components/News';
 import Main from '/voxeliface/components/Main';
 import Grid from '/voxeliface/components/Grid';
-import Image from '/voxeliface/components/Image';
 import Header from '/src/components/Header';
 import Button from '/voxeliface/components/Button';
 import Settings from '../components/Settings';
 import SkinList from '../components/SkinList';
 import LoaderSetup from '../components/LoaderSetup';
 import * as Dialog from '/voxeliface/components/Dialog';
+import ModpackSetup from '../components/ModpackSetup';
 import InstanceList from '../components/InstanceList';
 import InstancePage from '../components/InstancePage';
 
@@ -121,6 +121,10 @@ export default function Home() {
                 console.log(versions);
 
                 setLoaderVersions(versions);
+            } else if(loader === "modpacks") {
+                setLoading(false);
+                setPage('modpack-setup');
+                return;
             } else {
                 const versions = await API.makeRequest({
                     java: MINECRAFT_VERSION_MANIFEST,
@@ -283,7 +287,7 @@ export default function Home() {
                         <InstancePage instance={instance}/>
                     }
                     {page === 'add-instance' ?
-                        <SelectInstanceType loading={loading} settingUp={settingUp} types={[
+                        <SelectInstanceType back={selectBackToHome} loading={loading} types={[
                             "divide:Supported by Mojang Studios",
                             ["java_vanilla",
                                 LoaderIcons.java,
@@ -295,23 +299,10 @@ export default function Home() {
                                 "coming soon"
                             ],
                             "divide:Third Party Modpacks",
-                            ["curseforge",
-                                "/curseforge-icon.svg",
-                                [
-                                    ["Import ZIP", null, true, "secondary"],
-                                    ["Search", () => loadModpacks(API.CurseForge.Modpacks), true]
-                                ],
-                                "coming back soon"
-                            ],
-                            ["ftb",
-                                "/ftb-icon.png",
-                                [["Search", () => loadModpacks(API.FeedTheBeast.Modpacks), true]],
-                                "coming back soon"
-                            ],
-                            ["modrinth",
-                                "/modrinth-icon.svg",
-                                [["Search", () => loadModpacks(API.Modrinth.Modpacks), true]],
-                                "coming soon"
+                            ["modpack",
+                                "img/icons/brand_default.svg",
+                                [["Continue", () => chooseLoader("modpacks")]],
+                                "beta"
                             ],
                             "divide:Third Party Modloaders",
                             ["forge",
@@ -337,12 +328,7 @@ export default function Home() {
                                 "img/icons/brand_default.svg",
                                 [["Import", () => null, true]]
                             ]
-                        ]} backButton={
-                            <Button theme="secondary" css={{ left: 16, bottom: 16, position: "fixed" }} onClick={selectBackToHome}>
-                                <ArrowLeft/>
-                                Back to Instances
-                            </Button>
-                        }/>
+                        ]}/>
                     : page === 'setup-loader' ?
                         <LoaderSetup install={installLoader} loader={settingUp} versions={loaderVersions} backButton={
                             <Button theme="secondary" onClick={setupBackToSelect}>
@@ -350,6 +336,8 @@ export default function Home() {
                                 Select Another Loader
                             </Button>
                         }/>
+                    : page === 'modpack-setup' ?
+                        <ModpackSetup back={setupBackToSelect} install={null}/>
                     : page === 'settings' ?
                         <Settings close={selectBackToHome}/>
                     : page === 'news' ?

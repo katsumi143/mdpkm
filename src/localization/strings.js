@@ -24,12 +24,8 @@ export default new LocalizedStrings({
         'app.mdpkm.select_instance_type.bedrock_vanilla': 'Minecraft Bedrock Edition',
         'app.mdpkm.select_instance_type.bedrock_vanilla.description': 'Simply Bedrock Edition with downloadable content.\nWindows 10+ only, requires a Microsoft Store account.',
 
-        'app.mdpkm.select_instance_type.curseforge': 'CurseForge Modpacks',
-        'app.mdpkm.select_instance_type.curseforge.description': 'Modpacks created by CurseForge Users.',
-        'app.mdpkm.select_instance_type.ftb': 'Feed the Beast Modpacks',
-        'app.mdpkm.select_instance_type.ftb.description': 'Modpacks created by the FTB Group.',
-        'app.mdpkm.select_instance_type.modrinth': 'Modrinth Modpacks',
-        'app.mdpkm.select_instance_type.modrinth.description': 'Modpacks created by Modrinth Users.',
+        'app.mdpkm.select_instance_type.modpack': 'Minecraft Modpacks',
+        'app.mdpkm.select_instance_type.modpack.description': 'Minecraft Java Edition Modpacks created by communities.',
 
         'app.mdpkm.select_instance_type.forge': 'Forge Modloader',
         'app.mdpkm.select_instance_type.forge.description': 'Forge Description',
