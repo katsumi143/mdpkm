@@ -4,19 +4,17 @@ export default class EventEmitter {
     }
 
     on(event, listener) {
-        if (typeof this.events[event] !== 'object') {
+        if (typeof this.events[event] !== 'object')
             this.events[event] = [];
-        }
 
         this.events[event].push(listener);
     }
 
     removeListener(event, listener) {
         if (typeof this.events[event] === 'object') {
-            let id = this.events[event].indexOf(listener);
-            if (id > -1) {
+            const id = this.events[event].indexOf(listener);
+            if (id > -1)
                 this.events[event].splice(id, 1);
-            }
         }
     }
 
@@ -26,9 +24,8 @@ export default class EventEmitter {
             listeners = this.events[event].slice();
             length = listeners.length;
 
-            for (i = 0; i < length; i++) {
+            for (i = 0; i < length; i++)
                 listeners[i].apply(this, args);
-            }
         }
     }
 

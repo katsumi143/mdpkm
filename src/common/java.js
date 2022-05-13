@@ -16,7 +16,7 @@ export default class Java {
         const dataPath = `${DataController.dataPath}/java`;
         if(!await Util.fileExists(dataPath))
             await Util.createDir(dataPath);
-        return new Java(DataController, dataPath, await DataController.getData("javaData"));
+        return new Java(DataController, dataPath, await DataController.getData('javaData'));
     }
 
     async getExecutable(version, updateToastState) {
@@ -51,6 +51,6 @@ export default class Java {
     }
 
     getVersions() {
-        return this.data.get("installed");
+        return this.data.get('installed');
     }
 }

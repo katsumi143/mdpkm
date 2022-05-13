@@ -38,7 +38,7 @@ class DataObject {
             let defaultValue = def[defaultKeys[i]];
             if (defaultValue !== undefined && cacheValue === undefined) {
                 cache[defaultKeys[i]] = def[defaultKeys[i]];
-            } else if (typeof cacheValue == "object") {
+            } else if (typeof cacheValue == 'object') {
                 this.updateStored(cacheValue, defaultValue);
             }
         }
@@ -48,14 +48,14 @@ class DataObject {
 
     add(value) {
         if(!this.cache instanceof Array)
-            throw new TypeError("DATA_IS_OBJECT");
+            throw new TypeError('DATA_IS_OBJECT');
         this.cache.push(value);
         this.save();
         return this;
     }
 
     get(path) {
-        let pathArray = path.split(".");
+        let pathArray = path.split('.');
         let value = this.cache;
         for (let i = 0; i < pathArray.length; i++) {
             let index = pathArray[i];
@@ -80,7 +80,7 @@ class DataObject {
 
     set(path, newValue) {
         let schema = this.cache;
-        let pathArray = path.split(".");
+        let pathArray = path.split('.');
         let length = pathArray.length;
         for (let i = 0; i < length - 1; i++) {
             let index = pathArray[i];
@@ -112,7 +112,7 @@ export class DataController {
             const dataPath = await appDir();
             if(!await Util.fileExists(dataPath))
                 await Util.createDir(dataPath);
-            resolve(new DataController(dataPath.replace(/\/+|\\+/g, "/")));
+            resolve(new DataController(dataPath.replace(/\/+|\\+/g, '/')));
         });
     }
 

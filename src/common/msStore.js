@@ -169,7 +169,7 @@ export default class MicrosoftStore {
 
     static buildSyncRequest(cookie, version) {
         console.log(cookie, version);
-        const id = "d25480ca-36aa-46e6-b76b-39608d49558c";
+        const id = 'd25480ca-36aa-46e6-b76b-39608d49558c';
         const root = create({
             Envelope: {
                 '@xmlns': this.soap,

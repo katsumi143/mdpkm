@@ -9,39 +9,39 @@ export default class Util {
     }
 
     static formatDateBetween(date, date2, style) {
-        if (style === "x-ymhs-ago") {
+        if (style === 'x-ymhs-ago') {
             let temporary;
             if (date2.getFullYear() - date.getFullYear() > 0)
-                temporary = ["year", date2.getFullYear() - date.getFullYear()];
+                temporary = ['year', date2.getFullYear() - date.getFullYear()];
             else if (date2.getMonth() - date.getMonth() > 0)
-                temporary = ["month", date2.getMonth() - date.getMonth()];
+                temporary = ['month', date2.getMonth() - date.getMonth()];
             else if (date2.getDay() - date.getDay() > 0)
-                temporary = ["day", date2.getDay() - date.getDay()];
+                temporary = ['day', date2.getDay() - date.getDay()];
             else if (date2.getHours() - date.getHours() > 0)
-                temporary = ["hour", date2.getHours() - date.getHours()];
+                temporary = ['hour', date2.getHours() - date.getHours()];
             else if (date2.getMinutes() - date.getMinutes() > 0)
-                temporary = ["minute", date2.getMinutes() - date.getMinutes()];
+                temporary = ['minute', date2.getMinutes() - date.getMinutes()];
             else
-                temporary = ["second", date2.getSeconds() - date.getSeconds()];
+                temporary = ['second', date2.getSeconds() - date.getSeconds()];
             return `${temporary[1]} ${temporary[0]}${temporary[1] === 1 ? '' : 's'} ago`;
         }
     }
 
     static async downloadFile(url, directory, useCache, fileName) {
-        const split = directory.replace(/\/+|\\+/g, "/").split("/");
-        if (split.reverse()[0].includes(".")) {
+        const split = directory.replace(/\/+|\\+/g, '/').split('/');
+        if (split.reverse()[0].includes('.')) {
             fileName = split[0];
             split.shift();
         }
-        directory = split.reverse().join("/");
+        directory = split.reverse().join('/');
 
-        const outputFile = fileName ? `${directory}/${decodeURI(fileName)}` : `${directory}/${decodeURI(url.split("/").reverse()[0])}`;
+        const outputFile = fileName ? `${directory}/${decodeURI(fileName)}` : `${directory}/${decodeURI(url.split('/').reverse()[0])}`;
         if (useCache && await Util.fileExists(outputFile))
             return outputFile;
 
         console.log(`Starting Download for ${url} in ${directory}`);
-        await new invoke("download_file", {
-            url: url.replace(" ", "%20"),
+        await new invoke('download_file', {
+            url: url.replace(/ /g, '%20'),
             path: outputFile
         }).catch(err => {throw new Error(err.stack)});
 
@@ -54,8 +54,8 @@ export default class Util {
             return path;
 
         console.log(`Starting Download for ${url} as ${path}`);
-        await new invoke("download_file", {
-            url: url.replace(" ", "%20"),
+        await new invoke('download_file', {
+            url: url.replace(/ /g, '%20'),
             path
         }).catch(err => {throw new Error(err.stack)});
 
@@ -64,43 +64,43 @@ export default class Util {
     }
 
     static async readTextFile(path) {
-        return invoke("fs_read_text_file", { path }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_read_text_file', { path }).catch(err => {throw new Error(err.stack)});
     }
 
     static async readBinaryFile(path) {
-        return invoke("fs_read_file", { path }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_read_file', { path }).catch(err => {throw new Error(err.stack)});
     }
 
     static writeFile(path, contents) {
-        return invoke("fs_write_file", { path, contents }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_write_file', { path, contents }).catch(err => {throw new Error(err.stack)});
     }
 
     static writeBinaryFile(path, contents) {
-        return invoke("fs_write_binary", { path, contents }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_write_binary', { path, contents }).catch(err => {throw new Error(err.stack)});
     }
 
     static removeFile(path) {
-        return invoke("fs_remove_file", { path }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_remove_file', { path }).catch(err => {throw new Error(err.stack)});
     }
 
     static fileExists(path) {
-        return invoke("fs_file_exists", { path }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_file_exists', { path }).catch(err => {throw new Error(err.stack)});
     }
 
     static extractZip(path, output) {
-        return invoke("extract_zip", { path, output }).catch(err => {throw new Error(err.stack)});
+        return invoke('extract_zip', { path, output }).catch(err => {throw new Error(err.stack)});
     }
 
     static async moveFolder(path, target) {
-        return invoke("move_dir", {
+        return invoke('move_dir', {
             path,
             target
         }).then(_ => target).catch(err => {throw new Error(err.stack)});
     }
 
     static copyFile(path, target) {
-        return Util.createDirAll(target.split(/\/+|\\+/g).slice(0, -1).join("/")).then(_ =>
-            invoke("fs_copy", {
+        return Util.createDirAll(target.split(/\/+|\\+/g).slice(0, -1).join('/')).then(_ =>
+            invoke('fs_copy', {
                 path,
                 target
             }).then(_ => target)
@@ -108,7 +108,7 @@ export default class Util {
     }
 
     static extractFile(path, name, output) {
-        return invoke("extract_file", {
+        return invoke('extract_file', {
             path,
             fileName: name,
             output
@@ -116,22 +116,22 @@ export default class Util {
     }
 
     static extractFiles(zip, path, output, ignore) {
-        return invoke("extract_files", {
+        return invoke('extract_files', {
             zip,
             path,
             output,
-            ignore: ignore ?? "~"
+            ignore: ignore ?? '~'
         }).then(_ => output).catch(err => {throw new Error(err.stack)});
     }
 
     static createDirAll(path) {
-        return invoke("fs_create_dir_all", {
+        return invoke('fs_create_dir_all', {
             path
         }).then(_ => path).catch(err => {throw new Error(err.stack)});
     }
 
     static readDir(path) {
-        return invoke("fs_read_dir", { path }).then(paths => paths.map(([path, isDir]) => ({
+        return invoke('fs_read_dir', { path }).then(paths => paths.map(([path, isDir]) => ({
             name: path.split(/\/+|\\+/).reverse()[0],
             path,
             isDir: isDir === 'true'
@@ -139,7 +139,7 @@ export default class Util {
     }
 
     static readDirRecursive(path) {
-        return invoke("fs_read_dir_recursive", { path }).then(paths => paths.map(([path, isDir]) => ({
+        return invoke('fs_read_dir_recursive', { path }).then(paths => paths.map(([path, isDir]) => ({
             name: path.split(/\/+|\\+/).reverse()[0],
             path,
             isDir: isDir === 'true'
@@ -147,29 +147,29 @@ export default class Util {
     }
 
     static readFileInZip(path, filePath) {
-        return invoke("fs_read_file_in_zip", {
+        return invoke('fs_read_file_in_zip', {
             path, filePath
         }).catch(err => {throw new Error(err.stack)});
     }
 
     static readBinaryInZip(path, filePath) {
-        return invoke("fs_read_binary_in_zip", {
+        return invoke('fs_read_binary_in_zip', {
             path, filePath
         }).catch(err => {throw new Error(err.stack)});
     }
 
     static createZip(path, prefix, files) {
-        return invoke("create_zip", {
+        return invoke('create_zip', {
             path, prefix, files
         }).catch(err => {throw new Error(err.stack)});
     }
 
     static createDir(path) {
-        return invoke("fs_create_dir_all", { path }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_create_dir_all', { path }).catch(err => {throw new Error(err.stack)});
     }
 
     static removeDir(path) {
-        return invoke("fs_remove_dir", { path }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_remove_dir', { path }).catch(err => {throw new Error(err.stack)});
     }
 
     static mavenToArray(s, nativeString, forceExt) {
@@ -189,11 +189,11 @@ export default class Util {
     }
 
     static mavenToString(...args) {
-        return this.mavenToArray(...args).join("/");
+        return this.mavenToArray(...args).join('/');
     }
 
     static binToString(array) {
-        let result = "";
+        let result = '';
         for (let i = 0; i < array.length; i++) {
             result += String.fromCharCode(array[i]);
         }
@@ -201,7 +201,7 @@ export default class Util {
     }
 
     static async readJarManifest(jarPath, property) {
-        const data = await this.readFileInZip(jarPath, "META-INF/MANIFEST.MF");
+        const data = await this.readFileInZip(jarPath, 'META-INF/MANIFEST.MF');
         for (const value of data.match(/.*:.*/g)) {
             const [prop, val] = value.split(/ *: */);
             if (prop === property)
@@ -228,7 +228,7 @@ export default class Util {
         args.push(
             [...libraries, minecraftArtifact]
                 .filter(l => !l.natives)
-                .map(l => `"${l.path.replace(/\/+|\\+/g, "/")}"`)
+                .map(l => `"${l.path.replace(/\/+|\\+/g, '/')}"`)
                 .join(Util.platform === 'win32' ? ';' : ':')
         );
 
@@ -399,7 +399,7 @@ export default class Util {
                         case 'classpath':
                             val = [...libraries, minecraftArtifact]
                                 .filter(l => !l.natives)
-                                .map(l => `"${l.path.replace(/\/+|\\+/g, "/")}"`)
+                                .map(l => `"${l.path.replace(/\/+|\\+/g, '/')}"`)
                                 .join(Util.platform === 'win32' ? ';' : ':');
                             break;
                         default:
@@ -569,7 +569,7 @@ export default class Util {
     }
 
     static tryRust() {
-        return invoke("spawn");
+        return invoke('spawn');
     }
 
     static getLoaderName(type) {

@@ -29,7 +29,7 @@ export default class FTBApi {
                                 await new Promise(resolve => setTimeout(resolve, 5000));
                             try {
                                 const modpack = await API.makeRequest(`${FTB_API_BASE}/public/modpack/${id}`);
-                                if(modpack.status !== "error")
+                                if(modpack.status !== 'error')
                                     return this.modpacks.unshift(new API.FeedTheBeast.Modpack(
                                         modpack
                                     ));
@@ -85,7 +85,7 @@ export default class FTBApi {
             this.id = id;
             this.name = name;
             this.summary = synopsis;
-            this.displayIcon = art.filter(a => a.type === "square").reverse()[0].url;
+            this.displayIcon = art.filter(a => a.type === 'square').reverse()[0].url;
 
             this.authors = authors;
             this.downloads = installs;
@@ -94,12 +94,12 @@ export default class FTBApi {
             this.dateUpdated = updated * 1000;
 
             this.latestVersion = versions.reverse()[0];
-            this.latestGameVersion = this.latestVersion.targets.find(v => v.type === "game")?.version ??
+            this.latestGameVersion = this.latestVersion.targets.find(v => v.type === 'game')?.version ??
                 versions.find(v => v.targets.find(t =>
-                    t.type === "modloader" &&
-                    t.version === this.latestVersion.targets.find(y => y.type === "modloader")?.version
-                )).targets.find(v => v.type === "game")?.version ??
-                versions.find(v => v.targets.find(t => t.type === "game")).targets.find(v => v.type === "game")?.version
+                    t.type === 'modloader' &&
+                    t.version === this.latestVersion.targets.find(y => y.type === 'modloader')?.version
+                )).targets.find(v => v.type === 'game')?.version ??
+                versions.find(v => v.targets.find(t => t.type === 'game')).targets.find(v => v.type === 'game')?.version
         }
 
         getLatestVersion() {
@@ -113,14 +113,14 @@ export default class FTBApi {
             }, instances);
             instance.on('changed', _ => instances.emit('changed'));
 
-            const loader = manifest.targets.find(t => t.type === "modloader");
+            const loader = manifest.targets.find(t => t.type === 'modloader');
 
             const config = await instance.getConfig();
             config.loader.type = loader.name;
-            config.loader.game = manifest.targets.find(t => t.type === "game")?.version ?? this.latestGameVersion;
+            config.loader.game = manifest.targets.find(t => t.type === 'game')?.version ?? this.latestGameVersion;
             config.loader.version = loader.version;
 
-            config.modpack.source = "feedthebeast";
+            config.modpack.source = 'feedthebeast';
             config.modpack.project = this.id;
             config.modpack.cachedName = this.name;
 
@@ -132,7 +132,7 @@ export default class FTBApi {
         }
 
         async install(instances, update) {
-            update("Fetching Version Manifest");
+            update('Fetching Version Manifest');
             const latestVersion = await this.getLatestVersion();
             const instanceDir = `${instances.dataPath}/${this.name}`;
             if(!await Util.fileExists(instanceDir))
@@ -144,13 +144,13 @@ export default class FTBApi {
                 latestVersion
             );
             instance.modpack = this;
-            instance.state = "Waiting...";
-            instances.emit("changed");
+            instance.state = 'Waiting...';
+            instances.emit('changed');
 
-            update("Downloading Files");
+            update('Downloading Files');
             await this.downloadFiles(instance, update);
 
-            update("Downloading Icon");
+            update('Downloading Icon');
             await Util.downloadFile(
                 this.displayIcon,
                 instanceDir,
@@ -158,7 +158,7 @@ export default class FTBApi {
                 'icon.png'
             );
 
-            update("Saving Data");
+            update('Saving Data');
             await Util.writeFile(`${instanceDir}/modpack.json`, JSON.stringify(this.data));
 
             await instance.getConfig();
@@ -172,8 +172,8 @@ export default class FTBApi {
         async downloadFiles(instance, update, concurrency = 20) {
             const config = await instance.getConfig();
 
-            instance.setState("Downloading Files");
-            update?.("Downloading Files");
+            instance.setState('Downloading Files');
+            update?.('Downloading Files');
 
             let downloaded = 0;
             return pMap(

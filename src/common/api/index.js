@@ -24,7 +24,7 @@ class API {
         this[name].API = this;
     }
     static async makeRequest(url, options = {}) {
-        console.log(options.method ?? "GET", url, options);
+        console.log(options.method ?? 'GET', url, options);
         const response = await fetch(url, {
             body: options.body ?? Body.text(''),
             query: options.query ?? {},
@@ -121,13 +121,13 @@ class API {
     static Microsoft = class MicrosoftAPI {
         static async getAccessData(code) {
             const { scope, expires_in, token_type, access_token, refresh_token } = await API.makeRequest(`${MDPKM_API}/v1/oauth/token`, {
-                method: "POST",
+                method: 'POST',
                 body: Body.json({
                     code
                 })
             });
 
-            console.warn("[API:Microsoft]: Signed into Microsoft successfully");
+            console.warn('[API:Microsoft]: Signed into Microsoft successfully');
             return {
                 scope,
                 token: access_token,
@@ -139,13 +139,13 @@ class API {
 
         static async refreshAccessToken(refreshToken) {
             const { scope, expires_in, token_type, access_token, refresh_token } = await API.makeRequest(`${MDPKM_API}/v1/oauth/token`, {
-                method: "POST",
+                method: 'POST',
                 body: Body.json({
                     refreshToken
                 })
             });
 
-            console.warn("[API:Microsoft]: Refreshed Access Token");
+            console.warn('[API:Microsoft]: Refreshed Access Token');
             return {
                 scope,
                 token: access_token,
@@ -200,19 +200,19 @@ class API {
             if(!accessToken)
                 throw new Error(`Invalid Access Token: ${accessToken}`);
             const xboxData = await API.makeRequest(`${XBOX_AUTH_BASE}/user/authenticate`, {
-                method: "POST",
+                method: 'POST',
                 body: Body.json({
                     Properties: {
-                        AuthMethod: "RPS",
-                        SiteName: "user.auth.xboxlive.com",
+                        AuthMethod: 'RPS',
+                        SiteName: 'user.auth.xboxlive.com',
                         RpsTicket: `d=${accessToken}`
                     },
-                    RelyingParty: "http://auth.xboxlive.com",
-                    TokenType: "JWT"
+                    RelyingParty: 'http://auth.xboxlive.com',
+                    TokenType: 'JWT'
                 })
             });
 
-            console.warn("[API:XboxLive]: Signed into Xbox Live successfully");
+            console.warn('[API:XboxLive]: Signed into Xbox Live successfully');
             return {
                 token: xboxData.Token,
                 userHash: xboxData.DisplayClaims.xui[0].uhs,
@@ -242,14 +242,14 @@ class API {
             if(!token)
                 throw new Error(`Invalid Access Token: ${token}`);
             const xstsData = await API.makeRequest(`${XSTS_AUTH_BASE}/xsts/authorize`, {
-                method: "POST",
+                method: 'POST',
                 body: Body.json({
                     Properties: {
-                        SandboxId: "RETAIL",
+                        SandboxId: 'RETAIL',
                         UserTokens: [ token ]
                     },
-                    RelyingParty: "rp://api.minecraftservices.com/",
-                    TokenType: "JWT"
+                    RelyingParty: 'rp://api.minecraftservices.com/',
+                    TokenType: 'JWT'
                 })
             });
             if(xstsData.XErr) {
@@ -268,7 +268,7 @@ class API {
                 }
             }
 
-            console.warn("[API:XboxLive]: Acquired XSTS Token");
+            console.warn('[API:XboxLive]: Acquired XSTS Token');
             return {
                 token: xstsData.Token,
                 userHash: xstsData.DisplayClaims.xui[0].uhs,
@@ -323,13 +323,13 @@ class API {
             if(!token) throw new Error(`Invalid Access Token: ${token}`);
             if(!userHash) throw new Error(`Invalid User Hash: ${userHash}`);
             const { expires_in, token_type, access_token } = await API.makeRequest(`${MINECRAFT_SERVICES_API}/authentication/login_with_xbox`, {
-                method: "POST",
+                method: 'POST',
                 body: Body.json({
                     identityToken: `XBL3.0 x=${userHash};${token}`
                 })
             });
 
-            console.warn("[API:Minecraft]: Acquired Access Token");
+            console.warn('[API:Minecraft]: Acquired Access Token');
             return {
                 token: access_token,
                 tokenType: token_type,
@@ -368,10 +368,10 @@ class API {
                 const versions = await MicrosoftStore.getVersions();
                 versions.reverse();
                 return [{
-                    name: "Releases",
+                    name: 'Releases',
                     data: versions.filter(v => v[2] === 0).map(v => ({ name: v[0], value: v[0] }))
                 }, {
-                    name: "Previews",
+                    name: 'Previews',
                     data: versions.filter(v => v[2] === 2).map(v => ({ name: v[0], value: v[0] }))
                 }];
             }
