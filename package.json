@@ -16,7 +16,6 @@
         "@tauri-apps/cli": "1.0.0-rc.10",
         "@tauri-apps/tauricon": "github:tauri-apps/tauricon",
         "@vitejs/plugin-react": "^1.2.0",
-        "react-devtools": "^4.24.4",
         "vite": "^2.8.6",
         "vite-plugin-tauri": "1.1.3"
     },
