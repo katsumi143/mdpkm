@@ -9,14 +9,14 @@ Minecraft instance management made a bit easier, plus a few other useful things 
 mdpkm is a work-in-progress project, issues should be expected, plus a bit of annoyances!
 
 ## Features
-| Feature           | Status                    |
-|-------------------|---------------------------|
-| Modloader Support | ✅                        |
-| Bedrock Edition   | 🚧                        |
-| Mod Installation  | ✅ (Modrinth)             |
-| Mod Management    | ✅                        |
-| Modpacks          | 🚧 Being Revamped         |
-| Exporting         | ✅ (Custom Format)        |
+| Feature           | Summary                            | Status              |
+|-------------------|------------------------------------|---------------------|
+| Modloader Support |                                    | ✅                 |
+| Bedrock Edition   |                                    | 🚧                 |
+| Mod Installation  |                                    | ✅ (Modrinth)      |
+| Mod Management    |                                    | ✅                 |
+| Modpacks          |                                    | 🚧 Being Revamped  |
+| Exporting         | Share instances with your friends! | ✅ (Custom Format) |
 
 ## Loader/Minecraft Support
 | Loader Name       | Status             |
