@@ -588,19 +588,21 @@ export class Instance extends EventEmitter {
             if(!version)
                 throw new Error(`'${title}' is incompatible with '${this.name}'.`);
 
-            const file = version?.files.find(f => f.primary) ?? version?.files[0];
+            const file = version?.files?.find(f => f.primary) ?? version?.files?.[0] ?? version;
+            const fileName = file.filename ?? file.fileName;
+            const downloadUrl = file.url ?? file.downloadUrl;
             if(file)
-                await Util.downloadFilePath(file.url, `${this.path}/mods/${file.filename}`, true);
+                await Util.downloadFilePath(downloadUrl, `${this.path}/mods/${fileName}`, true);
 
             this.downloading.splice(this.downloading.findIndex(d => d.id === id), 1);
             if(!file)
                 throw new Error('File invalid.');
             
-            const mod = await this.readMod(`${this.path}/mods/${file.filename}`);
+            const mod = await this.readMod(`${this.path}/mods/${fileName}`);
             if(mod)
                 this.mods.push({ source: api.SOURCE_NUMBER, ...(mod ?? {
                     id: "error",
-                    name: file?.filename ?? title,
+                    name: fileName ?? title,
                     loader: "error",
                     description: "error",
                     version: "error"
@@ -624,29 +626,36 @@ export class Instance extends EventEmitter {
         return true;
     }
 
-    async downloadMods() {
+    async downloadMods(concurrency = 20) {
         let downloaded = 0;
-        for (const [source, id, versionId] of this.config.modifications) {
-            this.setState(`Downloading Mods ${downloaded + 1}/${this.config.modifications.length}`);
-            const api = API[APINames[PlatformIndex[source]]];
-            const { title } = await api.getProject(id);
-            const version = await api.getProjectVersion(versionId);
-            const file = version?.files.find(f => f.primary) ?? version?.files[0];
-            if(file)
-                await Util.downloadFilePath(file.url, `${this.path}/mods/${file.filename}`, true);
-            this.downloading.splice(this.downloading.findIndex(d => d.id === id), 1);
 
-            const mod = await this.readMod(`${this.path}/mods/${file?.filename}`);
-            if(mod)
-                this.mods.push({ source: api.SOURCE_NUMBER, ...(mod ?? {
-                    id: "error",
-                    name: file?.filename ?? title,
-                    loader: "error",
-                    description: "error",
-                    version: "error"
-                })});
-            downloaded++;
-        }
+        return pMap(
+            this.config.modifications,
+            async([source, id, versionId]) => {
+                this.setState(`Downloading Mods ${downloaded + 1}/${this.config.modifications.length}`);
+                const api = API[APINames[PlatformIndex[source]]];
+                const { title } = await api.getProject(id);
+                const version = await api.getProjectVersion(versionId, id);
+                const file = version?.files?.find(f => f.primary) ?? version?.files?.[0] ?? version;
+                const fileName = file.filename ?? file.fileName;
+                const downloadUrl = file.url ?? file.downloadUrl;
+                if(file)
+                    await Util.downloadFilePath(downloadUrl, `${this.path}/mods/${fileName}`, true);
+                this.downloading.splice(this.downloading.findIndex(d => d.id === id), 1);
+
+                const mod = await this.readMod(`${this.path}/mods/${fileName}`);
+                if(mod)
+                    this.mods.push({ source: api.SOURCE_NUMBER, ...(mod ?? {
+                        id: "error",
+                        name: fileName ?? title,
+                        loader: "error",
+                        description: "error",
+                        version: "error"
+                    })});
+                downloaded++;
+            },
+            { concurrency }
+        );
     }
 
     async deleteMod(id) {
@@ -655,6 +664,7 @@ export class Instance extends EventEmitter {
             return console.warn(`Mod Deletion of ${id} failed, doesn't exist.`);
         console.warn(`Deleting Mod ${id}`);
 
+        await Util.removeFile(mod.path);
         const config = await this.getConfig();
         if(config.modifications.some(m => m[4] === id))
             config.modifications.splice(config.modifications.findIndex(m => m[4] === id), 1);
@@ -663,7 +673,6 @@ export class Instance extends EventEmitter {
 
         if(this.mods.some(m => m.id === id))
             this.mods.splice(this.mods.findIndex(m => m.id === id), 1);
-        await Util.removeFile(mod.path);
 
         this.emit('changed');
         console.warn(`Deleted Mod ${id}`);

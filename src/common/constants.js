@@ -40,7 +40,7 @@ export const PlatformNames = {
     github: 'GitHub (n/a)',
     modrinth: 'Modrinth',
     internal: 'Internal',
-    curseforge: 'CurseForge (n/a)',
+    curseforge: 'CurseForge',
     feedthebeast: 'Feed the Beast'
 };
 export const PlatformIcons = {

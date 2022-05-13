@@ -21,7 +21,7 @@ export default function Mod({ id, api, data, instance, featured, recommended }) 
     const installMod = () => Instance.downloadMod(mod?.id ?? mod?.project_id, mod.source ? API[mod.source] : API.Modrinth);
     useEffect(() => {
         if(id && typeof api === 'number' && !mod)
-            API[PlatformNames[PlatformIndex[api]]].getProject(id).then(setMod);
+            API[PlatformNames[PlatformIndex[api]]].Mods.get(id).then(setMod);
     }, [id, api]);
     useEffect(() => {
         if(data && data !== mod)
@@ -30,15 +30,16 @@ export default function Mod({ id, api, data, instance, featured, recommended }) 
     return (
         <Grid padding="8px" background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
             {mod ? <React.Fragment>
-                <Image src={mod.icon_url} size={48} borderRadius={4} css={{
-                    minWidth: '48px',
+                <Image src={mod.icon} size={48} borderRadius={4} css={{
+                    zIndex: 2,
+                    minWidth: 48,
                     transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
 
                     '&:hover': {
-                        zIndex: 2,
-                        border: '#ffffff26 solid 1px',
-                        transform: 'scale(2) translate(25%, 25%)',
-                        backgroundColor: '#262626'
+                        zIndex: 3,
+                        transform: 'scale(2)',
+                        transformOrigin: 'top left',
+                        backgroundColor: '$primaryBackground'
                     }
                 }}/>
                 <Grid margin="4px 0 0 12px" padding="2px 0" spacing="2px" direction="vertical">
@@ -61,17 +62,10 @@ export default function Mod({ id, api, data, instance, featured, recommended }) 
                         }
                     </Typography>
                     <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
-                        {(mod.client_side !== "unsupported" &&
-                            mod.server_side !== "unsupported") ?
-                            "Universal mod"
-                        : mod.client_side !== "unsupported" ?
-                            "Client mod" :
-                            mod.server_side !== "unsupported" ?
-                            "Server mod" : "Unavailable"
-                        }
+                        {mod.getSide()} mod
                     </Typography>
                     <Typography size=".9rem" color="$secondaryColor" family="Nunito" textalign="left">
-                        {mod.description}
+                        {mod.summary}
                     </Typography>
                 </Grid>
                 <Grid spacing="8px" css={{
