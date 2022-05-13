@@ -1,22 +1,20 @@
 import { arch } from '@tauri-apps/api/os';
+import { appDir } from '@tauri-apps/api/path';
 
 import API from './api';
 import Util from './util';
 import { ADOPTIUM_API } from './constants';
-import DataController from './dataController';
 
 export default class Java {
-    constructor(dataController, dataPath, data) {
-        this.dataController = dataController;
-        this.path = dataPath;
-        this.data = data;
+    constructor(path) {
+        this.path = path;
     }
 
     static async build() {
-        const dataPath = `${DataController.dataPath}/java`;
-        if(!await Util.fileExists(dataPath))
-            await Util.createDir(dataPath);
-        return new Java(DataController, dataPath, await DataController.getData('javaData'));
+        const path = `${await appDir()}/java`;
+        if(!await Util.fileExists(path))
+            await Util.createDir(path);
+        return new Java(path);
     }
 
     async getExecutable(version, updateToastState) {
@@ -37,7 +35,7 @@ export default class Java {
             binary.architecture === this.convertArch(arc)
         );
 
-        const zipPath = await Util.downloadFile(latest.binary.package.link, `${this.dataController.dataPath}/temp`);
+        const zipPath = await Util.downloadFile(latest.binary.package.link, `${this.path}/temp`);
         await Util.extractZip(zipPath, `${this.path}`);
 
         return `${this.path}/${latest.release_name}/bin/javaw.exe`;

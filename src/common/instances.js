@@ -4,6 +4,7 @@ import * as tauri from '@tauri-apps/api';
 import path from 'path-browserify';
 import toast from 'react-hot-toast';
 import { create } from 'xmlbuilder2';
+import { appDir } from '@tauri-apps/api/path';
 
 import gte from 'semver/functions/gte';
 import coerce from 'semver/functions/coerce';
@@ -12,13 +13,13 @@ import API from './api';
 import Util from './util';
 import Java from './java';
 import EventEmitter from './lib/EventEmitter';
-import DataController from './dataController';
 import { APINames, LoaderData, LoaderTypes, PlatformIndex, MINECRAFT_VERSION_MANIFEST, MINECRAFT_RESOURCES_URL } from './constants';
 
 import {
     FORGE_MAVEN_BASE_URL
 } from './constants';
 
+const appDirectory = await appDir();
 const DEFAULT_INSTANCE_CONFIG = {
     loader: {
         type: 'vanilla',
@@ -40,7 +41,6 @@ export class Instance extends EventEmitter {
         this.icon = data.icon;
         this.instances = instances;
         this.downloading = [];
-        this.dataController = instances.dataController;
 
         this.state = null;
     }
@@ -427,7 +427,7 @@ export class Instance extends EventEmitter {
                 { width: 600, height: 500 },
                 false,
                 javaArguments
-            ).map(v => v.toString().replaceAll(this.instances.dataController.dataPath, '../../'));
+            ).map(v => v.toString().replaceAll(appDirectory, '../../'));
             console.log(jvmArguments);
 
             const window = tauri.window.getCurrent();
@@ -706,10 +706,9 @@ export class Instance extends EventEmitter {
 }
 
 class Instances extends EventEmitter {
-    constructor(dataController, dataPath, java) {
+    constructor(path, java) {
         super();
-        this.dataController = dataController;
-        this.dataPath = dataPath;
+        this.path = path;
         this.java = java;
 
         const window = tauri.window.getCurrent();
@@ -725,10 +724,10 @@ class Instances extends EventEmitter {
     }
 
     static async build() {
-        const dataPath = `${DataController.dataPath}/instances`;
-        if(!await Util.fileExists(dataPath))
-            await Util.createDir(dataPath);
-        return new Instances(DataController, dataPath, await Java.build());
+        const path = `${appDirectory}/instances`;
+        if(!await Util.fileExists(path))
+            await Util.createDir(path);
+        return new Instances(path, await Java.build());
     }
 
     async installModpack(modpack) {
@@ -1317,7 +1316,7 @@ class Instances extends EventEmitter {
         this.gettingInstances = true;
         this.setState('Reading Directory');
 
-        const directory = await Util.readDir(this.dataPath);
+        const directory = await Util.readDir(this.path);
         const instances = this.instances = this.instances || [];
         for (const file of directory)
             if (!instances.some(inst => inst.name === file.name)) {
@@ -1348,7 +1347,7 @@ class Instances extends EventEmitter {
     }
 
     getPath(name) {
-        const base = this.dataController.dataPath;
+        const base = appDirectory;
         switch (name) {
             case 'instances':
                 return `${base}instances`;
