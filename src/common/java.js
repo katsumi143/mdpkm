@@ -35,8 +35,11 @@ export default class Java {
             binary.architecture === this.convertArch(arc)
         );
 
-        const zipPath = await Util.downloadFile(latest.binary.package.link, `${this.path}/temp`);
+        const zipPath = await Util.downloadFile(latest.binary.package.link, this.temp);
         await Util.extractZip(zipPath, `${this.path}`);
+        await Util.removeFile(zipPath);
+        if(await Util.readDir(this.temp).then(f => f.length === 0))
+            await Util.removeDir(this.temp);
 
         return `${this.path}/${latest.release_name}/bin/javaw.exe`;
     }
@@ -50,5 +53,9 @@ export default class Java {
 
     getVersions() {
         return this.data.get('installed');
+    }
+
+    get temp() {
+        return `${this.path}/temp`;
     }
 }
