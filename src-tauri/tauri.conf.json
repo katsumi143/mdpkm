@@ -47,6 +47,10 @@
             "active": false
         },
         "allowlist": {
+            "protocol": {
+                "asset": true,
+                "assetScope": ["*"]
+            },
             "clipboard": {
                 "writeText": true
             },
@@ -54,6 +58,9 @@
                 "close": true,
                 "create": true,
                 "setFocus": true,
+                "maximize": true,
+                "minimize": true,
+                "unmaximize": true,
                 "startDragging": true
             },
             "process": {
@@ -68,23 +75,7 @@
             },
             "http": {
                 "scope": [
-                    "https://minecraft.net/*",
-                    "https://api.modpacks.ch/*",
-                    "https://api.adoptium.net/*",
-                    "https://api.modrinth.com/*",
-                    "https://meta.quiltmc.org/*",
-                    "https://mrarm.io/r/w10-vdb",
-                    "https://meta.fabricmc.net/*",
-                    "https://cdn.essential.gg/mods/*",
-                    "https://authserver.mojang.com/*",
-                    "https://xsts.auth.xboxlive.com/*",
-                    "https://launchermeta.mojang.com/*",
-                    "https://mdpkm.voxelified.com/api/*",
-                    "https://api.minecraftservices.com/*",
-                    "https://addons-ecs.forgesvc.net/api/*",
-                    "https://user.auth.xboxlive.com/user/authenticate",
-                    "https://raw.githubusercontent.com/MCMrARM/mc-w10-versiondb/*.json",
-                    "https://files.minecraftforge.net/net/minecraftforge/forge/maven-metadata.json"
+                    "https://*/*"
                 ],
                 "request": true
             },
@@ -128,7 +119,7 @@
             }
         ],
         "security": {
-            "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: asset: token: 'unsafe-eval' 'unsafe-inline' 'self' img-src: 'self'"
+            "csp": "default-src 'self'; img-src: 'self' asset: https://asset.localhost"
         }
     }
 }
