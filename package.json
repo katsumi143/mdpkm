@@ -2,9 +2,10 @@
     "name": "mdpkm",
     "version": "1.0.0",
     "description": "placeholder",
-    "author": "Blookers",
+    "repository": "github:Blookerss/mdpkm",
+    "homepage": "https://github.com/Blookerss/mdpkm#readme",
+    "author": "Blookerss (https://github.com/Blookerss)",
     "license": "MIT",
-    "private": true,
     "scripts": {
         "dev": "vite-tauri dev",
         "start": "vite-tauri",
