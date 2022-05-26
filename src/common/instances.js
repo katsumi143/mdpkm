@@ -1,5 +1,6 @@
 import pMap from 'p-map-browser';
 import { Buffer } from 'buffer/';
+import { v4 as uuidv4 } from 'uuid';
 import * as tauri from '@tauri-apps/api';
 import path from 'path-browserify';
 import toast from 'react-hot-toast';
@@ -12,8 +13,10 @@ import coerce from 'semver/functions/coerce';
 import API from './api';
 import Util from './util';
 import Java from './java';
+import Store from './store';
 import EventEmitter from './lib/EventEmitter';
-import { APINames, LoaderData, LoaderTypes, PlatformIndex, MINECRAFT_VERSION_MANIFEST, MINECRAFT_RESOURCES_URL } from './constants';
+import { setState, clearData, addInstance, setInstance, removeInstance } from '../common/slices/instances';
+import { MINECRAFT_VERSION_MANIFEST, MINECRAFT_RESOURCES_URL } from './constants';
 
 import {
     FORGE_MAVEN_BASE_URL
@@ -35,25 +38,47 @@ const DEFAULT_INSTANCE_CONFIG = {
 export class Instance extends EventEmitter {
     constructor(data, instances) {
         super();
+        this.id = uuidv4();
         this.name = data.name;
         this.path = data.path;
         this.data = data;
         this.icon = data.icon;
+        this.mods = [];
         this.instances = instances;
         this.downloading = [];
 
         this.state = null;
     }
 
-    static async build(data, instances) {
-        if(!await Util.fileExists(data.path))
-            await Util.createDir(data.path);
+    toSerial() {
+        return {
+            id: this.id,
+            name: this.name,
+            icon: this.icon,
+            path: this.path,
+            mods: [...this.mods],
+            state: this.state,
+            config: this.config,
+            minState: this.minState,
+            downloading: [...this.downloading],
 
-        const iconPath = `${data.path}/icon.png`;
-        if(await Util.fileExists(iconPath)) {
-            const image = await Util.readBinaryFile(iconPath).catch(console.warn);
-            if (image)
-                data.icon = Buffer.from(image).toString('base64');
+            isJava: this.isJava(),
+            isModded: this.isModded(),
+            isBedrock: this.isBedrock(),
+            isVanilla: this.isVanilla()
+        };
+    }
+
+    static async build(data, instances) {
+        if (!await Util.fileExists(data.path))
+            await Util.createDir(data.path);
+        if (instances.instances.find(i => i.name === data.name))
+            throw new Error(`${data.name} already exists`);
+
+        const files = await Util.readDir(data.path);
+        for (const { name, path } of files) {
+            if (/\.(png|jpg|svg)$/.test(name))
+                data.icon = path;
         }
 
         return new Instance(data, instances);
@@ -125,7 +150,7 @@ export class Instance extends EventEmitter {
                     gameVersion: mcversion,
                     version
                 };
-                const image = await Util.readBinaryInZip(path, logoFile).catch(console.warn);
+                const image = await Util.readBinaryInZip(path, logoFile ?? 'icon.png').catch(console.warn);
                 if (image)
                     mod.icon = Buffer.from(image).toString('base64');
 
@@ -146,7 +171,7 @@ export class Instance extends EventEmitter {
                     gameVersion: depends?.minecraft,
                     version
                 };
-                const image = await Util.readBinaryInZip(path, icon ?? `assets/${id}/textures/icon.png`).catch(console.warn);
+                const image = await Util.readBinaryInZip(path, icon ?? 'icon.png').catch(console.warn);
                 if(image)
                     mod.icon = Buffer.from(image).toString('base64');
                 if(Array.isArray(jars))
@@ -174,7 +199,7 @@ export class Instance extends EventEmitter {
                     gameVersion: depends.minecraft,
                     version
                 };
-                const image = await Util.readBinaryInZip(path, metadata.icon).catch(console.warn);
+                const image = await Util.readBinaryInZip(path, metadata.icon ?? 'icon.png').catch(console.warn);
                 if (image)
                     mod.icon = Buffer.from(image).toString('base64');
 
@@ -183,19 +208,19 @@ export class Instance extends EventEmitter {
     }
 
     isJava() {
-        return LoaderTypes[this.config?.loader.type]?.includes('java');
+        return Util.getLoaderType(this.config?.loader?.type)?.includes('java');
     }
 
     isBedrock() {
-        return LoaderTypes[this.config?.loader.type]?.includes('bedrock');
+        return Util.getLoaderType(this.config?.loader?.type)?.includes('bedrock');
     }
 
     isVanilla() {
-        return LoaderTypes[this.config?.loader.type]?.includes('vanilla');
+        return Util.getLoaderType(this.config?.loader?.type)?.includes('vanilla');
     }
 
     isModded() {
-        return LoaderTypes[this.config?.loader.type]?.includes('modded');
+        return Util.getLoaderType(this.config?.loader?.type)?.includes('modded');
     }
 
     async launch(account) {
@@ -220,13 +245,13 @@ export class Instance extends EventEmitter {
 
         const { loader } = await this.getConfig();
         const isJava = this.isJava(), isBedrock = this.isBedrock();
-        if (!await Util.fileExists(this.getClientPath()))
+        if (!await Util.fileExists(this.getClientPath()) || !await Util.fileExists(this.getMinecraftManifestPath()))
             await this.instances.installMinecraft(loader.game, this, updateToastState);
         if(isJava || !isBedrock) {
             updateToastState('Reading Minecraft Manifest');
 
             const manifest = JSON.parse(
-                await Util.readTextFile(`${this.instances.getPath('mcVersions')}/${loader.game}.json`)
+                await Util.readTextFile(this.getMinecraftManifestPath())
             );
             const assetsJson = JSON.parse(
                 await Util.readTextFile(`${this.instances.getPath('mcAssets')}/indexes/${manifest.assets}.json`)
@@ -262,6 +287,8 @@ export class Instance extends EventEmitter {
                 );
                 manifest.mainClass = loaderManifest.mainClass;
 
+                if(loaderManifest.minecraftArguments)
+                    manifest.minecraftArguments = loaderManifest.minecraftArguments;
                 if(loaderManifest.arguments?.game)
                     for (const argument of loaderManifest.arguments.game)
                         manifest.arguments.game.push(argument);
@@ -284,81 +311,6 @@ export class Instance extends EventEmitter {
                         )
                     );*/
             }
-            /*switch(loader.type) {
-                case 'fabric':
-                    updateToastState("Reading Fabric Manifest");
-                    const { mainClass: fabricMainClass, libraries: flibraries } = await this.instances.getFabricManifest(loader);
-                    const fabricLibraries = Util.mapLibraries(flibraries, this.instances.getPath("libraries"));
-                    libraries = libraries.concat(fabricLibraries);
-                    manifest.mainClass = fabricMainClass;
-                    break;
-                case 'quilt':
-                    updateToastState("Reading Quilt Manifest");
-                    const { mainClass: quiltMainClass, libraries: qlibraries } = await this.instances.getQuiltManifest(loader);
-                    const quiltLibraries = Util.mapLibraries(qlibraries, this.instances.getPath("libraries"));
-                    libraries = libraries.concat(quiltLibraries);
-                    manifest.mainClass = quiltMainClass;
-                    break;
-                case 'forge':
-                    updateToastState("Reading Forge Manifest");
-                    const manifestPath = `${this.instances.getPath('libraries')}/net/minecraftforge/${loader.game}-${loader.version}/${loader.game}-${loader.version}.json`;
-                    if(!await Util.fileExists(manifestPath))
-                        await this.instances.installLoader(this, toastId, toastHead, true);
-
-                    const forgeManifest = JSON.parse(
-                        await Util.readTextFile(manifestPath)
-                    );
-                    if (gt(coerce(loader.game), coerce('1.5.2'))) {
-                        const getForgeLastVer = ver => Number.parseInt(ver.split('.')[ver.split('.').length - 1], 10);
-                        if (
-                            lt(coerce(loader.version), coerce('10.13.1')) &&
-                            gte(coerce(loader.version), coerce('9.11.1')) &&
-                            getForgeLastVer(loader.version) < 1217 &&
-                            getForgeLastVer(loader.version) > 935
-                        ) {
-
-                        }
-
-                        const forgeLibraries = Util.mapLibraries(
-                            forgeManifest.version.libraries,
-                            this.instances.getPath('libraries')
-                        );
-                        libraries = libraries.concat(forgeLibraries);
-                        manifest.mainClass = forgeManifest.version.mainClass;
-                        if (forgeManifest.version.minecraftArguments)
-                            manifest.minecraftArguments = forgeManifest.version.minecraftArguments;
-                        else if (forgeManifest.version.arguments.game) {
-                            if (forgeManifest.version.arguments.jvm) {
-                                manifest.forge = { arguments: {} };
-                                manifest.forge.arguments.jvm = forgeManifest.version.arguments.jvm.map(
-                                    arg => {
-                                        return arg
-                                            .replace(/\${version_name}/g, manifest.id)
-                                            .replace(
-                                                /=\${library_directory}/g,
-                                                "=\"../../libraries\""//`="${this.instances.getPath('libraries')}"`
-                                            )
-                                            .replace(
-                                                /\${library_directory}/g,
-                                                "../../libraries"//this.instances.getPath('libraries')
-                                            )
-                                            .replace(
-                                                /\${classpath_separator}/g,
-                                                Util.platform === 'win32' ? ';' : ':'
-                                            );
-                                    }
-                                );
-                            }
-                            manifest.arguments.game = manifest.arguments.game.concat(
-                                forgeManifest.version.arguments.game
-                            );
-                        }
-                    } else
-                        minecraftArtifact = {
-                            path: `${this.instances.getPath('mcVersions')}/${loader.game}-${loader.version}`
-                        };
-                    break
-            }*/
             libraries = Util.removeDuplicates(
                 libraries.concat(Util.mapLibraries(manifest.libraries, this.instances.getPath('libraries'))),
                 'url'
@@ -405,7 +357,7 @@ export class Instance extends EventEmitter {
             const ownsMinecraft = await API.Minecraft.ownsMinecraft(account.minecraft).catch(err => {
                 console.error(err);
                 toast.dismiss(toastId);
-                throw new Error(`Failed to check your entitlements.\n${err.message ?? ''}`);
+                throw new Error(`Couldn't verify your ownership of Minecraft Java Edition.\n${err.message ?? ''}`);
             });
             if(!ownsMinecraft) {
                 toast.dismiss(toastId);
@@ -487,7 +439,6 @@ export class Instance extends EventEmitter {
                     type: {out: 'INFO', err: 'ERROR'}[type],
                     text: message
                 });
-                this.emit('changed');
                 if(!windowClosed)
                     if(message.startsWith('Loading Minecraft ') && message.includes(' with Fabric '))
                         updateText(`Loading Fabric ${message.split(' ')[6]} for ${message.split(' ')[2]}`);
@@ -511,6 +462,10 @@ export class Instance extends EventEmitter {
 
             let log4jString = '';
             window.listen(logger, async ({ payload }) => {
+                if (payload === 'finished') {
+                    windowClosed = true;
+                    return splashWindow.close();
+                }
                 const [type, ...split] = payload.split(':');
                 const string = split.join(':');
                 if(/ *<log4j:Event/.test(string))
@@ -551,11 +506,11 @@ export class Instance extends EventEmitter {
     async delete() {
         await Util.removeDir(this.path);
 
-        if(this.instances.instances.some(i => i.name === this.name))
+        if(this.instances.instances.some(i => i.name === this.name)) {
             this.instances.instances.splice(this.instances.instances.findIndex(i => i.name === this.name), 1);
-        else
+            Store.dispatch(removeInstance(this.id));
+        } else
             console.warn(`Couldn't find ${this.name}'s instance in instances`);
-        this.instances.emit('changed');
     }
 
     getClientPath() {
@@ -567,8 +522,9 @@ export class Instance extends EventEmitter {
             return `${this.instances.getPath('versions')}/bedrock-${loader.game}/GameDirectory`;
     }
 
-    installMods(toastId, toastHead, concurrency) {
-        return this.modpack.installMods(this, toastId, toastHead, concurrency);
+    getMinecraftManifestPath() {
+        const { loader } = this.config;
+        return `${this.instances.getPath('versions')}/java-${loader.game}/manifest.json`;
     }
 
     async downloadMod(id, api) {
@@ -577,17 +533,17 @@ export class Instance extends EventEmitter {
             id,
             type: 'mod'
         });
-        this.emit('changed');
+        this.updateStore();
 
         const config = await this.getConfig();
         try {
             const { slug, title } = await api.getProject(id);
-            const versions = await api.getProjectVersions(id);
+            const versions = await api.getProjectVersions(id, config);
             const version = api.getCompatibleVersion(config, versions);
             if(!version)
-                throw new Error(`'${title}' is incompatible with '${this.name}'.`);
+                throw new Error(`'${title ?? slug}' is incompatible with '${this.name}'.`);
 
-            const file = version?.files?.find(f => f.primary) ?? version?.files?.[0] ?? version;
+            const file = version?.files?.find(f => f.primary && (f.url ?? f.downloadUrl)) ?? version?.files?.find(f => f.url ?? f.downloadUrl) ?? version;
             const fileName = file.filename ?? file.fileName;
             const downloadUrl = file.url ?? file.downloadUrl;
             if(file)
@@ -599,14 +555,14 @@ export class Instance extends EventEmitter {
             
             const mod = await this.readMod(`${this.path}/mods/${fileName}`);
             if(mod)
-                this.mods.push({ source: api.SOURCE_NUMBER, ...(mod ?? {
+                this.mods.push({ source: api.id, ...(mod ?? {
                     id: 'error',
                     name: fileName ?? title,
                     loader: 'error',
                     description: 'error',
                     version: 'error'
                 })});
-            config.modifications.push([api.SOURCE_NUMBER, id, version.id, slug, mod?.id ?? slug]);
+            config.modifications.push([api.id, id, version.id, slug, mod?.id ?? slug]);
         } catch(err) {
             console.error(err);
             toast.error(`Failed to download ${id}.\n${err.message ?? 'Unknown Reason.'}`);
@@ -614,12 +570,11 @@ export class Instance extends EventEmitter {
             const index = this.downloading.findIndex(d => d.id === id);
             if(index >= 0)
                 this.downloading.splice(index, 1);
-            this.emit('changed');
             return false;
         }
 
         await this.saveConfig(config);
-        this.emit('changed');
+        this.updateStore();
 
         console.warn(`Downloaded Mod ${id}`);
         return true;
@@ -631,27 +586,30 @@ export class Instance extends EventEmitter {
         return pMap(
             this.config.modifications,
             async([source, id, versionId]) => {
-                this.setState(`Downloading Mods ${downloaded + 1}/${this.config.modifications.length}`);
-                const api = API[APINames[PlatformIndex[source]]];
-                const { title } = await api.getProject(id);
-                const version = await api.getProjectVersion(versionId, id);
-                const file = version?.files?.find(f => f.primary) ?? version?.files?.[0] ?? version;
-                const fileName = file.filename ?? file.fileName;
-                const downloadUrl = file.url ?? file.downloadUrl;
-                if(file)
-                    await Util.downloadFilePath(downloadUrl, `${this.path}/mods/${fileName}`, true);
-                this.downloading.splice(this.downloading.findIndex(d => d.id === id), 1);
+                try {
+                    this.setState(`Downloading Mods ${downloaded + 1}/${this.config.modifications.length}`, 'Downloading Mods');
+                    const api = API.get(source);
+                    const { title } = await api.getProject(id);
+                    const version = await api.getProjectVersion(versionId, id);
+                    const file = version?.files?.find(f => f.primary) ?? version?.files?.[0] ?? version;
+                    const fileName = file.filename ?? file.fileName;
+                    const downloadUrl = file.url ?? file.downloadUrl;
+                    if(file)
+                        await Util.downloadFilePath(downloadUrl, `${this.path}/mods/${fileName}`, true);
+                    this.downloading.splice(this.downloading.findIndex(d => d.id === id), 1);
 
-                const mod = await this.readMod(`${this.path}/mods/${fileName}`);
-                if(mod)
-                    this.mods.push({ source: api.SOURCE_NUMBER, ...(mod ?? {
-                        id: 'error',
-                        name: fileName ?? title,
-                        loader: 'error',
-                        description: 'error',
-                        version: 'error'
-                    })});
-                downloaded++;
+                    const mod = await this.readMod(`${this.path}/mods/${fileName}`);
+                    if(mod)
+                        this.mods.push({ source: api.SOURCE_NUMBER, ...(mod ?? {
+                            id: 'error',
+                            name: fileName ?? title,
+                            loader: 'error',
+                            description: 'error',
+                            version: 'error'
+                        })});
+                    this.updateStore();
+                    downloaded++;
+                } catch(err) { console.warn(err); }
             },
             { concurrency }
         );
@@ -672,15 +630,23 @@ export class Instance extends EventEmitter {
 
         if(this.mods.some(m => m.id === id))
             this.mods.splice(this.mods.findIndex(m => m.id === id), 1);
+        this.updateStore();
 
-        this.emit('changed');
         console.warn(`Deleted Mod ${id}`);
         return true;
     }
 
-    setState(state) {
+    setState(state, minimalState) {
         this.state = state;
-        this.emit('changed');
+        this.minState = minimalState ?? state;
+        this.updateStore();
+    }
+
+    updateStore() {
+        Store.dispatch(setInstance({
+            id: this.id,
+            data: this.toSerial()
+        }));
     }
 
     async getConfig() {
@@ -710,17 +676,7 @@ class Instances extends EventEmitter {
         super();
         this.path = path;
         this.java = java;
-
-        const window = tauri.window.getCurrent();
-        window.listen('minecraft_log', ([type, text]) => {
-            console.log(type, text);
-            switch(type) {
-                default:
-                case 'info':
-                    console.log(text);
-                    break;
-            }
-        });
+        this.getInstances();
     }
 
     static async build() {
@@ -730,27 +686,9 @@ class Instances extends EventEmitter {
         return new Instances(path, await Java.build());
     }
 
-    async installModpack(modpack) {
-        const toastHead = `Installing ${modpack.name}`;
-        const toastId = toast.loading(`${toastHead}\nFetching Info`, {
-            className: 'gotham',
-            position: 'bottom-right',
-            duration: Infinity,
-            style: { whiteSpace: 'pre-wrap' }
-        });
-
-        const func = text => {
-            toast(`${toastHead}\n${text}`, {
-                id: toastId
-            });
-        };
-        func.id = toastId, func.head = toastHead;
-        return modpack.install(this, func);
-    }
-
     async installLoader(instance, toastId, toastHead, skipDone) {
-        const updateToastState = typeof toastId == 'function' ? toastId : text => {
-            instance.setState(text);
+        const updateToastState = typeof toastId == 'function' ? toastId : (text, min) => {
+            instance.setState(text, min);
             if (toastId)
                 toast(`${toastHead}\n${text}`, {
                     id: toastId
@@ -854,37 +792,13 @@ class Instances extends EventEmitter {
                 await this.downloadLibraries(libraries, updateToastState);
 
                 break;
-            /*case 'quilt':
-                updateToastState("Reading Quilt Manifest");
-                const quiltManifest = await this.getQuiltManifest(loader);
-                console.log(quiltManifest);
-
-                libraries = Util.mapLibraries(quiltManifest.libraries, this.getPath("libraries"));
-
-                await this.downloadLibraries(libraries, updateToastState);
-
-                break;
-            case 'fabric':
-                updateToastState("Reading Fabric Manifest");
-
-                const fabricManifest = await this.getFabricManifest(loader);
-                console.log(fabricManifest);
-
-                libraries = Util.mapLibraries(fabricManifest.libraries, this.getPath("libraries"));
-
-                await this.downloadLibraries(libraries, updateToastState);
-
-                break;*/
             default:
                 const manifestPath = `${loaderDir}/manifest.json`;
                 if(!await Util.fileExists(manifestPath)) {
-                    const loaderData = LoaderData[loader.type];
-                    if(loaderData) {
-                        const manifest = await API.makeRequest(
-                            Util.parseString(loaderData.manifestUrl, loader.game, loader.version)
-                        );
-                        await Util.writeFile(manifestPath, JSON.stringify(manifest));
-                    } else {
+                    const loaderData = API.getLoader(loader.type);
+                    if(loaderData)
+                        await loaderData.source.downloadManifest(manifestPath, loader.game, loader.version);
+                    else {
                         if(toastId)
                             toast.error(`${Util.getLoaderName(loader.type)} isn't supported by mdpkm!`, {
                                 position: 'bottom-right'
@@ -894,11 +808,13 @@ class Instances extends EventEmitter {
                 }
 
                 const manifest = await Util.readTextFile(manifestPath).then(JSON.parse);
-                await this.downloadLibraries(
-                    Util.mapLibraries(manifest.libraries, this.getPath('libraries')),
-                    updateToastState
-                );
+                const missing = [];
+                for (const resource of Util.mapLibraries(manifest.libraries, this.getPath('libraries')))
+                    if(!await Util.fileExists(resource.path))
+                        missing.push(resource);
 
+                if (missing.length > 0)
+                    await this.downloadLibraries(missing, updateToastState);
                 break;
         };
 
@@ -907,28 +823,6 @@ class Instances extends EventEmitter {
             toast.success(`${typeof toastId === 'function' ? toastId.head : toastHead}\nSuccess!`, {
                 id: typeof toastId === 'function' ? toastId.id : toastId,
                 duration: 3000
-            });
-    }
-
-    async getQuiltManifest(loader) {
-        const manifestPath = `${this.getPath('versions')}/quilt-loader-${loader.game}-${loader.version}/quilt-loader-${loader.game}-${loader.version}.json`;
-        if(await Util.fileExists(manifestPath))
-            return await Util.readTextFile(manifestPath).then(JSON.parse);
-        else
-            return API.Quilt.getVersionManifest(loader.game, loader.version).then(async manifest => {
-                await Util.writeFile(manifestPath, JSON.stringify(manifest));
-                return manifest;
-            });
-    }
-
-    async getFabricManifest(loader) {
-        const manifestPath = `${this.getPath('versions')}/fabric-loader-${loader.game}-${loader.version}/fabric-loader-${loader.game}-${loader.version}.json`;
-        if(await Util.fileExists(manifestPath))
-            return await Util.readTextFile(manifestPath).then(JSON.parse);
-        else
-            return API.Fabric.getVersionManifest(loader.game, loader.version).then(async manifest => {
-                await Util.writeFile(manifestPath, JSON.stringify(manifest));
-                return manifest;
             });
     }
 
@@ -947,7 +841,6 @@ class Instances extends EventEmitter {
                 '.lzma'
             )}`
         );
-        console.log('extracted file');
 
         const mainJar = `${this.getPath('mcVersions')}/${forge.minecraft}.jar`;
         const mcJsonPath = `${this.getPath('mcVersions')}/${forge.minecraft}.json`;
@@ -1017,11 +910,8 @@ class Instances extends EventEmitter {
     }
 
     async installInstanceWithLoader(name, loader, gameVersion, loaderVersion, setState) {
-        console.log(loader, gameVersion, loaderVersion);
         const toastHead = `Setting-Up ${name}`;
         const toastId = setState ? null : toast.loading(`${toastHead}\nSetting up Instance`, {
-            className: 'gotham',
-            position: 'bottom-right',
             duration: Infinity,
             style: { whiteSpace: 'pre-wrap' }
         });
@@ -1031,7 +921,6 @@ class Instances extends EventEmitter {
             name,
             path: `${this.getPath('instances')}/${name}`
         }, this);
-        instance.on('changed', _ => this.emit('changed'));
 
         const config = await instance.getConfig();
         config.loader.type = loader;
@@ -1051,67 +940,97 @@ class Instances extends EventEmitter {
             await this.installMinecraft(gameVersion, instance, setState);
         } catch(err) {
             console.error(err);
+            await Util.removeDir(instance.path);
             return toast.error(`Failed to install ${loader} ${gameVersion}\nInstallation cancelled.`);
         }
 
         this.instances.unshift(instance);
-        instance.mods = [];
+        Store.dispatch(addInstance(instance.toSerial()));
+        instance.mods = await instance.getMods();
         instance.corrupt = false;
         instance.setState(null);
         setState?.();
     }
 
-    async importInstance() {
-        const path = await tauri.dialog.open({
-            filters: [{ name: 'mdpkm Instance Files', extensions: ['mdpki'] }]
-        });
-        if(path)
-            if(path.endsWith('.mdpki')) {
-                const { name } = await Util.readFileInZip(path, 'export_data.json').then(JSON.parse);
-                if(this.instances.some(i => i.name === name))
-                    return toast.error(`Import failed, a instance called ${name} already exists`, {
-                        position: 'bottom-right'
-                    });
-
-                const instanceDir = `${this.getPath('instances')}/${name}`;
-                if(!await Util.fileExists(instanceDir))
-                    await Util.createDirAll(instanceDir);
-                await Util.extractZip(path, instanceDir);
-                await Util.removeFile(`${instanceDir}/export_data.json`);
-
-                const instance = await Instance.build({
-                    name,
-                    path: instanceDir
-                }, this);
-                instance.on('changed', _ => this.emit('changed'));
-                instance.mods = [];
-                this.instances.unshift(instance);
-
-                const { loader } = await instance.getConfig();
-                if(loader?.version)
-                    await Util.createDir(`${instance.path}/mods`);
-
-                await this.installLoader(instance);
-                await instance.downloadMods();
-
-                instance.mods = await instance.getMods();
-                instance.corrupt = false;
-                instance.setState(null);
-
-                toast(`Imported ${name} successfully`, {
-                    position: 'bottom-right'
-                });
-            } else
-                toast.error('Import failed, path did not lead to a export file', {
-                    position: 'bottom-right'
-                });
-        else
-            toast.error('Import failed, path was not specified', {
+    async importInstance(name, path, inherit) {
+        if(this.instances.some(i => i.name === name))
+            return toast.error(`Import failed, a instance called ${name} already exists`, {
                 position: 'bottom-right'
             });
+
+        const instanceDir = `${this.getPath('instances')}/${name}`;
+        if(!await Util.fileExists(instanceDir))
+            await Util.createDirAll(instanceDir);
+        await Util.extractZip(path, instanceDir);
+
+        const exportDataPath = `${instanceDir}/export_data.json`;
+        if (await Util.fileExists(exportDataPath))
+            await Util.removeFile(exportDataPath);
+        else {
+            let api;
+            for (const test of Object.values(API.mapped))
+                if (await test.canImport?.(instanceDir)) {
+                    api = test;
+                    break;
+                }
+            console.log(api.id, api.canImport(instanceDir));
+            if (api?.finishImport)
+                await Util.writeFile(`${instanceDir}/config.json`,
+                    await api.finishImport(instanceDir).then(([loader]) => JSON.stringify({
+                        ...DEFAULT_INSTANCE_CONFIG,
+                        loader
+                    })).catch(async err => {
+                        await Util.removeDir(instanceDir);
+                        throw err;
+                    }));
+            else
+                throw new Error('Unsupported export');
+        }
+
+        const instance = await Instance.build({
+            name,
+            path: instanceDir
+        }, this);
+        instance.mods = [];
+
+        const { loader } = await instance.getConfig();
+        if(loader?.version)
+            await Util.createDir(`${instance.path}/mods`);
+
+        await this.installLoader(instance);
+        await instance.downloadMods();
+
+        const toInherit = this.instances[inherit];
+        if (toInherit) {
+            const optionsPath = `${toInherit.path}/options.txt`;
+            if (await Util.fileExists(optionsPath))
+                await Util.copyFile(optionsPath, `${instanceDir}/options.txt`);
+
+            const configPath = `${toInherit.path}/config`;
+            if (await Util.fileExists(configPath))
+                for (const { name, path, isDir } of await Util.readDirRecursive(configPath)) {
+                    if (isDir)
+                        continue;
+                    const parent = path.substr(0, path.replace(/\/+|\\+/, '/').lastIndexOf('/'));
+                    await Util.createDirAll(parent);
+                    await Util.copyFile(path, `${instanceDir}/config/${path.replace(/\/+|\\+/, '/').replace(configPath.replace(/\/+|\\+/, '/'), '')}`)
+                }
+        }
+
+        instance.mods = await instance.getMods();
+        instance.corrupt = false;
+
+        this.instances.unshift(instance);
+        Store.dispatch(addInstance(instance.toSerial()));
+        instance.setState(null);
+
+        toast(`Imported ${name} successfully`, {
+            position: 'bottom-right'
+        });
     }
 
-    async exportInstance(instance, files) {
+    async exportInstance(id, files) {
+        const instance = this.getInstance(id);
         const path = await tauri.dialog.save({
             filters: [{ name: 'mdpkm Instance Files', extensions: ['mdpki'] }]
         });
@@ -1164,7 +1083,7 @@ class Instances extends EventEmitter {
                         library.path = checkForgeMatch(library.path);
 
                         return Util.downloadFilePath(encodeURI(library.url), library.path, true)
-                            .then(_ => updateToastState?.(`Downloading Libraries (${downloaded += 1}/${libraries.length})`));
+                            .then(_ => updateToastState?.(`Downloading Libraries (${downloaded += 1}/${libraries.length})`, 'Downloading Libraries'));
                     } catch (err) {
                         console.error(err);
                     }
@@ -1182,18 +1101,18 @@ class Instances extends EventEmitter {
         const { loader } = await instance.getConfig();
         const isJava = instance.isJava(), isBedrock = instance.isBedrock();
         if(isJava || !isBedrock) {
+            const manifestPath = instance.getMinecraftManifestPath();
             const versionManifest = await JSON.parse(
-                await Util.readTextFile(`${this.getPath('mcVersions')}/${version}.json`).catch(async _ => {
+                await Util.readTextFile(manifestPath).catch(async _ => {
                     updateToastState?.('Downloading Manifest');
                     const { versions } = await Util.makeRequest(MINECRAFT_VERSION_MANIFEST);
-                    console.log(versions);
                     const targetManifest = versions.find(manifest => manifest.id === version);
                     if (!targetManifest)
                         throw new Error(`Could not find manifest for ${version}`);
 
-                    return Util.downloadFile(
+                    return Util.downloadFilePath(
                         targetManifest.url,
-                        `${this.getPath('libraries')}/minecraft`
+                        manifestPath
                     ).then(path => Util.readTextFile(path));
                 })
             );
@@ -1219,7 +1138,6 @@ class Instances extends EventEmitter {
                     resourcesPath: `${this.path}/resources/${key}`
                 })
             );
-            console.log(assets);
 
             const libraries = Util.mapLibraries(
                 versionManifest.libraries,
@@ -1245,9 +1163,13 @@ class Instances extends EventEmitter {
                 );
             }
 
-            updateToastState?.('Downloading Libraries');
+            updateToastState?.('Checking Resources');
+            const missing = [];
+            for (const resource of [...libraries, ...assets, clientArtifact])
+                if(!await Util.fileExists(resource.path))
+                    missing.push(resource);
             await this.downloadLibraries(
-                [...libraries, ...assets, clientArtifact],
+                missing,
                 updateToastState
             );
             if(assetsJson.map_to_resources) {
@@ -1292,29 +1214,12 @@ class Instances extends EventEmitter {
         );
     }
 
-    getLatestModpackFile(files) {
-        let date = 0, file = null;
-        for (let i = 0; i < files.length; i++) {
-            let value = files[i];
-            if (new Date(value.gameVersionDateReleased) > date)
-                file = value;
-        }
-        return file;
-    }
-
-    static getLatestMod(files) {
-        let date = 0, file = null;
-        for (let i = 0; i < files.length; i++) {
-            let value = files[i];
-            if (new Date(value.fileDate) > date)
-                file = value;
-        }
-        return file;
-    }
-
     async getInstances() {
         this.gettingInstances = true;
         this.setState('Reading Directory');
+
+        this.instances = [];
+        Store.dispatch(clearData());
 
         const directory = await Util.readDir(this.path);
         const instances = this.instances = this.instances || [];
@@ -1332,8 +1237,9 @@ class Instances extends EventEmitter {
                 const loaderType = Util.getLoaderType(instance.config.loader.type);
                 if(!instance.mods && loaderType?.includes('modded'))
                     instance.corrupt = true, instance.state = 'Unavailable';
-                instance.on('changed', _ => this.emit('changed'));
-                instances.unshift(instance);
+
+                this.instances.push(instance);
+                Store.dispatch(addInstance(instance.toSerial()));
             }
 
         this.gettingInstances = false;
@@ -1341,9 +1247,13 @@ class Instances extends EventEmitter {
         return instances;
     }
 
+    getInstance(id) {
+        return this.instances?.find(i => i.id === id);
+    }
+
     setState(state) {
         this.state = state;
-        this.emit('changed');
+        Store.dispatch(setState(state));
     }
 
     getPath(name) {

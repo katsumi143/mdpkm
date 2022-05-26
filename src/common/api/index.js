@@ -19,10 +19,88 @@ import MicrosoftStore from '/src/common/msStore';
 import { MDPKM_API, ESSENTIAL_SITE, XSTS_AUTH_BASE, XBOX_AUTH_BASE, MINECRAFT_NEWS_RSS, MINECRAFT_SERVICES_API } from '/src/common/constants';
 
 class API {
-    static add(name, module) {
+    static mapped = {};
+    static loaders = [];
+    static instanceTypes = [{
+        name: 'first_party',
+        types: []
+    }, {
+        name: 'third_party_modpacks',
+        types: [{
+            id: 'modpack',
+            isLoader: true
+        }]
+    }, {
+        name: 'third_party',
+        types: []
+    }, {
+        name: 'other',
+        types: [{
+            id: 'import',
+            isImport: true
+        }, {
+            id: 'import2'
+        }]
+    }];
+
+    static async add(name, module) {
         this[name] = module;
         this[name].API = this;
+        this.mapped[module.id] = this[name];
+        if (typeof this[name].init === 'function')
+            await this[name].init();
     }
+
+    static get(id) {
+        return this.mapped[id];
+    }
+
+    static getModPlatforms() {
+        return Object.values(this.mapped).filter(a => a.Mods);
+    }
+
+    static getModPlatformIDs() {
+        return this.getModPlatforms().map(a => a.id);
+    }
+
+    static getModpackPlatforms() {
+        return Object.values(this.mapped).filter(a => a.Modpacks);
+    }
+
+    static getModpackPlatformIDs() {
+        return this.getModpackPlatforms().map(a => a.id);
+    }
+
+    static addLoader(id, icon, source, options = {}) {
+        const { category, description, ...restOptions } = options;
+        API.addInstanceType(category ?? 'third_party', {
+            id,
+            icon,
+            isLoader: true,
+            description
+        });
+        API.loaders.push({
+            id,
+            icon,
+            source,
+            ...restOptions
+        });
+    }
+
+    static addInstanceType(categoryName, data) {
+        const category = this.instanceTypes.find(c => c.name === categoryName);
+        if(category)
+            return category.types.push(data);
+        return this.instanceTypes.push({
+            name: categoryName,
+            types: [data]
+        });
+    }
+
+    static getLoader(id) {
+        return this.loaders.find(l => l.id === id);
+    }
+
     static async makeRequest(url, options = {}) {
         console.log(options.method ?? 'GET', url, options);
         const response = await fetch(url, {
@@ -32,6 +110,8 @@ class API {
             headers: options.headers ?? {},
             responseType: {JSON: 1, Text: 2, Binary: 3}[options.responseType] ?? 2
         });
+        if(!response.ok)
+            throw new Error(`${response.status} ${response.data}`);
         if(response.headers['content-type']?.includes('application/json') || options.forceJson)
             response.data = JSON.parse(response.data);
         console.log(url, options, response);
@@ -39,7 +119,8 @@ class API {
     }
 
     static Internal = class InternalAPI {
-        static SOURCE_NUMBER = 3;
+        static id = 'internal';
+        static icon = 'img/icons/brand_default.svg';
         static INTERNAL_VERSIONS = [{
             id: '189forge',
             files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/6128d13e6b88c104dede042a/Essential-Forge-1.8.9.jar`, filename: 'essential-forge-1.8.9.jar' }],
@@ -76,9 +157,8 @@ class API {
             slug: 'essential-container',
             title: 'Essential',
             author: 'Spark Universe',
-            source: 'Internal',
             loaders: ['fabric', 'forge', 'quilt'],
-            icon_url: 'essential-bg.svg',
+            icon_url: 'img/icons/essential_mod.svg',
             website_url: ESSENTIAL_SITE,
             client_side: 'required',
             server_side: 'unsupported',
@@ -87,7 +167,7 @@ class API {
 
         static Mods = class Mods {
             static async get(id) {
-                return new Mod(API.Internal.INTERNAL_PROJECTS.find(p => p.id === id));
+                return new Mod(API.Internal.INTERNAL_PROJECTS.find(p => p.id === id), 'internal');
             }
 
             static async search(query) {
@@ -96,7 +176,7 @@ class API {
                         !query ||
                         p.title.toLowerCase().includes(query.toLowerCase()) ||
                         p.description.toLowerCase().includes(query.toLowerCase())
-                    ).map(m => new Mod(m))
+                    ).map(m => new Mod(m, 'internal'))
                 };
             }
         }
@@ -231,7 +311,6 @@ class API {
                     [account] = await API.Microsoft.verifyAccount(account);
                     account.xbox = await this.getAccessData(account.microsoft.token);
                 }
-                console.log(account);
                 account.xsts = await this.getXSTSData(account.xbox.token);
                 return [account, true];
             }
@@ -278,6 +357,7 @@ class API {
     }
 
     static Minecraft = class MinecraftAPI {
+        static type = 'java-vanilla';
         static accessData;
 
         static async getNews() {
@@ -285,13 +365,29 @@ class API {
                 responseType: 'Text'
             });
             const xml = create(data).toObject();
-            console.log(xml);
-
             return {
                 news: xml.rss.channel.item,
                 version: xml.rss['@version'],
                 description: xml.rss.channel.description
             };
+        }
+
+        static getVersions() {
+            return API.makeRequest(MINECRAFT_VERSION_MANIFEST).then(versions =>
+                [{
+                    name: "Releases",
+                    data: versions.versions.filter(v => v.type == "release").map(v => ({ name: v.id, value: v.id }))
+                }, {
+                    name: "Snapshots",
+                    data: versions.versions.filter(v => v.type == "snapshot").map(v => ({ name: v.id, value: v.id }))
+                }, {
+                    name: "Old Betas",
+                    data: versions.versions.filter(v => v.type == "old_beta").map(v => ({ name: v.id, value: v.id }))
+                }, {
+                    name: "Old Alphas",
+                    data: versions.versions.filter(v => v.type == "old_alpha").map(v => ({ name: v.id, value: v.id }))
+                }]
+            );
         }
 
         static async verifyAccount(account) {
@@ -355,6 +451,8 @@ class API {
         }
         
         static Bedrock = class BedrockAPI {
+            static type = 'bedrock-vanilla';
+            
             static async getDownloadLink(version) {
                 const versions = await MicrosoftStore.getVersions();
                 const uuid = versions.find(v => v[0] === version)?.[1];
@@ -380,12 +478,62 @@ class API {
 };
 
 import { Quilt, Forge, Fabric, GitHub, Modrinth, CurseForge, FeedTheBeast } from './custom';
-API.add('Quilt', Quilt);
-API.add('Forge', Forge);
-API.add('Fabric', Fabric);
-API.add('GitHub', GitHub);
-API.add('Modrinth', Modrinth);
-API.add('CurseForge', CurseForge);
-API.add('FeedTheBeast', FeedTheBeast);
+await API.add('Quilt', Quilt);
+await API.add('Forge', Forge);
+await API.add('Fabric', Fabric);
+await API.add('GitHub', GitHub);
+await API.add('Modrinth', Modrinth);
+await API.add('CurseForge', CurseForge);
+await API.add('FeedTheBeast', FeedTheBeast);
+
+API.addLoader('java', 'img/icons/minecraft/java.png', API.Minecraft, {
+    banner: 'img/banners/minecraft_franchise.svg',
+    category: 'first_party',
+    creatorIcon: 'img/icons/mojang_studios.svg',
+    versionBanners: [
+        [/^22w13oneblockatatime/, 'img/banners/minecraft_franchise.svg', 'One Block at a Time (April Fools)'],
+        [/^20w14infinite/, 'img/banners/minecraft_franchise.svg', 'The Ultimate Content Update (April Fools)'],
+        [/^3D Shareware v1\.34/, 'img/banners/minecraft_franchise.svg', '3D Shareware v1.34 (April Fools)'],
+        [/^\d\.RV-.*/, 'img/banners/minecraft_franchise.svg', 'Trendy Update (April Fools)'],
+        [/^15w14a/, 'img/banners/minecraft_franchise.svg', 'The Loves and Hugs Update (April Fools)'],
+        [/^\d+(w\d+[a-z]|.*?-(rc|pre)\d+)/, 'img/banners/minecraft_franchise.svg', 'Minecraft Snapshot'],
+    
+        [/^1\.19/, 'img/banners/versions/minecraft_1.19.webp', 'The Wild Update'],,
+        [/^1\.18/, 'img/banners/versions/minecraft_1.17-1.18.webp', 'Caves & Cliffs: Part II'],
+        [/^1\.17/, 'img/banners/versions/minecraft_1.17-1.18.webp', 'Caves & Cliffs: Part I'],
+        [/^1\.16/, 'img/banners/versions/minecraft_1.16.webp', 'The Nether Update'],
+        [/^1\.16/, 'img/banners/minecraft_franchise.svg', 'Buzzy Bees'],
+        [/^1\.14/, 'img/banners/versions/minecraft_1.14.webp', 'Village & Pillager'],
+        [/^1\.13/, 'img/banners/versions/minecraft_1.13.webp', 'Update Aquatic'],
+        [/^1\.12/, 'img/banners/minecraft_franchise.svg', 'World of Color Update'],
+        [/^1\.11/, 'img/banners/minecraft_franchise.svg', 'Exploration Update'],
+        [/^1\.10/, 'img/banners/minecraft_franchise.svg', 'Frostburn Update'],
+        [/^1\.9/, 'img/banners/minecraft_franchise.svg', 'Cpmbat Update'],
+        [/^1\.8/, 'img/banners/minecraft_franchise.svg', 'Bountiful Update'],
+        [/^1\.7/, 'img/banners/minecraft_franchise.svg', 'The Update that Changed the World'],
+        [/^1\.6/, 'img/banners/minecraft_franchise.svg', 'Horse Update'],
+        [/^1\.5/, 'img/banners/minecraft_franchise.svg', 'Redstone Update'],
+        [/^1\.4/, 'img/banners/minecraft_franchise.svg', 'Pretty Scary Update'],
+        [/^1\.3/, 'img/banners/minecraft_franchise.svg', 'Minecraft Full Release'],
+        [/^1\.2/, 'img/banners/minecraft_franchise.svg', 'Minecraft Full Release'],
+        [/^1\.1/, 'img/banners/minecraft_franchise.svg', 'Minecraft Full Release'],
+        [/^1\.0/, 'img/banners/minecraft_franchise.svg', 'Adventure Update'],
+    
+        [/^b.+/, 'img/banners/minecraft_old.webp', 'Minecraft Beta'],
+        [/^a.+/, 'img/banners/minecraft_old.webp', 'Minecraft Alpha']
+    ]
+});
+API.addLoader('bedrock', 'img/icons/minecraft/bedrock.png', API.Minecraft.Bedrock, {
+    banner: 'img/banners/minecraft_franchise.svg',
+    category: 'first_party',
+    creatorIcon: 'img/icons/mojang_studios.svg',
+    versionBanners: [
+        [/1\.19/, 'img/banners/versions/minecraft_1.19.webp', 'The Wild Update'],
+        [/1\.18/, 'img/banners/versions/minecraft_1.17-1.18.webp', 'Caves & Cliffs: Part II'],
+        [/1\.17/, 'img/banners/versions/minecraft_1.17-1.18.webp', 'Caves & Cliffs: Part I']
+    ]
+});
+
+API.mapped.internal = API.Internal;
 
 export default API;

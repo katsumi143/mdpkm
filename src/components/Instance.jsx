@@ -1,5 +1,6 @@
 import React from 'react';
 import { keyframes } from '@stitches/react';
+import { useTranslation } from 'react-i18next';
 import { CaretRightFill } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
@@ -19,6 +20,7 @@ const Animation = keyframes({
 });
 
 export default function Instance({ css, data: instance, onView }) {
+    const { t } = useTranslation();
     return (
         <Grid width="100%" padding="4px 16px" alignItems="start" css={{
             opacity: 0,
@@ -65,7 +67,7 @@ export default function Instance({ css, data: instance, onView }) {
                     position: 'absolute'
                 }}>
                     <Button theme="secondary" onClick={onView} disabled={instance.corrupt}>
-                        View
+                        {t('app.mdpkm.common:actions.view')}
                         <CaretRightFill/>
                     </Button>
                 </Grid>

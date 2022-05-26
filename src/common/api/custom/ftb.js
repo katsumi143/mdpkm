@@ -1,6 +1,7 @@
 import { FTB_API_BASE } from '/src/common/constants';
 export default class FTBApi {
-    static SOURCE_NUMBER = 2;
+    static id = 'ftb';
+    static icon = 'img/icons/platforms/feedthebeast.png';
 
     static Modpacks = class Modpacks {
         static modpacks;

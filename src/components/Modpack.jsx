@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { open } from '@tauri-apps/api/shell';
-import { BoxArrowUpRight } from 'react-bootstrap-icons';
+import { Download, BoxArrowUpRight } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -9,20 +9,29 @@ import Spinner from '/voxeliface/components/Spinner';
 import Typography from '/voxeliface/components/Typography';
 
 import API from '../common/api';
-import { PlatformIndex, PlatformNames } from '../common/constants';
-export default function Modpack({ id, api, data, featured, recommended }) {
+import Util from '../common/util';
+export default function Modpack({ id, api, data, featured, recommended, importModpack }) {
     const [modpack, setModpack] = useState(data);
-    const installModpack = () => null;
+    const installModpack = async() => {
+        const path = await API.get(api).downloadModpack(id ?? data.id);
+        const manifest = await API.get(api).readModpackManifest(path);
+        await Util.writeBinaryFile(`${Util.tempPath}/${manifest.name}.png`, await API.makeRequest(
+            (await API.get(api).getProject(id ?? data.id)).icon,
+            { responseType: 'Binary' }
+        ));
+
+        importModpack(path);
+    };
     useEffect(() => {
-        if(id && typeof api === 'number' && !modpack)
-            API[PlatformNames[PlatformIndex[api]]].getProject(id).then(setModpack);
+        if(id && typeof api === 'string' && !modpack)
+            API.get(api).getProject(id).then(setModpack);
     }, [id, api]);
     useEffect(() => {
         if(data && data !== modpack)
             setModpack(data);
     }, [data]);
     return (
-        <Grid padding="8px" background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
+        <Grid padding={8} background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
             {modpack ? <React.Fragment>
                 <Image src={modpack.icon} size={48} borderRadius={4} css={{
                     zIndex: 2,
@@ -36,7 +45,7 @@ export default function Modpack({ id, api, data, featured, recommended }) {
                         backgroundColor: '$primaryBackground'
                     }
                 }}/>
-                <Grid margin="4px 0 0 12px" padding="2px 0" spacing="2px" direction="vertical">
+                <Grid margin="4px 0 0 12px" padding="2px 0" spacing={2} direction="vertical">
                     <Typography size="1.1rem" color="$primaryColor" family="Nunito" lineheight={1}>
                         {modpack.title}
                         {modpack.author && 
@@ -59,7 +68,7 @@ export default function Modpack({ id, api, data, featured, recommended }) {
                         {modpack.summary}
                     </Typography>
                 </Grid>
-                <Grid spacing="8px" css={{
+                <Grid spacing={8} css={{
                     right: 8,
                     position: 'absolute'
                 }}>
@@ -75,6 +84,10 @@ export default function Modpack({ id, api, data, featured, recommended }) {
                             Visit Website
                         </Button>
                     }
+                    <Button onClick={installModpack} disabled={modpack.client_side === "unsupported"}>
+                        <Download/>
+                        Install
+                    </Button>
                 </Grid>
             </React.Fragment> : <Spinner/>}
         </Grid>

@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import Mod from './Mod';
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
-import Select from '/voxeliface/components/Input/Select';
 import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
-import SelectItem from '/voxeliface/components/Input/SelectItem';
+import * as Select from '/voxeliface/components/Input/Select';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
-import Instances from '../common/instances';
-import { APINames, ModPlatforms, PlatformNames, PlatformIcons } from '../common/constants';
+import Util from '../common/util';
 import { Search } from 'react-bootstrap-icons';
-export default function ModSearch({ instance }) {
-    const { config } = Instances.instances[instance];
+export default function ModSearch({ instanceId }) {
+    const { t } = useTranslation();
+    const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
+    const { config } = instance;
+    const loaderData = API.getLoader(config?.loader?.type);
 
-    const [api, setApi] = useState('Modrinth');
+    const [api, setApi] = useState('modrinth');
     const [mods, setMods] = useState();
     const [query, setQuery] = useState();
     const [instance2, setInstance2] = useState();
@@ -26,14 +29,14 @@ export default function ModSearch({ instance }) {
     const search = api => {
         if(searching)
             return toast.error('Already searching');
-        if(!API[api].Mods) {
+        if(!API.get(api).Mods) {
             setMods([]);
             return toast.error(`API.${api}.Mods is missing`);
         }
         setSearching(true);
-        API[api].Mods.search(query, {
-            versions: [config.loader.game],
-            categories: [config.loader.type]
+        API.get(api).Mods.search(query, {
+            versions: [config.loader.game, config.loader.game.substring(0, Math.max(4, config.loader.game.lastIndexOf('.')))],
+            categories: [...[loaderData?.asLoader ?? config.loader.type]]
         }).then(({ hits }) => {
             setMods(hits);
             setSearching(false);
@@ -49,11 +52,11 @@ export default function ModSearch({ instance }) {
         search(api);
     };
     useEffect(() => {
-        if(instance !== instance2) {
+        if(instanceId !== instance2) {
             setMods();
             setSearching(false);
         }
-        setInstance2(instance);
+        setInstance2(instanceId);
     }, [instance]);
     useEffect(() => {
         if(!mods && !searching)
@@ -63,33 +66,38 @@ export default function ModSearch({ instance }) {
         <Grid spacing="1rem" direction="vertical">
             <Grid justifyContent="space-between">
                 <Grid>
-                    <Grid spacing="4px" direction="vertical">
+                    <Grid spacing={4} direction="vertical">
                         <Typography size=".9rem" text="Search Query" color="$secondaryColor" family="Nunito"/>
-                        <TextInput value={query} onChange={event => setQuery(event.target.value)}>
+                        <TextInput value={query} onChange={setQuery}>
                             <Button theme="secondary" onClick={() => search(api)} disabled={searching}>
                                 {searching ? <BasicSpinner size={16}/> : <Search/>}
-                                Search
+                                {t('app.mdpkm.common:actions.search')}
                             </Button>
                         </TextInput>
                     </Grid>
                 </Grid>
                 <Grid>
-                    <Grid spacing="4px" direction="vertical">
+                    <Grid spacing={4} direction="vertical">
                         <Typography size=".9rem" text="Platform" color="$secondaryColor" family="Nunito"/>
-                        <Select value={api} onChange={event => setAPI(event.target.value)}>
-                            {ModPlatforms.map((platform, index) =>
-                                <SelectItem key={index} value={APINames[platform]}>
-                                    <Image src={PlatformIcons[platform]} size={16} borderRadius={4}/>
-                                    {PlatformNames[platform]}
-                                </SelectItem>
-                            )}
-                        </Select>
+                        <Select.Root value={api} onChange={setAPI} disabled={searching}>
+                            <Select.Group name="Mod Platforms">
+                                {API.getModPlatformIDs().map((platform, index) =>
+                                    <Select.Item key={index} value={platform}>
+                                        <Image src={API.get(platform).icon} size={16} borderRadius={4}/>
+                                        {Util.getPlatformName(platform)}
+                                    </Select.Item>
+                                )}
+                            </Select.Group>
+                        </Select.Root>
+                        {API.get(api)?.announcement && <Typography size=".6rem" color="$secondaryColor" family="Nunito" whitespace="nowrap">
+                            {API.get(api).announcement}
+                        </Typography>}
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid spacing="8px" direction="vertical">
+            <Grid spacing={8} direction="vertical">
                 {mods && mods.map((mod, index) =>
-                    <Mod key={index} data={mod} instance={instance}/>
+                    <Mod key={index} data={mod} instanceId={instanceId}/>
                 )}
                 <Grid direction="vertical">
                     <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">

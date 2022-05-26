@@ -2,8 +2,6 @@ import Util from '../util';
 import { appDir } from '@tauri-apps/api/path';
 import { createSlice } from '@reduxjs/toolkit';
 
-import LocalStrings from '../../localization/strings';
-
 const settingsPath = `${await appDir()}/settings.json`;
 const settings = await Util.readTextFile(settingsPath).then(JSON.parse).catch(console.warn);
 export const settingsSlice = createSlice({
@@ -11,7 +9,7 @@ export const settingsSlice = createSlice({
     initialState: {
         theme: settings?.theme ?? 'default',
         account: settings?.account,
-        language: settings?.language ?? LocalStrings.getLanguage()
+        language: settings?.language ?? 'en'
     },
     reducers: {
         setTheme: (state, { payload }) => {

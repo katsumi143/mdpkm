@@ -1,0 +1,50 @@
+{
+    "actions.view": "View",
+    "actions.edit": "Edit",
+    "actions.retry": "Retry",
+    "actions.launch": "Launch",
+    "actions.delete": "Delete",
+    "actions.search": "Search",
+    "actions.install": "Install",
+    "actions.refresh": "Refresh",
+    "actions.open_folder": "Open Folder",
+    "actions.visit_website": "Visit Website",
+
+    "states.waiting": "Waiting",
+    "states.installed": "Installed",
+    "states.installing": "Installing",
+    "states.unavailable": "Unavailable",
+
+    "buttons.back_to_instances": "Back to Instances",
+    "buttons.back_to_selection": "Back to Selection",
+
+    "loaders.java": "Minecraft Java Edition",
+    "loaders.java.summary": "Simply Vanilla Minecraft, no mods or anything special.",
+    "loaders.forge": "Forge Loader",
+    "loaders.forge.summary": "Forge summary",
+    "loaders.quilt": "Quilt Loader",
+    "loaders.quilt.summary": "Fabric is a lightweight, experimental modding toolchain.",
+    "loaders.fabric": "Fabric Loader",
+    "loaders.fabric.summary": "Fabric is a lightweight, experimental modding toolchain.",
+    "loaders.bedrock": "Minecraft Bedrock Edition",
+    "loaders.bedrock.summary": "Simply Bedrock Edition with downloadable content.\nWindows 10+ only, requires a Microsoft Store account.",
+    "loaders.modpack": "Minecraft Modpacks",
+    "loaders.modpack.summary": "Minecraft Java Edition Modpacks created by communities.",
+    "loaders.import": "Import Instance",
+    "loaders.import.summary": "Import user generated instances via mdpki files.",
+    "loaders.import2": "Import Custom Client",
+    "loaders.import2.summary": "Import a custom manifest file.\nMust support the official Minecraft Launcher!",
+
+    "loaders.categories.first_party": "Mojang Studios",
+    "loaders.categories.third_party": "Third Party Modloaders",
+    "loaders.categories.third_party_modpacks": "Third Party Modpacks",
+    "loaders.categories.other": "Other Options",
+
+
+    "platforms.ftb": "Feed the Beast",
+    "platforms.github": "GitHub",
+    "platforms.internal": "Internal",
+    "platforms.modrinth": "Modrinth",
+    "platforms.curseforge": "CurseForge",
+    "platforms.local": "Local"
+}

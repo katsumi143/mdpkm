@@ -17,7 +17,6 @@ fn main() {
             });
         })
         .invoke_handler(tauri::generate_handler![
-            //web_request,
             move_dir,
             fs_copy,
             create_zip,
@@ -38,6 +37,7 @@ fn main() {
             fs_read_text_file,
             fs_create_dir_all,
             reregister_package,
+            fs_write_binary_zip,
             fs_read_file_in_zip,
             get_microsoft_account,
             fs_read_dir_recursive,
@@ -48,11 +48,7 @@ fn main() {
         .expect("error while running tauri application");
 }
 
-use std::collections::HashMap;
-//use tauri::api::http::{ClientBuilder, HttpRequestBuilder, ResponseData, ResponseType};
-
 use std::net::{ TcpListener, TcpStream };
-use std::io::{ Write, Read };
 fn redirect_uri() -> Result<String, ()> {
     let listener = TcpListener::bind(format!("127.0.0.1:3432"));
 
@@ -118,34 +114,6 @@ fn respond_with_error(error_message: String, mut stream: TcpStream) {
     stream.write_all(response.as_bytes()).unwrap();
     stream.flush().unwrap();
 }
-
-/*#[tauri::command]
-async fn web_request(
-    url: String,
-    method: String,
-    body: tauri::api::http::Body,
-    query: HashMap<String, String>,
-    headers: HashMap<String, String>,
-    response_type: ResponseType,
-) -> Result<ResponseData, String> {
-    let method = &method;
-    let headers2 = reqwest::header::HeaderMap::new();
-    let client = ClientBuilder::new().max_redirections(3).build().unwrap();
-    let mut request_builder = HttpRequestBuilder::new(method, url).unwrap().query(query).headers(headers2);
-
-    if method.eq("POST") {
-        request_builder = request_builder.body(body);
-    }
-
-    let request = request_builder.response_type(response_type);
-    if let Ok(response) = client.send(request).await {
-        if let Ok(result) = response.read().await {
-            return Ok(result);
-        }
-        return Err("response read failed".into());
-    }
-    return Err("web request failed".into());
-}*/
 
 #[tauri::command]
 fn move_dir(path: String, target: String) {
@@ -244,6 +212,7 @@ fn fs_read_binary_in_zip(path: String, file_path: String) -> Result<Vec<u8>, Str
     return Err(file.unwrap_err().to_string());
 }
 
+use std::io::{ Read, Write };
 use walkdir::{ WalkDir };
 
 #[tauri::command]
@@ -331,6 +300,15 @@ fn fs_write_binary(path: String, contents: Vec<u8>) {
 }
 
 #[tauri::command]
+fn fs_write_binary_zip(path: String, name: String, contents: Vec<u8>) {
+    let mut zip = zip::ZipWriter::new(std::fs::File::create(&path).unwrap());
+    let options = zip::write::FileOptions::default().compression_method(zip::CompressionMethod::Stored);
+    zip.start_file(name, options).unwrap();
+    zip.write(&contents).unwrap();
+    zip.finish().unwrap();
+}
+
+#[tauri::command]
 fn fs_remove_file(path: String) -> Result<(), String> {
     let result = std::fs::remove_file(path);
     if result.is_ok() {
@@ -340,8 +318,12 @@ fn fs_remove_file(path: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn fs_remove_dir(path: String) {
-    std::fs::remove_dir_all(path).unwrap();
+fn fs_remove_dir(path: String) -> Result<(), String> {
+    let result = std::fs::remove_dir_all(path);
+    if result.is_ok() {
+        return Ok(result.unwrap());
+    }
+    return Err(result.unwrap_err().to_string());
 }
 
 #[tauri::command]
@@ -434,19 +416,23 @@ fn launch_minecraft(window: tauri::window::Window, cwd: String, java_path: Strin
     let logger = gen_log_str();
     let _logger = logger.clone();
     std::thread::spawn(move || {
-        let child = child_runner::run(&java_path, &args.join(" "), &cwd, Stdio::piped(), Stdio::piped());
-        BufReader::new(child.stdout.unwrap())
+        let mut child = child_runner::run(&java_path, &args.join(" "), &cwd, Stdio::piped(), Stdio::piped());
+        BufReader::new(child.stdout.take().unwrap())
             .lines()
             .filter_map(| line | line.ok())
             .for_each(| line | {
                 window.emit(&_logger, format!("out:{}", &line)).unwrap();
             });
-        BufReader::new(child.stderr.unwrap())
+        BufReader::new(child.stderr.take().unwrap())
             .lines()
             .filter_map(| line | line.ok())
             .for_each(| line | {
                 window.emit(&_logger, format!("err:{}", &line)).unwrap();
             });
+        std::thread::spawn(move || {
+            child.wait().unwrap();
+            window.emit(&_logger, "finished").unwrap();
+        });
     });
     return logger;
 }
@@ -527,7 +513,7 @@ async fn launch_package(family: String, game_dir: String) {
 }
 
 #[tauri::command]
-async fn reregister_package(family: String, game_dir: String) {
+async fn reregister_package(_family: String, game_dir: String) {
     let game_path = std::path::Path::new(&game_dir);
     let manifest_path = game_path.join("AppxManifest.xml");
     let options = RegisterPackageOptions::new().unwrap();
@@ -542,7 +528,11 @@ use tauri::Manager;
 
 #[tauri::command]
 fn send_window_event(window: tauri::window::Window, label: String, event: String, payload: String) {
-    window.get_window(&label).unwrap().emit(&event, payload).unwrap();
+    let window2 = window.get_window(&label);
+    match window2 {
+        Some(x) => x.emit(&event, payload).unwrap(),
+        None => println!("{} is closed, tried to send {}", label, event)
+    }
 }
 
 #[cfg(windows)]

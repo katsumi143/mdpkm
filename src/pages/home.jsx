@@ -1,32 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Buffer } from 'buffer/';
 import { styled } from '@stitches/react';
+import { useDispatch } from 'react-redux';
 import { open } from '@tauri-apps/api/dialog';
+import * as shell from '@tauri-apps/api/shell';
+import { listen } from '@tauri-apps/api/event';
+import { useTranslation } from 'react-i18next';
 import toast, { Toaster } from 'react-hot-toast';
-import { PlusLg, GearFill, ArrowLeft } from 'react-bootstrap-icons';
+import { relaunch } from '@tauri-apps/api/process';
+import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
+import { XLg, PlusLg, Github, Download, GearFill, ArrowLeft } from 'react-bootstrap-icons';
 import { MinecraftSkinViewer } from '@yannichock/react-minecraft-skin-viewer';
 
 import App from '/src/components/App';
 import News from '../components/News';
 import Main from '/voxeliface/components/Main';
 import Grid from '/voxeliface/components/Grid';
+import Pages from '/src/components/Pages';
 import Header from '/src/components/Header';
 import Button from '/voxeliface/components/Button';
-import Settings from '../components/Settings';
-import SkinList from '../components/SkinList';
-import LoaderSetup from '../components/LoaderSetup';
+import Settings from '/src/components/Settings';
+import SkinList from '/src/components/SkinList';
+import PageItem from '/src/components/Pages/Item';
+import TextInput from '/voxeliface/components/Input/Text';
+import Typography from '/voxeliface/components/Typography';
+import LoaderSetup from '/src/components/LoaderSetup';
 import * as Dialog from '/voxeliface/components/Dialog';
-import ModpackSetup from '../components/ModpackSetup';
-import InstanceList from '../components/InstanceList';
-import InstancePage from '../components/InstancePage';
+import ModpackSetup from '/src/components/ModpackSetup';
+import InstanceList from '/src/components/InstanceList';
+import InstancePage from '/src/components/InstancePage';
+import ImportInstance from '/src/components/ImportInstance';
 
-import SelectInstanceType from '../components/SelectInstanceType';
+import SelectInstanceType from '/src/components/SelectInstanceType';
 
-import API from '../common/api';
-import Util from '../common/util';
-import Instances from '../common/instances';
-import LocalStrings from '../localization/strings';
-import { LoaderIcons, QUILT_API_BASE, FABRIC_API_BASE, FORGE_VERSION_MANIFEST, MINECRAFT_VERSION_MANIFEST } from '../common/constants';
+import API from '/src/common/api';
+import Util from '/src/common/util';
+import Instances from '/src/common/instances';
+import { addSkin, saveSkins } from '/src/common/slices/skins';
 
 const TopButton = styled('button', {
     flex: 1,
@@ -53,15 +63,20 @@ const TopButton = styled('button', {
     }
 });
 
+let updateListener;
 export default function Home() {
+    const { t } = useTranslation();
+    const dispatch = useDispatch();
     const [_, setBruh] = useState(0);
     const [skin, setSkin] = useState();
     const [page, setPage] = useState('home');
+    const [update, setUpdate] = useState();
     const [loading, setLoading] = useState(false);
     const [instance, setInstance] = useState();
     const [fullPage, setFullPage] = useState('instances');
-    const [instances, setInstances] = useState();
     const [settingUp, setSettingUp] = useState();
+    const [importPath, setImportPath] = useState();
+    const [addSkinName, setAddSkinName] = useState();
     const [addSkinImage, setAddSkinImage] = useState();
     const [sidebarActive, setSidebarActive] = useState(true);
     const [loaderVersions, setLoaderVersions] = useState();
@@ -90,12 +105,10 @@ export default function Home() {
         })
     };
     const importInstance = () => {
-        setPage('home');
+        setPage('import-instance');
         setLoading(false);
-        setSidebarActive(true);
-        Instances.importInstance();
     };
-    const selectInstance = index => setInstance(index);
+    const selectInstance = id => setInstance(id);
     const installLoader = async(name, loader, gameVersion, loaderVersion, setState) => {
         setState('Preparing...');
         await Instances.installInstanceWithLoader(name, loader, gameVersion, loaderVersion, setState).catch(err => {
@@ -116,78 +129,60 @@ export default function Home() {
     const chooseLoader = async loader => {
         setLoading(true);
         try {
-            if(loader === "bedrock") {
+            if(loader === 'bedrock') {
                 const versions = await API.Minecraft.Bedrock.getLoaderVersions();
                 console.log(versions);
 
                 setLoaderVersions(versions);
-            } else if(loader === "modpacks") {
+            } else if(loader === 'modpack') {
                 setLoading(false);
                 setPage('modpack-setup');
                 return;
             } else {
-                const versions = await API.makeRequest({
-                    java: MINECRAFT_VERSION_MANIFEST,
-                    forge: FORGE_VERSION_MANIFEST,
-                    quilt: `${QUILT_API_BASE}/versions`,
-                    fabric: `${FABRIC_API_BASE}/versions`
-                }[loader]).then(versions => {
-                    switch(loader) {
-                        case "java":
-                            return [{
-                                name: "Releases",
-                                data: versions.versions.filter(v => v.type == "release").map(v => ({ name: v.id, value: v.id }))
-                            }, {
-                                name: "Snapshots",
-                                data: versions.versions.filter(v => v.type == "snapshot").map(v => ({ name: v.id, value: v.id }))
-                            }, {
-                                name: "Old Betas",
-                                data: versions.versions.filter(v => v.type == "old_beta").map(v => ({ name: v.id, value: v.id }))
-                            }, {
-                                name: "Old Alphas",
-                                data: versions.versions.filter(v => v.type == "old_alpha").map(v => ({ name: v.id, value: v.id }))
-                            }];
-                        case "quilt":
-                        case "fabric":
-                            const fabric = {};
-                            const loaders = versions.loader.map(y => y.version);
-                            for (const { version } of versions.game) {
-                                fabric[version] = loaders;
-                            }
-                            return fabric;
-                        default:
-                            return versions;
-                    }
-                });
+                const loaderData = API.getLoader(loader);
+                if(!loaderData)
+                    throw new Error(`Invalid Loader: ${loader}`);
+                const versions = await loaderData.source.getVersions();
                 setLoaderVersions(versions);
             }
         } catch(err) {
             setLoading(false);
-            return toast.error(err.message);
+            return toast.error(`Failed to load ${loader};\n${err}`);
         }
         setSettingUp(loader);
         setLoading(false);
         setPage('setup-loader');
     };
+    const importModpack = path => {
+        setImportPath(path);
+        setPage('import-instance');
+    };
     const selectSkin = () => {
 
     };
-    const newsPage = () => {
-        setSidebarActive(false);
-        setPage('news');
+    const addNewSkin = () => {
+        dispatch(addSkin({
+            name: addSkinName,
+            image: addSkinImage
+        }));
+        dispatch(saveSkins());
     };
-
+    const updateApp = () => {
+        setUpdate({
+            ...update,
+            updating: true
+        });
+        installUpdate().then(() => relaunch());
+    };
     useEffect(() => {
-        if(!Instances.instances && !Instances.gettingInstances)
-            Instances.getInstances().then(i => {
-                Instances.on('changed', () => {
-                    setBruh(bruh => bruh + 1);
-                    setInstances(Instances.instances);
-                });
-                setInstances(i);
+        if (!updateListener)
+            updateListener = listen('tauri://update-available', ({ payload }) => {
+                console.log('New version available: ', payload);
+                setUpdate(payload);
+            }).then(unlisten => {
+                updateListener = unlisten;
+                checkUpdate();
             });
-        else if(!instances)
-            setInstances(Instances.instances);
     });
 
     return (
@@ -198,6 +193,55 @@ export default function Home() {
                     overflow: 'hidden auto',
                     flexDirection: 'row'
                 }}>
+                    {update &&
+                        <Grid width="100%" height="100%" direction="vertical" alignItems="center" background="#00000099" justifyContent="center" css={{
+                            top: 0,
+                            left: 0,
+                            zIndex: 100000,
+                            position: 'absolute'
+                        }}>
+                            <Grid width="40%" height="35%" padding={12} direction="vertical" background="$secondaryBackground" borderRadius={8} css={{
+                                border: '1px solid $secondaryBorder2',
+                                position: 'relative'
+                            }}>
+                                <Typography size="1.2rem" color="$primaryColor" weight={600} family="Nunito Sans">
+                                    New Update Available
+                                </Typography>
+                                <Typography size=".9rem" color="$primaryColor" weight={400} family="Nunito">
+                                    Version {update.version}
+                                </Typography>
+
+                                <Typography size=".9rem" color="$primaryColor" weight={400} margin="1rem 0 0" family="Nunito">
+                                    Release notes:
+                                </Typography>
+                                <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito">
+                                    {update.body}
+                                </Typography>
+
+                                <Grid margin="8px 0 0" spacing={8} css={{
+                                    bottom: 12,
+                                    position: 'absolute'
+                                }}>
+                                    <Button theme="accent" onClick={updateApp} disabled={update.updating}>
+                                        {update.updating ? <BasicSpinner size={16}/> : <Download size={14}/>}
+                                        Install Update
+                                    </Button>
+                                    <Button theme="secondary" onClick={() => setUpdate()} disabled={update.updating}>
+                                        <XLg/>
+                                        Later
+                                    </Button>
+                                </Grid>
+                                <Button theme="secondary" onClick={() => shell.open(`https://github.com/Blookerss/mdpkm/releases/tag/v${update.version}`)} css={{
+                                    right: 12,
+                                    bottom: 12,
+                                    position: 'absolute'
+                                }}>
+                                    <Github size={14}/>
+                                    View Release
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    }
                     <Grid width="35%" height="100%" direction="vertical" background="$blackA2" justifyContent="space-between" css={{
                         opacity: sidebarActive ? 1 : 0,
                         maxWidth: '35%',
@@ -213,16 +257,10 @@ export default function Home() {
                             <TopButton onClick={() => setFullPage('instances')} selected={fullPage === 'instances'}>
                                 Instances
                             </TopButton>
-                            <TopButton onClick={() => setFullPage('skins')} selected={fullPage === 'skins'}>
-                                Skins
-                            </TopButton>
-                            <TopButton onClick={() => setFullPage('news')} selected={fullPage === 'news'}>
-                                News
-                            </TopButton>
                         </Grid>
                         {
                             fullPage === 'instances' ?
-                                <InstanceList selected={instance} onSelect={selectInstance} instances={instances}/>
+                                <InstanceList id={instance} onSelect={selectInstance}/>
                             : fullPage === 'skins' ?
                                 <SkinList selected={skin} onSelect={selectSkin}/>
                             : null
@@ -233,27 +271,27 @@ export default function Home() {
                             {fullPage === 'instances' ?
                                 <Button onClick={addInstancePage}>
                                     <PlusLg/>
-                                    {LocalStrings['app.mdpkm.home.sidebar.buttons.add_instance']}
+                                    {t('app.mdpkm.home.sidebar.buttons.add_instance')}
                                 </Button>
                             : fullPage === 'skins' ?
                                 <Dialog.Root>
                                     <Dialog.Trigger asChild>
-                                        <Button>
+                                        <Button onClick={() => setAddSkinImage()}>
                                             <PlusLg/>
-                                            Add New Skin
+                                            {t('app.mdpkm.home.sidebar.buttons.add_skin')}
                                         </Button>
                                     </Dialog.Trigger>
                                     <Dialog.Content>
                                         <Dialog.Title>Add new Minecraft Skin</Dialog.Title>
-                                        <Dialog.Description>
-                                            This action will literally murder you.
-                                        </Dialog.Description>
-                                        <Grid width="fit-content" spacing={8} direction="vertical" alignItems="center">
+                                        <Grid spacing={4} direction="vertical">
+                                            <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito">
+                                                Skin Name
+                                            </Typography>
+                                            <TextInput value={addSkinName} onChange={setAddSkinName} placeholder="Enter a name"/>
+                                        </Grid>
+                                        <Grid width="fit-content" margin="8px 0 0" spacing={8} direction="vertical">
                                             <Grid background="$secondaryBackground2" borderRadius={8} css={{ overflow: 'hidden' }}>
                                                 {addSkinImage &&
-                                                    /*<Image src={`data:image/png;base64,${addSkinImage}`} size={96} css={{
-                                                        imageRendering: 'pixelated'
-                                                    }}/>*/
                                                     <MinecraftSkinViewer
                                                         skin={`data:image/png;base64,${addSkinImage}`}
                                                         width={128}
@@ -266,9 +304,9 @@ export default function Home() {
                                                 Choose image
                                             </Button>
                                         </Grid>
-                                        <Grid margin="25 0 0" justifyContent="end">
+                                        <Grid margin="16px 0 0" justifyContent="end">
                                             <Dialog.Close asChild>
-                                                <Button size="medium">
+                                                <Button onClick={addNewSkin} disabled={!addSkinName || !addSkinImage}>
                                                     Add Skin
                                                 </Button>
                                             </Dialog.Close>
@@ -278,78 +316,60 @@ export default function Home() {
                             : null}
                             <Button theme="secondary" onClick={settingsPage}>
                                 <GearFill/>
-                                {LocalStrings['app.mdpkm.home.sidebar.buttons.settings']}
+                                {t('app.mdpkm.home.sidebar.buttons.settings')}
                             </Button>
                         </Grid>
                     </Grid>
                     {fullPage === 'instances' && page === 'home' &&
-                        instances?.[instance] && !Instances.gettingInstances &&
-                        <InstancePage instance={instance}/>
+                        !Instances.gettingInstances &&
+                        <InstancePage id={instance}/>
                     }
-                    {page === 'add-instance' ?
-                        <SelectInstanceType back={selectBackToHome} loading={loading} types={[
-                            "divide:Supported by Mojang Studios",
-                            ["java_vanilla",
-                                LoaderIcons.java,
-                                [["Continue", () => chooseLoader("java")]]
-                            ],
-                            ["bedrock_vanilla",
-                                "/bedrock-icon-small.png",
-                                [["Continue", () => chooseLoader("bedrock")]],
-                                "coming soon"
-                            ],
-                            "divide:Third Party Modpacks",
-                            ["modpack",
-                                "img/icons/brand_default.svg",
-                                [["Continue", () => chooseLoader("modpacks")]],
-                                "beta"
-                            ],
-                            "divide:Third Party Modloaders",
-                            ["forge",
-                                LoaderIcons.forge,
-                                [["Continue", () => chooseLoader("forge")]],
-                                "unstable"
-                            ],
-                            ["fabric",
-                                LoaderIcons.fabric,
-                                [["Continue", () => chooseLoader("fabric")]]
-                            ],
-                            ["fabric2",
-                                LoaderIcons.quilt,
-                                [["Continue", () => chooseLoader("quilt")]],
-                                "beta software"
-                            ],
-                            "divide:Other",
-                            ["import",
-                                "img/icons/brand_default.svg",
-                                [["Import", importInstance]]
-                            ],
-                            ["import2",
-                                "img/icons/brand_default.svg",
-                                [["Import", () => null, true]]
-                            ]
-                        ]}/>
-                    : page === 'setup-loader' ?
-                        <LoaderSetup install={installLoader} loader={settingUp} versions={loaderVersions} backButton={
-                            <Button theme="secondary" onClick={setupBackToSelect}>
-                                <ArrowLeft/>
-                                Select Another Loader
-                            </Button>
-                        }/>
-                    : page === 'modpack-setup' ?
-                        <ModpackSetup back={setupBackToSelect} install={null}/>
-                    : page === 'settings' ?
-                        <Settings close={selectBackToHome}/>
-                    : page === 'news' ?
-                        <News render={page === 'news'} backButton={
-                            <Button theme="secondary" onClick={selectBackToHome}>
-                                <ArrowLeft/>
-                                Back to Home
-                            </Button>
-                        }/>
-                    : null}
+                    {page !== 'home' && <Grid width="100%" height="100%" css={{ position: 'relative' }}>
+                        <Pages value={page}>
+                            <PageItem value="add-instance">
+                                <SelectInstanceType
+                                    back={selectBackToHome}
+                                    types={API.instanceTypes}
+                                    loading={loading}
+                                    chooseLoader={chooseLoader}
+                                    importInstance={importInstance}
+                                />
+                            </PageItem>
+                            <PageItem value="setup-loader">
+                                <LoaderSetup
+                                    back={setupBackToSelect}
+                                    loader={settingUp}
+                                    install={installLoader}
+                                    versions={loaderVersions}
+                                />
+                            </PageItem>
+                            <PageItem value="modpack-setup">
+                                <ModpackSetup back={setupBackToSelect} importModpack={importModpack}/>
+                            </PageItem>
+                            <PageItem value="import-instance">
+                                <ImportInstance path={importPath} back={setupBackToSelect}/>
+                            </PageItem>
+                            <PageItem value="settings">
+                                <Settings close={selectBackToHome}/>
+                            </PageItem>
+                            <PageItem value="news">
+                                <News render={page === 'news'} backButton={
+                                    <Button theme="secondary" onClick={selectBackToHome}>
+                                        <ArrowLeft/>
+                                        Back to Home
+                                    </Button>
+                                }/>
+                            </PageItem>
+                        </Pages>
+                    </Grid>}
                 </Main>
-                <Toaster position="bottom-right"/>
+                <Toaster position="bottom-right" toastOptions={{
+                    style: {
+                        color: 'var(--colors-primaryColor)',
+                        fontSize: '.9rem',
+                        background: 'var(--colors-secondaryBackground)'
+                    }
+                }}/>
         </App>
     );
 };

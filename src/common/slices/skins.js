@@ -7,11 +7,11 @@ const skins = await Util.readTextFile(skinsPath).then(JSON.parse).catch(console.
 export const skinsSlice = createSlice({
     name: 'skins',
     initialState: {
-        data: skins?.data ?? {}
+        data: skins?.data ?? []
     },
     reducers: {
         addSkin: (state, { payload }) => {
-            state.data[payload.id] = payload.data;
+            state.data.push(payload);
         },
         saveSkins: state => {
             Util.writeFile(skinsPath, JSON.stringify(state));

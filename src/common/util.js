@@ -1,9 +1,34 @@
+import { t } from 'i18next';
 import path from 'path-browserify';
+import { Buffer } from 'buffer/';
 import { os, invoke } from '@tauri-apps/api';
+import { appDir } from '@tauri-apps/api/path';
 
 import API from './api';
-import { LoaderNames, LoaderTypes, MINECRAFT_LIBRARIES_URL } from './constants';
+import { MINECRAFT_LIBRARIES_URL } from './constants';
+
+const appDirectory = await appDir();
 export default class Util {
+    static appPath = appDirectory;
+    static tempPath = `${appDirectory}/temp`;
+
+    static async pmapTry(fn, tries = 5, delay = 5000) {
+        let ok = false;
+        let current = 0;
+        do {
+            current++;
+            if (current !== 1)
+                await new Promise(resolve => setTimeout(resolve, delay));
+            try {
+                await fn(current);
+                ok = true;
+            } catch (err) {
+                console.error(err);
+            }
+        } while (!ok && current <= tries);
+        return ok;
+    }
+
     static makeRequest(...args) {
         return API.makeRequest(...args);
     }
@@ -64,38 +89,53 @@ export default class Util {
     }
 
     static async readTextFile(path) {
-        return invoke('fs_read_text_file', { path }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_read_text_file', { path }).catch(err => {throw new Error(`readTextFile failed: ${err}`)});
     }
 
     static async readBinaryFile(path) {
-        return invoke('fs_read_file', { path }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_read_file', { path }).catch(err => {throw new Error(`readBinaryFile failed: ${err}`)});
+    }
+
+    static async readFileBase64(path) {
+        const binary = await this.readBinaryFile(path);
+        return Buffer.from(binary).toString('base64');
+    }
+
+    static async readFileInZipBase64(path, filePath) {
+        const binary = await this.readBinaryInZip(path, filePath);
+        return Buffer.from(binary).toString('base64');
     }
 
     static writeFile(path, contents) {
-        return invoke('fs_write_file', { path, contents }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_write_file', { path, contents }).catch(err => {throw new Error(`writeFile failed: ${err}`)});
     }
 
     static writeBinaryFile(path, contents) {
-        return invoke('fs_write_binary', { path, contents }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_write_binary', { path, contents }).catch(err => {throw new Error(`writeBinaryFile failed: ${err}`)});
+    }
+
+    static writeBinaryToZip(path, name, contents) {
+        console.log(path, name, contents);
+        return invoke('fs_write_binary', { path, name, contents }).catch(err => {throw new Error(`writeBinaryToZip failed: ${err}`)});
     }
 
     static removeFile(path) {
-        return invoke('fs_remove_file', { path }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_remove_file', { path }).catch(err => {throw Error(`removeFile failed: ${err}`)});
     }
 
     static fileExists(path) {
-        return invoke('fs_file_exists', { path }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_file_exists', { path }).catch(err => {throw new Error(`fileExists failed: ${err}`)});
     }
 
     static extractZip(path, output) {
-        return invoke('extract_zip', { path, output }).catch(err => {throw new Error(err.stack)});
+        return invoke('extract_zip', { path, output }).then(() => output).catch(err => {throw new Error(`extractZip failed: ${err}`)});
     }
 
     static async moveFolder(path, target) {
         return invoke('move_dir', {
             path,
             target
-        }).then(_ => target).catch(err => {throw new Error(err.stack)});
+        }).then(_ => target).catch(err => {throw new Error(`moveFolder failed: ${err}`)});
     }
 
     static copyFile(path, target) {
@@ -104,7 +144,7 @@ export default class Util {
                 path,
                 target
             }).then(_ => target)
-        ).catch(err => {throw new Error(err.stack)});
+        ).catch(err => {throw new Error(`copyFile failed: ${err}`)});
     }
 
     static extractFile(path, name, output) {
@@ -112,7 +152,7 @@ export default class Util {
             path,
             fileName: name,
             output
-        }).then(_ => output).catch(err => {throw new Error(err.stack)});
+        }).then(_ => output).catch(err => {throw new Error(`extractFile failed: ${err}`)});
     }
 
     static extractFiles(zip, path, output, ignore) {
@@ -121,13 +161,13 @@ export default class Util {
             path,
             output,
             ignore: ignore ?? '~'
-        }).then(_ => output).catch(err => {throw new Error(err.stack)});
+        }).then(_ => output).catch(err => {throw new Error(`extractFiles failed: ${err}`)});
     }
 
     static createDirAll(path) {
         return invoke('fs_create_dir_all', {
             path
-        }).then(_ => path).catch(err => {throw new Error(err.stack)});
+        }).then(_ => path).catch(err => {throw new Error(`createDirAll failed: ${err}`)});
     }
 
     static readDir(path) {
@@ -135,7 +175,7 @@ export default class Util {
             name: path.split(/\/+|\\+/).reverse()[0],
             path,
             isDir: isDir === 'true'
-        }))).catch(err => {throw new Error(err.stack)});
+        }))).catch(err => {throw new Error(`readDir failed: ${err}`)});
     }
 
     static readDirRecursive(path) {
@@ -143,33 +183,33 @@ export default class Util {
             name: path.split(/\/+|\\+/).reverse()[0],
             path,
             isDir: isDir === 'true'
-        }))).catch(err => {throw new Error(err.stack)});
+        }))).catch(err => {throw new Error(`readDirRecursive failed: ${err}`)});
     }
 
     static readFileInZip(path, filePath) {
         return invoke('fs_read_file_in_zip', {
             path, filePath
-        }).catch(err => {throw new Error(err.stack)});
+        }).catch(err => {throw new Error(`readFileInZip failed: ${err}`)});
     }
 
     static readBinaryInZip(path, filePath) {
         return invoke('fs_read_binary_in_zip', {
             path, filePath
-        }).catch(err => {throw new Error(err.stack)});
+        }).catch(err => {throw new Error(`readBinaryInZip failed: ${err}`)});
     }
 
     static createZip(path, prefix, files) {
         return invoke('create_zip', {
             path, prefix, files
-        }).catch(err => {throw new Error(err.stack)});
+        }).catch(err => {throw new Error(`createZip failed: ${err}`)});
     }
 
     static createDir(path) {
-        return invoke('fs_create_dir_all', { path }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_create_dir_all', { path }).catch(err => {throw new Error(`createDir failed: ${err}`)});
     }
 
     static removeDir(path) {
-        return invoke('fs_remove_dir', { path }).catch(err => {throw new Error(err.stack)});
+        return invoke('fs_remove_dir', { path }).catch(err => {throw new Error(`removeDir failed: ${err}`)});
     }
 
     static mavenToArray(s, nativeString, forceExt) {
@@ -573,11 +613,15 @@ export default class Util {
     }
 
     static getLoaderName(type) {
-        return LoaderNames[type] ?? type;
+        return t(`app.mdpkm.common:loaders.${type}`);
     }
 
     static getLoaderType(type) {
-        return LoaderTypes[type] ?? 'unknown';
+        return API.getLoader(type)?.source?.type ?? 'unknown';
+    }
+
+    static getPlatformName(id) {
+        return t(`app.mdpkm.common:platforms.${id ?? 'local'}`);
     }
 
     static getAccount(useSelector) {

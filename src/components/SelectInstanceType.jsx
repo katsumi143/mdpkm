@@ -1,94 +1,91 @@
 import React from 'react';
-import { keyframes } from '@stitches/react';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft } from 'react-bootstrap-icons';
 
-import Tag from './Tag';
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
 import Typography from '/voxeliface/components/Typography';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
-import LocalStrings from '../localization/strings';
-
-const FadeAnimation = keyframes({
-    "0%": {
-        opacity: 1,
-        transform: "none"
-    },
-    "100%": {
-        opacity: 0,
-        transform: "scale(0.8)"
-    }
-});
-
-export default function SelectInstanceType({ back, types, loading }) {
+import API from '../common/api';
+import PluginLoader from '../common/plugins/loader';
+import PluginSystem from '../common/plugins/system';
+export default function SelectInstanceType({ back, types, loading, chooseLoader, importInstance }) {
+    const { t } = useTranslation();
     return (
         <Grid width="100%" direction="vertical" alignItems="center">
-            <Grid width="100%" padding="1rem 0" spacing={4} direction="vertical" alignItems="center" css={{
+            <Grid width="100%" padding="1rem 0" spacing={8} direction="vertical" alignItems="center" css={{
                 borderBottom: '1px solid $tagBorder'
             }}>
-                <Typography size="1.4rem" color="$primaryColor" family="Raleway">
+                <Typography size="1.2rem" color="$primaryColor" family="Raleway" lineheight={1}>
                     Adding New Instance
                 </Typography>
-                <Typography color="$secondaryColor" family="Nunito">
-                    Select Instance Type
+                <Typography size=".9rem" color="$secondaryColor" family="Nunito" lineheight={1}>
+                    Select Loader
                 </Typography>
             </Grid>
             <Grid width="100%" height="-webkit-fill-available" spacing="1rem" padding="1rem 0" direction="vertical" alignItems="center" css={{
                 overflow: 'auto'
             }}>
-                {types.map((type, index) =>
-                    typeof type === "string" && type.startsWith("divide") ?
-                        <Grid key={index} width="70%" height="2px" margin="8px 0" background="$gray8" borderRadius={1}>
-                            <Typography size=".9rem" color="$secondaryColor" weight={600} family="Nunito" css={{
-                                top: 0,
-                                left: "50%",
-                                padding: "0 8px",
-                                position: "relative",
-                                transform: "translateX(-50%)",
-                                background: "$primaryBackground"
-                            }}>
-                                {type.split(":")[1]}
-                            </Typography>
-                        </Grid>
-                    :
-                    <Grid key={index} width="70%" padding="16px 24px" background="#0000001a" borderRadius="4px" alignItems="center" justifyContent="space-between">
-                        <Grid alignItems="center">
-                            <Image src={type[1]} size="48px" borderRadius={4}/>
-                            <Grid margin="0 0 0 24px" direction="vertical" alignItems="start">
-                                <Typography color="$primaryColor" whitespace="nowrap">
-                                    {LocalStrings[`app.mdpkm.select_instance_type.${type[0]}`] ?? 'Unknown Name'}
-                                    {type[3] &&
-                                        <Tag margin="0 0 0 8px">
-                                            <Typography size="0.8rem" color="$tagColor" weight={600} family="Nunito" lineheight={1.2}>
-                                                {type[3]}
-                                            </Typography>
-                                        </Tag>
-                                    }
-                                </Typography>
-                                <Typography size="0.8rem" color="$secondaryColor" weight={300} textalign="start" whitespace="pre-wrap">
-                                    {LocalStrings[`app.mdpkm.select_instance_type.${type[0]}.description`] ?? 'Unknown Description'}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                        <Grid spacing="8px">
-                            {type[2]?.map(([text, onClick, disabled, theme], index) => 
-                                <Button key={index} theme={theme} onClick={onClick} disabled={loading || disabled}>
-                                    {loading && <BasicSpinner size={16}/>}
-                                    {text}
-                                </Button>
-                            )}
-                        </Grid>
+                {types.filter(({ types }) => types.length > 0).map(({ name, types }) => <React.Fragment key={name}>
+                    <Grid width="70%" height={2} margin="8px 0" background="$tagBorder" borderRadius={1}>
+                        <Typography size=".9rem" color="$secondaryColor" weight={600} family="Nunito" css={{
+                            top: 0,
+                            left: "50%",
+                            padding: "0 8px",
+                            position: "relative",
+                            transform: "translateX(-50%)",
+                            background: "$primaryBackground"
+                        }}>
+                            {t(`app.mdpkm.common:loaders.categories.${name}`)}
+                        </Typography>
                     </Grid>
-                )}
+                    {types.map(({ id, icon, isLoader, isImport }, index) => {
+                        const loaderData = API.getLoader(id);
+                        const pluginData = PluginLoader.loaded[loaderData?.source?.id];
+                        return <Grid key={index} width="70%" padding="16px 24px" background="#0000001a" borderRadius={4} alignItems="center" justifyContent="space-between">
+                            <Grid alignItems="center">
+                                <Image src={icon ?? 'img/icons/brand_default.svg'} size={48} borderRadius={4}/>
+                                <Grid margin="0 0 0 24px" direction="vertical" alignItems="start">
+                                    <Typography color="$primaryColor" whitespace="nowrap" css={{ gap: 4 }}>
+                                        {t(`app.mdpkm.common:loaders.${id}`)}
+                                        {loaderData?.source instanceof PluginSystem &&
+                                            <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                                added by {pluginData.manifest.name}
+                                            </Typography>
+                                        }
+                                    </Typography>
+                                    <Typography size=".8rem" color="$secondaryColor" weight={300} textalign="start" whitespace="pre-wrap">
+                                        {t(`app.mdpkm.common:loaders.${id}.summary`)}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid spacing={8}>
+                                {isLoader && <Button theme="accent" onClick={() => chooseLoader(id)} disabled={loading}>
+                                    {loading && <BasicSpinner size={16}/>}
+                                    Continue
+                                </Button>}
+                                {isImport && <Button theme="accent" onClick={importInstance} disabled={loading}>
+                                    {loading && <BasicSpinner size={16}/>}
+                                    Import Instance
+                                </Button>}
+                                {!isLoader && !isImport &&
+                                    <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito">
+                                        Unsupported
+                                    </Typography>
+                                }
+                            </Grid>
+                        </Grid>;
+                    })}
+                </React.Fragment>)}
             </Grid>
             <Grid width="100%" padding={16} justifyContent="space-between" css={{
                 borderTop: '1px solid $tagBorder'
             }}>
                 <Button theme="secondary" onClick={back} disabled={loading}>
                     <ArrowLeft size={14}/>
-                    Back to Instances
+                    {t('app.mdpkm.common:buttons.back_to_instances')}
                 </Button>
             </Grid>
         </Grid>

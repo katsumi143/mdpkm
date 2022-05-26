@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { t } from 'i18next';
 import { open } from '@tauri-apps/api/shell';
 import { BoxArrowUpRight } from 'react-bootstrap-icons';
 
@@ -11,7 +12,6 @@ import Typography from '/voxeliface/components/Typography';
 
 import API from '../common/api';
 import Util from '../common/util';
-import LocalStrings from '../localization/strings';
 
 export default function News({ render, backButton }) {
     const [data, setData] = useState();

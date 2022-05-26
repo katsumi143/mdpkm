@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ArrowLeft } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
-import Select from '/voxeliface/components/Input/Select';
-import Spinner from '/voxeliface/components/Spinner';
 import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
-import SelectItem from '/voxeliface/components/Input/SelectItem';
+import * as Select from '/voxeliface/components/Input/Select';
 
+import API from '../common/api';
 import Util from '../common/util';
 function sortGame(a, b) {
     if (typeof a === 'string' && typeof b === 'string') {
@@ -46,7 +47,9 @@ function sortForge(a, b) {
     return 0;
 }
 
-export default function LoaderSetup({ loader, install, versions, backButton }) {
+export default function LoaderSetup({ back, loader, install, versions = [] }) {
+    const { t } = useTranslation();
+    const loaderData = API.getLoader(loader);
     const loaderVersions = Array.isArray(versions) ? null : versions;
     if(!Array.isArray(versions))
         for (const [key, value] of Object.entries(loaderVersions)) {
@@ -54,10 +57,10 @@ export default function LoaderSetup({ loader, install, versions, backButton }) {
         }
 
     const [name, setName] = useState('');
-    const [gameType, setGameType] = useState(Array.isArray(versions) ? versions[0] : null);
+    const [gameType, setGameType] = useState(Array.isArray(versions) ? versions.find(v => v.data.length > 0) : null);
     const [installState, setInstallState] = useState();
     const [gameVersions, setGameVersions] = useState(Array.isArray(versions) ?
-        versions[0].data :
+        gameType?.data :
         Object.keys(versions).sort(sortGame));
     const [gameVersion, setGameVersion] = useState(
         Array.isArray(versions) ? gameVersions[0].value : gameVersions[0]
@@ -68,16 +71,20 @@ export default function LoaderSetup({ loader, install, versions, backButton }) {
     const installLoader = () => install(name, loader, gameVersion, loaderVersion, setInstallState);
     return (
         <Grid width="100%" direction="vertical" alignItems="center">
+            <Grid width="100%" padding="1rem 0" spacing={8} direction="vertical" alignItems="center" css={{
+                borderBottom: '1px solid $tagBorder'
+            }}>
+                <Typography size="1.2rem" color="$primaryColor" family="Raleway" lineheight={1}>
+                    Adding New Instance
+                </Typography>
+                <Typography size=".9rem" color="$secondaryColor" family="Nunito" lineheight={1}>
+                    Configure Loader
+                </Typography>
+            </Grid>
             <Grid width="100%" height="-webkit-fill-available" direction="vertical" alignItems="center" justifyContent="center" css={{
                 overflow: 'auto'
             }}>
-                <Image src={{
-                    java: "java-banner.svg",
-                    forge: "forge-banner.png",
-                    quilt: "quilt-banner.svg",
-                    fabric: "fabric-icon.png",
-                    bedrock: "franchise-banner.svg"
-                }[loader]} width="100%" height="3.5rem"/>
+                <Image src={loaderData?.banner} width="100%" height="3.5rem"/>
                 {installState && <React.Fragment>
                     <Typography size="1.1rem" color="$primaryColor" margin="1rem 0 0">
                         Installing {Util.getLoaderName(loader)} for {gameVersion}
@@ -87,88 +94,96 @@ export default function LoaderSetup({ loader, install, versions, backButton }) {
                     </Typography>
                 </React.Fragment>}
 
-                {!installState && <Grid margin="2rem 0 0 0" spacing="4px" direction="vertical">
+                {!installState && <Grid margin="2rem 0 0 0" spacing={4} direction="vertical">
                     <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
                         Instance Name
                     </Typography>
                     <TextInput
-                        width="210px"
+                        width={210}
                         value={name}
-                        onChange={event => setName(event.target.value)}
+                        onChange={setName}
                     />
                 </Grid>}
 
                 {installState ? null : loaderVersions ?
-                    <Grid margin="24px 0 0 0" spacing="4px" direction="vertical">
+                    <Grid width={210} margin="24px 0 0 0" spacing={4} direction="vertical">
                         <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
                             Minecraft Version
                         </Typography>
-                        <Select
+                        <Select.Root
                             value={gameVersion}
-                            onChange={({ target }) => {
-                                setGameVersion(target.value);
-                                setLoaderVersion(loaderVersions[target.value][0]);
+                            onChange={v => {
+                                setGameVersion(v);
+                                setLoaderVersion(loaderVersions[v][0]);
                             }}
                         >
-                            {gameVersions.map((version, index) =>
-                                <SelectItem key={index} value={version}>
-                                    {version}
-                                </SelectItem>
-                            )}
-                        </Select>
+                            <Select.Group name="Minecraft Versions">
+                                {gameVersions.map((version, index) =>
+                                    <Select.Item key={index} value={version}>
+                                        {version}
+                                    </Select.Item>
+                                )}
+                            </Select.Group>
+                        </Select.Root>
                     </Grid> :
                     <React.Fragment>
-                        <Grid margin="16px 0 0 0" spacing="4px" direction="vertical">
+                        <Grid width={210} margin="16px 0 0 0" spacing={4} direction="vertical">
                             <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
-                                Release Category
+                                Version Category
                             </Typography>
-                            <Select
+                            <Select.Root
                                 value={gameType}
-                                onChange={({ target }) => {
-                                    setGameType(target.value);
-                                    setGameVersion(target.value.data[0].value);
-                                    setGameVersions(target.value.data);
+                                onChange={v => {
+                                    setGameType(v);
+                                    setGameVersion(v.data[0].value);
+                                    setGameVersions(v.data);
                                 }}
                             >
-                                {versions.map((type, index) =>
-                                    <SelectItem key={index} value={type}>
-                                        {type.name}
-                                    </SelectItem>
-                                )}
-                            </Select>
+                                <Select.Group name="Version Categories">
+                                    {versions.map((type, index) =>
+                                        <Select.Item key={index} value={type}>
+                                            {type.name}
+                                        </Select.Item>
+                                    )}
+                                </Select.Group>
+                            </Select.Root>
                         </Grid>
-                        <Grid margin="16px 0 0 0" spacing="4px" direction="vertical">
+                        <Grid width={210} margin="16px 0 0 0" spacing={4} direction="vertical">
                             <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
                                 Minecraft Version
                             </Typography>
-                            <Select
+                            <Select.Root
                                 value={gameVersion}
-                                onChange={({ target }) => setGameVersion(target.value)}
+                                onChange={setGameVersion}
                             >
-                                {gameVersions.map(({ name, value }, index) =>
-                                    <SelectItem key={index} value={value}>
-                                        {name}
-                                    </SelectItem>
-                                )}
-                            </Select>
+                                <Select.Group name="Minecraft Versions">
+                                    {gameVersions.map(({ name, value }, index) =>
+                                        <Select.Item key={index} value={value}>
+                                            {name}
+                                        </Select.Item>
+                                    )}
+                                </Select.Group>
+                            </Select.Root>
                         </Grid>
                     </React.Fragment>
                 }
 
-                {installState ? null : loaderVersions && <Grid margin="16px 0" spacing="4px" direction="vertical">
+                {installState ? null : loaderVersions && <Grid width={210} margin="16px 0" spacing={4} direction="vertical">
                     <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
                         Loader Version
                     </Typography>
-                    <Select
+                    <Select.Root
                         value={loaderVersion}
-                        onChange={({ target }) => setLoaderVersion(target.value)}
+                        onChange={setLoaderVersion}
                     >
-                        {loaderVersions[gameVersion].map((version, index) =>
-                            <SelectItem key={index} value={version}>
-                                {version.includes("-") ? version.split("-")[1] : version}
-                            </SelectItem>
-                        )}
-                    </Select>
+                        <Select.Group name="Loader Versions">
+                            {loaderVersions[gameVersion].map((version, index) =>
+                                <Select.Item key={index} value={version}>
+                                    {version.includes("-") ? version.split("-")[1] : version}
+                                </Select.Item>
+                            )}
+                        </Select.Group>
+                    </Select.Root>
                 </Grid>}
             </Grid>
             <Grid width="100%" padding={16} justifyContent="space-between" css={{
@@ -180,7 +195,12 @@ export default function LoaderSetup({ loader, install, versions, backButton }) {
                     <Typography size="1.1rem" color="$primaryColor" weight={600} family="Nunito">
                         {installState}
                     </Typography>
-                : backButton}
+                :
+                    <Button theme="secondary" onClick={back}>
+                        <ArrowLeft size={14}/>
+                        {t('common:app.mdpkm.common.buttons.back_to_selection')}
+                    </Button>
+                }
                 <Grid spacing={8}>
                     <Button onClick={installLoader} disabled={!name || !!installState}>
                         Install {Util.getLoaderName(loader)}

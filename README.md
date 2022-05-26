@@ -9,14 +9,22 @@ Minecraft instance management made a bit easier, plus a few other useful things 
 mdpkm is a work-in-progress project, issues should be expected, plus a bit of annoyances!
 
 ## Features
-| Feature           | Summary                            | Status              |
-|-------------------|------------------------------------|---------------------|
-| Modloader Support |                                    | ✅                 |
-| Bedrock Edition   |                                    | 🚧                 |
-| Mod Installation  |                                    | ✅ (Modrinth)      |
-| Mod Management    |                                    | ✅                 |
-| Modpacks          |                                    | 🚧 Being Revamped  |
-| Exporting         | Share instances with your friends! | ✅ (Custom Format) |
+| Feature           | Summary                               | Status              |
+|-------------------|---------------------------------------|---------------------|
+| Modloader Support |                                       | ✅                 |
+| Bedrock Edition   |                                       | 🚧                 |
+| Mod Installation  |                                       | ✅ (Modrinth)      |
+| Mod Management    |                                       | ✅                 |
+| Modpacks          |                                       | 🚧 Being Revamped  |
+| Exporting         | Share instances with your friends!    | ✅ (Custom Format) |
+| Plugins           | Add features using community plugins! | ✅ (Custom Format) |
+
+### Looking for more?<br/>
+Check out these awesome plugins!</br>
+<sup><sub>Most plugins are unofficial, we do not guarantee that these plugins are safe or functional.</sub></sub><br/>
+[mdpkm Plugin Example](https://github.com/Blookerss/mdpkm-example-plugin) (For plugin creators!)<br/>
+[LiteLoader for mdpkm](https://github.com/Blookerss/mdpkm-liteloader-plugin) (Official)<br/>
+[Legacy Fabric for mdpkm](https://github.com/Blookerss/mdpkm-legacy-fabric-plugin) (Official)<br/>
 
 ## Loader/Minecraft Support
 | Loader Name       | Status             |

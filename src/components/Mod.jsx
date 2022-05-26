@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { open } from '@tauri-apps/api/shell';
-import { Download, BoxArrowUpRight } from 'react-bootstrap-icons';
+import { useTranslation } from 'react-i18next';
+import { XLg, Download, ArrowClockwise, BoxArrowUpRight } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -11,35 +13,59 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
 import Instances from '../common/instances';
-import { PlatformIndex, PlatformNames } from '../common/constants';
-export default function Mod({ id, api, data, instance, featured, recommended }) {
-    const Instance = Instances.instances?.[instance];
+export default function Mod({ id, api, data, featured, instanceId, recommended }) {
+    const { t } = useTranslation();
+    const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
     const [mod, setMod] = useState(data);
-    const { config, downloading } = Instance ?? {};
+    const { config, downloading } = instance ?? {};
     const installed = config?.modifications.some(m => m[3] === mod?.slug);
     const installing = downloading?.some(d => d.id === (mod?.id ?? mod?.project_id));
-    const installMod = () => Instance.downloadMod(mod?.id ?? mod?.project_id, mod.source ? API[mod.source] : API.Modrinth);
+    const installMod = () => Instances.getInstance(instanceId).downloadMod(
+        mod?.id ?? mod?.project_id,
+        mod.source ? API.get(mod.source) : API.Modrinth
+    );
     useEffect(() => {
-        if(id && typeof api === 'number' && !mod)
-            API[PlatformNames[PlatformIndex[api]]].Mods.get(id).then(setMod);
-    }, [id, api]);
+        if(id && typeof api === 'string' && !mod)
+            API.get(api).Mods.get(id).then(setMod).catch(err => {
+                console.warn(err);
+                setMod('error');
+            });
+    }, [id, api, mod]);
     useEffect(() => {
         if(data && data !== mod)
             setMod(data);
     }, [data]);
+
     return (
-        <Grid padding="8px" background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
-            {mod ? <React.Fragment>
-                <Image src={mod.icon} size={48} borderRadius={4} css={{
-                    zIndex: 2,
+        <Grid padding={8} background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
+            {mod ? mod === 'error' ? <Grid width="100%" spacing={12} padding={4} css={{ position: 'relative' }}>
+                <XLg size={24} color="var(--colors-secondaryColor)"/>
+                <Grid width="100%" spacing={2} direction="vertical" justifyContent="center">
+                    <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                        An error occured.
+                    </Typography>
+                    {id && api &&
+                        <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                            {id} on {t(`app.mdpkm.common:platforms.${api}`)}.
+                        </Typography>
+                    }
+                    <Button theme="accent" onClick={() => setMod()} css={{
+                        right: 8,
+                        position: 'absolute'
+                    }}>
+                        <ArrowClockwise size={14}/>
+                        {t('app.mdpkm.common:actions.retry')}
+                    </Button>
+                </Grid>
+            </Grid> : <React.Fragment>
+                <Image src={mod.icon} size={48} background="$secondaryBackground" borderRadius={4} css={{
                     minWidth: 48,
+                    minHeight: 48,
                     transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
 
                     '&:hover': {
-                        zIndex: 3,
-                        transform: 'scale(2)',
-                        transformOrigin: 'top left',
-                        backgroundColor: '$primaryBackground'
+                        minWidth: 64,
+                        minHeight: 64
                     }
                 }}/>
                 <Grid margin="4px 0 0 12px" padding="2px 0" spacing="2px" direction="vertical">
@@ -68,7 +94,7 @@ export default function Mod({ id, api, data, instance, featured, recommended }) 
                         {mod.summary}
                     </Typography>
                 </Grid>
-                <Grid spacing="8px" css={{
+                <Grid spacing={8} css={{
                     right: 8,
                     position: 'absolute'
                 }}>
@@ -78,24 +104,36 @@ export default function Mod({ id, api, data, instance, featured, recommended }) 
                             <Typography size=".8rem" text="Downloads" color="$secondaryColor" family="Nunito" margin="0 0 0 4px"/>
                         </Typography>
                     }
-                    {mod.website_url &&
-                        <Button theme="secondary" onClick={() => open(mod.website_url)}>
+                    {mod.website &&
+                        <Button theme="secondary" onClick={() => open(mod.website)}>
                             <BoxArrowUpRight/>
-                            Visit Website
+                            {t('app.mdpkm.common:actions.visit_website')}
                         </Button>
                     }
-                    {typeof instance === "number" &&
-                        <Button onClick={installMod} disabled={mod.client_side === "unsupported" || installing || downloading.length > 0 || installed}>
-                            {(installing || downloading.length > 0) ?
+                    {instance &&
+                        <Button onClick={installMod} disabled={mod.client_side === "unsupported" || installing || downloading?.length > 0 || installed}>
+                            {(installing || downloading?.length > 0) ?
                                 <BasicSpinner size={16}/> : <Download/>
                             }
-                            {installed ? "Installed" : mod.client_side === "unsupported" ? "Unavailable" :
-                                installing ? "Installing" : downloading.length > 0 ? "Waiting" : "Install"
+                            {installed ? t('app.mdpkm.common:states.installed') : mod.client_side === "unsupported" ? t('app.mdpkm.common:states.unavailable') :
+                                installing ? t('app.mdpkm.common:states.installing') : downloading?.length > 0 ? t('app.mdpkm.common:states.waiting') : t('app.mdpkm.common:actions.install')
                             }
                         </Button>
                     }
                 </Grid>
-            </React.Fragment> : <Spinner/>}
+            </React.Fragment> : <Grid spacing={12} padding={4}>
+                <Spinner/>
+                <Grid spacing={2} direction="vertical" justifyContent="center">
+                    <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                        Loading mod...
+                    </Typography>
+                    {id && api &&
+                        <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                            {id} on {t(`app.mdpkm.common:platforms.${api}`)}.
+                        </Typography>
+                    }
+                </Grid>
+            </Grid>}
         </Grid>
     );
 };

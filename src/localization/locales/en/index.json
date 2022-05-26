@@ -1,0 +1,58 @@
+{
+    "app.mdpkm.home.sidebar.buttons.add_instance": "Add New Instance",
+    "app.mdpkm.home.sidebar.buttons.add_skin": "Add New Skin",
+    "app.mdpkm.home.sidebar.buttons.settings": "Settings",
+
+    "app.mdpkm.home.sidebar.pages.instances": "Your Instances",
+    "app.mdpkm.home.sidebar.pages.skins": "Skin Management",
+    "app.mdpkm.home.sidebar.pages.news": "Minecraft News",
+    
+
+    "app.mdpkm.settings.header.title": "Settings",
+
+    "app.mdpkm.settings.general.account": "Minecraft Account",
+    "app.mdpkm.settings.general.account.summary": "Account to use for Minecraft Java Edition.",
+
+    "app.mdpkm.settings.general.theme": "Theme",
+    "app.mdpkm.settings.general.theme.summary": "Choose a theme that suits you best!",
+
+    "app.mdpkm.settings.general.language": "Language",
+    "app.mdpkm.settings.general.language.summary": "Placeholder",
+
+    "app.mdpkm.settings.placeholder": "Unknown setting",
+    "app.mdpkm.settings.placeholder.summary": "Placeholder",
+
+    "app.mdpkm.instance_page.tabs.mods": "Modifications",
+    "app.mdpkm.instance_page.tabs.servers": "Servers",
+    "app.mdpkm.instance_page.tabs.resource_packs": "Resource Packs",
+    "app.mdpkm.instance_page.tabs.essential": "Essential",
+    "app.mdpkm.instance_page.tabs.settings": "Settings",
+    "app.mdpkm.instance_page.tabs.export": "Export",
+
+    "app.mdpkm.instance_page.tabs.mods.tabs.manage": "Manage Mods",
+    "app.mdpkm.instance_page.tabs.mods.tabs.search": "Mod Search",
+
+    "app.mdpkm.mod_management.title": "Mod Management",
+    "app.mdpkm.mod_management.search": "Search mods",
+    "app.mdpkm.mod_management.get_updates": "Get Updates",
+
+    "app.mdpkm.server_management.title": "Server Management",
+    "app.mdpkm.server_management.search": "Search servers",
+    "app.mdpkm.server_management.add": "Add Server",
+
+    "app.mdpkm.resourcepack_management.title": "Resource Pack Management",
+    "app.mdpkm.resourcepack_management.add": "Add Resource Pack",
+
+    "app.mdpkm.export_instance.title": "Export Instance",
+    "app.mdpkm.export_instance.files.title": "Choose files to export",
+    "app.mdpkm.export_instance.files.banned": "This file is locked",
+    "app.mdpkm.export_instance.files.sensitive": "May contain sensitive information",
+    "app.mdpkm.export_instance.buttons.export_mdpki": "Export Instance",
+    "app.mdpkm.export_instance.buttons.export_modrinth": "Export Modrinth Pack",
+    "app.mdpkm.export_instance.buttons.export_curseforge": "Export CurseForge Pack",
+
+    "app.mdpkm.select_instance_type.import": "Import mdpkm Instance",
+    "app.mdpkm.select_instance_type.import.description": "Import user generated instances via mdpki files.",
+    "app.mdpkm.select_instance_type.import2": "Import Custom Client",
+    "app.mdpkm.select_instance_type.import2.description": "Import a custom manifest file.\nMust support the official Minecraft Launcher!"
+}

@@ -1,43 +1,114 @@
+import pMap from 'p-map-browser';
+
 import Mod from '/src/common/api/structs/mod';
 import Modpack from '/src/common/api/structs/modpack';
-import { CURSEFORGE_API_BASE } from '/src/common/constants';
+import Project from '/src/common/api/structs/project';
+
+import Util from '../../util';
+import { CURSEFORGE_API_BASE, CURSEFORGE_CORE_KEY } from '/src/common/constants';
+
+const gameId = 432;
 class CurseForgeAPI {
-    static SOURCE_NUMBER = 1;
+    static id = 'curseforge';
+    static icon = 'img/icons/platforms/curseforge.svg';
+    static announcement = 'Some CurseForge projects may be unavailable for download.';
+
+    static makeRequest(url, options = {}) {
+        (options.headers = options.headers ?? {})['x-api-key'] = CURSEFORGE_CORE_KEY;
+        return this.API.makeRequest(url, options);
+    }
 
     static search(query, options = {}) {
-        const { game = 432, versions = [], section = 4471, categories = [] } = options;
-        return this.API.makeRequest(`${CURSEFORGE_API_BASE}/addon/search`, {
+        const { game = gameId, versions = [], section = 4471, categories = [] } = options;
+        return this.makeRequest(`${CURSEFORGE_API_BASE}/mods/search`, {
             query: {
                 query,
                 gameId: game.toString(),
-                sectionId: section.toString(),
+                classId: section.toString(),
+                sortField: '2',
                 categoryId: categories[1],
                 gameVersion: versions?.[0],
                 searchFilter: query,
                 modLoaderType: this.convertLoaderType(categories?.[0])
             }
         }).then(a => ({
-            hits: a
+            hits: a.data
         }));
     }
 
     static getProject(id) {
-        return this.API.makeRequest(`${CURSEFORGE_API_BASE}/addon/${id}`);
+        return this.makeRequest(`${CURSEFORGE_API_BASE}/mods/${id}`).then(project =>
+            new Project(project.data, this.id)
+        );
     }
 
     static getProjectVersion(id, projectId) {
-        return this.API.makeRequest(`${CURSEFORGE_API_BASE}/addon/${projectId}/file/${id}`);
+        return this.makeRequest(`${CURSEFORGE_API_BASE}/mods/${projectId}/files/${id}`).then(v => v.data);
     }
 
     static getProjectVersions(id) {
-        return this.API.makeRequest(`${CURSEFORGE_API_BASE}/addon/${id}/files`);
+        return this.makeRequest(`${CURSEFORGE_API_BASE}/mods/${id}/files`).then(v => v.data.sort((a, b) => new Date(b.fileDate) - new Date(a.fileDate)));
     }
 
     static getCompatibleVersion({ loader }, versions) {
         const loaderType = this.convertLoaderType(loader.type);
-        return versions.sort((a, b) => new Date(b.fileDate) - new Date(a.fileDate)).find(({ gameVersion }) =>
-            gameVersion.some(l => l === loaderType) && gameVersion.some(v => v === loader.game)
+        return versions.filter(v => v.downloadUrl).find(({ gameVersions }) =>
+            gameVersions.some(l => l === loaderType) && gameVersions.some(v => v === loader.game)
         );
+    }
+
+    static canImport(path) {
+        return Util.fileExists(`${path}/manifest.json`).catch(() => false);
+    }
+
+    static async finishImport(instancePath) {
+        const manifest = await Util.readTextFile(`${instancePath}/manifest.json`).then(JSON.parse);
+        const overridesPath = `${instancePath}/${manifest.overrides ?? 'overrides'}`;
+        if (await Util.fileExists(overridesPath)) {
+            for (const { name, path } of await Util.readDir(overridesPath))
+                await Util.moveFolder(path, `${instancePath}/${name}`);
+            await Util.removeDir(overridesPath);
+        }
+        await Util.copyFile(`${Util.tempPath}/${manifest.name}.png`, `${instancePath}/icon.png`);
+        await Util.removeFile(`${instancePath}/modlist.html`);
+
+        if (manifest.manifestVersion === 1) {
+            const loader = this.convertFormatLoader(manifest.minecraft);
+            await pMap(manifest.files, async({ fileID, projectID }) => {
+                const { fileName, downloadUrl, isAvailable } = await this.getProjectVersion(fileID, projectID);
+                if (!isAvailable)
+                    throw new Error(`${fileName} is unavailable`);
+                if (!downloadUrl)
+                    throw new Error(`${(await this.getProject(projectID)).title} has blocked usage in mdpkm.`);
+                const ok = await Util.pmapTry(() =>
+                    Util.downloadFilePath(downloadUrl, `${instancePath}/mods/${fileName}`)
+                );
+                if (!ok)
+                    throw new Error(`Failed to download ${fileID} (${projectID})`);
+            }, { concurrency: 20 });
+
+            return [loader];
+        } else
+            throw new Error(`Unknown Format Version: ${manifest.formatVersion}`);
+    }
+
+    static async downloadModpack(id) {
+        const version = (await this.getProjectVersions(id))[0];
+        console.log(version)
+        return Util.downloadFile(version.downloadUrl, Util.tempPath, true);
+    }
+
+    static readModpackManifest(archivePath) {
+        return Util.readFileInZip(archivePath, 'manifest.json').then(JSON.parse);
+    }
+
+    static convertFormatLoader(data) {
+        const loader = data.modLoaders.find(m => m.primary).id.split('-');
+        return {
+            game: data.version,
+            type: loader[0],
+            version: loader[1]
+        };
     }
 
     static convertLoaderType(type) {
@@ -55,7 +126,7 @@ CurseForgeAPI.Mods = class Mods {
             ...options
         }).then(({ hits, ...data }) => {
             return {
-                hits: hits.map(m => new Mod(m, 'CurseForge')),
+                hits: hits.map(m => new Mod(m, CurseForgeAPI.id)),
                 ...data
             };
         });
@@ -68,14 +139,16 @@ CurseForgeAPI.Modpacks = class Modpacks {
             ...options
         }).then(({ hits, ...data }) => {
             return {
-                hits: hits.map(m => new Modpack(m)),
+                hits: hits.map(m => new Modpack(m, CurseForgeAPI.id)),
                 ...data
             };
         });
     }
 
     static getCategories() {
-        return CurseForgeAPI.API.makeRequest(`${CURSEFORGE_API_BASE}/category/section/4471`).then(categories =>
+        return CurseForgeAPI.makeRequest(`${CURSEFORGE_API_BASE}/categories`, {
+            query: { gameId }
+        }).then(categories =>
             categories.map(({ id, name, avatarUrl }) => ({
                 id,
                 name,
@@ -85,7 +158,7 @@ CurseForgeAPI.Modpacks = class Modpacks {
     }
 
     static getVersions() {
-        return CurseForgeAPI.API.makeRequest(`${CURSEFORGE_API_BASE}/minecraft/version`).then(versions =>
+        return CurseForgeAPI.makeRequest(`${CURSEFORGE_API_BASE}/minecraft/version`).then(versions =>
             versions.map(({ versionString }) => ({
                 id: versionString,
                 name: versionString,

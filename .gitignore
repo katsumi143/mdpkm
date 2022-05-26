@@ -2,4 +2,4 @@ node_modules/
 src-tauri/target/
 src-tauri/WixTools/
 build
-.replit
+.tauri/

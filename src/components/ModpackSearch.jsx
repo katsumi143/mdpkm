@@ -1,33 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
-import Select from '/voxeliface/components/Input/Select';
 import Modpack from './Modpack';
 import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
-import SelectItem from '/voxeliface/components/Input/SelectItem';
+import * as Select from '/voxeliface/components/Input/Select';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
-import { APINames, ModPlatforms, PlatformNames, PlatformIcons } from '../common/constants';
+import Util from '../common/util';
 import { Search } from 'react-bootstrap-icons';
-export default function ModpackSearch({ css }) {
-    const [api, setApi] = useState('CurseForge');
+export default function ModpackSearch({ css, importModpack }) {
+    const { t } = useTranslation();
+    const [api, setApi] = useState('modrinth');
     const [query, setQuery] = useState();
     const [modpacks, setModpacks] = useState();
     const [searching, setSearching] = useState(false);
     const search = api => {
         if(searching)
             return toast.error('Already searching');
-        if(!API[api].Modpacks) {
+        if(!API.get(api).Modpacks) {
             setModpacks([]);
             return toast.error(`API.${api}.Modpacks is missing`);
         }
         setSearching(true);
-        API[api].Modpacks.search(query, {
+        API.get(api).Modpacks.search(query, {
             
         }).then(({ hits }) => {
             setModpacks(hits);
@@ -53,10 +54,10 @@ export default function ModpackSearch({ css }) {
                 <Grid>
                     <Grid spacing={4} direction="vertical">
                         <Typography size=".9rem" text="Search Query" color="$secondaryColor" family="Nunito"/>
-                        <TextInput value={query} onChange={event => setQuery(event.target.value)}>
+                        <TextInput value={query} onChange={setQuery}>
                             <Button theme="secondary" onClick={() => search(api)} disabled={searching}>
                                 {searching ? <BasicSpinner size={16}/> : <Search/>}
-                                Search
+                                {t('app.mdpkm.common:actions.search')}
                             </Button>
                         </TextInput>
                     </Grid>
@@ -64,20 +65,25 @@ export default function ModpackSearch({ css }) {
                 <Grid>
                     <Grid spacing={4} direction="vertical">
                         <Typography size=".9rem" text="Platform" color="$secondaryColor" family="Nunito"/>
-                        <Select value={api} onChange={event => setAPI(event.target.value)}>
-                            {ModPlatforms.map((platform, index) =>
-                                <SelectItem key={index} value={APINames[platform]}>
-                                    <Image src={PlatformIcons[platform]} size={16} borderRadius={4}/>
-                                    {PlatformNames[platform]}
-                                </SelectItem>
-                            )}
-                        </Select>
+                        <Select.Root value={api} onChange={setAPI} disabled={searching}>
+                            <Select.Group name="Modpack Platforms">
+                                {API.getModpackPlatformIDs().map((platform, index) =>
+                                    <Select.Item key={index} value={platform}>
+                                        <Image src={API.get(platform).icon} size={16} borderRadius={4}/>
+                                        {Util.getPlatformName(platform)}
+                                    </Select.Item>
+                                )}
+                            </Select.Group>
+                        </Select.Root>
+                        {API.get(api)?.announcement && <Typography size=".6rem" color="$secondaryColor" family="Nunito" whitespace="nowrap">
+                            {API.get(api).announcement}
+                        </Typography>}
                     </Grid>
                 </Grid>
             </Grid>
             <Grid spacing={8} direction="vertical">
                 {modpacks && modpacks.map((modpack, index) =>
-                    <Modpack key={index} data={modpack}/>
+                    <Modpack api={api} key={index} data={modpack} importModpack={importModpack}/>
                 )}
                 <Grid direction="vertical">
                     <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">

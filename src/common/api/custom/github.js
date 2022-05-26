@@ -1,13 +1,14 @@
 export default class GitHubAPI {
-    static SOURCE_NUMBER = 4;
+    static id = 'github';
+    static icon = 'img/icons/platforms/github.svg';
 
-    static Mods = class Mods {
+    /*static Mods = class Mods {
         static async search() {
             return {
                 hits: []
             };
         }
-    }
+    }*/
 
     static async getProject() {
         return null;

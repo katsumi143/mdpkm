@@ -1,35 +1,120 @@
-import React from 'react';
+import React, { useState } from 'react';
+import pMap from 'p-map-browser';
 import toast from 'react-hot-toast';
+import { open } from '@tauri-apps/api/shell';
+import { checkUpdate } from '@tauri-apps/api/updater';
+import { useTranslation } from 'react-i18next';
+import { getName, getVersion, getTauriVersion } from '@tauri-apps/api/app';
+import { open as open2 } from '@tauri-apps/api/dialog';
 import { appWindow } from '@tauri-apps/api/window';
+import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { useSelector, useDispatch } from 'react-redux';
-import { Gear, PlusLg, ArrowLeft } from 'react-bootstrap-icons';
+import { Gear, PlusLg, Github, ArrowLeft, Trash3Fill, Folder2Open, EnvelopeOpen, CloudArrowDown } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
-import Select from '/voxeliface/components/Input/Select';
 import Divider from '/voxeliface/components/Divider';
 import Typography from '/voxeliface/components/Typography';
-import SelectItem from '/voxeliface/components/Input/SelectItem';
+import * as Select from '/voxeliface/components/Input/Select';
 import ThemeContext from '/voxeliface/contexts/theme';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
-import LocalStrings from '../localization/strings';
-import { SKIN_API_BASE } from '../common/constants';
+import Util from '../common/util';
+import Plugins from '../common/plugins';
+import Instances from '../common/instances';
+import PluginLoader from '../common/plugins/loader';
+import { SKIN_API_BASE, MINECRAFT_RESOURCES_URL } from '../common/constants';
 import { setTheme, setLanguage, saveSettings } from '../common/slices/settings';
 import { addAccount, setAccount, saveAccounts, setAddingAccount } from '../common/slices/accounts';
+
+const appName = await getName();
+const appVersion = await getVersion();
+const tauriVersion = await getTauriVersion()
 export default function Settings({ close }) {
+    const { t, i18n } = useTranslation();
     const theme = useSelector(state => state.settings.theme);
     const account = useSelector(state => state.accounts.selected);
     const accounts = useSelector(state => state.accounts.data);
     const dispatch = useDispatch();
     const language = useSelector(state => state.settings.language);
     const addingAccount = useSelector(state => state.accounts.addingAccount);
+    const [_, setRerender] = useState();
+    const [cleaning, setCleaning] = useState();
+    const cleanInstallation = async() => {
+        setCleaning(true);
+        const loaders = [];
+        const checked = [];
+        const libraries = [];
+        for (const instance of Instances.instances) {
+            try {
+                const { loader } = await instance.getConfig();
+                const loaderDir = `${loader.type}-${loader.game}-${loader.version}`;
+                const loaderPath = `${Instances.getPath('versions')}/${loaderDir}/manifest.json`;
+                if (await Util.fileExists(loaderPath)) {
+                    loaders.push(loaderDir);
+
+                    const manifest = await Util.readTextFile(loaderPath).then(JSON.parse);
+                    libraries.push(...Util.mapLibraries(manifest.libraries, Instances.getPath('libraries')));
+                }
+
+                if (!checked.some(c => c === loader.game)) {
+                    const javaDir = `java-${loader.game}`;
+                    const javaPath = `${Instances.getPath('versions')}/${javaDir}/manifest.json`;
+                    if (await Util.fileExists(javaPath)) {
+                        loaders.push(javaPath);
+
+                        const manifest = await Util.readTextFile(javaPath).then(JSON.parse);
+                        libraries.push(...Util.mapLibraries(manifest.libraries, Instances.getPath('libraries')));
+
+                        libraries.push({
+                            url: manifest.downloads.client.url,
+                            sha1: manifest.downloads.client.sha1,
+                            path: `${Instances.getPath('mcVersions')}/${manifest.id}.jar`
+                        });
+
+                        const assets = await Util.readTextFile(`${Instances.getPath('mcAssets')}/indexes/${manifest.assets}.json`).then(JSON.parse);
+                        libraries.push(...Object.values(assets.objects).map(
+                            ({ hash }) => ({
+                                url: `${MINECRAFT_RESOURCES_URL}/${hash.substring(0, 2)}/${hash}`,
+                                sha1: hash,
+                                path: `${Instances.getPath('mcAssets')}/objects/${hash.substring(0, 2)}/${hash}`
+                            })
+                        ));
+                    }
+                    checked.push(loader.game);
+                }
+            } catch(err) {
+                console.error(err);
+            }
+        }
+        let removed = 0;
+        await pMap(
+            await Util.readDirRecursive(Instances.getPath('libraries')),
+            ({ path, isDir }) => {
+                if (isDir || libraries.some(l => l.path.replace(/\/+|\\+/g, '/') === path.replace(/\/+|\\+/g, '/')))
+                    return;
+                return Util.removeFile(path).then(() => removed++).catch(console.warn);
+            },
+            { concurrency: 30 }
+        );
+        await pMap(
+            await Util.readDirRecursive(Instances.getPath('versions')),
+            ({ name, path, isDir }) => {
+                if (!isDir || loaders.some(l => l === name))
+                    return;
+                return Util.removeDir(path).then(() => removed++).catch(console.warn);
+            },
+            { concurrency: 30 }
+        );
+        toast.success(`Removed ${removed} files.`);
+        setCleaning(false);
+    };
     const changeLanguage = lang => {
         dispatch(setLanguage(lang));
         dispatch(saveSettings());
-        LocalStrings.setLanguage(lang);
+        i18n.changeLanguage(lang);
     };
     const changeAccount = id => {
         dispatch(setAccount(id));
@@ -81,6 +166,29 @@ export default function Settings({ close }) {
         }
         dispatch(setAddingAccount(false));
     };
+    const addPlugin = async() => {
+        const path = await open2({
+            title: 'Select mdpkm Plugin',
+            filters: [{ name: 'mdpkm Plugins', extensions: ['plugin', 'zip'] }]
+        });
+        const split = path.split(/\/+|\\+/);
+        const pluginPath = `${Plugins.path}/${split.reverse()[0]}`;
+        await Util.moveFolder(path, pluginPath);
+
+        const manifest = await Util.readFileInZip(pluginPath, 'manifest.json').then(JSON.parse).catch(console.warn);
+        if(!manifest || !manifest.id || !manifest.name) {
+            await Util.removeFile(pluginPath);
+            return toast.error(`Invalid plugin.`);
+        }
+        await PluginLoader.loadPluginFile(manifest.name, pluginPath);
+        setRerender(Date.now());
+        toast.success(`Successfully added ${manifest.name}!`, { duration: 5000 });
+    };
+    const updateCheck = () => {
+        checkUpdate().then(console.log);
+    };
+    const reportIssue = () => open('https://github.com/Blookerss/mdpkm/issues/new');
+    const openGithub = () => open('https://github.com/Blookerss/mdpkm');
     return (
         <ThemeContext.Consumer>
             {({ setTheme }) => (
@@ -90,7 +198,7 @@ export default function Settings({ close }) {
                     }}>
                         <Typography size="1.3rem" color="$primaryColor" family="Nunito" css={{ gap: 8 }}>
                             <Gear/>
-                            Settings
+                            {t('app.mdpkm.settings.header.title')}
                         </Typography>
                     </Grid>
                     <Grid width="100%" height="-webkit-fill-available" padding=".5rem 1rem" direction="vertical" css={{
@@ -99,14 +207,19 @@ export default function Settings({ close }) {
                         <TextDivider text="General Settings"/>
                         <Grid padding="0 1rem" direction="vertical">
                             <Setting name="general.account">
-                                <Select value={account} onChange={({ target }) => changeAccount(target.value)} placeholder="Select an Account">
-                                    {accounts.map(({ profile }, key) =>
-                                        <SelectItem key={key} value={profile.id}>
-                                            <Image src={`${SKIN_API_BASE}/face/${profile.id}`} size={24} borderRadius={4}/>
-                                            {profile.name}
-                                        </SelectItem>
-                                    )}
-                                </Select>
+                                <Select.Root value={new String(account).toString()} onChange={changeAccount} disabled={accounts.length === 0} placeholder="Select an Account">
+                                    <Select.Group name="Minecraft Accounts">
+                                        {accounts.map(({ profile }, key) =>
+                                            <Select.Item key={key} value={profile.id}>
+                                                <Image src={`${SKIN_API_BASE}/face/${profile.id}`} size={24} borderRadius={4}/>
+                                                {profile.name}
+                                            </Select.Item>
+                                        )}
+                                    </Select.Group>
+                                    <Select.Item value="undefined" disabled>
+                                        None
+                                    </Select.Item>
+                                </Select.Root>
                                 <Button theme="accent" onClick={addNewAccount} disabled={addingAccount} css={{
                                     minWidth: 196
                                 }}>
@@ -115,18 +228,22 @@ export default function Settings({ close }) {
                                 </Button>
                             </Setting>
                             <Setting name="general.theme">
-                                <Select value={theme} onChange={({ target }) => changeTheme(target.value, setTheme)}>
-                                    <SelectItem value="default">Default</SelectItem>
-                                    <SelectItem value="light">Light</SelectItem>
-                                    <SelectItem value="dark">Dark</SelectItem>
-                                    <SelectItem value="purple">plow's puprle</SelectItem>
-                                </Select>
+                                <Select.Root value={theme} onChange={t => changeTheme(t, setTheme)}>
+                                    <Select.Group name="Themes">
+                                        <Select.Item value="default">Default</Select.Item>
+                                        <Select.Item value="light">Light</Select.Item>
+                                        <Select.Item value="dark">Dark</Select.Item>
+                                        <Select.Item value="purple">Purple</Select.Item>
+                                    </Select.Group>
+                                </Select.Root>
                             </Setting>
                             <Setting name="general.language">
-                                <Select value={language} onChange={({ target }) => changeLanguage(target.value)}>
-                                    <SelectItem value="en">English</SelectItem>
-                                    <SelectItem value="among">Among Us</SelectItem>
-                                </Select>
+                                <Select.Root value={language} onChange={changeLanguage}>
+                                    <Select.Group name="Languages">
+                                        <Select.Item value="en">English</Select.Item>
+                                        <Select.Item value="among">Among Us</Select.Item>
+                                    </Select.Group>
+                                </Select.Root>
                             </Setting>
                         </Grid>
 
@@ -138,6 +255,109 @@ export default function Settings({ close }) {
                         <TextDivider text="Java Settings"/>
                         <Grid padding="0 1rem" direction="vertical">
                             <Setting/>
+                        </Grid>
+
+                        <TextDivider text={`Plugin Management - ${Object.keys(PluginLoader.loaded).length} Installed`}/>
+                        <Grid padding="0 1rem" spacing={8} direction="vertical">
+                            <Grid spacing={8}>
+                                <Button theme="accent" onClick={addPlugin}>
+                                    <PlusLg/>
+                                    Add Plugin
+                                </Button>
+                                <Button theme="secondary" onClick={() => open(Plugins.path)}>
+                                    <Folder2Open/>
+                                    Open Folder
+                                </Button>
+                            </Grid>
+                            {Object.entries(PluginLoader.loaded).map(([id, { path, manifest }]) => {
+                                const pluginLoaders = API.loaders.filter(l => l.source?.id === id);
+                                return <Grid padding={8} spacing={8} background="$secondaryBackground" alignItems="center" borderRadius={8} css={{
+                                    position: 'relative'
+                                }}>
+                                    <Image src={convertFileSrc(`${path}/icon.svg`)} size={48} background="$primaryBackground" borderRadius={4}/>
+                                    <Grid spacing={2} direction="vertical">
+                                        <Typography color="$primaryColor" family="Nunito" lineheight={1}>
+                                            {manifest.name}
+                                        </Typography>
+                                        <Typography size=".8rem" color="$secondaryColor" family="Nunito" lineheight={1}>
+                                            {manifest.id} {manifest.version}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid spacing={8} css={{
+                                        right: 16,
+                                        position: 'absolute'
+                                    }}>
+                                        {pluginLoaders.length > 0 &&
+                                            <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" css={{ gap: 8 }}>
+                                                {pluginLoaders.map(({ icon }) =>
+                                                    <Image src={icon} size={20} background="$primaryBackground" borderRadius={4}/>
+                                                )}
+                                                Adds {pluginLoaders.length} Loader{pluginLoaders.length > 1 && 's'}
+                                            </Typography>
+                                        }
+                                        <Button theme="secondary" disabled>
+                                            <Trash3Fill/>
+                                            Remove
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            })}
+                        </Grid>
+
+                        <TextDivider text="Storage Management"/>
+                        <Grid spacing={8} padding="0 1rem" direction="vertical">
+                            <Typography size=".9rem" color="$primaryColor" family="Nunito">
+                                If you think {appName} is taking up too much space, you can automatically get rid of unneeded files.
+                            </Typography>
+                            <Button theme="accent" onClick={cleanInstallation} disabled>
+                                Clean Installation
+                            </Button>
+                            {cleaning &&
+                                <Grid width="100%" height="100%" alignItems="center" background="$primaryBackground" borderRadius={8} justifyContent="center" css={{
+                                    top: 0,
+                                    left: 0,
+                                    zIndex: 10000,
+                                    position: 'fixed'
+                                }}>
+                                    <Grid width="40%" height="fit-content" padding="1rem" spacing={4} direction="vertical" background="$secondaryBackground" borderRadius={8}>
+                                        <Typography size="1.1rem" color="$primaryColor" weight={600} family="Nunito Sans" lineheight={1}>
+                                            Cleaning {appName} Installation
+                                        </Typography>
+                                        <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                                            Do not close the application!
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            }
+                        </Grid>
+
+                        <TextDivider text="About this build"/>
+                        <Grid spacing={8} padding="0 1rem" direction="vertical">
+                            <Grid spacing={8} alignItems="center">
+                                <Image src="img/icons/brand_default.svg" size={48}/>
+                                <Grid spacing={2} direction="vertical">
+                                    <Typography color="$primaryColor" family="Nunito" lineheight={1}>
+                                        {appName} v{appVersion}
+                                    </Typography>
+                                    <Typography size=".7rem" color="$secondaryColor" family="Nunito" lineheight={1}>
+                                        Running Tauri {tauriVersion}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid spacing={8}>
+                                <Button theme="accent" onClick={updateCheck}>
+                                    <CloudArrowDown size={14}/>
+                                    Check for Updates
+                                </Button>
+                                <Button theme="accent" onClick={reportIssue}>
+                                    <EnvelopeOpen size={14}/>
+                                    Report Issue
+                                </Button>
+                                <Button theme="secondary" onClick={openGithub}>
+                                    <Github size={14}/>
+                                    Visit GitHub Page
+                                </Button>
+                            </Grid>
                         </Grid>
                     </Grid>
                     <Grid width="100%" padding={16} justifyContent="space-between" css={{
@@ -155,17 +375,18 @@ export default function Settings({ close }) {
 };
 
 function Setting({ name, children }) {
+    const { t } = useTranslation();
     const stringBase = `app.mdpkm.settings.${name ?? 'placeholder'}`;
     return <Grid margin=".6rem 0" justifyContent="space-between">
-        <Grid spacing="4px" direction="vertical">
+        <Grid spacing={4} direction="vertical">
             <Typography color="$primaryColor" family="Nunito" lineheight={1}>
-                {LocalStrings[stringBase] ?? stringBase}
+                {t(stringBase)}
             </Typography>
             <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1.2} whitespace="pre-wrap" textalign="start">
-                {LocalStrings[`${stringBase}.summary`] ?? `${stringBase}.summary`}
+                {t(`${stringBase}.summary`)}
             </Typography>
         </Grid>
-        <Grid spacing={4} direction="vertical">
+        <Grid width={196} spacing={4} direction="vertical">
             {children}
         </Grid>
     </Grid>
