@@ -17,7 +17,7 @@ mdpkm is a work-in-progress project, issues should be expected, plus a bit of an
 | Mod Management    |                                       | ✅                 |
 | Modpacks          |                                       | 🚧 Being Revamped  |
 | Exporting         | Share instances with your friends!    | ✅ (Custom Format) |
-| Plugins           | Add features using community plugins! | ✅ (Custom Format) |
+| Plugins           | Add features using community plugins! | ✅                 |
 
 ### Looking for more?<br/>
 Check out these awesome plugins!</br>
