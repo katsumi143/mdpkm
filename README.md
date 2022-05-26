@@ -13,7 +13,7 @@ mdpkm is a work-in-progress project, issues should be expected, plus a bit of an
 |-------------------|---------------------------------------------------------|---------------------|
 | Modloader Support | Vanilla not enough? Easily get more content with mods!  | ✅                 |
 | Bedrock Edition   |                                                         | 🚧                 |
-| Mod Installation  |                                                         | ✅ (Modrinth)      |
+| Mod Installation  |                                                         | ✅                 |
 | Mod Management    |                                                         | ✅                 |
 | Modpacks          | Get pre-made community modpacks to instantly play with. | ✅                 |
 | Exporting         | Share instances with your friends!                      | ✅ (Custom Format) |
