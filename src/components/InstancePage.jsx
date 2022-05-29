@@ -1,32 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import nbt from 'nbt';
 import toast from 'react-hot-toast';
 import { keyframes } from '@stitches/react';
 import { open } from '@tauri-apps/api/shell';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
-import { PlusLg, PlayFill, FileText, PencilFill, Trash3Fill, Folder2Open, FolderFill, FiletypePng, FiletypeJpg, FiletypeSvg, FiletypeTxt, FiletypeJson, CloudArrowDown, ArrowClockwise, ExclamationCircleFill, FileEarmarkZip, Save2 } from 'react-bootstrap-icons';
+import { PlayFill, PencilFill, Trash3Fill, Folder2Open, ExclamationCircleFill } from 'react-bootstrap-icons';
 
 import Mod from './Mod';
 import Tag from './Tag';
 import Tabs from '/voxeliface/components/Tabs';
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
-import Toggle from './Toggle';
 import Button from '/voxeliface/components/Button';
 import Slider from '/voxeliface/components/Input/Slider';
 import Spinner from '/voxeliface/components/Spinner';
-import Divider from '/voxeliface/components/Divider';
 import TabItem from '/voxeliface/components/Tabs/Item';
 import TextInput from '/voxeliface/components/Input/Text';
-import ModSearch from './ModSearch';
 import Typography from '/voxeliface/components/Typography';
-import InstanceMod from './InstanceMod';
 import * as Dialog from '/voxeliface/components/Dialog';
 import InstanceIcon from './InstanceIcon';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
+import ModManagement from './ModManagement';
+import InstanceExport from './InstanceExport';
 import TextTransition from './Transition/Text';
 import ImageTransition from './Transition/Image';
+import ServerManagement from './ServerManagement';
+import ResourcePackManagement from './ResourcePackManagement';
 
 import API from '../common/api';
 import Util from '../common/util';
@@ -43,23 +42,16 @@ export default function InstancePage({ id }) {
     const versionBanner = (loaderData?.versionBanners ?? API.getLoader('java')?.versionBanners)?.find(v => v?.[0].test(config?.loader?.game));
     const loaderDisabled = DisabledLoaders.some(d => d === config?.loader?.type);
 
-    let mods = instance?.mods;
     const Account = Util.getAccount(useSelector);
     const dispatch = useDispatch();
     const logErrors = instance?.launchLogs?.filter(({ type }) => type === 'ERROR');
     const [saving, setSaving] = useState(false);
-    const [servers, setServers] = useState();
     const [tabPage, setTabPage] = useState(0);
-    const [modPage, setModPage] = useState(0);
     const [instance2, setInstance2] = useState();
-    const [modFilter, setModFilter] = useState('');
     const [launchable, setLaunchable] = useState();
-    const [exportFiles, setExportFiles] = useState();
     const [consoleOpen, setConsoleOpen] = useState(false);
     const [instanceRam, setInstanceRam] = useState(instance?.config?.ram ?? 2);
-    const [serverFilter, setServerFilter] = useState('');
     const [instanceName, setInstanceName] = useState(name);
-    const [resourcePacks, setResourcePacks] = useState();
     const saveSettings = async() => {
         setSaving(true);
 
@@ -82,13 +74,9 @@ export default function InstancePage({ id }) {
         setSaving(false);
     };
     const viewModpackSite = () => open(modpack.websiteUrl);
-    const exportInstance = () => Instances.exportInstance(id, exportFiles.filter(e => e.selected).map(e => e.path));
     const deleteInstance = () => {
-        setServers();
         setLaunchable();
-        setExportFiles();
         setInstanceName();
-        setResourcePacks();
         Instances.getInstance(id).delete();
     };
     const launchInstance = async() => {
@@ -109,116 +97,9 @@ export default function InstancePage({ id }) {
             });
         else
             toast.error(`getInstance failed.\nTry refreshing your instances.`);
-    }
-    const getExportFiles = async() => {
-        if(!instance) return;
-        if (!instance?.path)
-            return toast.error('Invalid path');
-        const files = await Util.readDirRecursive(instance.path);
-        setExportFiles(files.map(file => {
-            file.banned = [
-                'icon\\.(png|jpg|svg)',
-                'dashloader-cache',
-                'modcache.json',
-                'modpack.json',
-                'config.json',
-                '.ReAuth.cfg',
-                '.mixin.out',
-                'essential',
-                '.fabric',
-                'natives',
-                'mods'
-            ].some(name => new RegExp(`^${name}$`).test(file.name) || new RegExp(`^/${name}/`).test(file.path.replace(instance.path, '').replace(/\/+|\\+/g, '/')));
-            file.sensitive = [
-                'crash-reports',
-                'logs'
-            ].indexOf(file.name) >= 0;
-            file.selected = [
-                'icon\\.(png|jpg|svg)',
-                'modpack.json',
-                'config.json',
-                'options.txt',
-                'config',
-                'mods'
-            ].some(name => new RegExp(`^${name}$`).test(file.name) || new RegExp(`^/${name}/`).test(file.path.replace(/\/+|\\+/g, '/').replace(instance.path.replace(/\/+|\\+/g, '/'), '')));
-            return file;
-        }));
-    };
-    const refreshMods = () => {
-        const Instance = Instances.getInstance(id);
-        Instance.getMods().then(mods => {
-            Instance.mods = mods;
-            Instance.updateStore();
-        });
-    };
-    const getResourcePacks = async() => {
-        if(!instance?.path)
-            return;
-        const path = `${instance.path}/resourcepacks`;
-        setResourcePacks('loading');
-        if(await Util.fileExists(path)) {
-            const files = await Util.readDir(path);
-            const resourcePacks = [];
-            for (const { name, path, isDir } of files) {
-                try {
-                    if(isDir) {
-                        const icon = await Util.readFileBase64(`${path}/pack.png`).catch(console.warn);
-                        const metadata = await Util.readTextFile(`${path}/pack.mcmeta`).then(JSON.parse);
-                        resourcePacks.push({
-                            name,
-                            icon,
-                            metadata
-                        });
-                    } else if(name.endsWith('.zip')) {
-                        const icon = await Util.readFileInZipBase64(path, 'pack.png').catch(console.warn);
-                        const metadata = await Util.readFileInZip(path, 'pack.mcmeta').then(JSON.parse);
-                        resourcePacks.push({
-                            name,
-                            icon,
-                            metadata
-                        });
-                    }
-                } catch(err) {
-                    console.warn(err);
-                }
-            }
-            setResourcePacks(resourcePacks);
-        } else {
-            console.warn('servers.dat not found');
-            setResourcePacks([]);
-        }
-    };
-    const getServers = async() => {
-        if(!instance?.path)
-            return;
-        const path = `${instance.path}/servers.dat`;
-        setServers('loading');
-        if(await Util.fileExists(path)) {
-            const data = await Util.readBinaryFile(path);
-            nbt.parse(data, (error, data) => {
-                if(error)
-                    throw error;
-                setServers(data.value.servers.value.value);
-            });
-        } else {
-            console.warn('servers.dat not found');
-            setServers([]);
-        }
     };
     const openFolder = () => open(path);
-
-    useEffect(() => {
-        if(!exportFiles)
-            getExportFiles();
-    }, [exportFiles]);
-    useEffect(() => {
-        if(!resourcePacks)
-            getResourcePacks();
-    }, [resourcePacks]);
-    useEffect(() => {
-        if(!servers)
-            getServers();
-    }, [servers]);
+;
     useEffect(() => {
         if(typeof launchable !== 'boolean') {
             const { type, game, version } = config?.loader ?? {};
@@ -233,11 +114,8 @@ export default function InstancePage({ id }) {
     }, [launchable]);
     useEffect(() => {
         if(instance2 !== instance?.id) {
-            setServers();
             setLaunchable();
-            setExportFiles();
             setInstanceName(name);
-            setResourcePacks();
         }
         setInstance2(instance?.id);
     });
@@ -270,7 +148,9 @@ export default function InstancePage({ id }) {
                         <TextTransition inline>{name}</TextTransition>
                     </Typography>
                     <Typography color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
-                        <TextTransition inline noOverflow>{minState ?? 'Installed'}</TextTransition>
+                        <TextTransition inline noOverflow>
+                            {minState ?? t('app.mdpkm.instances:states.none')}
+                        </TextTransition>
                     </Typography>
                 </Grid>
                 <Grid spacing={8} alignItems="center" css={{
@@ -467,206 +347,13 @@ export default function InstancePage({ id }) {
                 }}
             >
                 <TabItem name={t('app.mdpkm.instance_page.tabs.mods')} value={0} padding={0} disabled={!instance.isModded}>
-                    <Tabs
-                        value={modPage}
-                        onChange={event => setModPage(event.target.value)}
-                        borderRadius={0}
-                        css={{
-                            height: '100%'
-                        }}
-                    >
-                        <TabItem name={t('app.mdpkm.instance_page.tabs.mods.tabs.manage')} value={0}>
-                            <Grid margin="4px 0" spacing={8} justifyContent="space-between">
-                                <Grid direction="vertical">
-                                    <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
-                                        {t('app.mdpkm.mod_management.title')}
-                                    </Typography>
-                                    <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito">
-                                        <TextTransition inline>
-                                            {mods === 'loading' || !mods ? 'Loading...' : `${mods?.length} Installed ${mods?.length === 69 ? '(nice)' : ''}`}
-                                        </TextTransition>
-                                    </Typography>
-                                </Grid>
-                                <Grid spacing={8}>
-                                    <TextInput
-                                        width={144}
-                                        value={modFilter}
-                                        onChange={setModFilter}
-                                        placeholder={t('app.mdpkm.mod_management.search')}
-                                    />
-                                    <Button theme="secondary" onClick={refreshMods} disabled={mods === 'loading'}>
-                                        {mods === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
-                                        {t('app.mdpkm.common:actions.refresh')}
-                                    </Button>
-                                    <Button theme="accent" disabled>
-                                        <CloudArrowDown size={14}/>
-                                        {t('app.mdpkm.mod_management.get_updates')}
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                            {Array.isArray(mods) ? mods.length === 0 ?
-                                <React.Fragment>
-                                    <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
-                                        There's nothing here!
-                                    </Typography>
-                                    <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" textalign="start" lineheight={0} css={{ display: 'block' }}>
-                                        Find some mods via the <b>Mod Search</b> tab!
-                                    </Typography>
-                                </React.Fragment>
-                            : mods.filter(({ id, name }) => id?.toLowerCase().includes(modFilter) || name?.toLowerCase().includes(modFilter)).sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id)).map((mod, index) =>
-                                <InstanceMod key={index} mod={mod} instanceId={id}/>
-                            ) : <Spinner/>}
-                        </TabItem>
-                        <TabItem name={t('app.mdpkm.instance_page.tabs.mods.tabs.search')} value={1}>
-                            <ModSearch instanceId={id}/>
-                        </TabItem>
-                    </Tabs>
+                    <ModManagement instanceId={id}/>
                 </TabItem>
                 <TabItem name={t('app.mdpkm.instance_page.tabs.servers')} value={1}>
-                    <Grid margin="4px 0" spacing={8} justifyContent="space-between">
-                        <Grid direction="vertical">
-                            <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
-                                {t('app.mdpkm.server_management.title')}
-                            </Typography>
-                            <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito">
-                                <TextTransition inline>
-                                    {servers === 'loading' || !servers ? 'Loading...' :`${servers?.length} Servers`}
-                                </TextTransition>
-                            </Typography>
-                        </Grid>
-                        <Grid spacing={8}>
-                            <TextInput
-                                width={144}
-                                value={serverFilter}
-                                onChange={setServerFilter}
-                                placeholder={t('app.mdpkm.server_management.search')}
-                            />
-                            <Button theme="secondary" onClick={getServers} disabled={servers === 'loading'}>
-                                {servers === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
-                                {t('app.mdpkm.common:actions.refresh')}
-                            </Button>
-                            <Button theme="accent" disabled>
-                                <PlusLg/>
-                                {t('app.mdpkm.server_management.add')}
-                            </Button>
-                        </Grid>
-                    </Grid>
-                    {Array.isArray(servers) && servers?.filter(({ ip, name }) => ip?.value.toLowerCase().includes(serverFilter) || name?.value.toLowerCase().includes(serverFilter)).map((server, index) =>
-                        <Grid key={index} padding="8px" spacing="12px" alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{
-                            position: 'relative'
-                        }}>
-                            <Image
-                                src={server.icon ? `data:image/png;base64,${server.icon.value}` : 'img/icons/minecraft/unknown_server.png'}
-                                size={46}
-                                background="$secondaryBackground"
-                                borderRadius={4}
-                                css={{
-                                    minWidth: 46,
-                                    minHeight: 46,
-                                    transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-
-                                    '&:hover': {
-                                        minWidth: 64,
-                                        minHeight: 64
-                                    }
-                                }}
-                            />
-                            <Grid spacing={4} direction="vertical">
-                                <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
-                                    {server.name?.value}
-                                    {server.acceptTextures?.value === 1 &&
-                                        <Typography size=".7rem" color="$secondaryColor" weight={300} family="Nunito" margin="4px 0 0 8px" lineheight={1}>
-                                            Server Resource Pack Accepted
-                                        </Typography>
-                                    }
-                                </Typography>
-                                <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
-                                    {server.ip?.value}
-                                </Typography>
-                            </Grid>
-                            <Grid spacing="8px" css={{
-                                right: 16,
-                                position: 'absolute'
-                            }}>
-                                <Button theme="secondary" disabled>
-                                    <PencilFill/>
-                                    {t('app.mdpkm.common:actions.edit')}
-                                </Button>
-                                <Button theme="secondary" disabled>
-                                    <Trash3Fill/>
-                                    {t('app.mdpkm.common:actions.delete')}
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    )}
+                    <ServerManagement instanceId={id}/>
                 </TabItem>
                 <TabItem name={t('app.mdpkm.instance_page.tabs.resource_packs')} value={2}>
-                    <Grid margin="4px 0" spacing={8} justifyContent="space-between">
-                        <Grid direction="vertical">
-                            <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
-                                {t('app.mdpkm.resourcepack_management.title')}
-                            </Typography>
-                            <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito">
-                                <TextTransition inline>
-                                    {resourcePacks === 'loading' ? 'Loading...' :`${resourcePacks?.length} Resource Packs`}
-                                </TextTransition>
-                            </Typography>
-                        </Grid>
-                        <Grid spacing={8}>
-                            <Button theme="secondary" onClick={getResourcePacks} disabled={resourcePacks === 'loading'}>
-                                {resourcePacks === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
-                                {t('app.mdpkm.common:actions.refresh')}
-                            </Button>
-                            <Button theme="accent" disabled>
-                                <PlusLg/>
-                                {t('app.mdpkm.resourcepack_management.add')}
-                            </Button>
-                        </Grid>
-                    </Grid>
-                    {Array.isArray(resourcePacks) && resourcePacks?.filter(({ name }) => name.toLowerCase().includes(serverFilter)).map((resourcePack, index) =>
-                        <Grid key={index} padding="8px" spacing="12px" alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{
-                            position: 'relative'
-                        }}>
-                            <Image
-                                src={resourcePack.icon ? `data:image/png;base64,${resourcePack.icon}` : 'img/icons/minecraft/unknown_pack.png'}
-                                size={46}
-                                background="$secondaryBackground"
-                                borderRadius={4}
-                                css={{
-                                    minWidth: 46,
-                                    minHeight: 46,
-                                    transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-
-                                    '&:hover': {
-                                        minWidth: 64,
-                                        minHeight: 64
-                                    }
-                                }}
-                            />
-                            <Grid spacing={4} direction="vertical">
-                                <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
-                                    {resourcePack.name}
-                                    {resourcePack.acceptTextures?.value === 1 &&
-                                        <Typography size=".7rem" color="$secondaryColor" weight={300} family="Nunito" margin="4px 0 0 8px" lineheight={1}>
-                                            Server Resource Pack Accepted
-                                        </Typography>
-                                    }
-                                </Typography>
-                                <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
-                                    {resourcePack.metadata.pack?.description}
-                                </Typography>
-                            </Grid>
-                            <Grid spacing={8} css={{
-                                right: 16,
-                                position: 'absolute'
-                            }}>
-                                <Button theme="secondary" disabled>
-                                    <Trash3Fill/>
-                                    {t('app.mdpkm.common:actions.delete')}
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    )}
+                    <ResourcePackManagement instanceId={id}/>
                 </TabItem>
                 <TabItem name={t('app.mdpkm.instance_page.tabs.essential')} value={3} spacing={6} disabled={!instance.isModded}>
                     <Image src="img/banners/essential_mod.svg" width="100%" height="1.2rem" margin="8px 0 0" css={{
@@ -763,72 +450,7 @@ export default function InstancePage({ id }) {
                     </Grid>
                 </TabItem>
                 <TabItem name={t('app.mdpkm.instance_page.tabs.export')} value={6}>
-                    <Grid width="fit-content" spacing={4} direction="vertical">
-                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
-                            {t('app.mdpkm.export_instance.title')}
-                        </Typography>
-                        <Grid spacing={8}>
-                            <Button theme="accent" onClick={exportInstance}>
-                                <Save2/>
-                                {t('app.mdpkm.export_instance.buttons.export_mdpki')}
-                            </Button>
-                            <Button theme="secondary" disabled>
-                                <Image src="img/icons/modrinth-white.svg" size={14}/>
-                                {t('app.mdpkm.export_instance.buttons.export_modrinth')}
-                            </Button>
-                            <Button theme="secondary" disabled>
-                                <FileEarmarkZip/>
-                                {t('app.mdpkm.export_instance.buttons.export_curseforge')}
-                            </Button>
-                        </Grid>
-                    </Grid>
-                    <Grid direction="vertical" background="$secondaryBackground2" borderRadius={8} css={{ overflow: 'hidden auto' }}>
-                        <Grid alignItems="center" justifyContent="space-between">
-                            <Typography size=".9rem" color="$secondaryColor" margin="8px 12px" family="Nunito">
-                                {t('app.mdpkm.export_instance.files.title')}
-                            </Typography>
-                            <Button theme="secondary" onClick={getExportFiles}>
-                                <ArrowClockwise size={14}/>
-                                {t('app.mdpkm.common:actions.refresh')}
-                            </Button>
-                        </Grid>
-                        <Divider width="100%" css={{ minHeight: 1 }}/>
-                        {exportFiles && exportFiles.filter(({ path }) => path.replace(/\/+|\\+/g, '/').replace(instance.path.replace(/\/+|\\+/g, '/'), '').match(/\/+|\\+/g)?.length === 1)
-                        .sort((a, b) => b.name.localeCompare(a.name))
-                        .sort(({ isDir }, { isDir2 }) => isDir === isDir2 ? 0 : isDir ? -1 : 1)
-                        .map(({ name, isDir, banned, selected, sensitive }, index) => {
-                            const Icon = Object.entries({
-                                '\\.txt$': FiletypeTxt,
-                                '\\.png$': FiletypePng,
-                                '\\.jpg$': FiletypeJpg,
-                                '\\.svg$': FiletypeSvg,
-                                '\\.json$': FiletypeJson,
-                            }).find(([reg]) => new RegExp(reg).test(name))?.[1] ?? (isDir ? FolderFill : FileText);
-                            return <React.Fragment key={index}>
-                                <Grid spacing={8} padding="4px 8px" alignItems="center">
-                                    <Toggle size="small" value={selected} disabled={banned} onChange={event => {
-                                        exportFiles.find(f => f.name === name).selected = event.target.value;
-                                        if(isDir)
-                                            for (const file of exportFiles)
-                                                if(!file.banned && file.path.replace(/\/+|\\+/g, '/').replace(instance.path.replace(/\/+|\\+/g, '/'), '').startsWith(`/${name}/`))
-                                                    file.selected = event.target.value;
-                                        setExportFiles(exportFiles);
-                                    }}/>
-                                    <Icon color={banned ? "var(--colors-secondaryColor)" : "var(--colors-primaryColor)"}/>
-                                    <Typography color={banned ? "$secondaryColor" : "$primaryColor"} family="Nunito">
-                                        {name}
-                                        {banned && <Typography size=".7rem" color="$secondaryColor" weight={400} margin="0 0 0 8px" family="Nunito" lineheight={1}>
-                                            {t('app.mdpkm.export_instance.files.banned')}
-                                        </Typography>}
-                                        {sensitive && <Typography size=".7rem" color="$secondaryColor" weight={400} margin="0 0 0 8px" family="Nunito" lineheight={1}>
-                                            {t('app.mdpkm.export_instance.files.sensitive')}
-                                        </Typography>}
-                                    </Typography>
-                                </Grid>
-                                {index < exportFiles.length - 1 && <Divider width="100%" css={{ minHeight: 1 }}/>}
-                            </React.Fragment>;
-                        })}
-                    </Grid>
+                    <InstanceExport instanceId={id}/>
                 </TabItem>
             </Tabs>}
         </Grid>
