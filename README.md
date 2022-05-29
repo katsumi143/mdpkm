@@ -9,15 +9,15 @@ Minecraft instance management made a bit easier, plus a few other useful things 
 mdpkm is a work-in-progress project, issues should be expected, plus a bit of annoyances!
 
 ## Features
-| Feature           | Summary                               | Status              |
-|-------------------|---------------------------------------|---------------------|
-| Modloader Support |                                       | ✅                 |
-| Bedrock Edition   |                                       | 🚧                 |
-| Mod Installation  |                                       | ✅ (Modrinth)      |
-| Mod Management    |                                       | ✅                 |
-| Modpacks          |                                       | 🚧 Being Revamped  |
-| Exporting         | Share instances with your friends!    | ✅ (Custom Format) |
-| Plugins           | Add features using community plugins! | ✅ (Custom Format) |
+| Feature           | Summary                                                 | Status              |
+|-------------------|---------------------------------------------------------|---------------------|
+| Modloader Support | Vanilla not enough? Easily get more content with mods!  | ✅                 |
+| Bedrock Edition   |                                                         | 🚧                 |
+| Mod Installation  |                                                         | ✅                 |
+| Mod Management    |                                                         | ✅                 |
+| Modpacks          | Get pre-made community modpacks to instantly play with. | ✅                 |
+| Exporting         | Share instances with your friends!                      | ✅ (Custom Format) |
+| Plugins           | Add features using community plugins!                   | ✅                 |
 
 ### Looking for more?<br/>
 Check out these awesome plugins!</br>
@@ -27,13 +27,14 @@ Check out these awesome plugins!</br>
 [Legacy Fabric for mdpkm](https://github.com/Blookerss/mdpkm-legacy-fabric-plugin) (Official)<br/>
 
 ## Loader/Minecraft Support
-| Loader Name       | Status             |
-|-------------------|--------------------|
-| Java Edition      | ✅                 |
-| Bedrock Edition   | 🚧                 |
-| Fabric Loader     | ✅                 |
-| Forge Mod Loader  | ✅                 |
-| Quilt Loader      | ✅ (Beta Software) |
+| Loader Name                                                | Status             |
+|------------------------------------------------------------|--------------------|
+| Java Edition                                               | ✅                 |
+| Bedrock Edition                                            | 🚧                 |
+| [Fabric Loader](https://fabricmc.net/)                     | ✅                 |
+| [Forge Modloader](https://minecraftforge.net/)             | 🚧                 |
+| [Quilt Loader](https://quiltmc.org/)                       | ✅ (Beta Software) |
+| Need more? Try out community [plugins](#looking-for-more)! |                     |
 
 ## Translation
 | Language | Translators                                | Status  |
@@ -46,7 +47,8 @@ Check out these awesome plugins!</br>
 
 ## ![Install Image](https://img.icons8.com/fluency/24/000000/software-installer.png) Installation
 All installer files can be found through the [releases](https://github.com/Blookerss/mdpkm/releases) page.<br/>
-Download the latest release [here](https://github.com/Blookerss/mdpkm/releases/latest).
+Download the latest release [here](https://github.com/Blookerss/mdpkm/releases/latest).<br/>
+Get an installation guide [here](https://blookers.gitbook.io/mdpkm/installation).
 <br/><br/>
 <img src=".github/windows_support.svg" align="left" height="128"/>
 <br/><br/><br/><br/><br/><br/>
@@ -54,7 +56,7 @@ Download the latest release [here](https://github.com/Blookerss/mdpkm/releases/l
 <br/><br/><br/><br/><br/><br/>
 
 ## 🤔 Usage
-not yet
+Check out the [documentation](https://blookers.gitbook.io/mdpkm/getting-started)!
 <br/>
 
 ## 🥰 Contributing
