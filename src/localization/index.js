@@ -7,12 +7,9 @@ await i18n
 .init({
     resources: {
         en: {
+            'app.mdpkm.instances': (await import('./locales/en/instances')).default,
             'app.mdpkm.common': (await import('./locales/en/common')).default,
             translation: (await import('./locales/en')).default
-        },
-        among: {
-            'app.mdpkm.common': (await import('./locales/among/common')).default,
-            translation: (await import('./locales/among')).default
         }
     },
     lng: settingsSlice.getInitialState().language,

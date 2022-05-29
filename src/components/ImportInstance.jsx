@@ -104,10 +104,10 @@ export default function ImportInstance({ path: epath, back }) {
                 borderBottom: '1px solid $tagBorder'
             }}>
                 <Typography size="1.2rem" color="$primaryColor" family="Raleway" lineheight={1}>
-                    Adding New Instance
+                    {t('app.mdpkm.common:headers.adding_instance')}
                 </Typography>
                 <Typography size=".9rem" color="$secondaryColor" family="Nunito" lineheight={1}>
-                    Import Instance
+                    {t('app.mdpkm.import_instance.title')}
                 </Typography>
             </Grid>
             <Grid width="fit-content" height="-webkit-fill-available" spacing="1rem" padding="2rem 0" direction="vertical" alignItems="center" css={{
@@ -138,24 +138,25 @@ export default function ImportInstance({ path: epath, back }) {
                 </Grid>
                 {!epath && <Grid spacing={4} direction="vertical">
                     <Typography size=".9rem" color="$secondaryColor" family="Nunito">
-                        Select Exported Instance
+                        {t('app.mdpkm.import_instance.select_file')}
                     </Typography>
                     <TextInput
                         width={320}
-                        value={path ? `.../${path.split('\\').slice(-2).join('/')}` : 'Choose a file'}
+                        value={path && `.../${path.split('\\').slice(-2).join('/')}`}
                         readOnly
                         disabled={!!importState}
+                        placeholder={t('app.mdpkm.import_instance.select_file.placeholder')}
                     >
                         <Button onClick={selectFile} disabled={!!importState}>
                             <Folder2Open size={14}/>
-                            Select File
+                            {t('app.mdpkm.common:actions.select_file')}
                         </Button>
                     </TextInput>
                 </Grid>}
                 {data && <React.Fragment>
                     <Grid spacing={4} direction="vertical">
                         <Typography size=".9rem" color="$secondaryColor" family="Nunito">
-                            Name your instance
+                            {t('app.mdpkm.import_instance.name_instance')}
                         </Typography>
                         <TextInput
                             width={320}
@@ -166,13 +167,13 @@ export default function ImportInstance({ path: epath, back }) {
                     </Grid>
                     <Grid spacing={4} direction="vertical" css={{ width: 320 }}>
                         <Typography size=".9rem" color="$secondaryColor" family="Nunito">
-                            Inherit configuration from
+                            {t('app.mdpkm.import_instance.inherit_config')}
                         </Typography>
                         <Select.Root value={inherit} onChange={setInherit} disabled={!!importState}>
                             <Select.Item value="noinherit">
-                                Do not inherit
+                                {t('app.mdpkm.import_instance.inherit_config.items.none')}
                             </Select.Item>
-                            <Select.Group name="Instances">
+                            <Select.Group name={t('app.mdpkm.import_instance.inherit_config.category')}>
                                 {instances.map((instance, index) =>
                                     <Select.Item key={index} value={index}>
                                         <InstanceIcon size={24} instance={instance} hideLoader/>
@@ -194,12 +195,12 @@ export default function ImportInstance({ path: epath, back }) {
                 :
                     <Button theme="secondary" onClick={back}>
                         <ArrowLeft size={14}/>
-                        Back to Selection
+                        {t('app.mdpkm.common:buttons.back_to_selection')}
                     </Button>
                 }
                 <Grid spacing={8}>
                     <Button theme="accent" onClick={importInstance} disabled={!data || !!importState}>
-                        Import Instance
+                        {t('app.mdpkm.import_instance.buttons.import')}
                     </Button>
                 </Grid>
             </Grid>

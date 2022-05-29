@@ -75,10 +75,10 @@ export default function LoaderSetup({ back, loader, install, versions = [] }) {
                 borderBottom: '1px solid $tagBorder'
             }}>
                 <Typography size="1.2rem" color="$primaryColor" family="Raleway" lineheight={1}>
-                    Adding New Instance
+                    {t('app.mdpkm.common:headers.adding_instance')}
                 </Typography>
                 <Typography size=".9rem" color="$secondaryColor" family="Nunito" lineheight={1}>
-                    Configure Loader
+                    {t('app.mdpkm.loader_setup.header')}
                 </Typography>
             </Grid>
             <Grid width="100%" height="-webkit-fill-available" direction="vertical" alignItems="center" justifyContent="center" css={{
@@ -96,7 +96,7 @@ export default function LoaderSetup({ back, loader, install, versions = [] }) {
 
                 {!installState && <Grid margin="2rem 0 0 0" spacing={4} direction="vertical">
                     <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
-                        Instance Name
+                        {t('app.mdpkm.loader_setup.instance_name')}
                     </Typography>
                     <TextInput
                         width={210}
@@ -108,7 +108,7 @@ export default function LoaderSetup({ back, loader, install, versions = [] }) {
                 {installState ? null : loaderVersions ?
                     <Grid width={210} margin="24px 0 0 0" spacing={4} direction="vertical">
                         <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
-                            Minecraft Version
+                            {t('app.mdpkm.loader_setup.minecraft_version')}
                         </Typography>
                         <Select.Root
                             value={gameVersion}
@@ -129,7 +129,7 @@ export default function LoaderSetup({ back, loader, install, versions = [] }) {
                     <React.Fragment>
                         <Grid width={210} margin="16px 0 0 0" spacing={4} direction="vertical">
                             <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
-                                Version Category
+                                {t('app.mdpkm.loader_setup.version_type')}
                             </Typography>
                             <Select.Root
                                 value={gameType}
@@ -150,7 +150,7 @@ export default function LoaderSetup({ back, loader, install, versions = [] }) {
                         </Grid>
                         <Grid width={210} margin="16px 0 0 0" spacing={4} direction="vertical">
                             <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
-                                Minecraft Version
+                                {t('app.mdpkm.loader_setup.game_version')}
                             </Typography>
                             <Select.Root
                                 value={gameVersion}
@@ -198,12 +198,12 @@ export default function LoaderSetup({ back, loader, install, versions = [] }) {
                 :
                     <Button theme="secondary" onClick={back}>
                         <ArrowLeft size={14}/>
-                        {t('common:app.mdpkm.common.buttons.back_to_selection')}
+                        {t('app.mdpkm.common:buttons.back_to_selection')}
                     </Button>
                 }
                 <Grid spacing={8}>
                     <Button onClick={installLoader} disabled={!name || !!installState}>
-                        Install {Util.getLoaderName(loader)}
+                        {t('app.mdpkm.common:actions.install')} {Util.getLoaderName(loader)}
                     </Button>
                 </Grid>
             </Grid>

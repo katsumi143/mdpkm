@@ -73,22 +73,22 @@ export default function Mod({ id, api, data, featured, instanceId, recommended }
                         {mod.title}
                         {mod.author && 
                             <Typography size=".7rem" color="$secondaryColor" margin="4px 0 0 4px" lineheight={1}>
-                                by {mod.author}
+                                {t('app.mdpkm.mod.author', { val: mod.author })}
                             </Typography>
                         }
                         {featured &&
                             <Typography size=".8rem" color="#cbc365" margin="2px 0 0 6px" lineheight={1}>
-                                Featured
+                                {t('app.mdpkm.mod.featured')}
                             </Typography>
                         }
                         {recommended &&
                             <Typography size=".8rem" color="$secondaryColor" margin="2px 0 0 6px" lineheight={1}>
-                                Recommended
+                                {t('app.mdpkm.mod.recommended')}
                             </Typography>
                         }
                     </Typography>
                     <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
-                        {mod.getSide()} mod
+                        {t(`app.mdpkm.mod.sides.${mod.getSide()}`)}
                     </Typography>
                     <Typography size=".9rem" color="$secondaryColor" family="Nunito" textalign="left">
                         {mod.summary}
@@ -101,7 +101,9 @@ export default function Mod({ id, api, data, featured, instanceId, recommended }
                     {typeof mod.downloads === 'number' &&
                         <Typography color="$primaryColor" margin="0 8px 0 0" family="Nunito">
                             {Intl.NumberFormat('en-us', {}).format(mod.downloads)}
-                            <Typography size=".8rem" text="Downloads" color="$secondaryColor" family="Nunito" margin="0 0 0 4px"/>
+                            <Typography size=".8rem" color="$secondaryColor" family="Nunito" margin="0 0 0 4px">
+                                {t('app.mdpkm.mod.downloads')}
+                            </Typography>
                         </Typography>
                     }
                     {mod.website &&
@@ -125,11 +127,14 @@ export default function Mod({ id, api, data, featured, instanceId, recommended }
                 <Spinner/>
                 <Grid spacing={2} direction="vertical" justifyContent="center">
                     <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
-                        Loading mod...
+                        {t('app.mdpkm.common:states.loading')}
                     </Typography>
                     {id && api &&
                         <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
-                            {id} on {t(`app.mdpkm.common:platforms.${api}`)}.
+                            {t('app.mdpkm.mod.platform', {
+                                id,
+                                name: t(`app.mdpkm.common:platforms.${api}`)
+                            })}
                         </Typography>
                     }
                 </Grid>

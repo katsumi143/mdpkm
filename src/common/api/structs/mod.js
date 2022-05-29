@@ -3,13 +3,13 @@ export default class Mod extends Project {
     getSide() {
         const client = this.data.client_side, server = this.data.server_side;
         if(!client)
-            return 'Universal(?)';
+            return 'unknown';
         if(client !== 'unsupported' && server !== 'unsupported')
-            return 'Universal'
+            return 'universal'
         if(client !== 'unsupported')
-            return 'Client';
+            return 'client';
         if(server !== 'unsupported')
-            return 'Server';
-        return 'Unavailable';
+            return 'server';
+        return 'unavailable';
     }
 };

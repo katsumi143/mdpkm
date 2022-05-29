@@ -67,7 +67,9 @@ export default function ModSearch({ instanceId }) {
             <Grid justifyContent="space-between">
                 <Grid>
                     <Grid spacing={4} direction="vertical">
-                        <Typography size=".9rem" text="Search Query" color="$secondaryColor" family="Nunito"/>
+                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                            {t('app.mdpkm.common:labels.search_query')}
+                        </Typography>
                         <TextInput value={query} onChange={setQuery}>
                             <Button theme="secondary" onClick={() => search(api)} disabled={searching}>
                                 {searching ? <BasicSpinner size={16}/> : <Search/>}
@@ -78,7 +80,9 @@ export default function ModSearch({ instanceId }) {
                 </Grid>
                 <Grid>
                     <Grid spacing={4} direction="vertical">
-                        <Typography size=".9rem" text="Platform" color="$secondaryColor" family="Nunito"/>
+                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                            {t('app.mdpkm.common:labels.platform')}
+                        </Typography>
                         <Select.Root value={api} onChange={setAPI} disabled={searching}>
                             <Select.Group name="Mod Platforms">
                                 {API.getModPlatformIDs().map((platform, index) =>
@@ -101,7 +105,7 @@ export default function ModSearch({ instanceId }) {
                 )}
                 <Grid direction="vertical">
                     <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
-                        There's nothing here!
+                        {t('app.mdpkm.common:headers.empty_list')}
                     </Typography>
                     <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
                         Try searching again, or wait a few seconds!

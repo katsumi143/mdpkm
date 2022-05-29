@@ -58,7 +58,7 @@ export default function Instance({ css, data: instance, onView }) {
                             lineheight={1}
                             whitespace="nowrap"
                         >
-                            {instance.state ?? "Installed"}
+                            {instance.state ?? t('app.mdpkm.instances:states.none')}
                         </Typography>
                     </Grid>
                 </Grid>

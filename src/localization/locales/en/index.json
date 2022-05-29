@@ -9,15 +9,42 @@
     
 
     "app.mdpkm.settings.header.title": "Settings",
+    "app.mdpkm.settings.general": "General Settings",
+    "app.mdpkm.settings.instances": "Instance Settings",
+    "app.mdpkm.settings.java": "Java Settings",
+    "app.mdpkm.settings.plugins": "Plugin Management - {{val}} Installed",
+    "app.mdpkm.settings.storage": "Storage Management",
+    "app.mdpkm.settings.about": "About this build",
 
     "app.mdpkm.settings.general.account": "Minecraft Account",
     "app.mdpkm.settings.general.account.summary": "Account to use for Minecraft Java Edition.",
+    "app.mdpkm.settings.general.account.category": "Minecraft Accounts",
+    "app.mdpkm.settings.general.account.items.none": "None",
+    "app.mdpkm.settings.general.account.add": "Add New Account",
 
     "app.mdpkm.settings.general.theme": "Theme",
     "app.mdpkm.settings.general.theme.summary": "Choose a theme that suits you best!",
+    "app.mdpkm.settings.general.theme.category": "Themes",
+    "app.mdpkm.settings.general.theme.items.default": "Default",
+    "app.mdpkm.settings.general.theme.items.light": "Light",
+    "app.mdpkm.settings.general.theme.items.dark": "Dark",
+    "app.mdpkm.settings.general.theme.items.purple": "Purple",
 
     "app.mdpkm.settings.general.language": "Language",
     "app.mdpkm.settings.general.language.summary": "Placeholder",
+    "app.mdpkm.settings.general.language.category": "Languages",
+
+    "app.mdpkm.settings.plugins.add": "Add Plugin",
+    "app.mdpkm.settings.plugins.item.adds_loader": "Adds {{val}} Loader",
+    "app.mdpkm.settings.plugins.item.adds_loaders": "Adds {{val}} Loaders",
+
+    "app.mdpkm.settings.storage.clean_header": "If you think {{appName}} is taking up too much space, you can automatically get rid of unneeded files.",
+    "app.mdpkm.settings.storage.clean": "Clean Installation",
+
+    "app.mdpkm.settings.about.tauri": "Running Tauri {{val}}",
+    "app.mdpkm.settings.about.check_for_updates": "Check for updates",
+    "app.mdpkm.settings.about.report_bug": "Report an issue",
+    "app.mdpkm.settings.about.github": "Visit GitHub Site",
 
     "app.mdpkm.settings.placeholder": "Unknown setting",
     "app.mdpkm.settings.placeholder.summary": "Placeholder",
@@ -26,33 +53,72 @@
     "app.mdpkm.instance_page.tabs.servers": "Servers",
     "app.mdpkm.instance_page.tabs.resource_packs": "Resource Packs",
     "app.mdpkm.instance_page.tabs.essential": "Essential",
+    "app.mdpkm.instance_page.tabs.loader": "Game Loader",
     "app.mdpkm.instance_page.tabs.settings": "Settings",
     "app.mdpkm.instance_page.tabs.export": "Export",
+
+    "app.mdpkm.instance_page.tabs.settings.title": "Instance Settings",
+    "app.mdpkm.instance_page.tabs.settings.instance_name": "Instance Name",
+    "app.mdpkm.instance_page.tabs.settings.memory_alloc": "Memory Allocation - {{val}}GB",
+    "app.mdpkm.instance_page.tabs.settings.delete": "Delete Instance",
 
     "app.mdpkm.instance_page.tabs.mods.tabs.manage": "Manage Mods",
     "app.mdpkm.instance_page.tabs.mods.tabs.search": "Mod Search",
 
     "app.mdpkm.mod_management.title": "Mod Management",
+    "app.mdpkm.mod_management.count": "{{val}} Installed",
     "app.mdpkm.mod_management.search": "Search mods",
     "app.mdpkm.mod_management.get_updates": "Get Updates",
 
+    "app.mdpkm.mod.author": "by {{val}}",
+    "app.mdpkm.mod.platform": "{{id}} on {{name}}.",
+    "app.mdpkm.mod.featured": "Featured",
+    "app.mdpkm.mod.recommended": "Recommended",
+    "app.mdpkm.mod.downloads": "Downloads",
+    "app.mdpkm.mod.sides.unknown": "Unknown mod",
+    "app.mdpkm.mod.sides.universal": "Universal mod",
+    "app.mdpkm.mod.sides.server": "Server mod",
+    "app.mdpkm.mod.sides.client": "Client mod",
+    "app.mdpkm.mod.sides.unavailable": "Unavailable",
+    "app.mdpkm.mod.version": "Version {{val}}",
+    "app.mdpkm.mod.show_embedded": "Show Embedded Mods ({{val}})",
+    "app.mdpkm.mod.hide_embedded": "Hide Embedded Mods ({{val}})",
+
     "app.mdpkm.server_management.title": "Server Management",
+    "app.mdpkm.server_management.count": "{{val}} Servers",
+    "app.mdpkm.server_management.count1": "{{val}} Server",
     "app.mdpkm.server_management.search": "Search servers",
     "app.mdpkm.server_management.add": "Add Server",
 
     "app.mdpkm.resourcepack_management.title": "Resource Pack Management",
+    "app.mdpkm.resourcepack_management.count": "{{val}} Resource Packs",
+    "app.mdpkm.resourcepack_management.count1": "{{val}} Resource Pack",
     "app.mdpkm.resourcepack_management.add": "Add Resource Pack",
 
+    "app.mdpkm.import_instance.title": "Import Instance",
+    "app.mdpkm.import_instance.select_file": "Select exported instance",
+    "app.mdpkm.import_instance.select_file.placeholder": "Choose a file",
+    "app.mdpkm.import_instance.name_instance": "Name your instance",
+    "app.mdpkm.import_instance.inherit_config": "Inherit configuration from",
+    "app.mdpkm.import_instance.inherit_config.category": "Instances",
+    "app.mdpkm.import_instance.inherit_config.items.none": "Do not inherit",
+    "app.mdpkm.import_instance.buttons.import": "Import Instance",
+
     "app.mdpkm.export_instance.title": "Export Instance",
-    "app.mdpkm.export_instance.files.title": "Choose files to export",
+    "app.mdpkm.export_instance.files.title": "Choose Files",
     "app.mdpkm.export_instance.files.banned": "This file is locked",
     "app.mdpkm.export_instance.files.sensitive": "May contain sensitive information",
     "app.mdpkm.export_instance.buttons.export_mdpki": "Export Instance",
     "app.mdpkm.export_instance.buttons.export_modrinth": "Export Modrinth Pack",
     "app.mdpkm.export_instance.buttons.export_curseforge": "Export CurseForge Pack",
 
-    "app.mdpkm.select_instance_type.import": "Import mdpkm Instance",
-    "app.mdpkm.select_instance_type.import.description": "Import user generated instances via mdpki files.",
-    "app.mdpkm.select_instance_type.import2": "Import Custom Client",
-    "app.mdpkm.select_instance_type.import2.description": "Import a custom manifest file.\nMust support the official Minecraft Launcher!"
+    "app.mdpkm.select_instance_type.header": "Select Loader",
+    "app.mdpkm.select_instance_type.import.button": "Import Instance",
+    "app.mdpkm.select_instance_type.unsupported": "Unsupported",
+
+    "app.mdpkm.loader_setup.header": "Configure Loader",
+    "app.mdpkm.loader_setup.instance_name": "Instance Name",
+    "app.mdpkm.loader_setup.game_version": "Minecraft Version",
+    "app.mdpkm.loader_setup.loader_version": "Loader Version",
+    "app.mdpkm.loader_setup.version_type": "Version Category"
 }

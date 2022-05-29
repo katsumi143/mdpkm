@@ -365,7 +365,7 @@ export default function InstancePage({ id }) {
                     </Typography>
                     <Mod id="essential-container" api="internal" featured instanceId={id}/>
                 </TabItem>
-                <TabItem name="Game Loader" value={4}>
+                <TabItem name={t('app.mdpkm.instance_page.tabs.loader')} value={4}>
                     <Grid spacing={8}>
                         {loaderData?.icon ?
                             <Image src={loaderData?.icon} size={48} borderRadius={4}/>
@@ -400,20 +400,24 @@ export default function InstancePage({ id }) {
                 <TabItem name={t('app.mdpkm.instance_page.tabs.settings')} value={5}>
                     <Grid justifyContent="space-between">
                         <Typography color="$primaryColor" family="Nunito">
-                            Instance Settings
+                            {t('app.mdpkm.instance_page.tabs.settings.title')}
                         </Typography>
                         <Button theme="accent" onClick={saveSettings} disabled={saving}>
                             {saving ? <BasicSpinner size={16}/> : <PencilFill/>}
-                            Save Changes
+                            {t('app.mdpkm.common:actions.save_changes')}
                         </Button>
                     </Grid>
                     <Grid spacing={4} direction="vertical">
-                        <Typography size=".9rem" text="Instance Name" color="$secondaryColor" family="Nunito"/>
+                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                            {t('app.mdpkm.instance_page.tabs.settings.instance_name')}
+                        </Typography>
                         <TextInput value={instanceName} onChange={setInstanceName}/>
                     </Grid>
                     <Grid spacing={4} direction="vertical">
                         <Typography size=".9rem" color="$secondaryColor" family="Nunito">
-                            Memory Allocation - {instanceRam.toLocaleString('en', { minimumFractionDigits: 1 })}GB
+                            {t('app.mdpkm.instance_page.tabs.settings.memory_alloc', {
+                                val: instanceRam.toLocaleString('en', { minimumFractionDigits: 1 })
+                            })}
                         </Typography>
                         <Slider
                             min={1}
@@ -424,7 +428,9 @@ export default function InstancePage({ id }) {
                         />
                     </Grid>
                     <Grid width="fit-content" spacing={4} direction="vertical">
-                        <Typography size=".9rem" text="Delete Instance" color="$secondaryColor" family="Nunito"/>
+                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                            {t('app.mdpkm.instance_page.tabs.settings.delete')}
+                        </Typography>
                         <Dialog.Root>
                             <Dialog.Trigger asChild>
                                 <Button theme="secondary" disabled={saving}>

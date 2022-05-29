@@ -19,10 +19,10 @@ export default function SelectInstanceType({ back, types, loading, chooseLoader,
                 borderBottom: '1px solid $tagBorder'
             }}>
                 <Typography size="1.2rem" color="$primaryColor" family="Raleway" lineheight={1}>
-                    Adding New Instance
+                    {t('app.mdpkm.common:headers.adding_instance')}
                 </Typography>
                 <Typography size=".9rem" color="$secondaryColor" family="Nunito" lineheight={1}>
-                    Select Loader
+                    {t('app.mdpkm.select_instance_type.header')}
                 </Typography>
             </Grid>
             <Grid width="100%" height="-webkit-fill-available" spacing="1rem" padding="1rem 0" direction="vertical" alignItems="center" css={{
@@ -64,15 +64,15 @@ export default function SelectInstanceType({ back, types, loading, chooseLoader,
                             <Grid spacing={8}>
                                 {isLoader && <Button theme="accent" onClick={() => chooseLoader(id)} disabled={loading}>
                                     {loading && <BasicSpinner size={16}/>}
-                                    Continue
+                                    {t('app.mdpkm.common:actions.continue')}
                                 </Button>}
                                 {isImport && <Button theme="accent" onClick={importInstance} disabled={loading}>
                                     {loading && <BasicSpinner size={16}/>}
-                                    Import Instance
+                                    {t('app.mdpkm.select_instance_type.import.button')}
                                 </Button>}
                                 {!isLoader && !isImport &&
                                     <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito">
-                                        Unsupported
+                                        {t('app.mdpkm.select_instance_type.unsupported')}
                                     </Typography>
                                 }
                             </Grid>

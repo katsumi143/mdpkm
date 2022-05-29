@@ -49,7 +49,9 @@ export default function InstanceMod({ mod, embedded, instanceId }) {
                             {mod.name ?? mod.id}
                         </Typography>
                         <Typography size={embedded ? ".6rem" : ".7rem"} color="$secondaryColor" weight={300} family="Nunito" lineheight={1}>
-                            Version {mod.version}
+                            {t('app.mdpkm.mod.version', {
+                                val: mod.version
+                            })}
                         </Typography>
                     </Grid>
                     <Grid spacing={8} alignItems="center" css={{
@@ -89,7 +91,9 @@ export default function InstanceMod({ mod, embedded, instanceId }) {
                             transform: showEmbedded ? 'rotate(180deg)' : 'none',
                             marginRight: 4
                         }}/>
-                        {showEmbedded ? 'Hide' : 'Show'} Embedded Mods ({mod.embedded.length})
+                        {t(`app.mdpkm.mod.${showEmbedded ? 'hide': 'show'}_embedded`, {
+                            val: mod.embedded.length
+                        })}
                     </Typography>
                 }
             </Grid>

@@ -1,4 +1,10 @@
 {
+    "headers.empty_list": "There's nothing here!",
+    "headers.adding_instance": "Adding New Instance",
+
+    "labels.platform": "Platform",
+    "labels.search_query": "Search query",
+    
     "actions.view": "View",
     "actions.edit": "Edit",
     "actions.retry": "Retry",
@@ -7,16 +13,24 @@
     "actions.search": "Search",
     "actions.install": "Install",
     "actions.refresh": "Refresh",
+    "actions.continue": "Continue",
     "actions.open_folder": "Open Folder",
+    "actions.select_file": "Select File",
+    "actions.save_changes": "Save Changes",
     "actions.visit_website": "Visit Website",
 
     "states.waiting": "Waiting",
+    "states.loading": "Loading",
     "states.installed": "Installed",
     "states.installing": "Installing",
     "states.unavailable": "Unavailable",
 
     "buttons.back_to_instances": "Back to Instances",
     "buttons.back_to_selection": "Back to Selection",
+
+    "locales.en": "English",
+    "locales.lv": "Latviešu",
+    "locales.ru": "Русский",
 
     "loaders.java": "Minecraft Java Edition",
     "loaders.java.summary": "Simply Vanilla Minecraft, no mods or anything special.",
@@ -39,7 +53,6 @@
     "loaders.categories.third_party": "Third Party Modloaders",
     "loaders.categories.third_party_modpacks": "Third Party Modpacks",
     "loaders.categories.other": "Other Options",
-
 
     "platforms.ftb": "Feed the Beast",
     "platforms.github": "GitHub",

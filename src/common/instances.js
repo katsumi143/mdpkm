@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import pMap from 'p-map-browser';
 import { Buffer } from 'buffer/';
 import { v4 as uuidv4 } from 'uuid';
@@ -6,7 +7,6 @@ import path from 'path-browserify';
 import toast from 'react-hot-toast';
 import { create } from 'xmlbuilder2';
 import { appDir } from '@tauri-apps/api/path';
-
 import gte from 'semver/functions/gte';
 import coerce from 'semver/functions/coerce';
 
@@ -229,8 +229,8 @@ export class Instance extends EventEmitter {
             throw new Error('Account Required');
         this.launchLogs = [];
 
-        const toastHead = `Launching ${this.name}`;
-        const toastId = toast.loading(`${toastHead}\nPreparing`, {
+        const toastHead = t('app.mdpkm.instances:states.launching', { name: this.name });
+        const toastId = toast.loading(`${toastHead}\n${t('app.mdpkm.instances:states.preparing')}`, {
             className: 'gotham',
             position: 'bottom-right',
             duration: 10000,
@@ -249,7 +249,7 @@ export class Instance extends EventEmitter {
         if (!await Util.fileExists(this.getClientPath()) || !await Util.fileExists(this.getMinecraftManifestPath()))
             await this.instances.installMinecraft(loader.game, this, updateToastState);
         if(isJava || !isBedrock) {
-            updateToastState('Reading Minecraft Manifest');
+            updateToastState(t('app.mdpkm.instances:states.reading_manifest'));
 
             const manifest = JSON.parse(
                 await Util.readTextFile(this.getMinecraftManifestPath())
@@ -277,7 +277,9 @@ export class Instance extends EventEmitter {
 
             let libraries = [];
             if(!Util.getLoaderType(loader.type).includes('vanilla')) {
-                updateToastState(`Modifying Launch Info for ${Util.getLoaderName(loader.type)}`);
+                updateToastState(t('app.mdpkm.instances:states.modifying_info', {
+                    name: Util.getLoaderName(loader.type)
+                }));
                 const loaderManifestPath = `${this.instances.getPath('versions')}/${loader.type}-${loader.game}-${loader.version}/manifest.json`;
                 if(!await Util.fileExists(loaderManifestPath))
                     await this.instances.installLoader(this, toastId, toastHead, true);
@@ -317,7 +319,7 @@ export class Instance extends EventEmitter {
                 'url'
             );
 
-            updateToastState('Verifying Resources');
+            updateToastState(t('app.mdpkm.instances:states.verifying'));
 
             const missing = [];
             for (const resource of [...libraries, ...assets])
@@ -333,14 +335,14 @@ export class Instance extends EventEmitter {
                     this.path
                 ));
             if(assetsJson.map_to_resources) {
-                updateToastState?.('Copying Assets to Legacy Resources');
+                updateToastState?.(t('app.mdpkm.instances:states.copying_legacy'));
                 for (const asset of missing)
                     if(asset.resourcesPath)
                         await Util.copyFile(asset.path, asset.resourcesPath);
             }
 
             if (!await Util.fileExists(`${this.path}/natives/`)) {
-                updateToastState('Extracting Natives');
+                updateToastState(t('app.mdpkm.instances:states.extracting'));
                 
                 await this.instances.extractNatives(
                     libraries,
@@ -358,14 +360,16 @@ export class Instance extends EventEmitter {
             const ownsMinecraft = await API.Minecraft.ownsMinecraft(account.minecraft).catch(err => {
                 console.error(err);
                 toast.dismiss(toastId);
+                this.setState();
                 throw new Error(`Couldn't verify your ownership of Minecraft Java Edition.\n${err.message ?? ''}`);
             });
             if(!ownsMinecraft) {
                 toast.dismiss(toastId);
+                this.setState();
                 throw new Error('You do not own Minecraft Java Edition');
             }
 
-            updateToastState('Launching Minecraft');
+            updateToastState(t('app.mdpkm.instances:states.launching2'));
             const jvmArguments = getJvmArguments(
                 libraries,
                 minecraftArtifact,
@@ -588,7 +592,10 @@ export class Instance extends EventEmitter {
             this.config.modifications,
             async([source, id, versionId]) => {
                 try {
-                    this.setState(`Downloading Mods ${downloaded + 1}/${this.config.modifications.length}`, 'Downloading Mods');
+                    this.setState(t('app.mdpkm.instances:states.downloading_mods', {
+                        val: downloaded + 1,
+                        len: this.config.modifications.length
+                    }));
                     const api = API.get(source);
                     const { title } = await api.getProject(id);
                     const version = await api.getProjectVersion(versionId, id);

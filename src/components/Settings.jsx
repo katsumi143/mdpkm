@@ -202,11 +202,11 @@ export default function Settings({ close }) {
                     <Grid width="100%" height="-webkit-fill-available" padding=".5rem 1rem" direction="vertical" css={{
                         overflow: 'auto'
                     }}>
-                        <TextDivider text="General Settings"/>
+                        <TextDivider name="general"/>
                         <Grid padding="0 1rem" direction="vertical">
                             <Setting name="general.account">
                                 <Select.Root value={new String(account).toString()} onChange={changeAccount} disabled={accounts.length === 0} placeholder="Select an Account">
-                                    <Select.Group name="Minecraft Accounts">
+                                    <Select.Group name={t('app.mdpkm.settings.general.account.category')}>
                                         {accounts.map(({ profile }, key) =>
                                             <Select.Item key={key} value={profile.id}>
                                                 <Image src={`${SKIN_API_BASE}/face/${profile.id}`} size={24} borderRadius={4}/>
@@ -215,56 +215,73 @@ export default function Settings({ close }) {
                                         )}
                                     </Select.Group>
                                     <Select.Item value="undefined" disabled>
-                                        None
+                                        {t('app.mdpkm.settings.general.account.items.none')}
                                     </Select.Item>
                                 </Select.Root>
                                 <Button theme="accent" onClick={addNewAccount} disabled={addingAccount} css={{
                                     minWidth: 196
                                 }}>
                                     {addingAccount ? <BasicSpinner size={16}/> : <PlusLg/>}
-                                    Add New Account
+                                    {t('app.mdpkm.settings.general.account.add')}
                                 </Button>
                             </Setting>
                             <Setting name="general.theme">
                                 <Select.Root value={theme} onChange={t => changeTheme(t, setTheme)}>
-                                    <Select.Group name="Themes">
-                                        <Select.Item value="default">Default</Select.Item>
-                                        <Select.Item value="light">Light</Select.Item>
-                                        <Select.Item value="dark">Dark</Select.Item>
-                                        <Select.Item value="purple">Purple</Select.Item>
+                                    <Select.Group name={t('app.mdpkm.settings.general.theme.category')}>
+                                        <Select.Item value="default">
+                                            {t('app.mdpkm.settings.general.theme.items.default')}
+                                        </Select.Item>
+                                        <Select.Item value="light">
+                                            {t('app.mdpkm.settings.general.theme.items.light')}
+                                        </Select.Item>
+                                        <Select.Item value="dark">
+                                            {t('app.mdpkm.settings.general.theme.items.dark')}
+                                        </Select.Item>
+                                        <Select.Item value="purple">
+                                            {t('app.mdpkm.settings.general.theme.items.purple')}
+                                        </Select.Item>
                                     </Select.Group>
                                 </Select.Root>
                             </Setting>
                             <Setting name="general.language">
                                 <Select.Root value={language} onChange={changeLanguage}>
-                                    <Select.Group name="Languages">
-                                        <Select.Item value="en">English</Select.Item>
-                                        <Select.Item value="among">Among Us</Select.Item>
+                                    <Select.Group name={t('app.mdpkm.settings.general.language.category')}>
+                                        <Select.Item value="en">
+                                            {t('app.mdpkm.common:locales:en')}
+                                        </Select.Item>
+                                        <Select.Item value="lv">
+                                            {t('app.mdpkm.common:locales:lv')}
+                                        </Select.Item>
+                                        <Select.Item value="ru">
+                                            {t('app.mdpkm.common:locales:ru')}
+                                        </Select.Item>
                                     </Select.Group>
                                 </Select.Root>
                             </Setting>
                         </Grid>
 
-                        <TextDivider text="Instance Settings"/>
+                        <TextDivider name="instances"/>
                         <Grid padding="0 1rem" direction="vertical">
                             <Setting/>
                         </Grid>
 
-                        <TextDivider text="Java Settings"/>
+                        <TextDivider name="java"/>
                         <Grid padding="0 1rem" direction="vertical">
                             <Setting/>
                         </Grid>
 
-                        <TextDivider text={`Plugin Management - ${Object.keys(PluginLoader.loaded).length} Installed`}/>
+                        <TextDivider text={t('app.mdpkm.settings.plugins', {
+                            val: Object.keys(PluginLoader.loaded).length
+                        })}/>
                         <Grid padding="0 1rem" spacing={8} direction="vertical">
                             <Grid spacing={8}>
                                 <Button theme="accent" onClick={addPlugin}>
                                     <PlusLg/>
-                                    Add Plugin
+                                    {t('app.mdpkm.settings.plugins.add')}
                                 </Button>
                                 <Button theme="secondary" onClick={() => open(Plugins.path)}>
                                     <Folder2Open/>
-                                    Open Folder
+                                    {t('app.mdpkm.common:actions.open_folder')}
                                 </Button>
                             </Grid>
                             {Object.entries(PluginLoader.loaded).map(([id, { path, manifest }]) => {
@@ -275,7 +292,7 @@ export default function Settings({ close }) {
                                     <Image src={convertFileSrc(`${path}/icon.svg`)} size={48} background="$primaryBackground" borderRadius={4}/>
                                     <Grid spacing={2} direction="vertical">
                                         <Typography color="$primaryColor" family="Nunito" lineheight={1}>
-                                            {manifest.name}
+                                            {t(`app.mdpkm.plugin.${manifest.id}:name`)}
                                         </Typography>
                                         <Typography size=".8rem" color="$secondaryColor" family="Nunito" lineheight={1}>
                                             {manifest.id} {manifest.version}
@@ -290,7 +307,9 @@ export default function Settings({ close }) {
                                                 {pluginLoaders.map(({ icon }) =>
                                                     <Image src={icon} size={20} background="$primaryBackground" borderRadius={4}/>
                                                 )}
-                                                Adds {pluginLoaders.length} Loader{pluginLoaders.length > 1 && 's'}
+                                                {t(`app.mdpkm.settings.plugins.item.adds_loader${t > 1 ? 's' : ''}`, {
+                                                    val: pluginLoaders.length
+                                                })}
                                             </Typography>
                                         }
                                         <Button theme="secondary" disabled>
@@ -302,13 +321,15 @@ export default function Settings({ close }) {
                             })}
                         </Grid>
 
-                        <TextDivider text="Storage Management"/>
+                        <TextDivider name="storage"/>
                         <Grid spacing={8} padding="0 1rem" direction="vertical">
                             <Typography size=".9rem" color="$primaryColor" family="Nunito">
-                                If you think {appName} is taking up too much space, you can automatically get rid of unneeded files.
+                                {t('app.mdpkm.settings.storage.clean_header', {
+                                    appName
+                                })}
                             </Typography>
                             <Button theme="accent" onClick={cleanInstallation} disabled>
-                                Clean Installation
+                                {t('app.mdpkm.settings.storage.clean')}
                             </Button>
                             {cleaning &&
                                 <Grid width="100%" height="100%" alignItems="center" background="$primaryBackground" borderRadius={8} justifyContent="center" css={{
@@ -329,7 +350,7 @@ export default function Settings({ close }) {
                             }
                         </Grid>
 
-                        <TextDivider text="About this build"/>
+                        <TextDivider name="about"/>
                         <Grid spacing={8} padding="0 1rem" direction="vertical">
                             <Grid spacing={8} alignItems="center">
                                 <Image src="img/icons/brand_default.svg" size={48}/>
@@ -338,22 +359,24 @@ export default function Settings({ close }) {
                                         {appName} v{appVersion}
                                     </Typography>
                                     <Typography size=".7rem" color="$secondaryColor" family="Nunito" lineheight={1}>
-                                        Running Tauri {tauriVersion}
+                                        {t('app.mdpkm.settings.about.tauri', {
+                                            val: tauriVersion
+                                        })}
                                     </Typography>
                                 </Grid>
                             </Grid>
                             <Grid spacing={8}>
                                 <Button theme="accent" onClick={updateCheck}>
                                     <CloudArrowDown size={14}/>
-                                    Check for Updates
+                                    {t('app.mdpkm.settings.about.check_for_updates')}
                                 </Button>
                                 <Button theme="accent" onClick={reportIssue}>
                                     <EnvelopeOpen size={14}/>
-                                    Report Issue
+                                    {t('app.mdpkm.settings.about.report_bug')}
                                 </Button>
                                 <Button theme="secondary" onClick={openGithub}>
                                     <Github size={14}/>
-                                    Visit GitHub Page
+                                    {t('app.mdpkm.settings.about.github')}
                                 </Button>
                             </Grid>
                         </Grid>
@@ -363,7 +386,7 @@ export default function Settings({ close }) {
                     }}>
                         <Button theme="secondary" onClick={close}>
                             <ArrowLeft/>
-                            Back to Instances
+                            {t('app.mdpkm.common:buttons.back_to_instances')}
                         </Button>
                     </Grid>
                 </Grid>
@@ -390,14 +413,15 @@ function Setting({ name, children }) {
     </Grid>
 };
 
-function TextDivider({ text }) {
+function TextDivider({ name, text }) {
+    const { t } = useTranslation();
     return <Divider width="100%" margin="2rem 0 1rem" css={{
         position: 'relative',
         minHeight: 2,
 
         '&:after': {
             color: '$secondaryColor',
-            content: text,
+            content: text ?? t(`app.mdpkm.settings.${name}`),
             padding: '2px 8px',
             fontSize: '.9rem',
             position: 'absolute',
