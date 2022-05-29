@@ -34,6 +34,7 @@ fn main() {
             launch_package,
             fs_write_binary,
             launch_minecraft,
+            get_total_memory,
             fs_read_text_file,
             fs_create_dir_all,
             reregister_package,
@@ -533,6 +534,14 @@ fn send_window_event(window: tauri::window::Window, label: String, event: String
         Some(x) => x.emit(&event, payload).unwrap(),
         None => println!("{} is closed, tried to send {}", label, event)
     }
+}
+
+use sysinfo::{ System, SystemExt };
+#[tauri::command]
+fn get_total_memory() -> u64 {
+    let mut sys = System::new_all();
+    sys.refresh_all();
+    return sys.total_memory();
 }
 
 #[cfg(windows)]

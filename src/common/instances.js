@@ -60,6 +60,7 @@ export class Instance extends EventEmitter {
             state: this.state,
             config: this.config,
             minState: this.minState,
+            launchLogs: this.launchLogs ? [...this.launchLogs] : null,
             downloading: [...this.downloading],
 
             isJava: this.isJava(),
@@ -375,7 +376,7 @@ export class Instance extends EventEmitter {
                     profile: await API.Minecraft.getProfile(account.minecraft),
                     ...account.minecraft
                 },
-                4000,
+                (this.config.ram ?? 2) * 1000,
                 { width: 600, height: 500 },
                 false,
                 javaArguments
@@ -405,7 +406,7 @@ export class Instance extends EventEmitter {
                 title: `Starting ${this.name}`,
                 width: 320,
                 focus: true,
-                height: 160,
+                height: 180,
                 center: true,
                 resizable: false,
                 decorations: false,
@@ -428,7 +429,6 @@ export class Instance extends EventEmitter {
             }, 5000);
 
             const readOut = async(message, object, type) => {
-                console.log(message, object);
                 this.launchLogs.push(object ? {
                     text: message,
                     type: object['log4j:Event']['@level'],
@@ -439,6 +439,7 @@ export class Instance extends EventEmitter {
                     type: {out: 'INFO', err: 'ERROR'}[type],
                     text: message
                 });
+                this.updateStore();
                 if(!windowClosed)
                     if(message.startsWith('Loading Minecraft ') && message.includes(' with Fabric '))
                         updateText(`Loading Fabric ${message.split(' ')[6]} for ${message.split(' ')[2]}`);

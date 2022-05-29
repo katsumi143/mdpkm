@@ -184,9 +184,7 @@ export default function Settings({ close }) {
         setRerender(Date.now());
         toast.success(`Successfully added ${manifest.name}!`, { duration: 5000 });
     };
-    const updateCheck = () => {
-        checkUpdate().then(console.log);
-    };
+    const updateCheck = () => checkUpdate().then(console.log);
     const reportIssue = () => open('https://github.com/Blookerss/mdpkm/issues/new');
     const openGithub = () => open('https://github.com/Blookerss/mdpkm');
     return (

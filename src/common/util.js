@@ -272,8 +272,7 @@ export default class Util {
                 .join(Util.platform === 'win32' ? ';' : ':')
         );
 
-        args.push(`-Xmx${memory}m`);
-        args.push(`-Xms${memory}m`);
+        args.push(`-Xmx${memory}m`, `-Xms${memory}m`);
         args.push(...jvmOptions);
 
         args.push(`-Djava.library.path="${instancePath}/natives"`);
@@ -330,20 +329,17 @@ export default class Util {
                     default:
                         break;
                 }
-                if (val != null) {
+                if (val != null)
                     mcArgs[i] = val;
-                }
             }
         }
 
         args.push(...mcArgs);
 
-        if (resolution) {
-            args.push(`--width ${resolution.width}`);
-            args.push(`--height ${resolution.height}`);
-        }
+        if (resolution)
+            args.push(`--width ${resolution.width}`, `--height ${resolution.height}`);
 
-        return args;
+        return args.filter(value => value);
     }
 
     static modernGetJVMArguments(
@@ -358,16 +354,14 @@ export default class Util {
         hideAccessToken,
         jvmOptions = []
     ) {
-        console.log(account);
         const argDiscovery = /\${*(.*)}/;
         // eslint-disable-next-line no-template-curly-in-string
         let args = manifest.arguments.jvm.filter(value => !Util.skipLibrary(value));
 
-        args.push(`-Xmx${memory}m`);
-        args.push(`-Xms${memory}m`);
+        args.push(`-Xmx${memory}m`, `-Xms${memory}m`);
         args.push(`-Dminecraft.applet.TargetDirectory="${instancePath}"`);
         if (manifest.logging)
-            args.push(manifest?.logging?.client?.argument || '');
+            args.push(manifest?.logging?.client?.argument ?? '');
 
         args.push(...jvmOptions);
 
@@ -380,11 +374,10 @@ export default class Util {
 
         for (let i = 0; i < args.length; i++) {
             if (typeof args[i] === 'object' && args[i].rules) {
-                if (typeof args[i].value === 'string') {
+                if (typeof args[i].value === 'string')
                     args[i] = `"${args[i].value}"`;
-                } else if (typeof args[i].value === 'object') {
+                else if (typeof args[i].value === 'object')
                     args.splice(i, 1, ...args[i].value.map(v => `"${v}"`));
-                }
                 i--;
             } else if (typeof args[i] === 'string') {
                 if (argDiscovery.test(args[i])) {
@@ -445,21 +438,16 @@ export default class Util {
                         default:
                             break;
                     }
-                    if (val !== null) {
+                    if (val !== null)
                         args[i] = val;
-                    }
                 }
             }
         }
 
-        if (resolution) {
-            args.push(`--width ${resolution.width}`);
-            args.push(`--height ${resolution.height}`);
-        }
-        console.log(args, Util.platform);
+        if (resolution)
+            args.push(`--width ${resolution.width}`, `--height ${resolution.height}`);
 
-        args = args.filter(value => value);
-        return args;
+        return args.filter(value => value);
     }
 
     static removeDuplicates(array, property) {
@@ -627,6 +615,10 @@ export default class Util {
     static getAccount(useSelector) {
         const uuid = useSelector(state => state.accounts.selected);
         return useSelector(state => state.accounts.data).find(({ profile }) => (profile.id ?? profile.uuid) === uuid)
+    }
+
+    static getTotalMemory() {
+        return invoke('get_total_memory');
     }
 };
 

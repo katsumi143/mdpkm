@@ -14,7 +14,7 @@ import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Toggle from './Toggle';
 import Button from '/voxeliface/components/Button';
-import * as Dialog from '/voxeliface/components/Dialog';
+import Slider from '/voxeliface/components/Input/Slider';
 import Spinner from '/voxeliface/components/Spinner';
 import Divider from '/voxeliface/components/Divider';
 import TabItem from '/voxeliface/components/Tabs/Item';
@@ -22,6 +22,7 @@ import TextInput from '/voxeliface/components/Input/Text';
 import ModSearch from './ModSearch';
 import Typography from '/voxeliface/components/Typography';
 import InstanceMod from './InstanceMod';
+import * as Dialog from '/voxeliface/components/Dialog';
 import InstanceIcon from './InstanceIcon';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import TextTransition from './Transition/Text';
@@ -33,6 +34,7 @@ import Instances from '../common/instances';
 import { saveAccounts, writeAccount } from '../common/slices/accounts';
 import { LoaderStates, DisabledLoaders } from '../common/constants';
 
+const totalMemory = await Util.getTotalMemory();
 export default function InstancePage({ id }) {
     const { t } = useTranslation();
     const instance = useSelector(state => state.instances.data.find(i => i.id === id));
@@ -45,29 +47,39 @@ export default function InstancePage({ id }) {
     const Account = Util.getAccount(useSelector);
     const dispatch = useDispatch();
     const logErrors = instance?.launchLogs?.filter(({ type }) => type === 'ERROR');
+    const [saving, setSaving] = useState(false);
     const [servers, setServers] = useState();
     const [tabPage, setTabPage] = useState(0);
     const [modPage, setModPage] = useState(0);
-    const [renaming, setRenaming] = useState(false);
     const [instance2, setInstance2] = useState();
     const [modFilter, setModFilter] = useState('');
     const [launchable, setLaunchable] = useState();
     const [exportFiles, setExportFiles] = useState();
     const [consoleOpen, setConsoleOpen] = useState(false);
+    const [instanceRam, setInstanceRam] = useState(instance?.config?.ram ?? 2);
     const [serverFilter, setServerFilter] = useState('');
     const [instanceName, setInstanceName] = useState(name);
     const [resourcePacks, setResourcePacks] = useState();
-    const saveInstanceName = () => {
-        setRenaming(true);
-        const originalPath = path.toString();
-        const splitPath = path.split(/\/+|\\+/g);
-        splitPath.reverse()[0] = instanceName;
+    const saveSettings = async() => {
+        setSaving(true);
 
         const Instance = Instances.getInstance(id);
-        Instance.name = instanceName;
-        Instance.path = splitPath.reverse().join('/');
+        if (instanceName !== instance.name) {
+            const originalPath = path.toString();
+            const splitPath = path.split(/\/+|\\+/g);
+            splitPath.reverse()[0] = instanceName;
+
+            Instance.name = instanceName;
+            Instance.path = splitPath.reverse().join('/');
+            await Util.moveFolder(originalPath, Instance.path);
+        }
+
+        await Instance.saveConfig({
+            ...await Instance.getConfig(),
+            ram: instanceRam
+        });
         Instance.updateStore();
-        Util.moveFolder(originalPath, Instance.path).then(() => setRenaming(false));
+        setSaving(false);
     };
     const viewModpackSite = () => open(modpack.websiteUrl);
     const exportInstance = () => Instances.exportInstance(id, exportFiles.filter(e => e.selected).map(e => e.path));
@@ -271,7 +283,7 @@ export default function InstancePage({ id }) {
                         {t('app.mdpkm.common:actions.open_folder')}
                     </Button>
                     <Button onClick={launchInstance} disabled={loaderDisabled || !!minState || !Account}>
-                        <PlayFill/>
+                        {!!minState ? <BasicSpinner size={16}/> : <PlayFill/>}
                         {t('app.mdpkm.common:actions.launch')}
                     </Button>
                 </Grid>
@@ -699,20 +711,36 @@ export default function InstancePage({ id }) {
                     }
                 </TabItem>
                 <TabItem name={t('app.mdpkm.instance_page.tabs.settings')} value={5}>
+                    <Grid justifyContent="space-between">
+                        <Typography color="$primaryColor" family="Nunito">
+                            Instance Settings
+                        </Typography>
+                        <Button theme="accent" onClick={saveSettings} disabled={saving}>
+                            {saving ? <BasicSpinner size={16}/> : <PencilFill/>}
+                            Save Changes
+                        </Button>
+                    </Grid>
                     <Grid spacing={4} direction="vertical">
                         <Typography size=".9rem" text="Instance Name" color="$secondaryColor" family="Nunito"/>
-                        <TextInput value={instanceName} onChange={setInstanceName}>
-                            <Button theme="secondary" onClick={saveInstanceName} disabled={renaming || instanceName === name}>
-                                <PencilFill/>
-                                Save Changes
-                            </Button>
-                        </TextInput>
+                        <TextInput value={instanceName} onChange={setInstanceName}/>
+                    </Grid>
+                    <Grid spacing={4} direction="vertical">
+                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                            Memory Allocation - {instanceRam.toLocaleString('en', { minimumFractionDigits: 1 })}GB
+                        </Typography>
+                        <Slider
+                            min={1}
+                            max={Math.floor((totalMemory / 1000000) / 1.4)}
+                            step={.5}
+                            value={[instanceRam]}
+                            onChange={setInstanceRam}
+                        />
                     </Grid>
                     <Grid width="fit-content" spacing={4} direction="vertical">
                         <Typography size=".9rem" text="Delete Instance" color="$secondaryColor" family="Nunito"/>
                         <Dialog.Root>
                             <Dialog.Trigger asChild>
-                                <Button theme="secondary">
+                                <Button theme="secondary" disabled={saving}>
                                     <Trash3Fill/>
                                     {t('app.mdpkm.common:actions.delete')}
                                 </Button>
