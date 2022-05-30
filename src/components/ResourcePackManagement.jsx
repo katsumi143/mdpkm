@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import nbt from 'nbt';
+import { open } from '@tauri-apps/api/dialog';
+import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { PlusLg, PencilFill, Trash3Fill, ArrowClockwise } from 'react-bootstrap-icons';
+import { PlusLg, Trash3Fill, ArrowClockwise } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -12,12 +13,27 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import TextTransition from './Transition/Text';
 
 import Util from '../common/util';
-
+import Instances from '../common/instances';
 export default function ResourcePackManagement({ instanceId }) {
     const { t } = useTranslation();
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
     const [items, setItems] = useState();
     const [filter, setFilter] = useState('');
+    const addResourcePack = async() => {
+        const Instance = Instances.getInstance(instanceId);
+        const path = await open({
+            title: 'Select Resource Pack',
+            filters: [{ name: 'Resource Packs', extensions: ['zip'] }]
+        });
+        const split = path.split(/\/+|\\+/);
+        const packName = split.reverse()[0];
+        const packsPath = `${Instance.path}/resourcepacks`;
+        await Util.createDirAll(packsPath);
+        await Util.moveFolder(path, `${packsPath}/${packName}`);
+
+        toast.success(`Successfully added ${packName}!`, { duration: 5000 });
+        setItems();
+    };
     useEffect(() => {
         if(!items) {
             if(!instance?.path)
@@ -76,7 +92,7 @@ export default function ResourcePackManagement({ instanceId }) {
                     {items === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
                     {t('app.mdpkm.common:actions.refresh')}
                 </Button>
-                <Button theme="accent" disabled>
+                <Button theme="accent" onClick={addResourcePack}>
                     <PlusLg/>
                     {t('app.mdpkm.resourcepack_management.add')}
                 </Button>
