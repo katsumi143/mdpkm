@@ -173,6 +173,7 @@ export default function Settings({ close }) {
         });
         const split = path.split(/\/+|\\+/);
         const pluginPath = `${Plugins.path}/${split.reverse()[0]}`;
+        await Util.createDirAll(Plugins.path);
         await Util.moveFolder(path, pluginPath);
 
         const manifest = await Util.readFileInZip(pluginPath, 'manifest.json').then(JSON.parse).catch(console.warn);
