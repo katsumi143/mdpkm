@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Buffer } from 'buffer/';
 import { styled } from '@stitches/react';
 import { useDispatch } from 'react-redux';
+import ReactMarkdown from 'react-markdown';
 import { open } from '@tauri-apps/api/dialog';
 import * as shell from '@tauri-apps/api/shell';
 import { listen } from '@tauri-apps/api/event';
@@ -200,28 +201,55 @@ export default function Home() {
                             zIndex: 100000,
                             position: 'absolute'
                         }}>
-                            <Grid width="40%" height="35%" padding={12} direction="vertical" background="$secondaryBackground" borderRadius={8} css={{
+                            <Grid width="45%" height="45%" padding={12} direction="vertical" background="$secondaryBackground" borderRadius={8} css={{
                                 border: '1px solid $secondaryBorder2',
                                 position: 'relative'
                             }}>
                                 <Typography size="1.2rem" color="$primaryColor" weight={600} family="Nunito Sans">
                                     New Update Available
                                 </Typography>
-                                <Typography size=".9rem" color="$primaryColor" weight={400} family="Nunito">
-                                    Version {update.version}
+                                <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito">
+                                    Version {update.version} - Released {new Intl.RelativeTimeFormat('en', {
+                                        numeric: 'always' 
+                                    }).format(-Math.round((Date.now() - new Date(update.date)) / 86400000), 'day')}
                                 </Typography>
 
                                 <Typography size=".9rem" color="$primaryColor" weight={400} margin="1rem 0 0" family="Nunito">
                                     Release notes:
                                 </Typography>
-                                <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito">
-                                    {update.body}
+                                <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" textalign="start" css={{
+                                    padding: '.5rem .75rem',
+                                    overflow: 'hidden auto',
+                                    background: '$secondaryBackground2',
+                                    alignItems: 'start',
+                                    borderRadius: 8,
+                                    flexDirection: 'column',
+
+                                    '& > *:first-child': {
+                                        color: '$primaryColor',
+                                        marginTop: 0
+                                    },
+                                    '& > *:last-child': {
+                                        marginBottom: 0
+                                    },
+                                    '& h2': {
+                                        fontSize: '1.4em',
+                                        marginTop: 24,
+                                        marginBottom: '1rem',
+                                        borderBottom: '1px solid $tagBorder',
+                                        paddingBottom: '.3em'
+                                    },
+                                    '& p, & blockquote, & ul, & ol, & dl, & table, & pre, & details': {
+                                        margin: '0 0 1rem'
+                                    },
+                                    '& ul': {
+                                        paddingLeft: '2em'
+                                    }
+                                }}>
+                                    <ReactMarkdown>{update.body}</ReactMarkdown>
                                 </Typography>
 
-                                <Grid margin="8px 0 0" spacing={8} css={{
-                                    bottom: 12,
-                                    position: 'absolute'
-                                }}>
+                                <Grid margin="8px 0 0" spacing={8}>
                                     <Button theme="accent" onClick={updateApp} disabled={update.updating}>
                                         {update.updating ? <BasicSpinner size={16}/> : <Download size={14}/>}
                                         Install Update

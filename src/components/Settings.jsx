@@ -43,6 +43,7 @@ export default function Settings({ close }) {
     const addingAccount = useSelector(state => state.accounts.addingAccount);
     const [_, setRerender] = useState();
     const [cleaning, setCleaning] = useState();
+    const [updating, setUpdating] = useState(false);
     const cleanInstallation = async() => {
         setCleaning(true);
         const loaders = [];
@@ -193,7 +194,14 @@ export default function Settings({ close }) {
         setRerender(Date.now());
         toast.success(`Successfully added ${manifest.name}!`, { duration: 5000 });
     };
-    const updateCheck = () => checkUpdate().then(console.log);
+    const updateCheck = () => {
+        setUpdating(true);
+        checkUpdate().then(({ shouldUpdate }) => {
+            if (!shouldUpdate)
+                toast('No updates available!', { duration: 5000 });
+            setUpdating(false);
+        });
+    };
     const reportIssue = () => open('https://github.com/Blookerss/mdpkm/issues/new');
     const openGithub = () => open('https://github.com/Blookerss/mdpkm');
     return (
@@ -395,8 +403,8 @@ export default function Settings({ close }) {
                                 </Grid>
                             </Grid>
                             <Grid spacing={8}>
-                                <Button theme="accent" onClick={updateCheck}>
-                                    <CloudArrowDown size={14}/>
+                                <Button theme="accent" onClick={updateCheck} disabled={updating}>
+                                    {updating ? <BasicSpinner size={16}/> : <CloudArrowDown size={14}/>}
                                     {t('app.mdpkm.settings.about.check_for_updates')}
                                 </Button>
                                 <Button theme="accent" onClick={reportIssue}>

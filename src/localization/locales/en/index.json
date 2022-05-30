@@ -43,7 +43,7 @@
     "app.mdpkm.settings.storage.clean": "Clean Installation",
 
     "app.mdpkm.settings.about.tauri": "Running Tauri {{val}}",
-    "app.mdpkm.settings.about.check_for_updates": "Check for updates",
+    "app.mdpkm.settings.about.check_for_updates": "Check for Updates",
     "app.mdpkm.settings.about.report_bug": "Report an issue",
     "app.mdpkm.settings.about.github": "Visit GitHub Site",
 
