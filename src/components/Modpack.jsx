@@ -7,12 +7,14 @@ import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
 import Spinner from '/voxeliface/components/Spinner';
 import Typography from '/voxeliface/components/Typography';
+import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
 import Util from '../common/util';
-export default function Modpack({ id, api, data, featured, recommended, importModpack }) {
+export default function Modpack({ id, api, data, loading, featured, setLoading, recommended, importModpack }) {
     const [modpack, setModpack] = useState(data);
     const installModpack = async() => {
+        setLoading(true);
         const path = await API.get(api).downloadModpack(id ?? data.id);
         const manifest = await API.get(api).readModpackManifest(path);
         await Util.writeBinaryFile(`${Util.tempPath}/${manifest.name}.png`, await API.makeRequest(
@@ -20,6 +22,7 @@ export default function Modpack({ id, api, data, featured, recommended, importMo
             { responseType: 'Binary' }
         ));
 
+        setLoading(false);
         importModpack(path);
     };
     useEffect(() => {
@@ -84,8 +87,8 @@ export default function Modpack({ id, api, data, featured, recommended, importMo
                             Visit Website
                         </Button>
                     }
-                    <Button onClick={installModpack} disabled={modpack.client_side === "unsupported"}>
-                        <Download/>
+                    <Button onClick={installModpack} disabled={loading || modpack.client_side === "unsupported"}>
+                        {loading ? <BasicSpinner size={16}/> : <Download/>}
                         Install
                     </Button>
                 </Grid>

@@ -6,6 +6,7 @@ import Button from '/voxeliface/components/Button';
 import Typography from '/voxeliface/components/Typography';
 import ModpackSearch from './ModpackSearch';
 export default function ModpackSetup({ back, importModpack }) {
+    const [loading, setLoading] = useState();
     return (
         <Grid width="100%" direction="vertical" alignItems="center">
             <Grid width="100%" padding="1rem 0" spacing={8} direction="vertical" alignItems="center" css={{
@@ -24,7 +25,7 @@ export default function ModpackSetup({ back, importModpack }) {
                 <ModpackSearch css={{
                     width: '100%',
                     height: '100%'
-                }} importModpack={importModpack}/>
+                }} loading={loading} setLoading={setLoading} importModpack={importModpack}/>
             </Grid>
             <Grid width="100%" padding={16} justifyContent="space-between" css={{
                 borderTop: '1px solid $tagBorder'

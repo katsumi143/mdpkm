@@ -14,7 +14,7 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import API from '../common/api';
 import Util from '../common/util';
 import { Search } from 'react-bootstrap-icons';
-export default function ModpackSearch({ css, importModpack }) {
+export default function ModpackSearch({ css, loading, setLoading, importModpack }) {
     const { t } = useTranslation();
     const [api, setApi] = useState('modrinth');
     const [query, setQuery] = useState();
@@ -87,7 +87,14 @@ export default function ModpackSearch({ css, importModpack }) {
             </Grid>
             <Grid spacing={8} direction="vertical">
                 {modpacks && modpacks.map((modpack, index) =>
-                    <Modpack api={api} key={index} data={modpack} importModpack={importModpack}/>
+                    <Modpack
+                        api={api}
+                        key={index}
+                        data={modpack}
+                        loading={loading}
+                        setLoading={setLoading}
+                        importModpack={importModpack}
+                    />
                 )}
                 <Grid direction="vertical">
                     <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
