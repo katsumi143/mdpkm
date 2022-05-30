@@ -6,7 +6,8 @@
 
 **mdpkm is yet another instance manager for Minecraft Java *and Bedrock!***</br>
 Minecraft instance management made a bit easier, plus a few other useful things too.</br>
-mdpkm is a work-in-progress project, issues should be expected, plus a bit of annoyances!
+mdpkm is a work-in-progress project, issues should be expected, plus a bit of annoyances!</br></br>
+we've got a [discord server](https://discord.gg/YHDW77CMUw) now
 
 ## Features
 | Feature           | Summary                                                 | Status              |
