@@ -70,6 +70,7 @@ export default function ResourcePackManagement({ instanceId }) {
             });
         }
     }, [items]);
+    useEffect(() => setItems(), [instanceId]);
     return <React.Fragment>
         <Grid margin="4px 0" spacing={8} justifyContent="space-between">
             <Grid direction="vertical">

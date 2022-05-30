@@ -35,6 +35,7 @@ export default function ModManagement({ instanceId }) {
             });
         }
     }, [items, instance]);
+    useEffect(() => setItems(), [instanceId]);
     return <Tabs
         value={tab}
         onChange={event => setTab(event.target.value)}
