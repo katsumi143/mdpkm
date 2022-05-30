@@ -19,9 +19,13 @@ export const accountsSlice = createSlice({
             state.selected = payload;
         },
         writeAccount: (state, { payload }) => {
-            const index = state.data.findIndex(d => d.profile.uuid === payload.profile.uuid);
+            const index = state.data.findIndex(d => d.profile.uuid ?? d.profile.id === payload.profile.uuid ?? payload.profile.id);
             if(index >= 0)
                 state.data[index] = payload;
+        },
+        removeAccount: (state, { payload }) => {
+            const index = state.data.findIndex(d => d.profile.uuid ?? d.profile.id === payload);
+            state.data = [...state.data.slice(0, index), ...state.data.slice(index + 1)];
         },
         saveAccounts: state => {
             Util.writeFile(accountsPath, JSON.stringify(state));
@@ -32,5 +36,5 @@ export const accountsSlice = createSlice({
     }
 });
 
-export const { addAccount, setAccount, writeAccount, saveAccounts, setAddingAccount } = accountsSlice.actions;
+export const { addAccount, setAccount, writeAccount, saveAccounts, removeAccount, setAddingAccount } = accountsSlice.actions;
 export default accountsSlice.reducer;

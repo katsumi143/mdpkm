@@ -9,7 +9,7 @@ import { open as open2 } from '@tauri-apps/api/dialog';
 import { appWindow } from '@tauri-apps/api/window';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { useSelector, useDispatch } from 'react-redux';
-import { Gear, PlusLg, Github, ArrowLeft, Trash3Fill, Folder2Open, EnvelopeOpen, CloudArrowDown } from 'react-bootstrap-icons';
+import { XLg, Gear, PlusLg, Github, ArrowLeft, Trash3Fill, Folder2Open, EnvelopeOpen, CloudArrowDown } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -19,6 +19,7 @@ import Typography from '/voxeliface/components/Typography';
 import * as Select from '/voxeliface/components/Input/Select';
 import ThemeContext from '/voxeliface/contexts/theme';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
+import * as DropdownMenu from '/voxeliface/components/DropdownMenu';
 
 import API from '../common/api';
 import Util from '../common/util';
@@ -27,7 +28,7 @@ import Instances from '../common/instances';
 import PluginLoader from '../common/plugins/loader';
 import { SKIN_API_BASE, MINECRAFT_RESOURCES_URL } from '../common/constants';
 import { setTheme, setLanguage, saveSettings } from '../common/slices/settings';
-import { addAccount, setAccount, saveAccounts, setAddingAccount } from '../common/slices/accounts';
+import { addAccount, setAccount, saveAccounts, removeAccount, setAddingAccount } from '../common/slices/accounts';
 
 const appName = await getName();
 const appVersion = await getVersion();
@@ -125,6 +126,13 @@ export default function Settings({ close }) {
         dispatch(saveSettings());
         update(theme);
     };
+    const deleteAccount = ({ profile: { id, name } }) => {
+        dispatch(removeAccount(id));
+        if (account === id)
+            dispatch(setAccount());
+        dispatch(saveAccounts());
+        toast.success(`Successfully removed ${name}`);
+    }
     const addNewAccount = async() => {
         dispatch(setAddingAccount(true));
         try {
@@ -206,7 +214,7 @@ export default function Settings({ close }) {
                         <TextDivider name="general"/>
                         <Grid padding="0 1rem" direction="vertical">
                             <Setting name="general.account">
-                                <Select.Root value={new String(account).toString()} onChange={changeAccount} disabled={accounts.length === 0} placeholder="Select an Account">
+                                <Select.Root value={new String(account).toString()} onChange={changeAccount} disabled={accounts.length === 0} defaultValue="undefined">
                                     <Select.Group name={t('app.mdpkm.settings.general.account.category')}>
                                         {accounts.map(({ profile }, key) =>
                                             <Select.Item key={key} value={profile.id}>
@@ -222,9 +230,29 @@ export default function Settings({ close }) {
                                 <Button theme="accent" onClick={addNewAccount} disabled={addingAccount} css={{
                                     minWidth: 196
                                 }}>
-                                    {addingAccount ? <BasicSpinner size={16}/> : <PlusLg/>}
+                                    {addingAccount ? <BasicSpinner size={16}/> : <PlusLg size={14}/>}
                                     {t('app.mdpkm.settings.general.account.add')}
                                 </Button>
+                                <DropdownMenu.Root>
+                                    <DropdownMenu.Trigger asChild>
+                                        <Button theme="secondary" css={{
+                                            minWidth: 196
+                                        }}>
+                                            <XLg/>
+                                            {t('app.mdpkm.settings.general.account.remove')}
+                                        </Button>
+                                    </DropdownMenu.Trigger>
+                                    <DropdownMenu.Content sideOffset={8}>
+                                        <DropdownMenu.Label>{t('app.mdpkm.settings.general.account.category')}</DropdownMenu.Label>
+                                        {accounts.map(({ profile: { id, name } }, key) =>
+                                            <DropdownMenu.Item key={key} onClick={() => deleteAccount(accounts[key])}>
+                                                <Image src={`${SKIN_API_BASE}/face/${id}`} size={24} borderRadius={4}/>
+                                                {name}
+                                            </DropdownMenu.Item>
+                                        )}
+                                        <DropdownMenu.Arrow/>
+                                    </DropdownMenu.Content>
+                                </DropdownMenu.Root>
                             </Setting>
                             <Setting name="general.theme">
                                 <Select.Root value={theme} onChange={t => changeTheme(t, setTheme)}>

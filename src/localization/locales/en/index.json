@@ -21,6 +21,7 @@
     "app.mdpkm.settings.general.account.category": "Minecraft Accounts",
     "app.mdpkm.settings.general.account.items.none": "None",
     "app.mdpkm.settings.general.account.add": "Add New Account",
+    "app.mdpkm.settings.general.account.remove": "Remove an Account",
 
     "app.mdpkm.settings.general.theme": "Theme",
     "app.mdpkm.settings.general.theme.summary": "Choose a theme that suits you best!",
