@@ -422,13 +422,19 @@ fn launch_minecraft(window: tauri::window::Window, cwd: String, java_path: Strin
             .lines()
             .filter_map(| line | line.ok())
             .for_each(| line | {
-                window.emit(&_logger, format!("out:{}", &line)).unwrap();
+                let result = window.emit(&_logger, format!("out:{}", &line));
+                if !result.is_ok() {
+                    println!("failed to log to window (out): {}", result.unwrap_err());
+                }
             });
         BufReader::new(child.stderr.take().unwrap())
             .lines()
             .filter_map(| line | line.ok())
             .for_each(| line | {
-                window.emit(&_logger, format!("err:{}", &line)).unwrap();
+                let result = window.emit(&_logger, format!("err:{}", &line));
+                if !result.is_ok() {
+                    println!("failed to log to window (err): {}", result.unwrap_err());
+                }
             });
         std::thread::spawn(move || {
             child.wait().unwrap();
