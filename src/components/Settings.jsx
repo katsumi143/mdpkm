@@ -229,7 +229,7 @@ export default function Settings({ close }) {
                         overflow: 'auto'
                     }}>
                         <TextDivider name="general"/>
-                        <Grid padding="0 1rem" direction="vertical">
+                        <Grid spacing={8} padding="0 1rem" direction="vertical">
                             <Setting name="general.account">
                                 <Select.Root value={new String(account).toString()} onChange={changeAccount} disabled={accounts.length === 0} defaultValue="undefined">
                                     <Select.Group name={t('app.mdpkm.settings.general.account.category')}>
@@ -319,7 +319,7 @@ export default function Settings({ close }) {
                         </Grid>
 
                         <TextDivider name="instances"/>
-                        <Grid padding="0 1rem" direction="vertical">
+                        <Grid spacing={8} padding="0 1rem" direction="vertical">
                             <Setting name="instances.pageBanner">
                                 <Grid width="100%" justifyContent="end">
                                     <Toggle
@@ -366,14 +366,14 @@ export default function Settings({ close }) {
                         </Grid>
 
                         <TextDivider name="java"/>
-                        <Grid padding="0 1rem" direction="vertical">
+                        <Grid spacing={8} padding="0 1rem" direction="vertical">
                             <Setting/>
                         </Grid>
 
                         <TextDivider text={t('app.mdpkm.settings.plugins', {
                             val: Object.keys(PluginLoader.loaded).length
                         })}/>
-                        <Grid padding="0 1rem" spacing={8} direction="vertical">
+                        <Grid spacing={8} padding="0 1rem" direction="vertical">
                             <Grid spacing={8}>
                                 <Button theme="accent" onClick={addPlugin}>
                                     <PlusLg/>
@@ -498,7 +498,7 @@ export default function Settings({ close }) {
 function Setting({ name, children, direction }) {
     const { t } = useTranslation();
     const stringBase = `app.mdpkm.settings.${name ?? 'placeholder'}`;
-    return <Grid margin=".6rem 0" padding={8} background="$secondaryBackground2" borderRadius={8} justifyContent="space-between">
+    return <Grid padding={8} background="$secondaryBackground2" borderRadius={8} justifyContent="space-between">
         <Grid spacing={4} padding=".5rem .6rem" direction="vertical">
             <Typography color="$primaryColor" family="Nunito" lineheight={1}>
                 {t(stringBase)}
@@ -526,7 +526,7 @@ function TextDivider({ name, text }) {
             color: '$secondaryColor',
             content: text ?? t(`app.mdpkm.settings.${name}`),
             padding: '2px 8px',
-            fontSize: '.9rem',
+            fontSize: '.95rem',
             position: 'absolute',
             transform: 'translateY(-50%)',
             fontWeight: 400,
