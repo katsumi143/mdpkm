@@ -1,5 +1,6 @@
 import React from 'react';
 import { keyframes } from '@stitches/react';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { CaretRightFill } from 'react-bootstrap-icons';
 
@@ -21,6 +22,7 @@ const Animation = keyframes({
 
 export default function Instance({ css, data: instance, onView }) {
     const { t } = useTranslation();
+    const uiStyle = useSelector(state => state.settings.uiStyle);
     return (
         <Grid width="100%" padding="4px 16px" alignItems="start" css={{
             opacity: 0,
@@ -32,14 +34,15 @@ export default function Instance({ css, data: instance, onView }) {
                 border: '$secondaryBorder solid 1px',
                 position: 'relative'
             }}>
-                <Grid width="calc(100% - 80px)" spacing="16px" alignItems="center">
-                    <InstanceIcon instance={instance}/>
-                    <Grid width="inherit" spacing="4px" direction="vertical" alignItems="start">
+                <Grid width="calc(100% - 80px)" spacing={uiStyle === 'compact' ? '.6rem' : '1rem'} alignItems="center">
+                    <InstanceIcon size={uiStyle === 'compact' ? 36 : 48} instance={instance} hideLoader={uiStyle === 'compact'}/>
+                    <Grid width="inherit" spacing={uiStyle === 'compact' ? 2 : 4} direction="vertical" alignItems="start">
                         <Typography
-                            size="1rem"
+                            size={uiStyle === 'compact' ? '.85rem' : '1rem'}
                             width="100%"
                             color="$primaryColor"
                             family="Nunito"
+                            weight={uiStyle === 'compact' ? 400 : 500}
                             textalign="start"
                             lineheight={1}
                             whitespace="nowrap"
@@ -50,10 +53,10 @@ export default function Instance({ css, data: instance, onView }) {
                             {instance.name}
                         </Typography>
                         <Typography
-                            size=".8rem"
+                            size={uiStyle === 'compact' ? '.65rem' : '.8rem'}
                             color="$secondaryColor"
-                            weight={400}
                             family="Nunito"
+                            weight={uiStyle === 'compact' ? 300 : 400}
                             textalign="start"
                             lineheight={1}
                             whitespace="nowrap"
@@ -66,7 +69,7 @@ export default function Instance({ css, data: instance, onView }) {
                     right: 8,
                     position: 'absolute'
                 }}>
-                    <Button theme="secondary" onClick={onView} disabled={instance.corrupt}>
+                    <Button size={uiStyle === 'compact' ? 'smaller' : 'small'} theme="secondary" onClick={onView} disabled={instance.corrupt}>
                         {t('app.mdpkm.common:actions.view')}
                         <CaretRightFill/>
                     </Button>

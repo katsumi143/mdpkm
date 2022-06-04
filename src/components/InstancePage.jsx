@@ -36,22 +36,31 @@ import { LoaderStates, DisabledLoaders } from '../common/constants';
 const totalMemory = await Util.getTotalMemory();
 export default function InstancePage({ id }) {
     const { t } = useTranslation();
+    const uiStyle = useSelector(state => state.settings.uiStyle);
     const instance = useSelector(state => state.instances.data.find(i => i.id === id));
+    const showBanner = useSelector(state => state.settings['instances.showBanner']);
+    const defaultResolution = useSelector(state => state.settings['instances.defaultResolution'])
+
     const { name, path, config, modpack, minState } = instance ?? {};
     const loaderData = API.getLoader(config?.loader?.type);
     const versionBanner = (loaderData?.versionBanners ?? API.getLoader('java')?.versionBanners)?.find(v => v?.[0].test(config?.loader?.game));
     const loaderDisabled = DisabledLoaders.some(d => d === config?.loader?.type);
 
+    const initialState = {
+        instanceRam: instance?.config?.ram ?? 2,
+        instanceName: name,
+        instanceResolution: instance?.config?.resolution ?? defaultResolution
+    };
     const Account = Util.getAccount(useSelector);
     const dispatch = useDispatch();
     const logErrors = instance?.launchLogs?.filter(({ type }) => type === 'ERROR');
     const [saving, setSaving] = useState(false);
     const [tabPage, setTabPage] = useState(0);
-    const [instance2, setInstance2] = useState();
     const [launchable, setLaunchable] = useState();
     const [consoleOpen, setConsoleOpen] = useState(false);
-    const [instanceRam, setInstanceRam] = useState(instance?.config?.ram ?? 2);
-    const [instanceName, setInstanceName] = useState(name);
+    const [instanceRam, setInstanceRam] = useState(initialState.instanceRam);
+    const [instanceName, setInstanceName] = useState(initialState.instanceName);
+    const [instanceResolution, setInstanceResolution] = useState(initialState.instanceResolution);
     const saveSettings = async() => {
         setSaving(true);
 
@@ -68,7 +77,8 @@ export default function InstancePage({ id }) {
 
         await Instance.saveConfig({
             ...await Instance.getConfig(),
-            ram: instanceRam
+            ram: instanceRam[0],
+            resolution: instanceResolution
         });
         Instance.updateStore();
         setSaving(false);
@@ -99,7 +109,6 @@ export default function InstancePage({ id }) {
             toast.error(`getInstance failed.\nTry refreshing your instances.`);
     };
     const openFolder = () => open(path);
-;
     useEffect(() => {
         if(typeof launchable !== 'boolean') {
             const { type, game, version } = config?.loader ?? {};
@@ -113,12 +122,11 @@ export default function InstancePage({ id }) {
         }
     }, [launchable]);
     useEffect(() => {
-        if(instance2 !== instance?.id) {
-            setLaunchable();
-            setInstanceName(name);
-        }
-        setInstance2(instance?.id);
-    });
+        setLaunchable();
+        setInstanceRam(initialState.instanceRam);
+        setInstanceName(initialState.instanceName);
+        setInstanceResolution(initialState.instanceResolution);
+    }, [id]);
 
     if(!instance)
         return 'invalid';
@@ -129,7 +137,7 @@ export default function InstancePage({ id }) {
             <Grid margin="1rem" padding={12} background="$secondaryBackground2" borderRadius={16} css={{
                 position: 'relative'
             }}>
-                <InstanceIcon size={80} instance={instance} hideLoader props={{
+                <InstanceIcon size={uiStyle === 'compact' ? 64 : 80} instance={instance} hideLoader props={{
                     css: {
                         zIndex: 2,
                         background: '$primaryBackground',
@@ -143,11 +151,11 @@ export default function InstancePage({ id }) {
                         }
                     }
                 }}/>
-                <Grid margin="0 0 0 1.2rem" spacing={6} direction="vertical" justifyContent="center">
-                    <Typography size="1.3rem" color="$primaryColor" weight={600} family="Nunito" lineheight={1}>
+                <Grid margin={uiStyle === 'compact' ? '0 0 0 1rem' : '0 0 0 1.2rem'} spacing={uiStyle === 'compact' ? 4 : 6} direction="vertical" justifyContent="center">
+                    <Typography size={uiStyle === 'compact' ? '1.2rem' : '1.3rem'} color="$primaryColor" weight={600} family="Nunito" lineheight={1}>
                         <TextTransition inline>{name}</TextTransition>
                     </Typography>
-                    <Typography color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                    <Typography size={uiStyle === 'compact' ? '.9rem' : '1rem'} color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
                         <TextTransition inline noOverflow>
                             {minState ?? t('app.mdpkm.instances:states.none')}
                         </TextTransition>
@@ -242,22 +250,35 @@ export default function InstancePage({ id }) {
                     </Grid>
                 </InstanceInfo>
             }
-            {versionBanner && !instance.launchLogs &&
+            {versionBanner && !instance.launchLogs && showBanner &&
                 <InstanceInfo css={{ justifyContent: 'space-between' }}>
-                    <Grid spacing=".8rem">
-                        <ImageTransition src={versionBanner[1]} size={48} width="8rem" css={{ imageRendering: '-webkit-optimize-contrast', backgroundPosition: 'left' }}/>
+                    <Grid spacing={uiStyle === 'compact' ? '.3rem' : '.8rem'}>
+                        <ImageTransition
+                            src={versionBanner[1]}
+                            size={uiStyle === 'compact' ? 32 : 48}
+                            width="8rem"
+                            css={{
+                                imageRendering: '-webkit-optimize-contrast',
+                                backgroundPosition: 'left'
+                            }}
+                        />
                         <Grid spacing={4} direction="vertical" justifyContent="center">
-                            <Typography color="$primaryColor" family="Nunito" lineheight={1}>
+                            <Typography size={uiStyle === 'compact' ? '.9rem' : '1rem'} color="$primaryColor" family="Nunito" lineheight={1}>
                                 <TextTransition inline>{versionBanner[2]}</TextTransition>
                             </Typography>
-                            <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                            <Typography size={uiStyle === 'compact' ? '.7rem' : '.8rem'} color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
                                 <TextTransition inline>
                                     {`${Util.getLoaderName(config?.loader?.type)} ${config?.loader?.game}`}
                                 </TextTransition>
                             </Typography>
                         </Grid>
                     </Grid>
-                    <ImageTransition src={loaderData?.creatorIcon ?? 'img/icons/no_author.svg'} size={40} width="8rem" css={{ backgroundPosition: 'right' }}/>
+                    <ImageTransition
+                        src={loaderData?.creatorIcon ?? 'img/icons/no_author.svg'}
+                        size={uiStyle === 'compact' ? 32 : 40}
+                        width="8rem"
+                        css={{ backgroundPosition: 'right' }}
+                    />
                 </InstanceInfo>
             }
             {config.modpack.source !== "manual" &&
@@ -397,8 +418,10 @@ export default function InstancePage({ id }) {
                         />
                     }
                 </TabItem>
-                <TabItem name={t('app.mdpkm.instance_page.tabs.settings')} value={5}>
-                    <Grid justifyContent="space-between">
+                <TabItem name={t('app.mdpkm.instance_page.tabs.settings')} value={5} padding={0}>
+                    <Grid padding={8} justifyContent="space-between" css={{
+                        borderBottom: '1px solid $secondaryBorder'
+                    }}>
                         <Typography color="$primaryColor" family="Nunito">
                             {t('app.mdpkm.instance_page.tabs.settings.title')}
                         </Typography>
@@ -407,52 +430,87 @@ export default function InstancePage({ id }) {
                             {t('app.mdpkm.common:actions.save_changes')}
                         </Button>
                     </Grid>
-                    <Grid spacing={4} direction="vertical">
-                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
-                            {t('app.mdpkm.instance_page.tabs.settings.instance_name')}
-                        </Typography>
-                        <TextInput value={instanceName} onChange={setInstanceName}/>
-                    </Grid>
-                    <Grid spacing={4} direction="vertical">
-                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
-                            {t('app.mdpkm.instance_page.tabs.settings.memory_alloc', {
-                                val: instanceRam.toLocaleString('en', { minimumFractionDigits: 1 })
-                            })}
-                        </Typography>
-                        <Slider
-                            min={1}
-                            max={Math.floor((totalMemory / 1000000) / 1.4)}
-                            step={.5}
-                            value={[instanceRam]}
-                            onChange={setInstanceRam}
-                        />
-                    </Grid>
-                    <Grid width="fit-content" spacing={4} direction="vertical">
-                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
-                            {t('app.mdpkm.instance_page.tabs.settings.delete')}
-                        </Typography>
-                        <Dialog.Root>
-                            <Dialog.Trigger asChild>
-                                <Button theme="secondary" disabled={saving}>
-                                    <Trash3Fill/>
-                                    {t('app.mdpkm.common:actions.delete')}
-                                </Button>
-                            </Dialog.Trigger>
-                            <Dialog.Content>
-                                <Dialog.Title>Are you absolutely sure?</Dialog.Title>
-                                <Dialog.Description>
-                                    This action cannot be undone.<br/>
-                                    '{instance.name}' will be lost forever! (A long time!)
-                                </Dialog.Description>
-                                <Grid margin="25 0 0" justifyContent="end">
-                                    <Dialog.Close asChild>
-                                        <Button theme="accent" onClick={deleteInstance}>
-                                            Yes, delete Instance
-                                        </Button>
-                                    </Dialog.Close>
+                    <Grid padding=".6rem .8rem" spacing={16} direction="vertical">
+                        <Grid spacing={4} direction="vertical">
+                            <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                                {t('app.mdpkm.instance_page.tabs.settings.instance_name')}
+                            </Typography>
+                            <TextInput value={instanceName} onChange={setInstanceName}/>
+                        </Grid>
+                        <Grid spacing={4} direction="vertical">
+                            <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                                {t('app.mdpkm.instance_page.tabs.settings.memory_alloc', {
+                                    val: instanceRam.toLocaleString('en', { minimumFractionDigits: 1 })
+                                })}
+                            </Typography>
+                            <Slider
+                                min={1}
+                                max={Math.floor((totalMemory / 1000000) / 1.4)}
+                                step={.5}
+                                value={[instanceRam]}
+                                onChange={setInstanceRam}
+                            />
+                        </Grid>
+                        <Grid spacing={4} direction="vertical">
+                            <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                                {t('app.mdpkm.instance_page.tabs.settings.resolution')}
+                            </Typography>
+                            <Grid spacing={8}>
+                                <Grid direction="vertical">
+                                    <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                        {t('app.mdpkm.instance_page.tabs.settings.resolution.width')}
+                                    </Typography>
+                                    <TextInput
+                                        width={80}
+                                        value={Math.max(0, instanceResolution[0] || 0)}
+                                        onChange={value => {
+                                            const number = parseInt(value);
+                                            setInstanceResolution(val => [number, val[1]]);
+                                        }}
+                                    />
                                 </Grid>
-                            </Dialog.Content>
-                        </Dialog.Root>
+                                <Grid direction="vertical">
+                                    <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                        {t('app.mdpkm.instance_page.tabs.settings.resolution.height')}
+                                    </Typography>
+                                    <TextInput
+                                        width={80}
+                                        value={Math.max(0, instanceResolution[1] || 0)}
+                                        onChange={value => {
+                                            const number = parseInt(value);
+                                            setInstanceResolution(val => [val[0], number]);
+                                        }}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid width="fit-content" spacing={4} direction="vertical">
+                            <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                                {t('app.mdpkm.instance_page.tabs.settings.delete')}
+                            </Typography>
+                            <Dialog.Root>
+                                <Dialog.Trigger asChild>
+                                    <Button theme="secondary" disabled={saving}>
+                                        <Trash3Fill/>
+                                        {t('app.mdpkm.common:actions.delete')}
+                                    </Button>
+                                </Dialog.Trigger>
+                                <Dialog.Content>
+                                    <Dialog.Title>Are you absolutely sure?</Dialog.Title>
+                                    <Dialog.Description>
+                                        This action cannot be undone.<br/>
+                                        '{instance.name}' will be lost forever! (A long time!)
+                                    </Dialog.Description>
+                                    <Grid margin="25 0 0" justifyContent="end">
+                                        <Dialog.Close asChild>
+                                            <Button theme="accent" onClick={deleteInstance}>
+                                                Yes, delete Instance
+                                            </Button>
+                                        </Dialog.Close>
+                                    </Grid>
+                                </Dialog.Content>
+                            </Dialog.Root>
+                        </Grid>
                     </Grid>
                 </TabItem>
                 <TabItem name={t('app.mdpkm.instance_page.tabs.export')} value={6}>
