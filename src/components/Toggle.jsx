@@ -77,11 +77,12 @@ const StyledInput = styled('input', {
     position: 'absolute'
 });
 
-export default function Toggle({ size = "medium", value = false, onChange, disabled }) {
+export default function Toggle({ css, size = "medium", value = false, onChange, disabled }) {
     const [checked, setChecked] = useState(value);
     return (
         <StyledToggle size={size} css={{
-            opacity: disabled ? .5 : 1
+            opacity: disabled ? .5 : 1,
+            ...css
         }}>
             <StyledSwitch size={size} css={{
                 transform: checked ? undefined : 'none'

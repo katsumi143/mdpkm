@@ -31,9 +31,21 @@
     "app.mdpkm.settings.general.theme.items.dark": "Dark",
     "app.mdpkm.settings.general.theme.items.purple": "Purple",
 
+    "app.mdpkm.settings.general.uiStyle": "Display Style",
+    "app.mdpkm.settings.general.uiStyle.summary": "Choose a style that suits you best!",
+    "app.mdpkm.settings.general.uiStyle.category": "Display Styles",
+    "app.mdpkm.settings.general.uiStyle.items.default": "Normal",
+    "app.mdpkm.settings.general.uiStyle.items.compact": "Compact",
+
     "app.mdpkm.settings.general.language": "Language",
     "app.mdpkm.settings.general.language.summary": "Placeholder",
     "app.mdpkm.settings.general.language.category": "Languages",
+
+    "app.mdpkm.settings.instances.pageBanner": "Minecraft Version Banner",
+    "app.mdpkm.settings.instances.pageBanner.summary": "Displays update/loader information.",
+
+    "app.mdpkm.settings.instances.defaultResolution": "Default Window Resolution",
+    "app.mdpkm.settings.instances.defaultResolution.summary": "Window resolution to use for new instances.",
 
     "app.mdpkm.settings.plugins.add": "Add Plugin",
     "app.mdpkm.settings.plugins.item.adds_loader": "Adds {{val}} Loader",
@@ -61,6 +73,9 @@
     "app.mdpkm.instance_page.tabs.settings.title": "Instance Settings",
     "app.mdpkm.instance_page.tabs.settings.instance_name": "Instance Name",
     "app.mdpkm.instance_page.tabs.settings.memory_alloc": "Memory Allocation - {{val}}GB",
+    "app.mdpkm.instance_page.tabs.settings.resolution": "Window Resolution",
+    "app.mdpkm.instance_page.tabs.settings.resolution.width": "Width",
+    "app.mdpkm.instance_page.tabs.settings.resolution.height": "Height",
     "app.mdpkm.instance_page.tabs.settings.delete": "Delete Instance",
 
     "app.mdpkm.instance_page.tabs.mods.tabs.manage": "Manage Mods",

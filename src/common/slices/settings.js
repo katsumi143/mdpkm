@@ -8,10 +8,16 @@ export const settingsSlice = createSlice({
     name: 'settings',
     initialState: {
         theme: settings?.theme ?? 'default',
+        uiStyle: settings?.uiStyle ?? 'default',
         account: settings?.account,
-        language: settings?.language ?? 'en'
+        language: settings?.language ?? 'en',
+        'instances.showBanner': settings?.['instances.showBanner'] ?? true,
+        'instances.defaultResolution': settings?.['instances.defaultResolution'] ?? [900, 500]
     },
     reducers: {
+        set: (state, { payload: [key, value] }) => {
+            state[key] = value;
+        },
         setTheme: (state, { payload }) => {
             state.theme = payload;
         },
@@ -27,5 +33,5 @@ export const settingsSlice = createSlice({
     }
 });
 
-export const { setTheme, setAccount, setLanguage, saveSettings } = settingsSlice.actions;
+export const { set, setTheme, setAccount, setLanguage, saveSettings } = settingsSlice.actions;
 export default settingsSlice.reducer;

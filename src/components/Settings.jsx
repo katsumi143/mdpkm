@@ -13,8 +13,10 @@ import { XLg, Gear, PlusLg, Github, ArrowLeft, Trash3Fill, Folder2Open, Envelope
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
+import Toggle from './Toggle';
 import Button from '/voxeliface/components/Button';
 import Divider from '/voxeliface/components/Divider';
+import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
 import * as Select from '/voxeliface/components/Input/Select';
 import ThemeContext from '/voxeliface/contexts/theme';
@@ -27,7 +29,7 @@ import Plugins from '../common/plugins';
 import Instances from '../common/instances';
 import PluginLoader from '../common/plugins/loader';
 import { SKIN_API_BASE, MINECRAFT_RESOURCES_URL } from '../common/constants';
-import { setTheme, setLanguage, saveSettings } from '../common/slices/settings';
+import { set, setTheme, setLanguage, saveSettings } from '../common/slices/settings';
 import { addAccount, setAccount, saveAccounts, removeAccount, setAddingAccount } from '../common/slices/accounts';
 
 const appName = await getName();
@@ -36,11 +38,14 @@ const tauriVersion = await getTauriVersion()
 export default function Settings({ close }) {
     const { t, i18n } = useTranslation();
     const theme = useSelector(state => state.settings.theme);
+    const uiStyle = useSelector(state => state.settings.uiStyle);
     const account = useSelector(state => state.accounts.selected);
     const accounts = useSelector(state => state.accounts.data);
     const dispatch = useDispatch();
     const language = useSelector(state => state.settings.language);
     const addingAccount = useSelector(state => state.accounts.addingAccount);
+    const showInstanceBanner = useSelector(state => state.settings['instances.showBanner']);
+    const defaultInstanceResolution = useSelector(state => state.settings['instances.defaultResolution']);
     const [_, setRerender] = useState();
     const [cleaning, setCleaning] = useState();
     const [updating, setUpdating] = useState(false);
@@ -202,6 +207,10 @@ export default function Settings({ close }) {
             setUpdating(false);
         });
     };
+    const setSetting = (key, value) => {
+        dispatch(set([key, value]));
+        dispatch(saveSettings());
+    };
     const reportIssue = () => open('https://github.com/Blookerss/mdpkm/issues/new');
     const openGithub = () => open('https://github.com/Blookerss/mdpkm');
     return (
@@ -263,7 +272,7 @@ export default function Settings({ close }) {
                                 </DropdownMenu.Root>
                             </Setting>
                             <Setting name="general.theme">
-                                <Select.Root value={theme} onChange={t => changeTheme(t, setTheme)}>
+                                <Select.Root value={theme} onChange={v => changeTheme(v, setTheme)}>
                                     <Select.Group name={t('app.mdpkm.settings.general.theme.category')}>
                                         <Select.Item value="default">
                                             {t('app.mdpkm.settings.general.theme.items.default')}
@@ -276,6 +285,18 @@ export default function Settings({ close }) {
                                         </Select.Item>
                                         <Select.Item value="purple">
                                             {t('app.mdpkm.settings.general.theme.items.purple')}
+                                        </Select.Item>
+                                    </Select.Group>
+                                </Select.Root>
+                            </Setting>
+                            <Setting name="general.uiStyle">
+                                <Select.Root value={uiStyle} onChange={v => setSetting('uiStyle', v)}>
+                                    <Select.Group name={t('app.mdpkm.settings.general.uiStyle.category')}>
+                                        <Select.Item value="default">
+                                            {t('app.mdpkm.settings.general.uiStyle.items.default')}
+                                        </Select.Item>
+                                        <Select.Item value="compact">
+                                            {t('app.mdpkm.settings.general.uiStyle.items.compact')}
                                         </Select.Item>
                                     </Select.Group>
                                 </Select.Root>
@@ -299,7 +320,49 @@ export default function Settings({ close }) {
 
                         <TextDivider name="instances"/>
                         <Grid padding="0 1rem" direction="vertical">
-                            <Setting/>
+                            <Setting name="instances.pageBanner">
+                                <Grid width="100%" justifyContent="end">
+                                    <Toggle
+                                        size="small"
+                                        value={showInstanceBanner}
+                                        onChange={() =>
+                                            setSetting('instances.showBanner', !showInstanceBanner)
+                                        }
+                                    />
+                                </Grid>
+                            </Setting>
+                            <Setting name="instances.defaultResolution">
+                                <Grid width="100%" spacing={8} justifyContent="end">
+                                    <Grid direction="vertical">
+                                        <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                            {t('app.mdpkm.instance_page.tabs.settings.resolution.width')}
+                                        </Typography>
+                                        <TextInput
+                                            width={80}
+                                            value={Math.max(0, defaultInstanceResolution[0] || 0)}
+                                            onChange={value =>
+                                                setSetting('instances.defaultResolution',
+                                                    [parseInt(value), defaultInstanceResolution[1]]
+                                                )
+                                            }
+                                        />
+                                    </Grid>
+                                    <Grid direction="vertical">
+                                        <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                            {t('app.mdpkm.instance_page.tabs.settings.resolution.height')}
+                                        </Typography>
+                                        <TextInput
+                                            width={80}
+                                            value={Math.max(0, defaultInstanceResolution[1] || 0)}
+                                            onChange={value =>
+                                                setSetting('instances.defaultResolution',
+                                                    [defaultInstanceResolution[0], parseInt(value)]
+                                                )
+                                            }
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </Setting>
                         </Grid>
 
                         <TextDivider name="java"/>
@@ -432,11 +495,11 @@ export default function Settings({ close }) {
     );
 };
 
-function Setting({ name, children }) {
+function Setting({ name, children, direction }) {
     const { t } = useTranslation();
     const stringBase = `app.mdpkm.settings.${name ?? 'placeholder'}`;
-    return <Grid margin=".6rem 0" justifyContent="space-between">
-        <Grid spacing={4} direction="vertical">
+    return <Grid margin=".6rem 0" padding={8} background="$secondaryBackground2" borderRadius={8} justifyContent="space-between">
+        <Grid spacing={4} padding=".5rem .6rem" direction="vertical">
             <Typography color="$primaryColor" family="Nunito" lineheight={1}>
                 {t(stringBase)}
             </Typography>
@@ -444,7 +507,10 @@ function Setting({ name, children }) {
                 {t(`${stringBase}.summary`)}
             </Typography>
         </Grid>
-        <Grid width={196} spacing={4} direction="vertical">
+        <Grid spacing={4} direction={direction ?? 'vertical'} css={{
+            minWidth: 196,
+            position: 'relative'
+        }}>
             {children}
         </Grid>
     </Grid>

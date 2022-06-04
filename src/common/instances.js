@@ -370,6 +370,8 @@ export class Instance extends EventEmitter {
             }
 
             updateToastState(t('app.mdpkm.instances:states.launching2'));
+            const [width, height] = this.config.resolution ??
+                Store.getState().settings['instances.defaultResolution'];
             const jvmArguments = getJvmArguments(
                 libraries,
                 minecraftArtifact,
@@ -381,7 +383,7 @@ export class Instance extends EventEmitter {
                     ...account.minecraft
                 },
                 (this.config.ram ?? 2) * 1000,
-                { width: 600, height: 500 },
+                { width, height },
                 false,
                 javaArguments
             ).map(v => v.toString().replaceAll(appDirectory, '../../'));
