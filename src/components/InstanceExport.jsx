@@ -43,7 +43,7 @@ export default function InstanceExport({ instanceId }) {
     const { t } = useTranslation();
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
     const [items, setItems] = useState();
-    const exportInstance = () => Instances.exportInstance(id,
+    const exportInstance = () => Instances.exportInstance(instanceId,
         items.filter(e => e.selected).map(e => e.path)
     );
     useEffect(() => {
