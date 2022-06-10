@@ -102,13 +102,14 @@ export default function LoaderSetup({ back, loader, install, versions = [] }) {
                         width={210}
                         value={name}
                         onChange={setName}
+                        placeholder={t('app.mdpkm.loader_setup.instance_name.placeholder')}
                     />
                 </Grid>}
 
                 {installState ? null : loaderVersions ?
                     <Grid width={210} margin="24px 0 0 0" spacing={4} direction="vertical">
                         <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
-                            {t('app.mdpkm.loader_setup.minecraft_version')}
+                            {t('app.mdpkm.loader_setup.game_version')}
                         </Typography>
                         <Select.Root
                             value={gameVersion}
@@ -117,7 +118,7 @@ export default function LoaderSetup({ back, loader, install, versions = [] }) {
                                 setLoaderVersion(loaderVersions[v][0]);
                             }}
                         >
-                            <Select.Group name="Minecraft Versions">
+                            <Select.Group name={t('app.mdpkm.loader_setup.game_version.category')}>
                                 {gameVersions.map((version, index) =>
                                     <Select.Item key={index} value={version}>
                                         {version}
@@ -139,7 +140,7 @@ export default function LoaderSetup({ back, loader, install, versions = [] }) {
                                     setGameVersions(v.data);
                                 }}
                             >
-                                <Select.Group name="Version Categories">
+                                <Select.Group name={t('app.mdpkm.loader_setup.version_type.category')}>
                                     {versions.map((type, index) =>
                                         <Select.Item key={index} value={type}>
                                             {type.name}
@@ -156,7 +157,7 @@ export default function LoaderSetup({ back, loader, install, versions = [] }) {
                                 value={gameVersion}
                                 onChange={setGameVersion}
                             >
-                                <Select.Group name="Minecraft Versions">
+                                <Select.Group name={t('app.mdpkm.loader_setup.game_version.category')}>
                                     {gameVersions.map(({ name, value }, index) =>
                                         <Select.Item key={index} value={value}>
                                             {name}
@@ -170,13 +171,13 @@ export default function LoaderSetup({ back, loader, install, versions = [] }) {
 
                 {installState ? null : loaderVersions && <Grid width={210} margin="16px 0" spacing={4} direction="vertical">
                     <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
-                        Loader Version
+                        {t('app.mdpkm.loader_setup.loader_version')}
                     </Typography>
                     <Select.Root
                         value={loaderVersion}
                         onChange={setLoaderVersion}
                     >
-                        <Select.Group name="Loader Versions">
+                        <Select.Group name={t('app.mdpkm.loader_setup.loader_version.category')}>
                             {loaderVersions[gameVersion].map((version, index) =>
                                 <Select.Item key={index} value={version}>
                                     {version.includes("-") ? version.split("-")[1] : version}

@@ -134,7 +134,11 @@
 
     "app.mdpkm.loader_setup.header": "Configure Loader",
     "app.mdpkm.loader_setup.instance_name": "Instance Name",
+    "app.mdpkm.loader_setup.instance_name.placeholder": "Enter a name",
     "app.mdpkm.loader_setup.game_version": "Minecraft Version",
+    "app.mdpkm.loader_setup.game_version.category": "Minecraft Versions",
     "app.mdpkm.loader_setup.loader_version": "Loader Version",
-    "app.mdpkm.loader_setup.version_type": "Version Category"
+    "app.mdpkm.loader_setup.loader_version.category": "Loader Versions",
+    "app.mdpkm.loader_setup.version_type": "Version Category",
+    "app.mdpkm.loader_setup.version_type.category": "Version Categories"
 }
