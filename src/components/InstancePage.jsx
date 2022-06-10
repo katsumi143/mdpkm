@@ -198,7 +198,7 @@ export default function InstancePage({ id }) {
                         borderBottom: consoleOpen ? '1px solid $secondaryBorder2' : null
                     }}>
                         <Typography color="$primaryColor" family="Nunito" lineheight={1}>
-                            Instance Console {logErrors.length && `(${logErrors.length} Errors!)`}
+                            Instance Console {logErrors.length ? `(${logErrors.length} Errors!)` : ''}
                         </Typography>
                     </Grid>
                     <Button theme="secondary" onClick={() => setConsoleOpen(!consoleOpen)} css={{
