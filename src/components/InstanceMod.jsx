@@ -79,7 +79,7 @@ export default function InstanceMod({ mod, updates, embedded, instanceId }) {
                                 {Util.getLoaderName(mod?.loader)?.split(" ")?.[0]} {mod.gameVersion}
                             </Typography>
                         </Tag>}
-                        {update && <Button theme="accent">
+                        {update && <Button theme="accent" disabled>
                             <CloudArrowDown size={14}/>
                             Update
                         </Button>}

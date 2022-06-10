@@ -24,9 +24,14 @@ export default function ModManagement({ instanceId }) {
     const [items, setItems] = useState(instance.mods);
     const [filter, setFilter] = useState('');
     const [updates, setUpdates] = useState();
+    const [updateChecking, setUpdateChecking] = useState(false);
     const checkForUpdates = () => {
         const Instance = Instances.getInstance(instanceId);
-        Instance.checkForUpdates().then(setUpdates);
+        setUpdateChecking(true);
+        Instance.checkForUpdates().then(updates => {
+            setUpdates(updates);
+            setUpdateChecking(false);
+        });
     };
     useEffect(() => {
         if (instance.mods && instance.mods !== items)
@@ -42,7 +47,6 @@ export default function ModManagement({ instanceId }) {
         }
     }, [items, instance]);
     useEffect(() => setItems(), [instanceId]);
-    console.log(updates);
     return <Tabs
         value={tab}
         onChange={event => setTab(event.target.value)}
@@ -77,8 +81,8 @@ export default function ModManagement({ instanceId }) {
                         {items === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
                         {t('app.mdpkm.common:actions.refresh')}
                     </Button>
-                    <Button theme="accent" onClick={checkForUpdates}>
-                        <CloudArrowDown size={14}/>
+                    <Button theme="accent" onClick={checkForUpdates} disabled={updateChecking}>
+                        {updateChecking ? <BasicSpinner size={16}/> : <CloudArrowDown size={14}/>}
                         {t('app.mdpkm.mod_management.get_updates')}
                     </Button>
                 </Grid>
