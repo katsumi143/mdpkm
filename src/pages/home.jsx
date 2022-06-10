@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import toast, { Toaster } from 'react-hot-toast';
 import { relaunch } from '@tauri-apps/api/process';
 import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
-import { XLg, PlusLg, Github, Download, GearFill, ArrowLeft } from 'react-bootstrap-icons';
+import { XLg, Gear, PlusLg, Github, Archive, Download, GearFill, ArrowLeft, Newspaper, PersonBadge } from 'react-bootstrap-icons';
 import { MinecraftSkinViewer } from '@yannichock/react-minecraft-skin-viewer';
 
 import App from '/src/components/App';
@@ -31,7 +31,8 @@ import ModpackSetup from '/src/components/ModpackSetup';
 import InstanceList from '/src/components/InstanceList';
 import InstancePage from '/src/components/InstancePage';
 import ImportInstance from '/src/components/ImportInstance';
-
+import SideNavigation from '/voxeliface/components/SideNavigation';
+import NavigationItem from '/voxeliface/components/SideNavigation/Item';
 import SelectInstanceType from '/src/components/SelectInstanceType';
 
 import API from '/src/common/api';
@@ -39,61 +40,28 @@ import Util from '/src/common/util';
 import Instances from '/src/common/instances';
 import { addSkin, saveSkins } from '/src/common/slices/skins';
 
-const TopButton = styled('button', {
-    flex: 1,
-    color: '$secondaryColor',
-    border: 'none',
-    padding: '.25rem 0',
-    fontSize: '.8rem',
-    fontWeight: 400,
-    background: 'none',
-    fontFamily: 'Nunito',
-    transition: 'color 250ms cubic-bezier(0.4, 0, 0.2, 1), background 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-
-    '&:hover': {
-        color: '$primaryColor',
-        background: '$secondaryBackground2'
-    },
-    variants: {
-        selected: {
-            true: {
-                color: '$primaryColor',
-                fontWeight: 500
-            }
-        }
-    }
-});
-
 let updateListener;
 export default function Home() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const [_, setBruh] = useState(0);
     const [skin, setSkin] = useState();
-    const [page, setPage] = useState('home');
+    const [page, setPage] = useState(0);
     const [update, setUpdate] = useState();
     const [loading, setLoading] = useState(false);
     const [instance, setInstance] = useState();
-    const [fullPage, setFullPage] = useState('instances');
     const [settingUp, setSettingUp] = useState();
     const [importPath, setImportPath] = useState();
     const [addSkinName, setAddSkinName] = useState();
     const [addSkinImage, setAddSkinImage] = useState();
-    const [sidebarActive, setSidebarActive] = useState(true);
+    const [instancePage, setInstancePage] = useState('home');
     const [loaderVersions, setLoaderVersions] = useState();
     const setupBackToSelect = () => {
+        setInstancePage('add-instance');
         setLoaderVersions();
         setSettingUp();
-        setPage('add-instance');
     };
-    const selectBackToHome = () => {
-        setSidebarActive(true);
-        setPage('home');
-    };
-    const addInstancePage = () => {
-        setSidebarActive(false);
-        setPage('add-instance');
-    };
+    const selectBackToHome = () => setInstancePage('home');
     const chooseSkinImage = () => {
         open({
             filters: [{ name: 'All files', extensions: ['png'] }]
@@ -106,7 +74,7 @@ export default function Home() {
         })
     };
     const importInstance = () => {
-        setPage('import-instance');
+        setInstancePage('import');
         setLoading(false);
     };
     const selectInstance = id => setInstance(id);
@@ -117,15 +85,10 @@ export default function Home() {
             toast.error(`Instance Installation Failed!\n${err.message ?? 'Unknown Reason.'}`);
         });
         toast.success(`${name} was created successfully.`);
-        setPage('home');
+        setInstancePage('home');
         setInstance(Instances.instances.findIndex(i => i.name === name));
         setSettingUp();
-        setSidebarActive(true);
         setLoaderVersions();
-    };
-    const settingsPage = () => {
-        setSidebarActive(false);
-        setPage('settings');
     };
     const chooseLoader = async loader => {
         setLoading(true);
@@ -136,8 +99,8 @@ export default function Home() {
 
                 setLoaderVersions(versions);
             } else if(loader === 'modpack') {
+                setInstancePage('modpack-setup');
                 setLoading(false);
-                setPage('modpack-setup');
                 return;
             } else {
                 const loaderData = API.getLoader(loader);
@@ -150,13 +113,13 @@ export default function Home() {
             setLoading(false);
             return toast.error(`Failed to load ${loader};\n${err}`);
         }
+        setInstancePage('setup-loader');
         setSettingUp(loader);
         setLoading(false);
-        setPage('setup-loader');
     };
     const importModpack = path => {
+        setInstancePage('import');
         setImportPath(path);
-        setPage('import-instance');
     };
     const selectSkin = () => {
 
@@ -270,126 +233,61 @@ export default function Home() {
                             </Grid>
                         </Grid>
                     }
-                    <Grid width="35%" height="100%" direction="vertical" background="$blackA2" justifyContent="space-between" css={{
-                        opacity: sidebarActive ? 1 : 0,
-                        maxWidth: '35%',
-                        position: 'absolute',
-                        maxHeight: 'inherit',
-                        transform: sidebarActive ? 'none' : 'translateX(-100%)',
-                        transition: 'transform 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                        pointerEvents: sidebarActive ? 'unset' : 'none'
-                    }}>
-                        <Grid background="$secondaryBackground" css={{
-                            borderBottom: '1px solid $secondaryBorder2'
-                        }}>
-                            <TopButton onClick={() => setFullPage('instances')} selected={fullPage === 'instances'}>
-                                Instances
-                            </TopButton>
-                        </Grid>
-                        {
-                            fullPage === 'instances' ?
-                                <InstanceList id={instance} onSelect={selectInstance}/>
-                            : fullPage === 'skins' ?
-                                <SkinList selected={skin} onSelect={selectSkin}/>
-                            : null
-                        }
-                        <Grid width="100%" spacing="1rem" background="$secondaryBackground" alignItems="center" justifyContent="center" css={{
-                            minHeight: 64
-                        }}>
-                            {fullPage === 'instances' ?
-                                <Button onClick={addInstancePage}>
-                                    <PlusLg/>
-                                    {t('app.mdpkm.home.sidebar.buttons.add_instance')}
-                                </Button>
-                            : fullPage === 'skins' ?
-                                <Dialog.Root>
-                                    <Dialog.Trigger asChild>
-                                        <Button onClick={() => setAddSkinImage()}>
-                                            <PlusLg/>
-                                            {t('app.mdpkm.home.sidebar.buttons.add_skin')}
-                                        </Button>
-                                    </Dialog.Trigger>
-                                    <Dialog.Content>
-                                        <Dialog.Title>Add new Minecraft Skin</Dialog.Title>
-                                        <Grid spacing={4} direction="vertical">
-                                            <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito">
-                                                Skin Name
-                                            </Typography>
-                                            <TextInput value={addSkinName} onChange={setAddSkinName} placeholder="Enter a name"/>
-                                        </Grid>
-                                        <Grid width="fit-content" margin="8px 0 0" spacing={8} direction="vertical">
-                                            <Grid background="$secondaryBackground2" borderRadius={8} css={{ overflow: 'hidden' }}>
-                                                {addSkinImage &&
-                                                    <MinecraftSkinViewer
-                                                        skin={`data:image/png;base64,${addSkinImage}`}
-                                                        width={128}
-                                                        height={128}
-                                                        background="transparent"
-                                                    />
-                                                }
-                                            </Grid>
-                                            <Button theme="secondary" onClick={chooseSkinImage}>
-                                                Choose image
+                    <SideNavigation value={page} onChange={setPage}>
+                        <NavigationItem name={t('app.mdpkm.home.navigation.instances')} icon={<Archive size={16}/>} value={0} direction="horizontal">
+                            <Pages value={instancePage}>
+                                <PageItem value="home">
+                                    <Grid width="35%" height="100%" direction="vertical" background="$blackA2" justifyContent="space-between" css={{
+                                        maxWidth: '35%',
+                                        borderRight: '1px solid $secondaryBorder'
+                                    }}>
+                                        <InstanceList id={instance} onSelect={selectInstance}/>
+                                        <Grid width="100%" spacing="1rem" background="$secondaryBackground" alignItems="center" justifyContent="center" css={{
+                                            minHeight: 64
+                                        }}>
+                                            <Button onClick={() => setInstancePage('add-instance')}>
+                                                <PlusLg size={14}/>
+                                                {t('app.mdpkm.buttons.add_instance')}
                                             </Button>
                                         </Grid>
-                                        <Grid margin="16px 0 0" justifyContent="end">
-                                            <Dialog.Close asChild>
-                                                <Button onClick={addNewSkin} disabled={!addSkinName || !addSkinImage}>
-                                                    Add Skin
-                                                </Button>
-                                            </Dialog.Close>
-                                        </Grid>
-                                    </Dialog.Content>
-                                </Dialog.Root>
-                            : null}
-                            <Button theme="secondary" onClick={settingsPage}>
-                                <GearFill/>
-                                {t('app.mdpkm.home.sidebar.buttons.settings')}
-                            </Button>
-                        </Grid>
-                    </Grid>
-                    {fullPage === 'instances' && page === 'home' &&
-                        !Instances.gettingInstances &&
-                        <InstancePage id={instance}/>
-                    }
-                    {page !== 'home' && <Grid width="100%" height="100%" css={{ position: 'relative' }}>
-                        <Pages value={page}>
-                            <PageItem value="add-instance">
-                                <SelectInstanceType
-                                    back={selectBackToHome}
-                                    types={API.instanceTypes}
-                                    loading={loading}
-                                    chooseLoader={chooseLoader}
-                                    importInstance={importInstance}
-                                />
-                            </PageItem>
-                            <PageItem value="setup-loader">
-                                <LoaderSetup
-                                    back={setupBackToSelect}
-                                    loader={settingUp}
-                                    install={installLoader}
-                                    versions={loaderVersions}
-                                />
-                            </PageItem>
-                            <PageItem value="modpack-setup">
-                                <ModpackSetup back={setupBackToSelect} importModpack={importModpack}/>
-                            </PageItem>
-                            <PageItem value="import-instance">
-                                <ImportInstance path={importPath} back={setupBackToSelect}/>
-                            </PageItem>
-                            <PageItem value="settings">
-                                <Settings close={selectBackToHome}/>
-                            </PageItem>
-                            <PageItem value="news">
-                                <News render={page === 'news'} backButton={
-                                    <Button theme="secondary" onClick={selectBackToHome}>
-                                        <ArrowLeft/>
-                                        Back to Home
-                                    </Button>
-                                }/>
-                            </PageItem>
-                        </Pages>
-                    </Grid>}
+                                    </Grid>
+                                    <InstancePage id={instance}/>
+                                </PageItem>
+                                <PageItem value="add-instance">
+                                    <SelectInstanceType
+                                        back={selectBackToHome}
+                                        types={API.instanceTypes}
+                                        loading={loading}
+                                        chooseLoader={chooseLoader}
+                                        importInstance={importInstance}
+                                    />
+                                </PageItem>
+                                <PageItem value="setup-loader">
+                                    <LoaderSetup
+                                        back={setupBackToSelect}
+                                        loader={settingUp}
+                                        install={installLoader}
+                                        versions={loaderVersions}
+                                    />
+                                </PageItem>
+                                <PageItem value="modpack-setup">
+                                    <ModpackSetup back={setupBackToSelect} importModpack={importModpack}/>
+                                </PageItem>
+                                <PageItem value="import">
+                                    <ImportInstance path={importPath} back={setupBackToSelect}/>
+                                </PageItem>
+                            </Pages>
+                        </NavigationItem>
+                        {/*<NavigationItem name={t('app.mdpkm.home.navigation.skins')} icon={<PersonBadge size={16}/>} value={1}>
+                            skins
+                        </NavigationItem>*/}
+                        {/*<NavigationItem name={t('app.mdpkm.home.navigation.news')} icon={<Newspaper size={16}/>} value={2}>
+                            news
+                        </NavigationItem>*/}
+                        <NavigationItem name={t('app.mdpkm.home.navigation.settings')} icon={<Gear size={16}/>} value={3} footer>
+                            <Settings/>
+                        </NavigationItem>
+                    </SideNavigation>
                 </Main>
                 <Toaster position="bottom-right" toastOptions={{
                     style: {

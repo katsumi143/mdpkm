@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Trash3Fill, CaretDownFill, ExclamationCircleFill } from 'react-bootstrap-icons';
+import { Trash3Fill, CaretDownFill, CloudArrowDown, ExclamationCircleFill } from 'react-bootstrap-icons';
 
 import Tag from './Tag';
 import Grid from '/voxeliface/components/Grid';
@@ -13,8 +13,9 @@ import API from '../common/api';
 import Util from '../common/util';
 import Instances from '../common/instances';
 
-export default function InstanceMod({ mod, embedded, instanceId }) {
+export default function InstanceMod({ mod, updates, embedded, instanceId }) {
     const { t } = useTranslation();
+    const update = updates?.[mod?.config?.[1]];
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
     const sourceApi = API.get(mod?.source);
     const loaderData = API.getLoader(mod?.loader);
@@ -52,6 +53,7 @@ export default function InstanceMod({ mod, embedded, instanceId }) {
                             {t('app.mdpkm.mod.version', {
                                 val: mod.version
                             })}
+                            {update && ' (Update available)'}
                         </Typography>
                     </Grid>
                     <Grid spacing={8} alignItems="center" css={{
@@ -71,12 +73,16 @@ export default function InstanceMod({ mod, embedded, instanceId }) {
                                 {Util.getPlatformName(mod.source)}
                             </Typography>
                         </Tag>
-                        <Tag>
+                        {!update && <Tag>
                             {loaderData?.icon && <Image src={loaderData?.icon} size={12}/>}
                             <Typography size=".6rem" color="$tagColor" family="Nunito">
                                 {Util.getLoaderName(mod?.loader)?.split(" ")?.[0]} {mod.gameVersion}
                             </Typography>
-                        </Tag>
+                        </Tag>}
+                        {update && <Button theme="accent">
+                            <CloudArrowDown size={14}/>
+                            Update
+                        </Button>}
                         {!embedded && <Button theme="secondary" onClick={deleteMod}>
                             <Trash3Fill/>
                             {t('app.mdpkm.common:actions.delete')}

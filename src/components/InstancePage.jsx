@@ -4,7 +4,7 @@ import { keyframes } from '@stitches/react';
 import { open } from '@tauri-apps/api/shell';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
-import { PlayFill, PencilFill, Trash3Fill, Folder2Open, ExclamationCircleFill } from 'react-bootstrap-icons';
+import { App, List, Gear, PlayFill, PencilFill, Trash3Fill, Folder2Open, FileEarmarkZip, ExclamationCircleFill } from 'react-bootstrap-icons';
 
 import Mod from './Mod';
 import Tag from './Tag';
@@ -129,11 +129,9 @@ export default function InstancePage({ id }) {
     }, [id]);
 
     if(!instance)
-        return 'invalid';
+        return;
     return (
-        <Grid width="-webkit-fill-available" margin="0 0 0 35%" height="100%" direction="vertical" css={{
-            flex: 1
-        }}>
+        <Grid height="100%" direction="vertical" css={{ flex: 1, overflow: 'hidden' }}>
             <Grid margin="1rem" padding={12} background="$secondaryBackground2" borderRadius={16} css={{
                 position: 'relative'
             }}>
@@ -367,33 +365,25 @@ export default function InstancePage({ id }) {
                     margin: '0 1rem 1rem'
                 }}
             >
-                <TabItem name={t('app.mdpkm.instance_page.tabs.mods')} value={0} padding={0} disabled={!instance.isModded}>
+                <TabItem name={t('app.mdpkm.instance_page.tabs.mods')} icon={<List size={14}/>} value={0} padding={0} disabled={!instance.isModded}>
                     <ModManagement instanceId={id}/>
                 </TabItem>
-                <TabItem name={t('app.mdpkm.instance_page.tabs.servers')} value={1}>
+                <TabItem name={t('app.mdpkm.instance_page.tabs.servers')} icon={<List size={14}/>} value={1}>
                     <ServerManagement instanceId={id}/>
                 </TabItem>
-                <TabItem name={t('app.mdpkm.instance_page.tabs.resource_packs')} value={2}>
+                <TabItem name={t('app.mdpkm.instance_page.tabs.resource_packs')} icon={<List size={14}/>} value={2}>
                     <ResourcePackManagement instanceId={id}/>
                 </TabItem>
-                <TabItem name={t('app.mdpkm.instance_page.tabs.essential')} value={3} spacing={6} disabled={!instance.isModded}>
-                    <Image src="img/banners/essential_mod.svg" width="100%" height="1.2rem" margin="8px 0 0" css={{
-                        backgroundPosition: "left center"
-                    }}/>
-                    <Typography size=".8rem" color="$secondaryColor" margin="0 0 8px" weight={600} family="Nunito" textalign="start">
-                        The essential multiplayer mod for Minecraft Java.<br/>
-                        mdpkm is not endorsed by Essential.
-                    </Typography>
-                    <Mod id="essential-container" api="internal" featured instanceId={id}/>
-                </TabItem>
-                <TabItem name={t('app.mdpkm.instance_page.tabs.loader')} value={4}>
-                    <Grid spacing={8}>
+                <TabItem name={t('app.mdpkm.instance_page.tabs.loader')} icon={<App size={14}/>} value={3}>
+                    <Grid spacing={12} padding={8} alignItems="center" background="$secondaryBackground2" borderRadius={4} css={{
+                        position: 'relative'
+                    }}>
                         {loaderData?.icon ?
-                            <Image src={loaderData?.icon} size={48} borderRadius={4}/>
+                            <Image src={loaderData?.icon} size={48} background="$secondaryBackground" borderRadius={4}/>
                         : <Grid width={48} height={48} alignItems="center" background="$gray10" borderRadius={4} justifyContent="center">
                             <ExclamationCircleFill size={24} color="#ffffff80"/>
                         </Grid>}
-                        <Grid height={48} spacing={4} direction="vertical" justifyContent="center">
+                        <Grid spacing={4} direction="vertical" justifyContent="center">
                             <Typography size="1rem" color="$primaryColor" family="Nunito" lineheight={1}>
                                 {Util.getLoaderName(config?.loader?.type) ?? `${config.loader.type} (Unknown)`}
                                 {LoaderStates[config.loader.type] &&
@@ -408,6 +398,15 @@ export default function InstancePage({ id }) {
                                 {config.loader.game}{config.loader.version && `-${config.loader.version}`}
                             </Typography>
                         </Grid>
+                        <Grid css={{
+                            right: 16,
+                            position: 'absolute'
+                        }}>
+                            <Button theme="accent" disabled>
+                                <PencilFill/>
+                                {t('app.mdpkm.common:actions.edit')}
+                            </Button>
+                        </Grid>
                     </Grid>
                     {loaderData?.source?.recommendedMod &&
                         <Mod
@@ -418,7 +417,7 @@ export default function InstancePage({ id }) {
                         />
                     }
                 </TabItem>
-                <TabItem name={t('app.mdpkm.instance_page.tabs.settings')} value={5} padding={0}>
+                <TabItem name={t('app.mdpkm.instance_page.tabs.settings')} icon={<Gear size={14}/>} value={4} padding={0}>
                     <Grid padding={8} justifyContent="space-between" css={{
                         borderBottom: '1px solid $secondaryBorder'
                     }}>
@@ -513,7 +512,7 @@ export default function InstancePage({ id }) {
                         </Grid>
                     </Grid>
                 </TabItem>
-                <TabItem name={t('app.mdpkm.instance_page.tabs.export')} value={6}>
+                <TabItem name={t('app.mdpkm.instance_page.tabs.export')} icon={<FileEarmarkZip size={14}/>} value={5}>
                     <InstanceExport instanceId={id}/>
                 </TabItem>
             </Tabs>}

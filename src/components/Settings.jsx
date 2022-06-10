@@ -15,6 +15,7 @@ import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Toggle from './Toggle';
 import Button from '/voxeliface/components/Button';
+import Header from '/voxeliface/components/Typography/Header';
 import Divider from '/voxeliface/components/Divider';
 import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
@@ -35,7 +36,7 @@ import { addAccount, setAccount, saveAccounts, removeAccount, setAddingAccount }
 const appName = await getName();
 const appVersion = await getVersion();
 const tauriVersion = await getTauriVersion()
-export default function Settings({ close }) {
+export default function Settings() {
     const { t, i18n } = useTranslation();
     const theme = useSelector(state => state.settings.theme);
     const uiStyle = useSelector(state => state.settings.uiStyle);
@@ -217,18 +218,10 @@ export default function Settings({ close }) {
         <ThemeContext.Consumer>
             {({ setTheme }) => (
                 <Grid width="100%" direction="vertical">
-                    <Grid width="100%" padding="1rem 1.5rem" spacing={4} direction="vertical" css={{
-                        borderBottom: '1px solid $tagBorder'
-                    }}>
-                        <Typography size="1.3rem" color="$primaryColor" family="Nunito" css={{ gap: 8 }}>
-                            <Gear/>
-                            {t('app.mdpkm.settings.header.title')}
-                        </Typography>
-                    </Grid>
-                    <Grid width="100%" height="-webkit-fill-available" padding=".5rem 1rem" direction="vertical" css={{
+                    <Grid width="100%" height="-webkit-fill-available" padding=".75rem 1rem" direction="vertical" css={{
                         overflow: 'auto'
                     }}>
-                        <TextDivider name="general"/>
+                        <Header>{t('app.mdpkm.settings.general')}</Header>
                         <Grid spacing={8} padding="0 1rem" direction="vertical">
                             <Setting name="general.account">
                                 <Select.Root value={new String(account).toString()} onChange={changeAccount} disabled={accounts.length === 0} defaultValue="undefined">
@@ -245,7 +238,7 @@ export default function Settings({ close }) {
                                     </Select.Item>
                                 </Select.Root>
                                 <Button theme="accent" onClick={addNewAccount} disabled={addingAccount} css={{
-                                    minWidth: 196
+                                    width: 'auto'
                                 }}>
                                     {addingAccount ? <BasicSpinner size={16}/> : <PlusLg size={14}/>}
                                     {t('app.mdpkm.settings.general.account.add')}
@@ -253,7 +246,7 @@ export default function Settings({ close }) {
                                 <DropdownMenu.Root>
                                     <DropdownMenu.Trigger asChild>
                                         <Button theme="secondary" css={{
-                                            minWidth: 196
+                                            width: 'auto'
                                         }}>
                                             <XLg/>
                                             {t('app.mdpkm.settings.general.account.remove')}
@@ -301,7 +294,7 @@ export default function Settings({ close }) {
                                     </Select.Group>
                                 </Select.Root>
                             </Setting>
-                            <Setting name="general.language">
+                            <Setting name="general.language" noSummary>
                                 <Select.Root value={language} onChange={changeLanguage}>
                                     <Select.Group name={t('app.mdpkm.settings.general.language.category')}>
                                         <Select.Item value="en">
@@ -318,61 +311,55 @@ export default function Settings({ close }) {
                             </Setting>
                         </Grid>
 
-                        <TextDivider name="instances"/>
+                        <Header spacious>{t('app.mdpkm.settings.instances')}</Header>
                         <Grid spacing={8} padding="0 1rem" direction="vertical">
-                            <Setting name="instances.pageBanner">
-                                <Grid width="100%" justifyContent="end">
-                                    <Toggle
-                                        size="small"
-                                        value={showInstanceBanner}
-                                        onChange={() =>
-                                            setSetting('instances.showBanner', !showInstanceBanner)
+                            <Setting name="instances.pageBanner" direction="horizontal">
+                                <Toggle
+                                    size="small"
+                                    value={showInstanceBanner}
+                                    onChange={() =>
+                                        setSetting('instances.showBanner', !showInstanceBanner)
+                                    }
+                                />
+                                <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                    {showInstanceBanner ? 'On' : 'Off'}
+                                </Typography>
+                            </Setting>
+                            <Setting name="instances.defaultResolution" direction="horizontal">
+                                <Grid direction="vertical">
+                                    <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                        {t('app.mdpkm.instance_page.tabs.settings.resolution.width')}
+                                    </Typography>
+                                    <TextInput
+                                        width={80}
+                                        value={Math.max(0, defaultInstanceResolution[0] || 0)}
+                                        onChange={value =>
+                                            setSetting('instances.defaultResolution',
+                                                [parseInt(value), defaultInstanceResolution[1]]
+                                            )
+                                        }
+                                    />
+                                </Grid>
+                                <Grid direction="vertical">
+                                    <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                        {t('app.mdpkm.instance_page.tabs.settings.resolution.height')}
+                                    </Typography>
+                                    <TextInput
+                                        width={80}
+                                        value={Math.max(0, defaultInstanceResolution[1] || 0)}
+                                        onChange={value =>
+                                            setSetting('instances.defaultResolution',
+                                                [defaultInstanceResolution[0], parseInt(value)]
+                                            )
                                         }
                                     />
                                 </Grid>
                             </Setting>
-                            <Setting name="instances.defaultResolution">
-                                <Grid width="100%" spacing={8} justifyContent="end">
-                                    <Grid direction="vertical">
-                                        <Typography size=".8rem" color="$secondaryColor" family="Nunito">
-                                            {t('app.mdpkm.instance_page.tabs.settings.resolution.width')}
-                                        </Typography>
-                                        <TextInput
-                                            width={80}
-                                            value={Math.max(0, defaultInstanceResolution[0] || 0)}
-                                            onChange={value =>
-                                                setSetting('instances.defaultResolution',
-                                                    [parseInt(value), defaultInstanceResolution[1]]
-                                                )
-                                            }
-                                        />
-                                    </Grid>
-                                    <Grid direction="vertical">
-                                        <Typography size=".8rem" color="$secondaryColor" family="Nunito">
-                                            {t('app.mdpkm.instance_page.tabs.settings.resolution.height')}
-                                        </Typography>
-                                        <TextInput
-                                            width={80}
-                                            value={Math.max(0, defaultInstanceResolution[1] || 0)}
-                                            onChange={value =>
-                                                setSetting('instances.defaultResolution',
-                                                    [defaultInstanceResolution[0], parseInt(value)]
-                                                )
-                                            }
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </Setting>
                         </Grid>
 
-                        <TextDivider name="java"/>
-                        <Grid spacing={8} padding="0 1rem" direction="vertical">
-                            <Setting/>
-                        </Grid>
-
-                        <TextDivider text={t('app.mdpkm.settings.plugins', {
+                        <Header spacious>{t('app.mdpkm.settings.plugins', {
                             val: Object.keys(PluginLoader.loaded).length
-                        })}/>
+                        })}</Header>
                         <Grid spacing={8} padding="0 1rem" direction="vertical">
                             <Grid spacing={8}>
                                 <Button theme="accent" onClick={addPlugin}>
@@ -386,7 +373,7 @@ export default function Settings({ close }) {
                             </Grid>
                             {Object.entries(PluginLoader.loaded).map(([id, { path, manifest }]) => {
                                 const pluginLoaders = API.loaders.filter(l => l.source?.id === id);
-                                return <Grid padding={8} spacing={8} background="$secondaryBackground" alignItems="center" borderRadius={8} css={{
+                                return <Grid key={id} padding={8} spacing={8} background="$secondaryBackground" alignItems="center" borderRadius={8} css={{
                                     position: 'relative'
                                 }}>
                                     <Image src={convertFileSrc(`${path}/icon.svg`)} size={48} background="$primaryBackground" borderRadius={4}/>
@@ -404,8 +391,8 @@ export default function Settings({ close }) {
                                     }}>
                                         {pluginLoaders.length > 0 &&
                                             <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" css={{ gap: 8 }}>
-                                                {pluginLoaders.map(({ icon }) =>
-                                                    <Image src={icon} size={20} background="$primaryBackground" borderRadius={4}/>
+                                                {pluginLoaders.map(({ icon }, key) =>
+                                                    <Image key={key} src={icon} size={20} background="$primaryBackground" borderRadius={4}/>
                                                 )}
                                                 {t(`app.mdpkm.settings.plugins.item.adds_loader${t > 1 ? 's' : ''}`, {
                                                     val: pluginLoaders.length
@@ -421,7 +408,7 @@ export default function Settings({ close }) {
                             })}
                         </Grid>
 
-                        <TextDivider name="storage"/>
+                        <Header spacious>{t('app.mdpkm.settings.storage')}</Header>
                         <Grid spacing={8} padding="0 1rem" direction="vertical">
                             <Typography size=".9rem" color="$primaryColor" family="Nunito">
                                 {t('app.mdpkm.settings.storage.clean_header', {
@@ -450,7 +437,7 @@ export default function Settings({ close }) {
                             }
                         </Grid>
 
-                        <TextDivider name="about"/>
+                        <Header spacious>{t('app.mdpkm.settings.about')}</Header>
                         <Grid spacing={8} padding="0 1rem" direction="vertical">
                             <Grid spacing={8} alignItems="center">
                                 <Image src="img/icons/brand_default.svg" size={48}/>
@@ -481,57 +468,33 @@ export default function Settings({ close }) {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid width="100%" padding={16} justifyContent="space-between" css={{
-                        borderTop: '1px solid $tagBorder',
-                    }}>
-                        <Button theme="secondary" onClick={close}>
-                            <ArrowLeft/>
-                            {t('app.mdpkm.common:buttons.back_to_instances')}
-                        </Button>
-                    </Grid>
                 </Grid>
             )}
         </ThemeContext.Consumer>
     );
 };
 
-function Setting({ name, children, direction }) {
+function Setting({ name, children, direction, noSummary }) {
     const { t } = useTranslation();
     const stringBase = `app.mdpkm.settings.${name ?? 'placeholder'}`;
-    return <Grid padding={8} background="$secondaryBackground2" borderRadius={8} justifyContent="space-between">
+    return <Grid css={{
+        marginBottom: 8
+    }}>
         <Grid spacing={4} padding=".5rem .6rem" direction="vertical">
             <Typography color="$primaryColor" family="Nunito" lineheight={1}>
                 {t(stringBase)}
             </Typography>
-            <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1.2} whitespace="pre-wrap" textalign="start">
-                {t(`${stringBase}.summary`)}
-            </Typography>
-        </Grid>
-        <Grid spacing={4} direction={direction ?? 'vertical'} css={{
-            minWidth: 196,
-            position: 'relative'
-        }}>
-            {children}
+            {!noSummary &&
+                <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1.2} whitespace="pre-wrap" textalign="start">
+                    {t(`${stringBase}.summary`)}
+                </Typography>
+            }
+            <Grid margin=".5rem 0 0" spacing={8} direction={direction ?? 'vertical'} css={{
+                minWidth: 196,
+                position: 'relative'
+            }}>
+                {children}
+            </Grid>
         </Grid>
     </Grid>
-};
-
-function TextDivider({ name, text }) {
-    const { t } = useTranslation();
-    return <Divider width="100%" margin="2rem 0 1rem" css={{
-        position: 'relative',
-        minHeight: 2,
-
-        '&:after': {
-            color: '$secondaryColor',
-            content: text ?? t(`app.mdpkm.settings.${name}`),
-            padding: '2px 8px',
-            fontSize: '.95rem',
-            position: 'absolute',
-            transform: 'translateY(-50%)',
-            fontWeight: 400,
-            fontFamily: 'Nunito',
-            background: '$primaryBackground'
-        }
-    }}/>
 };

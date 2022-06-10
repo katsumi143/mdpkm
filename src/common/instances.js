@@ -132,6 +132,7 @@ export class Instance extends EventEmitter {
 
         return mods.map(mod => {
             mod.source = this.config.modifications.find(m => m[4] === mod.id)?.[0];
+            mod.config = this.config.modifications.find(m => m[4] === mod.id);
             return mod;
         });
     }
@@ -222,6 +223,31 @@ export class Instance extends EventEmitter {
 
     isModded() {
         return Util.getLoaderType(this.config?.loader?.type)?.includes('modded');
+    }
+
+    async checkForUpdates() {
+        const mapped = {};
+        const updates = {};
+        for (const mod of this.config.modifications)
+            (mapped[mod[0]] = mapped[mod[0]] ?? []).push(mod);
+        for (const [id, mods] of Object.entries(mapped)) {
+            const api = API.get(id);
+            if (api.getProjects) {
+                const projects = await api.getProjects(mods.map(m => m[1]));
+                await pMap(projects, async({ id }) => {
+                    const ok = await Util.pmapTry(async() => {
+                        const versions = await api.getProjectVersions(id, this.config);
+                        const latest = api.getCompatibleVersion(this.config, versions);
+                        if (latest && mods.find(m => m[1] === id)[2] !== latest.id)
+                            updates[id] = latest;
+                    }, 3);
+                    if (!ok)
+                        throw new Error(`Failed to download ${title}`);
+                }, { concurrency: 20 });
+            }
+        }
+        console.log(updates);
+        return updates;
     }
 
     async launch(account) {

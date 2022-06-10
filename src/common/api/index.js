@@ -142,8 +142,13 @@ class API {
             loaders: ['fabric', 'quilt'],
             version: '1.17.1'
         }, {
+            id: '118fabric',
+            files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/62307167d8793b3874ecb4ad/Essential-fabric_1-18-2.jar`, filename: 'essential-fabric-1.18.jar' }],
+            loaders: ['fabric', 'quilt'],
+            version: '1.18'
+        }, {
             id: '1181fabric',
-            files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/61b4e1475b559418a4988419/Essential-fabric_1-18-1.jar`, filename: 'essential-fabric-1.18.1.jar' }],
+            files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/62307167d8793b3874ecb4ad/Essential-fabric_1-18-2.jar`, filename: 'essential-fabric-1.18.2.jar' }],
             loaders: ['fabric', 'quilt'],
             version: '1.18.1'
         }, {
@@ -151,18 +156,23 @@ class API {
             files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/62307167d8793b3874ecb4ad/Essential-fabric_1-18-2.jar`, filename: 'essential-fabric-1.18.2.jar' }],
             loaders: ['fabric', 'quilt'],
             version: '1.18.2'
+        }, {
+            id: '119fabric',
+            files: [{ url: `${ESSENTIAL_BASE}/60ecf53d6b26c76a26d49e5b/629efb9ab4a0a64e522b6a35/Essential-fabric_1-19.jar`, filename: 'essential-fabric-1.19.jar' }],
+            loaders: ['fabric', 'quilt'],
+            version: '1.19'
         }];
         static INTERNAL_PROJECTS = [{
             id: 'essential-container',
             slug: 'essential-container',
             title: 'Essential',
-            author: 'Spark Universe',
+            author: 'Essential',
             loaders: ['fabric', 'forge', 'quilt'],
             icon_url: 'img/icons/essential_mod.svg',
             website_url: ESSENTIAL_SITE,
             client_side: 'required',
             server_side: 'unsupported',
-            description: 'The essential multiplayer mod for Minecraft Java.'
+            description: 'Essential is a quality of life mod for Minecraft Java.\nSupports Forge 1.8.9, 1.12.2, 1.17.1 & Fabric 1.17.1, 1.18, 1.19'
         }];
 
         static Mods = class Mods {

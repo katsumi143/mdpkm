@@ -28,7 +28,10 @@ export default function Mod({ id, api, data, featured, instanceId, recommended }
         if(id && typeof api === 'string' && !mod)
             API.get(api).Mods.get(id).then(setMod).catch(err => {
                 console.warn(err);
-                setMod('error');
+                let message = 'An unknown error occured.';
+                if (err.message.includes(503))
+                    message = 'The service is unavailable.';
+                setMod(`error:${message}`);
             });
     }, [id, api, mod]);
     useEffect(() => {
@@ -38,11 +41,11 @@ export default function Mod({ id, api, data, featured, instanceId, recommended }
 
     return (
         <Grid padding={8} background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
-            {mod ? mod === 'error' ? <Grid width="100%" spacing={12} padding={4} css={{ position: 'relative' }}>
+            {mod ? mod.startsWith?.('error') ? <Grid width="100%" spacing={12} padding={4} css={{ position: 'relative' }}>
                 <XLg size={24} color="var(--colors-secondaryColor)"/>
                 <Grid width="100%" spacing={2} direction="vertical" justifyContent="center">
                     <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
-                        An error occured.
+                        {mod.split(':')[1]}
                     </Typography>
                     {id && api &&
                         <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
@@ -72,17 +75,17 @@ export default function Mod({ id, api, data, featured, instanceId, recommended }
                     <Typography size="1.1rem" color="$primaryColor" family="Nunito" lineheight={1}>
                         {mod.title}
                         {mod.author && 
-                            <Typography size=".7rem" color="$secondaryColor" margin="4px 0 0 4px" lineheight={1}>
+                            <Typography size=".7rem" color="$secondaryColor" lineheight={1}>
                                 {t('app.mdpkm.mod.author', { val: mod.author })}
                             </Typography>
                         }
                         {featured &&
-                            <Typography size=".8rem" color="#cbc365" margin="2px 0 0 6px" lineheight={1}>
+                            <Typography size=".8rem" color="#cbc365" lineheight={1}>
                                 {t('app.mdpkm.mod.featured')}
                             </Typography>
                         }
                         {recommended &&
-                            <Typography size=".8rem" color="$secondaryColor" margin="2px 0 0 6px" lineheight={1}>
+                            <Typography size=".8rem" color="$secondaryColor" lineheight={1}>
                                 {t('app.mdpkm.mod.recommended')}
                             </Typography>
                         }
@@ -90,7 +93,7 @@ export default function Mod({ id, api, data, featured, instanceId, recommended }
                     <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
                         {t(`app.mdpkm.mod.sides.${mod.getSide()}`)}
                     </Typography>
-                    <Typography size=".9rem" color="$secondaryColor" family="Nunito" textalign="left">
+                    <Typography size=".9rem" color="$secondaryColor" family="Nunito" textalign="left" whitespace="pre-wrap">
                         {mod.summary}
                     </Typography>
                 </Grid>
@@ -101,7 +104,7 @@ export default function Mod({ id, api, data, featured, instanceId, recommended }
                     {typeof mod.downloads === 'number' &&
                         <Typography color="$primaryColor" margin="0 8px 0 0" family="Nunito">
                             {Intl.NumberFormat('en-us', {}).format(mod.downloads)}
-                            <Typography size=".8rem" color="$secondaryColor" family="Nunito" margin="0 0 0 4px">
+                            <Typography size=".8rem" color="$secondaryColor" family="Nunito">
                                 {t('app.mdpkm.mod.downloads')}
                             </Typography>
                         </Typography>

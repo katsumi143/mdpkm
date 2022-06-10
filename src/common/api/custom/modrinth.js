@@ -34,6 +34,21 @@ class ModrinthAPI {
             });
     }
 
+    static async getProjects(ids) {
+        const cached = [];
+        for (const id of ids)
+            if(this.projectCache[id])
+                cached.push(this.projectCache[id]);
+        return [...await this.API.makeRequest(`${MODRINTH_API_BASE}/projects`, {
+            query: { ids: JSON.stringify(ids) }
+        }).then(projects =>
+            projects.map(project => {
+                this.projectCache[project.id] = new Project(project, this.id);
+                return this.projectCache[project.id];
+            })
+        ), ...cached];
+    }
+
     static getProjectVersion(id) {
         return this.API.makeRequest(`${MODRINTH_API_BASE}/version/${id}`);
     }
@@ -43,6 +58,11 @@ class ModrinthAPI {
         return this.API.makeRequest(`${MODRINTH_API_BASE}/project/${id}/version`, {
             versions: [loader?.game],
             categories: [loaderData?.asLoader ?? loader?.type]
+        });
+    }
+    static getProjectVersionsBulk(ids) {
+        return this.API.makeRequest(`${MODRINTH_API_BASE}/versions`, {
+            query: { ids: JSON.stringify(ids) }
         });
     }
 

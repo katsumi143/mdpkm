@@ -9,6 +9,7 @@ export default function Pages({ value, children, css }) {
         leave: { left: '-100%' }
     });
     return <Grid width="100%" height="100%" css={{
+        overflow: 'hidden',
         position: 'relative',
         ...css
     }}>

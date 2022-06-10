@@ -1,12 +1,12 @@
 {
-    "app.mdpkm.home.sidebar.buttons.add_instance": "Add New Instance",
-    "app.mdpkm.home.sidebar.buttons.add_skin": "Add New Skin",
-    "app.mdpkm.home.sidebar.buttons.settings": "Settings",
+    "app.mdpkm.home.navigation.instances": "Your Instances",
+    "app.mdpkm.home.navigation.skins": "Minecraft Skins",
+    "app.mdpkm.home.navigation.news": "News",
+    "app.mdpkm.home.navigation.settings": "Settings",
 
-    "app.mdpkm.home.sidebar.pages.instances": "Your Instances",
-    "app.mdpkm.home.sidebar.pages.skins": "Skin Management",
-    "app.mdpkm.home.sidebar.pages.news": "Minecraft News",
-    
+    "app.mdpkm.buttons.add_instance": "Add New Instance",
+
+    "app.mdpkm.headers.instances": "Your Instances",
 
     "app.mdpkm.settings.header.title": "Settings",
     "app.mdpkm.settings.general": "General Settings",
