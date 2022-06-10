@@ -148,7 +148,6 @@ export default function Home() {
                 checkUpdate();
             });
     });
-
     return (
         <App>
             <Header icon="/text.png"/>
@@ -164,7 +163,7 @@ export default function Home() {
                             zIndex: 100000,
                             position: 'absolute'
                         }}>
-                            <Grid width="45%" height="45%" padding={12} direction="vertical" background="$secondaryBackground" borderRadius={8} css={{
+                            <Grid width="45%" padding={12} direction="vertical" background="$secondaryBackground" borderRadius={8} css={{
                                 border: '1px solid $secondaryBorder2',
                                 position: 'relative'
                             }}>
@@ -172,71 +171,37 @@ export default function Home() {
                                     New Update Available
                                 </Typography>
                                 <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito">
-                                    Version {update.version} - Released {new Intl.RelativeTimeFormat('en', {
+                                    Version {update.version} - Released {new Date(update.date).getTime() ? new Intl.RelativeTimeFormat('en', {
                                         numeric: 'always' 
-                                    }).format(-Math.round((Date.now() - new Date(update.date)) / 86400000), 'day')}
+                                    }).format(-Math.round((Date.now() - new Date(update.date)) / 86400000), 'day') : 'at an unknown date'}
                                 </Typography>
 
                                 <Typography size=".9rem" color="$primaryColor" weight={400} margin="1rem 0 0" family="Nunito">
                                     Release notes:
                                 </Typography>
-                                <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" textalign="start" css={{
-                                    padding: '.5rem .75rem',
-                                    overflow: 'hidden auto',
-                                    background: '$secondaryBackground2',
-                                    alignItems: 'start',
-                                    borderRadius: 8,
-                                    flexDirection: 'column',
-
-                                    '& > *:first-child': {
-                                        color: '$primaryColor',
-                                        marginTop: 0
-                                    },
-                                    '& > *:last-child': {
-                                        marginBottom: 0
-                                    },
-                                    '& h2': {
-                                        fontSize: '1.4em',
-                                        marginTop: 24,
-                                        marginBottom: '1rem',
-                                        borderBottom: '1px solid $tagBorder',
-                                        paddingBottom: '.3em'
-                                    },
-                                    '& p, & blockquote, & ul, & ol, & dl, & table, & pre, & details': {
-                                        margin: '0 0 1rem'
-                                    },
-                                    '& ul': {
-                                        paddingLeft: '2em'
-                                    }
-                                }}>
-                                    <ReactMarkdown>{update.body}</ReactMarkdown>
-                                </Typography>
                                 <Markdown text={update.body} css={{
                                     padding: '.5rem .75rem',
                                     overflow: 'hidden auto',
                                     background: '$secondaryBackground2',
-                                    borderRadius: 8,
-                                    flexDirection: 'row'
+                                    borderRadius: 8
                                 }}/>
 
-                                <Grid margin="8px 0 0" spacing={8}>
-                                    <Button theme="accent" onClick={updateApp} disabled={update.updating}>
-                                        {update.updating ? <BasicSpinner size={16}/> : <Download size={14}/>}
-                                        Install Update
-                                    </Button>
-                                    <Button theme="secondary" onClick={() => setUpdate()} disabled={update.updating}>
-                                        <XLg/>
-                                        Later
+                                <Grid margin="2rem 0 0" justifyContent="space-between">
+                                    <Grid spacing={8}>
+                                        <Button theme="accent" onClick={updateApp} disabled={update.updating}>
+                                            {update.updating ? <BasicSpinner size={16}/> : <Download size={14}/>}
+                                            Install Update
+                                        </Button>
+                                        <Button theme="secondary" onClick={() => setUpdate()} disabled={update.updating}>
+                                            <XLg/>
+                                            Later
+                                        </Button>
+                                    </Grid>
+                                    <Button theme="secondary" onClick={() => shell.open(`https://github.com/Blookerss/mdpkm/releases/tag/v${update.version}`)}>
+                                        <Github size={14}/>
+                                        View Release
                                     </Button>
                                 </Grid>
-                                <Button theme="secondary" onClick={() => shell.open(`https://github.com/Blookerss/mdpkm/releases/tag/v${update.version}`)} css={{
-                                    right: 12,
-                                    bottom: 12,
-                                    position: 'absolute'
-                                }}>
-                                    <Github size={14}/>
-                                    View Release
-                                </Button>
                             </Grid>
                         </Grid>
                     }
