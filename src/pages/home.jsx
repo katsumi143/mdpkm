@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Buffer } from 'buffer/';
 import { styled } from '@stitches/react';
 import { useDispatch } from 'react-redux';
-import ReactMarkdown from 'react-markdown';
 import { open } from '@tauri-apps/api/dialog';
 import * as shell from '@tauri-apps/api/shell';
 import { listen } from '@tauri-apps/api/event';
@@ -23,6 +22,7 @@ import Button from '/voxeliface/components/Button';
 import Settings from '/src/components/Settings';
 import SkinList from '/src/components/SkinList';
 import PageItem from '/src/components/Pages/Item';
+import Markdown from '/voxeliface/components/Markdown';
 import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
 import LoaderSetup from '/src/components/LoaderSetup';
@@ -211,6 +211,13 @@ export default function Home() {
                                 }}>
                                     <ReactMarkdown>{update.body}</ReactMarkdown>
                                 </Typography>
+                                <Markdown text={update.body} css={{
+                                    padding: '.5rem .75rem',
+                                    overflow: 'hidden auto',
+                                    background: '$secondaryBackground2',
+                                    borderRadius: 8,
+                                    flexDirection: 'row'
+                                }}/>
 
                                 <Grid margin="8px 0 0" spacing={8}>
                                     <Button theme="accent" onClick={updateApp} disabled={update.updating}>

@@ -40,11 +40,11 @@
         "react-dom": "^18.0.0",
         "react-hot-toast": "^2.2.0",
         "react-i18next": "^11.16.9",
-        "react-markdown": "^8.0.3",
         "react-redux": "^8.0.1",
         "react-router-dom": "^6.3.0",
         "react-spring": "^9.4.5",
         "redux": "^4.2.0",
+        "rehype-raw": "^6.1.1",
         "semver": "^7.3.7",
         "uuid": "^8.3.2",
         "xmlbuilder2": "^3.0.2"
