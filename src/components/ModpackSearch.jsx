@@ -17,7 +17,7 @@ import { Search } from 'react-bootstrap-icons';
 export default function ModpackSearch({ css, loading, setLoading, importModpack }) {
     const { t } = useTranslation();
     const [api, setApi] = useState('modrinth');
-    const [query, setQuery] = useState();
+    const [query, setQuery] = useState('');
     const [modpacks, setModpacks] = useState();
     const [searching, setSearching] = useState(false);
     const search = api => {

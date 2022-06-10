@@ -23,7 +23,7 @@ export default function ModSearch({ instanceId }) {
 
     const [api, setApi] = useState('modrinth');
     const [mods, setMods] = useState();
-    const [query, setQuery] = useState();
+    const [query, setQuery] = useState('');
     const [instance2, setInstance2] = useState();
     const [searching, setSearching] = useState(false);
     const search = api => {

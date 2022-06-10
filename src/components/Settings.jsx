@@ -9,14 +9,13 @@ import { open as open2 } from '@tauri-apps/api/dialog';
 import { appWindow } from '@tauri-apps/api/window';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { useSelector, useDispatch } from 'react-redux';
-import { XLg, Gear, PlusLg, Github, ArrowLeft, Trash3Fill, Folder2Open, EnvelopeOpen, CloudArrowDown } from 'react-bootstrap-icons';
+import { XLg, PlusLg, Github, Trash3Fill, Folder2Open, EnvelopeOpen, CloudArrowDown } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Toggle from './Toggle';
 import Button from '/voxeliface/components/Button';
 import Header from '/voxeliface/components/Typography/Header';
-import Divider from '/voxeliface/components/Divider';
 import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
 import * as Select from '/voxeliface/components/Input/Select';

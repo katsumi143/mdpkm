@@ -20,7 +20,7 @@ export default function ImportInstance({ path: epath, back }) {
     const { t } = useTranslation();
     const instances = useSelector(state => state.instances.data);
 
-    const [name, setName] = useState();
+    const [name, setName] = useState('');
     const [path, setPath] = useState(epath);
     const [data, setData] = useState();
     const [inherit, setInherit] = useState('noinherit');
@@ -57,7 +57,7 @@ export default function ImportInstance({ path: epath, back }) {
             }[manifest.icon?.charAt(0)];
             manifest.config = await Util.readFileInZip(path, 'config.json').then(JSON.parse);
 
-            setName(manifest.name);
+            setName(manifest.name ?? '');
             setData(manifest);
             setPath(path);
         }).catch(console.warn);
@@ -71,7 +71,7 @@ export default function ImportInstance({ path: epath, back }) {
             };
 
             setSourceImg('img/banners/modrinth.svg');
-            setName(manifest.name);
+            setName(manifest.name ?? '');
             setData(manifest);
             setPath(path);
         }).catch(console.warn);
@@ -89,7 +89,7 @@ export default function ImportInstance({ path: epath, back }) {
             };
 
             setSourceImg('img/banners/curseforge.svg');
-            setName(manifest.name);
+            setName(manifest.name ?? '');
             setData(manifest);
             setPath(path);
         }).catch(console.warn);

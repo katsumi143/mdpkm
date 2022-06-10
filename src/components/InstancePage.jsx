@@ -59,7 +59,7 @@ export default function InstancePage({ id }) {
     const [launchable, setLaunchable] = useState();
     const [consoleOpen, setConsoleOpen] = useState(false);
     const [instanceRam, setInstanceRam] = useState(initialState.instanceRam);
-    const [instanceName, setInstanceName] = useState(initialState.instanceName);
+    const [instanceName, setInstanceName] = useState(initialState.instanceName ?? '');
     const [instanceResolution, setInstanceResolution] = useState(initialState.instanceResolution);
     const saveSettings = async() => {
         setSaving(true);
