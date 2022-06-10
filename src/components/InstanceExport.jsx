@@ -63,6 +63,7 @@ export default function InstanceExport({ instanceId }) {
             );
         }
     }, [items]);
+    useEffect(() => setItems(), [instanceId]);
     return <React.Fragment>
         <Grid width="fit-content" spacing={4} direction="vertical">
             <Typography size=".9rem" color="$secondaryColor" family="Nunito">
@@ -88,7 +89,7 @@ export default function InstanceExport({ instanceId }) {
             <Typography size=".9rem" color="$secondaryColor" family="Nunito" lineheight={1}>
                 {t('app.mdpkm.export_instance.files.title')}
             </Typography>
-            <Button theme="secondary" onClick={() => setItems()}>
+            <Button theme="secondary" onClick={() => setItems()} disabled={items === 'loading'}>
                 {items === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
                 {t('app.mdpkm.common:actions.refresh')}
             </Button>
