@@ -1,5 +1,6 @@
 import { t } from 'i18next';
 import toast from 'react-hot-toast';
+import * as http from '@tauri-apps/api/http';
 import { appDir } from '@tauri-apps/api/path';
 
 import API from '../api';
@@ -7,6 +8,8 @@ import Util from '../util';
 import PluginAPI from './api';
 import PluginSystem from './system';
 
+// For plugin developers:
+// http://docs.mdpkm.voxelified.com/docs/category/plugin-api
 const compiler = await import('@nx-js/compiler-util');
 const appDirectory = await appDir();
 export default class PluginLoader {
@@ -36,6 +39,7 @@ export default class PluginLoader {
             t,
             API,
             Util,
+            http,
             toast,
             PluginAPI: this.pluginApi,
             PluginSystem

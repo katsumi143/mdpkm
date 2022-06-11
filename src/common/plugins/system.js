@@ -1,4 +1,7 @@
 import API from '../api';
+
+// For plugin developers:
+// http://docs.mdpkm.voxelified.com/docs/plugin-api/pluginsystem
 export default class PluginSystem {
     constructor(id) {
         this.id = id;

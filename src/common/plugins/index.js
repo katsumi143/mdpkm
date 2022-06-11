@@ -3,6 +3,8 @@ import { appDir } from '@tauri-apps/api/path';
 import Util from '../util';
 import Loader from './loader';
 
+// For plugin developers:
+// http://docs.mdpkm.voxelified.com/docs/category/plugin-api
 const appDirectory = await appDir();
 export default class Plugins {
     static path = `${appDirectory}/plugins`;

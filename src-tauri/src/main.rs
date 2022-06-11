@@ -154,9 +154,13 @@ fn extract_file(path: String, file_name: String, output: String) -> Result<u64, 
                 if file.name().contains(&*file_name) {
                     let outpath = &std::path::Path::new(&*output);
                     std::fs::create_dir_all(outpath.parent().unwrap()).unwrap();
-                    let mut outfile = std::fs::File::create(outpath).unwrap();
-                    if let Ok(result) = std::io::copy(&mut file, &mut outfile) {
-                        return Ok(result);
+                    let outfile = std::fs::File::create(outpath);
+                    if outfile.is_ok() {
+                        if let Ok(result) = std::io::copy(&mut file, &mut outfile.unwrap()) {
+                            return Ok(result);
+                        }
+                    } else {
+                        return Err(outfile.unwrap_err().to_string());
                     }
                 }
             }

@@ -18,6 +18,8 @@ import Project from './structs/project';
 import MicrosoftStore from '/src/common/msStore';
 import { MDPKM_API, ESSENTIAL_SITE, XSTS_AUTH_BASE, XBOX_AUTH_BASE, MINECRAFT_NEWS_RSS, MINECRAFT_SERVICES_API } from '/src/common/constants';
 
+// For plugin developers:
+// http://docs.mdpkm.voxelified.com/docs/plugin-api/api
 class API {
     static mapped = {};
     static loaders = [];

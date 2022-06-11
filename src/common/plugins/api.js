@@ -1,5 +1,8 @@
 import i18n from 'i18next';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
+
+// For plugin developers:
+// http://docs.mdpkm.voxelified.com/docs/plugin-api/pluginapi
 export default class PluginAPI {
     constructor(loader) {
         this.loader = loader;
