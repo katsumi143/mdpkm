@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { Search } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 
 import Grid from '/voxeliface/components/Grid';
@@ -13,8 +14,8 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
 import Util from '../common/util';
-import { Search } from 'react-bootstrap-icons';
-export default function ModpackSearch({ css, loading, setLoading, importModpack }) {
+import Patcher from '/src/common/plugins/patcher';
+export default Patcher.register(function ModpackSearch({ css, loading, setLoading, importModpack }) {
     const { t } = useTranslation();
     const [api, setApi] = useState('modrinth');
     const [query, setQuery] = useState('');
@@ -107,4 +108,4 @@ export default function ModpackSearch({ css, loading, setLoading, importModpack 
             </Grid>
         </Grid>
     );
-};
+});

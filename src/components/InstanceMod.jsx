@@ -11,9 +11,9 @@ import Typography from '/voxeliface/components/Typography';
 
 import API from '../common/api';
 import Util from '../common/util';
+import Patcher from '/src/common/plugins/patcher';
 import Instances from '../common/instances';
-
-export default function InstanceMod({ mod, updates, embedded, instanceId }) {
+export default Patcher.register(function InstanceMod({ mod, updates, embedded, instanceId }) {
     const { t } = useTranslation();
     const update = updates?.[mod?.config?.[1]];
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
@@ -34,6 +34,7 @@ export default function InstanceMod({ mod, updates, embedded, instanceId }) {
                         <Image src={`data:image/png;base64,${mod.icon}`} size={embedded ? 32 : 40} background="$secondaryBackground" borderRadius="8.33333333%" css={{
                             minWidth: embedded ? 32 : 40,
                             minHeight: embedded ? 32 : 40,
+                            boxShadow: '$buttonShadow',
                             transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
                             imageRendering: 'pixelated',
 
@@ -112,4 +113,4 @@ export default function InstanceMod({ mod, updates, embedded, instanceId }) {
             }
         </Grid>
     );
-};
+});

@@ -11,6 +11,7 @@ import * as Select from '/voxeliface/components/Input/Select';
 
 import API from '../common/api';
 import Util from '../common/util';
+import Patcher from '/src/common/plugins/patcher';
 function sortGame(a, b) {
     if (typeof a === 'string' && typeof b === 'string') {
         const versionA = a.split('.');
@@ -47,7 +48,7 @@ function sortForge(a, b) {
     return 0;
 }
 
-export default function LoaderSetup({ back, loader, install, versions = [] }) {
+export default Patcher.register(function LoaderSetup({ back, loader, install, versions = [] }) {
     const { t } = useTranslation();
     const loaderData = API.getLoader(loader);
     const loaderVersions = Array.isArray(versions) ? null : versions;
@@ -210,4 +211,4 @@ export default function LoaderSetup({ back, loader, install, versions = [] }) {
             </Grid>
         </Grid>
     );
-};
+});

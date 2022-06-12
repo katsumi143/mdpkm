@@ -26,6 +26,7 @@ import * as DropdownMenu from '/voxeliface/components/DropdownMenu';
 import API from '../common/api';
 import Util from '../common/util';
 import Plugins from '../common/plugins';
+import Patcher from '/src/common/plugins/patcher';
 import Instances from '../common/instances';
 import PluginLoader from '../common/plugins/loader';
 import { SKIN_API_BASE, MINECRAFT_RESOURCES_URL } from '../common/constants';
@@ -35,7 +36,7 @@ import { addAccount, setAccount, saveAccounts, removeAccount, setAddingAccount }
 const appName = await getName();
 const appVersion = await getVersion();
 const tauriVersion = await getTauriVersion()
-export default function Settings() {
+export default Patcher.register(function Settings() {
     const { t, i18n } = useTranslation();
     const theme = useSelector(state => state.settings.theme);
     const uiStyle = useSelector(state => state.settings.uiStyle);
@@ -471,7 +472,7 @@ export default function Settings() {
             )}
         </ThemeContext.Consumer>
     );
-};
+});
 
 function Setting({ name, children, direction, noSummary }) {
     const { t } = useTranslation();

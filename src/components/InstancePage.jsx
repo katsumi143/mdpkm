@@ -29,12 +29,13 @@ import ResourcePackManagement from './ResourcePackManagement';
 
 import API from '../common/api';
 import Util from '../common/util';
+import Patcher from '/src/common/plugins/patcher';
 import Instances from '../common/instances';
 import { saveAccounts, writeAccount } from '../common/slices/accounts';
 import { LoaderStates, DisabledLoaders } from '../common/constants';
 
 const totalMemory = await Util.getTotalMemory();
-export default function InstancePage({ id }) {
+export default Patcher.register(function InstancePage({ id }) {
     const { t } = useTranslation();
     const uiStyle = useSelector(state => state.settings.uiStyle);
     const instance = useSelector(state => state.instances.data.find(i => i.id === id));
@@ -518,7 +519,7 @@ export default function InstancePage({ id }) {
             </Tabs>}
         </Grid>
     );
-};
+});
 
 const InstanceInfoAnimation = keyframes({
     from: {

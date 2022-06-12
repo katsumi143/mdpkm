@@ -8,8 +8,10 @@ import Image from '/voxeliface/components/Image';
 import Spinner from '/voxeliface/components/Spinner';
 import Typography from '/voxeliface/components/Typography';
 
+import Patcher from '/src/common/plugins/patcher';
+
 let sent = 1;
-export default function InstanceSplash() {
+export default Patcher.register(function InstanceSplash() {
     const [name, setName] = useState();
     const [text, setText] = useState('Waiting');
     const [loaded, setLoaded] = useState(false);
@@ -72,4 +74,4 @@ export default function InstanceSplash() {
             </Main>
         </App>
     );
-};
+});

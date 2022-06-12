@@ -17,7 +17,8 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import TextTransition from './Transition/Text';
 
 import Util from '../common/util';
-export default function ServerManagement({ instanceId }) {
+import Patcher from '/src/common/plugins/patcher';
+export default Patcher.register(function ServerManagement({ instanceId }) {
     const { t } = useTranslation();
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
     const [data, setData] = useState();
@@ -194,4 +195,4 @@ export default function ServerManagement({ instanceId }) {
             </Grid>
         </Portal>}
     </React.Fragment>;
-};
+});

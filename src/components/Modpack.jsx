@@ -11,7 +11,8 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
 import Util from '../common/util';
-export default function Modpack({ id, api, data, loading, featured, setLoading, recommended, importModpack }) {
+import Patcher from '/src/common/plugins/patcher';
+export default Patcher.register(function Modpack({ id, api, data, loading, featured, setLoading, recommended, importModpack }) {
     const [modpack, setModpack] = useState(data);
     const installModpack = async() => {
         setLoading(true);
@@ -95,4 +96,4 @@ export default function Modpack({ id, api, data, loading, featured, setLoading, 
             </React.Fragment> : <Spinner/>}
         </Grid>
     );
-};
+});

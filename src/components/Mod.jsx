@@ -12,8 +12,9 @@ import Typography from '/voxeliface/components/Typography';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
+import Patcher from '/src/common/plugins/patcher';
 import Instances from '../common/instances';
-export default function Mod({ id, api, data, featured, instanceId, recommended }) {
+export default Patcher.register(function Mod({ id, api, data, featured, instanceId, recommended }) {
     const { t } = useTranslation();
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
     const [mod, setMod] = useState(data);
@@ -64,6 +65,7 @@ export default function Mod({ id, api, data, featured, instanceId, recommended }
                 <Image src={mod.icon} size={48} background="$secondaryBackground" borderRadius={4} css={{
                     minWidth: 48,
                     minHeight: 48,
+                    boxShadow: '$buttonShadow',
                     transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
 
                     '&:hover': {
@@ -144,4 +146,4 @@ export default function Mod({ id, api, data, featured, instanceId, recommended }
             </Grid>}
         </Grid>
     );
-};
+});

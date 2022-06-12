@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
+import { Search } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 
 import Mod from './Mod';
@@ -14,8 +15,8 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
 import Util from '../common/util';
-import { Search } from 'react-bootstrap-icons';
-export default function ModSearch({ instanceId }) {
+import Patcher from '/src/common/plugins/patcher';
+export default Patcher.register(function ModSearch({ instanceId }) {
     const { t } = useTranslation();
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
     const { config } = instance;
@@ -114,4 +115,4 @@ export default function ModSearch({ instanceId }) {
             </Grid>
         </Grid>
     );
-};
+});

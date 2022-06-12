@@ -9,9 +9,10 @@ import Typography from '/voxeliface/components/Typography';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
+import Patcher from '/src/common/plugins/patcher';
 import PluginLoader from '../common/plugins/loader';
 import PluginSystem from '../common/plugins/system';
-export default function SelectInstanceType({ back, types, loading, chooseLoader, importInstance }) {
+export default Patcher.register(function SelectInstanceType({ back, types, loading, chooseLoader, importInstance }) {
     const { t } = useTranslation();
     return (
         <Grid width="100%" direction="vertical" alignItems="center">
@@ -90,4 +91,4 @@ export default function SelectInstanceType({ back, types, loading, chooseLoader,
             </Grid>
         </Grid>
     );
-};
+});

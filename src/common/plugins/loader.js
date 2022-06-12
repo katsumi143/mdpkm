@@ -1,12 +1,16 @@
+import React from 'react';
 import { t } from 'i18next';
 import toast from 'react-hot-toast';
 import * as http from '@tauri-apps/api/http';
 import { appDir } from '@tauri-apps/api/path';
+import * as Icons from 'react-bootstrap-icons';
 
 import API from '../api';
 import Util from '../util';
+import Patcher from './patcher';
 import PluginAPI from './api';
 import PluginSystem from './system';
+import * as Voxeliface from '/voxeliface';
 
 // For plugin developers:
 // http://docs.mdpkm.voxelified.com/docs/category/plugin-api
@@ -35,13 +39,17 @@ export default class PluginLoader {
         };
 
         const code = compiler.compileCode(await Util.readTextFile(pluginPath));
-        code({
+        await code({
             t,
             API,
             Util,
             http,
             toast,
+            React,
+            Icons,
+            Patcher,
             PluginAPI: this.pluginApi,
+            Voxeliface,
             PluginSystem
         });
         toast.success(`'${name}' has loaded.`);
@@ -74,5 +82,5 @@ export default class PluginLoader {
             }
     }
 };
-compiler.expose('JSON', 'window', 'Object', 'Promise');
+compiler.expose('JSON', 'Array', 'console', 'window', 'Object', 'Promise');
 PluginSystem.prototype.api = PluginLoader.pluginApi;

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Buffer } from 'buffer/';
-import { styled } from '@stitches/react';
 import { useDispatch } from 'react-redux';
 import { open } from '@tauri-apps/api/dialog';
 import * as shell from '@tauri-apps/api/shell';
@@ -9,24 +8,19 @@ import { useTranslation } from 'react-i18next';
 import toast, { Toaster } from 'react-hot-toast';
 import { relaunch } from '@tauri-apps/api/process';
 import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
-import { XLg, Gear, PlusLg, Github, Archive, Download, GearFill, ArrowLeft, Newspaper, PersonBadge } from 'react-bootstrap-icons';
-import { MinecraftSkinViewer } from '@yannichock/react-minecraft-skin-viewer';
+import { XLg, Gear, PlusLg, Github, Archive, Download } from 'react-bootstrap-icons';
 
 import App from '/src/components/App';
-import News from '../components/News';
 import Main from '/voxeliface/components/Main';
 import Grid from '/voxeliface/components/Grid';
 import Pages from '/src/components/Pages';
 import Header from '/src/components/Header';
 import Button from '/voxeliface/components/Button';
 import Settings from '/src/components/Settings';
-import SkinList from '/src/components/SkinList';
 import PageItem from '/src/components/Pages/Item';
 import Markdown from '/voxeliface/components/Markdown';
-import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
 import LoaderSetup from '/src/components/LoaderSetup';
-import * as Dialog from '/voxeliface/components/Dialog';
 import ModpackSetup from '/src/components/ModpackSetup';
 import InstanceList from '/src/components/InstanceList';
 import InstancePage from '/src/components/InstancePage';
@@ -37,11 +31,12 @@ import SelectInstanceType from '/src/components/SelectInstanceType';
 
 import API from '/src/common/api';
 import Util from '/src/common/util';
+import Patcher from '/src/common/plugins/patcher';
 import Instances from '/src/common/instances';
 import { addSkin, saveSkins } from '/src/common/slices/skins';
 
 let updateListener;
-export default function Home() {
+export default Patcher.register(function Home() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const [_, setBruh] = useState(0);
@@ -270,4 +265,4 @@ export default function Home() {
                 }}/>
         </App>
     );
-};
+});

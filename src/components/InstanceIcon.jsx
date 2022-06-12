@@ -4,7 +4,8 @@ import { convertFileSrc } from '@tauri-apps/api/tauri';
 import ImageTransition from './Transition/Image';
 
 import API from '../common/api';
-export default function InstanceIcon({ instance, size, hideLoader, props }) {
+import Patcher from '/src/common/plugins/patcher';
+export default Patcher.register(function InstanceIcon({ instance, size, hideLoader, props }) {
     const loaderIcon = API.getLoader(instance?.config?.loader?.type)?.icon;
     size = `${size ?? 48}px`;
     return <ImageTransition src={
@@ -15,6 +16,7 @@ export default function InstanceIcon({ instance, size, hideLoader, props }) {
         display: 'block',
         minWidth: size,
         minHeight: size,
+        boxShadow: '$buttonShadow',
         backgroundSize: !instance.icon ? '50%' : 'contain',
         
         '&:after': hideLoader || !loaderIcon ? undefined : {
@@ -35,4 +37,4 @@ export default function InstanceIcon({ instance, size, hideLoader, props }) {
         },
         ...props?.css
     }}/>;
-}
+});

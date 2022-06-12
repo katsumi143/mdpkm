@@ -13,8 +13,9 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import TextTransition from './Transition/Text';
 
 import Util from '../common/util';
+import Patcher from '/src/common/plugins/patcher';
 import Instances from '../common/instances';
-export default function ResourcePackManagement({ instanceId }) {
+export default Patcher.register(function ResourcePackManagement({ instanceId }) {
     const { t } = useTranslation();
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
     const [items, setItems] = useState();
@@ -141,4 +142,4 @@ export default function ResourcePackManagement({ instanceId }) {
             </Grid>
         )}
     </React.Fragment>;
-};
+});

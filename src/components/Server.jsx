@@ -6,7 +6,9 @@ import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
 import Typography from '/voxeliface/components/Typography';
-export default function Server({ name, icon, motd, type, players, address, instanceId, acceptTextures }) {
+
+import Patcher from '/src/common/plugins/patcher';
+export default Patcher.register(function Server({ name, icon, motd, type, players, address, instanceId, acceptTextures }) {
     const { t } = useTranslation();
     return <Grid height="fit-content" padding={8} spacing={12} background="$secondaryBackground2" borderRadius={8} justifyContent="space-between" css={{
         minWidth: '24rem'
@@ -71,4 +73,4 @@ export default function Server({ name, icon, motd, type, players, address, insta
             </React.Fragment>}
         </Grid>
     </Grid>;
-}
+});

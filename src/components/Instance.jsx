@@ -9,6 +9,7 @@ import Button from '/voxeliface/components/Button';
 import Typography from '/voxeliface/components/Typography';
 import InstanceIcon from './InstanceIcon';
 
+import Patcher from '/src/common/plugins/patcher';
 const Animation = keyframes({
     '0%': {
         opacity: 0,
@@ -20,7 +21,7 @@ const Animation = keyframes({
     }
 });
 
-export default function Instance({ css, data: instance, onView }) {
+export default Patcher.register(function Instance({ css, data: instance, onView }) {
     const { t } = useTranslation();
     const uiStyle = useSelector(state => state.settings.uiStyle);
     return (
@@ -77,4 +78,4 @@ export default function Instance({ css, data: instance, onView }) {
             </Grid>
         </Grid>
     );
-};
+});

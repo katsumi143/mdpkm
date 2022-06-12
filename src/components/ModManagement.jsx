@@ -16,8 +16,9 @@ import InstanceMod from './InstanceMod';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import TextTransition from './Transition/Text';
 
+import Patcher from '/src/common/plugins/patcher';
 import Instances from '../common/instances';
-export default function ModManagement({ instanceId }) {
+export default Patcher.register(function ModManagement({ instanceId }) {
     const { t } = useTranslation();
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
     const [tab, setTab] = useState();
@@ -122,4 +123,4 @@ export default function ModManagement({ instanceId }) {
             <Mod id="essential-container" api="internal" featured instanceId={instanceId}/>
         </TabItem>
     </Tabs>;
-};
+});

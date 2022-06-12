@@ -10,8 +10,9 @@ import Instance from './Instance';
 import Typography from '/voxeliface/components/Typography';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
+import Patcher from '/src/common/plugins/patcher';
 import Instances from '../common/instances';
-export default function InstanceList({ id, onSelect }) {
+export default Patcher.register(function InstanceList({ id, onSelect }) {
     const { t } = useTranslation();
     const state = useSelector(state => state.instances.state);
     const instances = useSelector(state => state.instances.data);
@@ -21,7 +22,6 @@ export default function InstanceList({ id, onSelect }) {
         await Instances.getInstances();
         setLoading(false);
     };
-
     return <React.Fragment>
         <Grid width="100%" padding=".8rem 1.2rem" alignItems="center" background="$secondaryBackground" justifyContent="space-between">
             <Grid spacing={4} direction="vertical">
@@ -68,4 +68,4 @@ export default function InstanceList({ id, onSelect }) {
             : <Spinner margin="1rem"/>}
         </Grid>
     </React.Fragment>;
-};
+});
