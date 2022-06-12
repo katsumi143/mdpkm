@@ -1,4 +1,5 @@
 import React from 'react';
+import toast from 'react-hot-toast';
 import { Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client';
 import { checkUpdate } from '@tauri-apps/api/updater';
@@ -10,7 +11,10 @@ import { Home, NotFound, InstanceSplash } from './pages';
 
 import './localization';
 import '/voxeliface/src/index.css';
-await Plugins.init();
+await Plugins.init().catch(err => {
+    console.error(err);
+    toast.error('An error occured while loading plugins.\nPlease report this!');
+});
 const root = createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
@@ -25,4 +29,5 @@ root.render(
         </Provider>
     </React.StrictMode>
 );
+window.test = Home;
 setInterval(() => checkUpdate(), 5 * 60000)
