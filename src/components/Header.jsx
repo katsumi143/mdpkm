@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import Tag from './Tag';
-import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Typography from '/voxeliface/components/Typography';
 import DefaultHeader from '/voxeliface/components/Header/Tauri';
@@ -27,20 +26,15 @@ export default function Header(props) {
                 right: '8rem',
                 padding: '4px 8px',
                 position: 'absolute',
-                background: '$secondaryBackground2',
-                borderColor: '$secondaryBorder2'
+                background: '$primaryBackground',
+                borderColor: '$secondaryBorder'
             }}>
-                <Grid spacing={2} direction="vertical">
-                    <Typography size=".7rem" color="$primaryColor" family="Nunito" lineheight={1}>
-                        Your Account
-                    </Typography>
-                    <Typography size=".6rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
-                        {profile.name}
-                    </Typography>
-                </Grid>
-                <ImageTransition src={`${SKIN_API_BASE}/face/${uuid}`} size={24} borderRadius={4} css={{
+                <ImageTransition src={`${SKIN_API_BASE}/face/24/${uuid}`} size={24} borderRadius={8} css={{
                     backgroundColor: '$primaryBackground'
                 }}/>
+                <Typography size=".75rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                    {profile.name}
+                </Typography>
             </Tag>}
         </DefaultHeader>
     );
