@@ -13,6 +13,7 @@ import Button from '/voxeliface/components/Button';
 import Portal from '/voxeliface/components/Portal';
 import Divider from '/voxeliface/components/Divider';
 import Spinner from '/voxeliface/components/Spinner';
+import Markdown from '/voxeliface/components/Markdown';
 import SkinFrame from './SkinFrame';
 import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
@@ -118,7 +119,7 @@ export default Patcher.register(function SkinManagement() {
             <Grid padding="0 0 2rem" direction="vertical" alignItems="center" justifyContent="space-between">
                 <Grid spacing="1rem" direction="vertical" alignItems="center">
                     <Typography color="$primaryColor" family="Nunito">
-                        Current
+                        {t('app.mdpkm.skin_management.current.header')}
                     </Typography>
                     {!loading && current ? <SkinFrame
                         walk
@@ -135,15 +136,16 @@ export default Patcher.register(function SkinManagement() {
                     </Grid>}
                 </Grid>
                 <Button theme="accent" onClick={() => setAdding(true)} disabled={loading}>
+                    <PlusLg size={14}/>
                     {t('app.mdpkm.skin_management.buttons.add_skin')}
                 </Button>
             </Grid>
             <Divider width={1} height="100%"/>
             <Grid width="100%" height="100%" direction="vertical" alignItems="center">
                 <Typography color="$primaryColor" family="Nunito" margin="0 0 1rem">
-                    Library
+                    {t('app.mdpkm.skin_management.library.header')}
                 </Typography>
-                <Grid spacing={8} css={{
+                {skins.length > 0 ? <Grid spacing={8} css={{
                     display: 'grid',
                     overflow: 'hidden auto',
                     gridTemplateColumns: 'repeat(5, 1fr)'
@@ -151,7 +153,14 @@ export default Patcher.register(function SkinManagement() {
                     {skins.map((skin, key) =>
                         <Skin key={key} data={skin} capes={capes} index={key} useSkin={useSkin} loading={loading || setting} current={current}/>
                     )}
-                </Grid>
+                </Grid> : <React.Fragment>
+                    <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
+                        {t('app.mdpkm.common:headers.empty_list')}
+                    </Typography>
+                    <Markdown text={t('app.mdpkm.skin_management.library.empty')} css={{
+                        '& > :first-child': { color: '$secondaryColor' }
+                    }}/>
+                </React.Fragment>}
             </Grid>
         </Grid>
         {adding && <Portal>
@@ -166,9 +175,7 @@ export default Patcher.register(function SkinManagement() {
                     minWidth: '24rem',
                     position: 'relative'
                 }}>
-                    <TextHeader>
-                        Adding Minecraft Skin
-                    </TextHeader>
+                    <TextHeader>{t('app.mdpkm.skin_management.adding.header')}</TextHeader>
                     <Grid spacing="2rem" justifyContent="space-between">
                         <SkinFrame
                             walk
@@ -181,15 +188,15 @@ export default Patcher.register(function SkinManagement() {
                             background="none"
                         />
                         <Grid direction="vertical">
-                            <InputLabel>Name</InputLabel>
+                            <InputLabel>{t('app.mdpkm.skin_management.skin_name.label')}</InputLabel>
                             <TextInput
                                 width="100%"
                                 value={addingName}
                                 onChange={setAddingName}
-                                placeholder="Type a name"
+                                placeholder={t('app.mdpkm.skin_management.skin_name.placeholder')}
                             />
 
-                            <InputLabel spacious>Player model</InputLabel>
+                            <InputLabel spacious>{t('app.mdpkm.skin_management.skin_model.label')}</InputLabel>
                             <Select.Root value={addingModel} onChange={setAddingModel}>
                                 <Select.Group name={t('app.mdpkm.skin_management.skin_model.category')}>
                                     <Select.Item value="CLASSIC">
@@ -201,7 +208,7 @@ export default Patcher.register(function SkinManagement() {
                                 </Select.Group>
                             </Select.Root>
 
-                            <InputLabel spacious>Skin file</InputLabel>
+                            <InputLabel spacious>{t('app.mdpkm.skin_management.skin_file.label')}</InputLabel>
                             <TextInput
                                 width="100%"
                                 value={addingPath && `.../${addingPath.split('\\').slice(-2).join('/')}`}
@@ -214,7 +221,7 @@ export default Patcher.register(function SkinManagement() {
                                 </Button>
                             </TextInput>
 
-                            <InputLabel spacious>Cape</InputLabel>
+                            <InputLabel spacious>{t('app.mdpkm.skin_management.cape.label')}</InputLabel>
                             <Select.Root value={addingCape} onChange={setAddingCape} defaultValue="none">
                                 <Select.Group name={t('app.mdpkm.skin_management.cape.category')}>
                                     {capes.map((cape, key) => <Select.Item key={key} value={cape.id}>
@@ -235,11 +242,11 @@ export default Patcher.register(function SkinManagement() {
                             <Grid margin="2rem 0 0" spacing={8}>
                                 <Button theme="accent" onClick={addNewSkin} disabled={!addingName}>
                                     <PlusLg size={14}/>
-                                    Add Skin
+                                    {t('app.mdpkm.skin_management.adding.submit')}
                                 </Button>
                                 <Button theme="secondary" onClick={() => setAdding(false)}>
                                     <XLg/>
-                                    Cancel
+                                    {t('app.mdpkm.skin_management.adding.cancel')}
                                 </Button>
                             </Grid>
                         </Grid>
@@ -282,7 +289,7 @@ function Skin({ data, capes, index, useSkin, loading, current }) {
                 </Tooltip.Trigger>
                 <Tooltip.Content side="top" sideOffset={4}>
                     <Tooltip.Arrow/>
-                    This feature is unavailable.
+                    {t('app.mdpkm.common:tooltips.feature_unavailable')}
                 </Tooltip.Content>
             </Tooltip.Root>
         </Grid>

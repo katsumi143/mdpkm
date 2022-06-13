@@ -109,7 +109,7 @@ export default Patcher.register(function ModSearch({ instanceId }) {
                         {t('app.mdpkm.common:headers.empty_list')}
                     </Typography>
                     <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
-                        Try searching again, or wait a few seconds!
+                        {t('app.mdpkm.common:headers.search_retry')}
                     </Typography>
                 </Grid>
             </Grid>

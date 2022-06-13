@@ -51,7 +51,6 @@ export default Patcher.register(function ServerManagement({ instanceId }) {
         });
         setData(data);
         setItems(data.value.servers.value.value);
-        console.log([...new Uint8Array(nbt.writeUncompressed(data))]);
         Util.writeBinaryFile(`${instance.path}/servers.dat`, [...new Uint8Array(nbt.writeUncompressed(data))]);
     };
     useEffect(() => {
@@ -85,7 +84,6 @@ export default Patcher.register(function ServerManagement({ instanceId }) {
             setAddingInfo();
     }, [addingAddress2]);
     useEffect(() => setItems(), [instanceId]);
-    console.log(data, addingInfo);
     return <React.Fragment>
         <Grid spacing={8} padding="4px 0" justifyContent="space-between">
             <Grid direction="vertical">
@@ -116,7 +114,7 @@ export default Patcher.register(function ServerManagement({ instanceId }) {
                 </Button>
                 <Button theme="accent" onClick={openAdding} disabled={!data}>
                     <PlusLg size={14}/>
-                    {t('app.mdpkm.server_management.add')}
+                    {t('app.mdpkm.server_management.buttons.add')}
                 </Button>
             </Grid>
         </Grid>
@@ -147,35 +145,35 @@ export default Patcher.register(function ServerManagement({ instanceId }) {
                     position: 'relative'
                 }}>
                     <Header>
-                        Adding Minecraft Server
+                        {t('app.mdpkm.server_management.adding.header')}
                         <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito">
-                            (may not appear if game is running)
+                            {t('app.mdpkm.server_management.adding.header_note')}
                         </Typography>
                     </Header>
                     <Grid spacing="2rem" justifyContent="space-between">
                         <Grid direction="vertical">
-                            <InputLabel>Display name</InputLabel>
+                            <InputLabel>{t('app.mdpkm.server_management.server_name.label')}</InputLabel>
                             <TextInput
                                 value={addingName}
                                 onChange={setAddingName}
-                                placeholder="Type a name"
+                                placeholder={t('app.mdpkm.server_management.server_name.placeholder')}
                             />
 
-                            <InputLabel spacious>Server address</InputLabel>
+                            <InputLabel spacious>{t('app.mdpkm.server_management.server_ip.label')}</InputLabel>
                             <TextInput
                                 value={addingAddress}
                                 onBlur={() => setAddingAddress2(() => addingAddress)}
                                 onChange={setAddingAddress}
-                                placeholder="Type an IP Address"
+                                placeholder={t('app.mdpkm.server_management.server_ip.placeholder')}
                             />
                             <Grid margin="2rem 0 0" spacing={8}>
                                 <Button theme="accent" onClick={addServer} disabled={!addingAddress}>
                                     <PlusLg size={14}/>
-                                    Add Server
+                                    {t('app.mdpkm.server_management.adding.submit')}
                                 </Button>
                                 <Button theme="secondary" onClick={closeAdding}>
                                     <XLg/>
-                                    Cancel
+                                    {t('app.mdpkm.server_management.adding.cancel')}
                                 </Button>
                             </Grid>
                         </Grid>

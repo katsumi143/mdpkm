@@ -1,9 +1,12 @@
 {
     "headers.empty_list": "There's nothing here!",
+    "headers.search_retry": "Try searching again, or wait a few seconds!",
     "headers.adding_instance": "Adding New Instance",
 
     "labels.platform": "Platform",
     "labels.search_query": "Search query",
+
+    "tooltips.feature_unavailable": "This feature is unavailable.",
     
     "actions.use": "Use",
     "actions.view": "View",

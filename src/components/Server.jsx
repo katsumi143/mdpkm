@@ -32,10 +32,10 @@ export default Patcher.register(function Server({ name, icon, motd, type, player
             />
             <Grid height="100%" spacing={4} direction="vertical">
                 <Typography size=".9rem" color="$primaryColor" family="Nunito" margin="6px 0 0" lineheight={1} whitespace="nowrap">
-                    {name || 'Minecraft Server'}
+                    {name || t('app.mdpkm.server.default_name')}
                     {acceptTextures === 1 &&
                         <Typography size=".7rem" color="$secondaryColor" weight={300} family="Nunito" margin="4px 0 0 8px" lineheight={1}>
-                            Server Resource Pack Accepted
+                            {t('app.mdpkm.server.textures_accepted')}
                         </Typography>
                     }
                 </Typography>
@@ -47,7 +47,7 @@ export default Patcher.register(function Server({ name, icon, motd, type, player
                     }}/>
                 :
                     <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
-                        {address || 'Unknown server'}
+                        {address || t('app.mdpkm.server.no_address')}
                     </Typography>
                 }
             </Grid>
@@ -55,7 +55,10 @@ export default Patcher.register(function Server({ name, icon, motd, type, player
         <Grid spacing={8} alignItems="center">
             <Grid height="100%" spacing={4} padding={4} direction="vertical" alignItems="end">
                 {players && <Typography size=".8rem" color="$secondaryColor" family="Nunito" spacing={4} lineheight={1}>
-                    {players.online}/{players.max} Players
+                    {t('app.mdpkm.server.players', {
+                        val: players.online,
+                        max: players.max
+                    })}
                 </Typography>}
                 {type && <Typography size=".8rem" color="$secondaryColor" family="Nunito" spacing={4} lineheight={1}>
                     {type}

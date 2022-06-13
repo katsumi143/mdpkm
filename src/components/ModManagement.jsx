@@ -91,7 +91,7 @@ export default Patcher.register(function ModManagement({ instanceId }) {
             {Array.isArray(items) ? items.length === 0 ?
                 <React.Fragment>
                     <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
-                        There's nothing here!
+                        {t('app.mdpkm.common:headers.empty_list')}
                     </Typography>
                     <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" textalign="start" lineheight={0} css={{ display: 'block' }}>
                         Find some mods via the <b>Mod Search</b> tab!
