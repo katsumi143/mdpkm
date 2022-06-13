@@ -416,15 +416,54 @@ class API {
             return [account, false];
         }
 
-        static async getProfile({ token, tokenType }) {
+        static async getProfile({ token, tokenType }, full) {
             if(!token) throw new Error(`Invalid Access Token: ${token}`);
             if(!tokenType) throw new Error(`Invalid Token Type: ${tokenType}`);
-            const { id, name } = await API.makeRequest(`${MINECRAFT_SERVICES_API}/minecraft/profile`, {
+            const { id, name, skins = [], capes = [] } = await API.makeRequest(`${MINECRAFT_SERVICES_API}/minecraft/profile`, {
                 headers: {
                     Authorization: `${tokenType} ${token}`
                 }
             });
+            if (full)
+                return { id, name, skins, capes };
             return { id, name };
+        }
+
+        static async uploadSkin({ token, tokenType }, image, variant) {
+            if(!token) throw new Error(`Invalid Access Token: ${token}`);
+            if(!tokenType) throw new Error(`Invalid Token Type: ${tokenType}`);
+            console.log(image, variant);
+            const data = await API.makeRequest(`${MINECRAFT_SERVICES_API}/minecraft/profile/skins`, {
+                body: new Body('Form', {
+                    file: {
+                        file: image,
+                        mime: 'image/png',
+                        fileName: 'skin.png'
+                    },
+                    variant
+                }),
+                method: 'POST',
+                headers: {
+                    Authorization: `${tokenType} ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).catch(console.warn);
+            console.log(data);
+        }
+
+        static async setCape({ token, tokenType }, id) {
+            if(!token) throw new Error(`Invalid Access Token: ${token}`);
+            if(!tokenType) throw new Error(`Invalid Token Type: ${tokenType}`);
+            const data = await API.makeRequest(`${MINECRAFT_SERVICES_API}/minecraft/profile/capes/active`, {
+                body: id && Body.json({
+                    capeId: id
+                }),
+                method: 'PUT',
+                headers: {
+                    Authorization: `${tokenType} ${token}`
+                }
+            });
+            console.log(data);
         }
 
         static async getAccessData({ token, userHash }) {

@@ -5,6 +5,7 @@
     "labels.platform": "Platform",
     "labels.search_query": "Search query",
     
+    "actions.use": "Use",
     "actions.view": "View",
     "actions.edit": "Edit",
     "actions.retry": "Retry",

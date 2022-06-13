@@ -28,8 +28,7 @@
         "@radix-ui/colors": "^0.1.8",
         "@reduxjs/toolkit": "^1.8.1",
         "@stitches/react": "^1.2.6",
-        "@tauri-apps/api": "1.0.0-rc.6",
-        "@yannichock/react-minecraft-skin-viewer": "^1.0.8",
+        "@tauri-apps/api": "^1.0.0-rc.6",
         "buffer": "latest",
         "i18next": "^21.8.3",
         "nbt": "^0.8.1",
@@ -46,6 +45,8 @@
         "redux": "^4.2.0",
         "rehype-raw": "^6.1.1",
         "semver": "^7.3.7",
+        "skinview3d": "^2.2.1",
+        "three": "^0.141.0",
         "uuid": "^8.3.2",
         "xmlbuilder2": "^3.0.2"
     }

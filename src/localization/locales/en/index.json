@@ -132,6 +132,13 @@
     "app.mdpkm.select_instance_type.import.button": "Import Instance",
     "app.mdpkm.select_instance_type.unsupported": "Unsupported",
 
+    "app.mdpkm.skin_management.skin_model.category": "Model Types",
+    "app.mdpkm.skin_management.skin_model.items.classic": "Classic",
+    "app.mdpkm.skin_management.skin_model.items.slim": "Slim",
+    "app.mdpkm.skin_management.cape.category": "Your Capes",
+    "app.mdpkm.skin_management.cape.items.none": "None",
+    "app.mdpkm.skin_management.buttons.add_skin": "Add New Skin",
+
     "app.mdpkm.loader_setup.header": "Configure Loader",
     "app.mdpkm.loader_setup.instance_name": "Instance Name",
     "app.mdpkm.loader_setup.instance_name.placeholder": "Enter a name",

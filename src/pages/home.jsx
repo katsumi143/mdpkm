@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import toast, { Toaster } from 'react-hot-toast';
 import { relaunch } from '@tauri-apps/api/process';
 import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
-import { XLg, Gear, PlusLg, Github, Archive, Download } from 'react-bootstrap-icons';
+import { XLg, Gear, PlusLg, Github, Archive, Download, PersonBadge } from 'react-bootstrap-icons';
 
 import App from '/src/components/App';
 import Main from '/voxeliface/components/Main';
@@ -25,6 +25,7 @@ import ModpackSetup from '/src/components/ModpackSetup';
 import InstanceList from '/src/components/InstanceList';
 import InstancePage from '/src/components/InstancePage';
 import ImportInstance from '/src/components/ImportInstance';
+import SkinManagement from '/src/components/SkinManagement';
 import SideNavigation from '/voxeliface/components/SideNavigation';
 import NavigationItem from '/voxeliface/components/SideNavigation/Item';
 import SelectInstanceType from '/src/components/SelectInstanceType';
@@ -245,9 +246,9 @@ export default Patcher.register(function Home() {
                                 </PageItem>
                             </Pages>
                         </NavigationItem>
-                        {/*<NavigationItem name={t('app.mdpkm.home.navigation.skins')} icon={<PersonBadge size={16}/>} value={1}>
-                            skins
-                        </NavigationItem>*/}
+                        <NavigationItem name={t('app.mdpkm.home.navigation.skins')} icon={<PersonBadge size={16}/>} value={1}>
+                            <SkinManagement/>
+                        </NavigationItem>
                         {/*<NavigationItem name={t('app.mdpkm.home.navigation.news')} icon={<Newspaper size={16}/>} value={2}>
                             news
                         </NavigationItem>*/}

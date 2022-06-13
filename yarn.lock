@@ -791,7 +791,7 @@
   dependencies:
     defer-to-connect "^2.0.1"
 
-"@tauri-apps/api@1.0.0-rc.6":
+"@tauri-apps/api@^1.0.0-rc.6":
   version "1.0.0-rc.6"
   resolved "https://registry.yarnpkg.com/@tauri-apps/api/-/api-1.0.0-rc.6.tgz#6c3358bc8c2cba705d52c1194e2d340cedf1697a"
   integrity sha512-/PbVs3/dUzid0/1XbML8tAkRSOmp+6Gv9ql02HGt3aIjNTvaL2902qEbiTX6xK++3oUoKJJ88t+V6IiNd1JUkw==
@@ -1005,13 +1005,6 @@
     "@rollup/pluginutils" "^4.2.1"
     react-refresh "^0.13.0"
     resolve "^1.22.0"
-
-"@yannichock/react-minecraft-skin-viewer@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@yannichock/react-minecraft-skin-viewer/-/react-minecraft-skin-viewer-1.0.8.tgz#bef9404ecf4c39d37244fc60b8f766c062c1f6b9"
-  integrity sha512-6IS+YaAc9YDlnkb47kaC4YS0zBDI+XrGVvvX3/wr6VzkHR+RQz6x6zlMeWcqDXiiPm3CEG66zq5iEkPjHN2aTw==
-  dependencies:
-    skinview3d "^2.2.0"
 
 ansi-align@^3.0.0:
   version "3.0.1"
@@ -4370,7 +4363,7 @@ skinview-utils@^0.6.2:
   dependencies:
     "@types/offscreencanvas" "^2019.6.4"
 
-skinview3d@^2.2.0:
+skinview3d@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/skinview3d/-/skinview3d-2.2.1.tgz#f66f29a35055d378a5949c72512e2c6eddaad02a"
   integrity sha512-VOzB2jcsXWTmyEqE6nIXhECg1+29ZcZjP0tw9mFIGN9Y4P/hDlAt2ev7NT7J0Sqgei5UJenkorW24VDZHCepKw==
@@ -4644,6 +4637,11 @@ three@^0.136.0:
   version "0.136.0"
   resolved "https://registry.yarnpkg.com/three/-/three-0.136.0.tgz#b1504db021b46398ef468aa7849f3dcabb814f50"
   integrity sha512-+fEMX7nYLz2ZesVP/dyifli5Jf8gR3XPAnFJveQ80aMhibFduzrADnjMbARXh8+W9qLK7rshJCjAIL/6cDxC+A==
+
+three@^0.141.0:
+  version "0.141.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.141.0.tgz#16677a12b9dd0c3e1568ebad0fd09de15d5a8216"
+  integrity sha512-JaSDAPWuk4RTzG5BYRQm8YZbERUxTfTDVouWgHMisS2to4E5fotMS9F2zPFNOIJyEFTTQDDKPpsgZVThKU3pXA==
 
 through@^2.3.6, through@^2.3.8:
   version "2.3.8"
