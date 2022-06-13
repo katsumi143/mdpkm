@@ -74,7 +74,7 @@ export default Patcher.register(function SkinManagement() {
                 setProfile();
             } catch(err) {
                 setSetting(false);
-                return toast.error('An unknown error occured.');
+                return toast.error('An unknown error occured.\nCheck your internet connection.');
             }
             setSetting(false);
             toast.success(`Your skin uploaded successfully!`);
