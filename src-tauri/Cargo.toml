@@ -1,6 +1,6 @@
 [package]
 name = "mdpkm"
-version = "1.3.1"
+version = "1.4.0"
 description = "A Tauri App"
 authors = ["Blookers"]
 license = ""
@@ -24,7 +24,7 @@ reqwest = "0.11.10"
 windows = { version = "0.35.0", features = ["System", "Storage", "Management_Deployment", "ApplicationModel", "Foundation", "Foundation_Collections", "Security_Authentication_Web_Core", "Security_Credentials"] }
 walkdir = "2.3.2"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.0.0-rc.14", features = ["http-multipart", "clipboard-write-text", "dialog-open", "dialog-save", "http-request", "os-all", "path-all", "process-exit", "process-relaunch", "protocol-asset", "shell-open", "updater", "window-close", "window-create", "window-maximize", "window-minimize", "window-set-focus", "window-start-dragging", "window-unmaximize"] }
+tauri = { version = "1.0.0-rc.14", features = ["clipboard-write-text", "dialog-open", "dialog-save", "http-multipart", "http-request", "os-all", "path-all", "process-exit", "process-relaunch", "protocol-asset", "shell-open", "updater", "window-close", "window-create", "window-maximize", "window-minimize", "window-set-focus", "window-start-dragging", "window-unmaximize"] }
 rand = "0.8.5"
 url = "2.2.2"
 zip = "0.5"
