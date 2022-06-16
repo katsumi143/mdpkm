@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Buffer } from 'buffer/';
 import toast from 'react-hot-toast';
 import { open } from '@tauri-apps/api/dialog';
+import { Buffer } from 'buffer/';
 import { useTranslation } from 'react-i18next';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,6 +26,7 @@ import API from '../common/api';
 import Util from '../common/util';
 import Patcher from '../common/plugins/patcher';
 import { addSkin, saveSkins } from '../common/slices/skins';
+import { saveAccounts, writeAccount } from '../common/slices/accounts';
 
 const SKIN_MODEL = { CLASSIC: 'default', SLIM: 'slim' };
 export default Patcher.register(function SkinManagement() {
@@ -36,7 +37,6 @@ export default Patcher.register(function SkinManagement() {
     const [capes, setCapes] = useState([]);
     const [adding, setAdding] = useState(false);
     const [profile, setProfile] = useState();
-    const [editing, setEditing] = useState();
     const [current, setCurrent] = useState();
     const [loading, setLoading] = useState(false);
     const [setting, setSetting] = useState(false);
@@ -84,8 +84,14 @@ export default Patcher.register(function SkinManagement() {
     useEffect(() => {
         if (!profile && !loading) {
             setLoading(true);
-            API.Minecraft.getProfile(account.minecraft, true).then(async profile => {
+            API.Minecraft.verifyAccount(account).then(async([verifiedAccount, changed]) => {
+                if(changed) {
+                    dispatch(writeAccount(verifiedAccount));
+                    dispatch(saveAccounts());
+                }
+                const profile = await API.Minecraft.getProfile(verifiedAccount.minecraft, true);
                 setProfile(profile);
+
                 const skin = profile.skins.find(s => s.state === 'ACTIVE');
                 const data = await API.makeRequest(skin?.url.replace(/^http/, 'https'), {
                     responseType: 'Binary'
