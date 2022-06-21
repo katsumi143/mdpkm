@@ -29,7 +29,7 @@ import { addSkin, saveSkins } from '../common/slices/skins';
 import { saveAccounts, writeAccount } from '../common/slices/accounts';
 
 const SKIN_MODEL = { CLASSIC: 'default', SLIM: 'slim' };
-function SkinManagement() {
+export default Patcher.register(function SkinManagement() {
     const { t } = useTranslation();
     const skins = useSelector(state => state.skins.data);
     const account = Util.getAccount(useSelector);
@@ -261,8 +261,7 @@ function SkinManagement() {
             </Grid>
         </Portal>}
     </Grid>;
-};
-export default Patcher.register('SkinManagement', SkinManagement);
+});
 
 function Skin({ data, capes, index, useSkin, loading, current }) {
     const { t } = useTranslation();

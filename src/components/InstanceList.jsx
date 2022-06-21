@@ -12,7 +12,7 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import Patcher from '/src/common/plugins/patcher';
 import Instances from '../common/instances';
-export default Patcher.register('InstanceList', function InstanceList({ id, onSelect }) {
+export default Patcher.register(function InstanceList({ id, onSelect }) {
     const { t } = useTranslation();
     const state = useSelector(state => state.instances.state);
     const instances = useSelector(state => state.instances.data);

@@ -40,7 +40,7 @@ const select = [
     'config',
     'mods'
 ];
-export default Patcher.register('InstanceExport', function InstanceExport({ instanceId }) {
+export default Patcher.register(function InstanceExport({ instanceId }) {
     const { t } = useTranslation();
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
     const [items, setItems] = useState();

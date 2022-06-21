@@ -37,7 +37,7 @@ import { addAccount, setAccount, saveAccounts, removeAccount, setAddingAccount }
 const appName = await getName();
 const appVersion = await getVersion();
 const tauriVersion = await getTauriVersion()
-function Settings() {
+export default Patcher.register(function Settings() {
     const { t, i18n } = useTranslation();
     const theme = useSelector(state => state.settings.theme);
     const uiStyle = useSelector(state => state.settings.uiStyle);
@@ -481,8 +481,7 @@ function Settings() {
             )}
         </ThemeContext.Consumer>
     );
-};
-export default Patcher.register('Settings', Settings);
+});
 
 function Setting({ name, children, direction, noSummary }) {
     const { t } = useTranslation();

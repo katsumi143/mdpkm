@@ -16,7 +16,7 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import API from '../common/api';
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
-export default Patcher.register('ModSearch', function ModSearch({ instanceId }) {
+export default Patcher.register(function ModSearch({ instanceId }) {
     const { t } = useTranslation();
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
     const { config } = instance;

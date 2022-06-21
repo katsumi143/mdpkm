@@ -5,7 +5,7 @@ import ImageTransition from './Transition/Image';
 
 import API from '../common/api';
 import Patcher from '/src/common/plugins/patcher';
-export default Patcher.register('InstanceIcon', function InstanceIcon({ instance, size, hideLoader, props }) {
+export default Patcher.register(function InstanceIcon({ instance, size, hideLoader, props }) {
     const loaderIcon = API.getLoader(instance?.config?.loader?.type)?.icon;
     size = `${size ?? 48}px`;
     return <ImageTransition src={

@@ -8,7 +8,7 @@ import Button from '/voxeliface/components/Button';
 import Typography from '/voxeliface/components/Typography';
 
 import Patcher from '/src/common/plugins/patcher';
-export default Patcher.register('Server', function Server({ name, icon, motd, type, players, address, instanceId, acceptTextures }) {
+export default Patcher.register(function Server({ name, icon, motd, type, players, address, instanceId, acceptTextures }) {
     const { t } = useTranslation();
     return <Grid height="fit-content" padding={8} spacing={12} background="$secondaryBackground2" borderRadius={8} justifyContent="space-between" css={{
         minWidth: '24rem'

@@ -14,7 +14,7 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import API from '../common/api';
 import Patcher from '/src/common/plugins/patcher';
 import Instances from '../common/instances';
-function Mod({ id, api, data, featured, instanceId, recommended }) {
+export default Patcher.register(function Mod({ id, api, data, featured, instanceId, recommended }) {
     const { t } = useTranslation();
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
     const [mod, setMod] = useState(data);
@@ -146,5 +146,4 @@ function Mod({ id, api, data, featured, instanceId, recommended }) {
             </Grid>}
         </Grid>
     );
-};
-export default Patcher.register('Mod', Mod);
+});

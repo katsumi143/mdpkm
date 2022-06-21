@@ -7,7 +7,7 @@ import Typography from '/voxeliface/components/Typography';
 import ModpackSearch from './ModpackSearch';
 
 import Patcher from '/src/common/plugins/patcher';
-export default Patcher.register('ModpackSetup', function ModpackSetup({ back, importModpack }) {
+export default Patcher.register(function ModpackSetup({ back, importModpack }) {
     const [loading, setLoading] = useState();
     return (
         <Grid width="100%" direction="vertical" alignItems="center">

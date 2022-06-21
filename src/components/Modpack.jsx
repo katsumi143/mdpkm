@@ -12,7 +12,7 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import API from '../common/api';
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
-export default Patcher.register('Modpack', function Modpack({ id, api, data, loading, featured, setLoading, recommended, importModpack }) {
+export default Patcher.register(function Modpack({ id, api, data, loading, featured, setLoading, recommended, importModpack }) {
     const [modpack, setModpack] = useState(data);
     const installModpack = async() => {
         setLoading(true);

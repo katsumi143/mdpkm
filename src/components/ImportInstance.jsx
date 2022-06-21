@@ -17,7 +17,7 @@ import API from '../common/api';
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
 import Instances from '../common/instances';
-export default Patcher.register('ImportInstance', function ImportInstance({ path: epath, back }) {
+export default Patcher.register(function ImportInstance({ path: epath, back }) {
     const { t } = useTranslation();
     const instances = useSelector(state => state.instances.data);
 

@@ -11,7 +11,7 @@ import Typography from '/voxeliface/components/Typography';
 import Patcher from '/src/common/plugins/patcher';
 
 let sent = 1;
-function InstanceSplash() {
+export default Patcher.register(function InstanceSplash() {
     const [name, setName] = useState();
     const [text, setText] = useState('Waiting');
     const [loaded, setLoaded] = useState(false);
@@ -74,5 +74,4 @@ function InstanceSplash() {
             </Main>
         </App>
     );
-};
-export default Patcher.register('InstanceSplash', InstanceSplash);
+});

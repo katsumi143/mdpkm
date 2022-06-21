@@ -18,5 +18,8 @@ export default defineConfig({
         i18nHotReload({
 			folder: 'src/localization/locales'
 		})
-    ]
+    ],
+    esbuild: {
+        keepNames: true
+    }
 });
