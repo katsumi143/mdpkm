@@ -48,7 +48,7 @@ function sortForge(a, b) {
     return 0;
 }
 
-export default Patcher.register(function LoaderSetup({ back, loader, install, versions = [] }) {
+export default Patcher.register('LoaderSetup', function LoaderSetup({ back, loader, install, versions = [] }) {
     const { t } = useTranslation();
     const loaderData = API.getLoader(loader);
     const loaderVersions = Array.isArray(versions) ? null : versions;

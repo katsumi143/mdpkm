@@ -21,7 +21,7 @@ const Animation = keyframes({
     }
 });
 
-export default Patcher.register(function Instance({ css, data: instance, onView }) {
+export default Patcher.register('Instance', function Instance({ css, data: instance, onView }) {
     const { t } = useTranslation();
     const uiStyle = useSelector(state => state.settings.uiStyle);
     return (

@@ -1,14 +1,21 @@
 import React from 'react';
 export default class Patcher {
     static patches = {};
-    static register(func) {
-        return (...args) => {
+    static registered = {};
+    static register(name, func) {
+        const newFunction = (...args) => {
             let returnValue = func(...args);
-            if (this.patches[func.name])
-                for (const patch of this.patches[func.name])
-                    returnValue = patch(returnValue);
+            if (this.patches[name])
+                for (const patch of this.patches[name])
+                    try {
+                        returnValue = patch(returnValue) ?? returnValue;
+                    } catch(err) {
+                        console.error(err);
+                    }
             return returnValue;
         };
+        this.registered[name] = newFunction;
+        return newFunction;
     }
     
     static patch(name, func) {
@@ -20,7 +27,7 @@ export default class Patcher {
             ...child.props,
             children: Patcher.mapRecursive(child => {
                 if (child?.type?.name === type)
-                    return func(child);
+                    return func(child) ?? child;
                 return child;
             }, child.props.children)
         }}));
@@ -42,4 +49,15 @@ export default class Patcher {
             child
         ];
     }
+
+    static pushChild(...args) {
+        return this.joinChild(...args);
+    }
+
+    static unshiftChild(child, children) {
+        return [
+            child,
+            ...(Array.isArray(children) || React.isValidElement(children) ? children : [children])
+        ];
+    } 
 };

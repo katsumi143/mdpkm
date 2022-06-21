@@ -18,7 +18,7 @@ import TextTransition from './Transition/Text';
 
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
-export default Patcher.register(function ServerManagement({ instanceId }) {
+export default Patcher.register('ServerManagement', function ServerManagement({ instanceId }) {
     const { t } = useTranslation();
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
     const [data, setData] = useState();

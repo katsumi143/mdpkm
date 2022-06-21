@@ -13,7 +13,7 @@ import API from '../common/api';
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
 import Instances from '../common/instances';
-export default Patcher.register(function InstanceMod({ mod, updates, embedded, instanceId }) {
+export default Patcher.register('InstanceMod', function InstanceMod({ mod, updates, embedded, instanceId }) {
     const { t } = useTranslation();
     const update = updates?.[mod?.config?.[1]];
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));

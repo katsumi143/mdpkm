@@ -35,7 +35,7 @@ import { saveAccounts, writeAccount } from '../common/slices/accounts';
 import { LoaderStates, DisabledLoaders } from '../common/constants';
 
 const totalMemory = await Util.getTotalMemory();
-export default Patcher.register(function InstancePage({ id }) {
+function InstancePage({ id }) {
     const { t } = useTranslation();
     const uiStyle = useSelector(state => state.settings.uiStyle);
     const instance = useSelector(state => state.instances.data.find(i => i.id === id));
@@ -519,7 +519,8 @@ export default Patcher.register(function InstancePage({ id }) {
             </Tabs>}
         </Grid>
     );
-});
+};
+export default Patcher.register('InstancePage', InstancePage);
 
 const InstanceInfoAnimation = keyframes({
     from: {

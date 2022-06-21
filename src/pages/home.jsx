@@ -37,7 +37,7 @@ import Instances from '/src/common/instances';
 import { addSkin, saveSkins } from '/src/common/slices/skins';
 
 let updateListener;
-export default Patcher.register(function Home() {
+function Home() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const [_, setBruh] = useState(0);
@@ -266,4 +266,5 @@ export default Patcher.register(function Home() {
                 }}/>
         </App>
     );
-});
+};
+export default Patcher.register('Home', Home);
