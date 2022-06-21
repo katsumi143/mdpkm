@@ -19,9 +19,11 @@ export const accountsSlice = createSlice({
             state.selected = payload;
         },
         writeAccount: (state, { payload }) => {
-            const index = state.data.findIndex(d => d.profile.uuid ?? d.profile.id === payload.profile.uuid ?? payload.profile.id);
+            const index = state.data.findIndex(d => (d.profile.uuid ?? d.profile.id) === (payload.profile.uuid ?? payload.profile.id));
             if(index >= 0)
                 state.data[index] = payload;
+            else
+                throw new Error(`Account not found`);
         },
         removeAccount: (state, { payload }) => {
             const index = state.data.findIndex(d => d.profile.uuid ?? d.profile.id === payload);
