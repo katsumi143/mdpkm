@@ -1,7 +1,8 @@
-import { create } from 'xmlbuilder2';
 import { open } from '@tauri-apps/api/shell';
-import { Body, fetch } from '@tauri-apps/api/http';
+import { create } from 'xmlbuilder2';
 import { getCurrent } from '@tauri-apps/api/window';
+import { Body, fetch } from '@tauri-apps/api/http';
+import { getName, getVersion } from '@tauri-apps/api/app';
 
 import {
     AZURE_CLIENT_ID,
@@ -20,6 +21,8 @@ import { MDPKM_API, ESSENTIAL_SITE, XSTS_AUTH_BASE, XBOX_AUTH_BASE, MINECRAFT_NE
 
 // For plugin developers:
 // http://docs.mdpkm.voxelified.com/docs/plugin-api/api
+const appName = await getName();
+const appVersion = await getVersion();
 class API {
     static mapped = {};
     static loaders = [];
@@ -103,13 +106,18 @@ class API {
         return this.loaders.find(l => l.id === id);
     }
 
+    static userAgent = `Blookerss/${appName}/${appVersion} (blookers@voxelified.com)`;
     static async makeRequest(url, options = {}) {
         console.log(options.method ?? 'GET', url, options);
+        if (typeof options.headers === 'object')
+            options.headers['User-Agent'] = this.userAgent;
         const response = await fetch(url, {
             body: options.body ?? Body.text(''),
             query: options.query ?? {},
             method: options.method ?? 'get',
-            headers: options.headers ?? {},
+            headers: options.headers ?? {
+                ['User-Agent']: this.userAgent
+            },
             responseType: {JSON: 1, Text: 2, Binary: 3}[options.responseType] ?? 2
         });
         if(!response.ok)

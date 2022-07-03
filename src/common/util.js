@@ -1,8 +1,8 @@
 import { t } from 'i18next';
 import path from 'path-browserify';
 import { Buffer } from 'buffer/';
-import { os, invoke } from '@tauri-apps/api';
 import { appDir } from '@tauri-apps/api/path';
+import { os, invoke } from '@tauri-apps/api';
 
 import API from './api';
 import { MINECRAFT_LIBRARIES_URL } from './constants';
