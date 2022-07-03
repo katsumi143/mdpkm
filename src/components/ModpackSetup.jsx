@@ -4,6 +4,7 @@ import { ArrowLeft } from 'react-bootstrap-icons';
 import Grid from '/voxeliface/components/Grid';
 import Button from '/voxeliface/components/Button';
 import Typography from '/voxeliface/components/Typography';
+import BrowserLink from './BrowserLink';
 import ModpackSearch from './ModpackSearch';
 
 import Patcher from '/src/common/plugins/patcher';
@@ -36,6 +37,11 @@ export default Patcher.register(function ModpackSetup({ back, importModpack }) {
                     <ArrowLeft size={14}/>
                     Back to Selection
                 </Button>
+                <Typography size=".8rem" color="$secondaryColor"><span>
+                    Need some help? Check out the <BrowserLink href="https://docs.mdpkm.voxelified.com/docs/tutorials/get-modpack">
+                        guide
+                    </BrowserLink>!
+                </span></Typography>
             </Grid>
         </Grid>
     );

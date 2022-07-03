@@ -10,6 +10,7 @@ import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
 import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
+import BrowserLink from './BrowserLink';
 import * as Select from '/voxeliface/components/Input/Select';
 import InstanceIcon from './InstanceIcon';
 
@@ -199,7 +200,12 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
                         {t('app.mdpkm.common:buttons.back_to_selection')}
                     </Button>
                 }
-                <Grid spacing={8}>
+                <Grid spacing={16}>
+                    <Typography size=".8rem" color="$secondaryColor"><span>
+                        Need some help? Check out the <BrowserLink href="https://docs.mdpkm.voxelified.com/docs/tutorials/import-instance">
+                            guide
+                        </BrowserLink>!
+                    </span></Typography>
                     <Button theme="accent" onClick={importInstance} disabled={!data || !!importState}>
                         {t('app.mdpkm.import_instance.buttons.import')}
                     </Button>

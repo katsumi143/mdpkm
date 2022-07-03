@@ -6,6 +6,7 @@ import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
 import Typography from '/voxeliface/components/Typography';
+import BrowserLink from './BrowserLink';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
@@ -53,7 +54,7 @@ export default Patcher.register(function SelectInstanceType({ back, types, loadi
                                         {t(`app.mdpkm.common:loaders.${id}`)}
                                         {loaderData?.source instanceof PluginSystem &&
                                             <Typography size=".8rem" color="$secondaryColor" family="Nunito">
-                                                added by {pluginData.manifest.name}
+                                                added by {pluginData?.manifest.name}
                                             </Typography>
                                         }
                                     </Typography>
@@ -88,6 +89,11 @@ export default Patcher.register(function SelectInstanceType({ back, types, loadi
                     <ArrowLeft size={14}/>
                     {t('app.mdpkm.common:buttons.back_to_instances')}
                 </Button>
+                <Typography size=".8rem" color="$secondaryColor"><span>
+                    Need some help? Check out the <BrowserLink href="https://docs.mdpkm.voxelified.com/docs/tutorials/install-loader">
+                        guide
+                    </BrowserLink>!
+                </span></Typography>
             </Grid>
         </Grid>
     );

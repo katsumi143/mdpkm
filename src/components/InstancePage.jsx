@@ -17,6 +17,7 @@ import Spinner from '/voxeliface/components/Spinner';
 import TabItem from '/voxeliface/components/Tabs/Item';
 import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
+import BrowserLink from './BrowserLink';
 import * as Dialog from '/voxeliface/components/Dialog';
 import InstanceIcon from './InstanceIcon';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
@@ -244,12 +245,17 @@ export default Patcher.register(function InstancePage({ id }) {
                         </Typography>
                         <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" textalign="start" lineheight={1.2}>
                             You don't have a Minecraft Account selected.<br/>
-                            Add a Minecraft Account or choose one in Settings.
+                            Add a Minecraft Account or choose one in Settings.<br/>
+                            <span>
+                                Need some help? Read the <BrowserLink href="https://docs.mdpkm.voxelified.com/docs/tutorials/account-login">
+                                    guide
+                                </BrowserLink>!
+                            </span>
                         </Typography>
                     </Grid>
                 </InstanceInfo>
             }
-            {versionBanner && !instance.launchLogs && showBanner &&
+            {Account && versionBanner && !instance.launchLogs && showBanner &&
                 <InstanceInfo css={{ justifyContent: 'space-between' }}>
                     <Grid spacing={uiStyle === 'compact' ? '.3rem' : '.8rem'}>
                         <ImageTransition

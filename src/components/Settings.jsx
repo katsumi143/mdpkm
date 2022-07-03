@@ -19,6 +19,7 @@ import Header from '/voxeliface/components/Typography/Header';
 import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
 import InputLabel from '/voxeliface/components/Input/Label';
+import BrowserLink from './BrowserLink';
 import * as Select from '/voxeliface/components/Input/Select';
 import ThemeContext from '/voxeliface/contexts/theme';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
@@ -370,6 +371,11 @@ export default Patcher.register(function Settings() {
                             val: Object.keys(PluginLoader.loaded).length
                         })}</Header>
                         <Grid spacing={8} padding="0 1rem" direction="vertical">
+                            <Typography size=".8rem" color="$secondaryColor"><span>
+                                Not sure how to install a plugin? Check out the <BrowserLink href="https://docs.mdpkm.voxelified.com/docs/tutorials/install-plugin">
+                                    guide
+                                </BrowserLink>!
+                            </span></Typography>
                             <Grid spacing={8}>
                                 <Button theme="accent" onClick={addPlugin}>
                                     <PlusLg/>
