@@ -50,7 +50,7 @@ export default Patcher.register(function SelectInstanceType({ back, types, loadi
                             <Grid alignItems="center">
                                 <Image src={icon ?? 'img/icons/brand_default.svg'} size={48} borderRadius={4}/>
                                 <Grid margin="0 0 0 24px" direction="vertical" alignItems="start">
-                                    <Typography color="$primaryColor" whitespace="nowrap" css={{ gap: 4 }}>
+                                    <Typography color="$primaryColor" whitespace="nowrap" spacing={6} horizontal>
                                         {t(`app.mdpkm.common:loaders.${id}`)}
                                         {loaderData?.source instanceof PluginSystem &&
                                             <Typography size=".8rem" color="$secondaryColor" family="Nunito">

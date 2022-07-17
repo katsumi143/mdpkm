@@ -50,7 +50,9 @@ export default Patcher.register(function Modpack({ id, api, data, loading, featu
                     }
                 }}/>
                 <Grid margin="4px 0 0 12px" padding="2px 0" spacing={2} direction="vertical">
-                    <Typography size="1.1rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                    <Typography size="1.1rem" color="$primaryColor" family="Nunito" horizontal lineheight={1} css={{
+                        width: 'fit-content'
+                    }}>
                         {modpack.title}
                         {modpack.author && 
                             <Typography size=".7rem" color="$secondaryColor" margin="4px 0 0 4px" lineheight={1}>
@@ -77,7 +79,7 @@ export default Patcher.register(function Modpack({ id, api, data, loading, featu
                     position: 'absolute'
                 }}>
                     {typeof modpack.downloads === 'number' &&
-                        <Typography color="$primaryColor" margin="0 8px 0 0" family="Nunito">
+                        <Typography color="$primaryColor" margin="0 8px 0 0" family="Nunito" horizontal>
                             {Intl.NumberFormat('en-us', {}).format(modpack.downloads)}
                             <Typography size=".8rem" text="Downloads" color="$secondaryColor" family="Nunito" margin="0 0 0 4px"/>
                         </Typography>

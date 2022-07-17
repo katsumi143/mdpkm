@@ -391,7 +391,7 @@ export default Patcher.register(function InstancePage({ id }) {
                             <ExclamationCircleFill size={24} color="#ffffff80"/>
                         </Grid>}
                         <Grid spacing={4} direction="vertical" justifyContent="center">
-                            <Typography size="1rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                            <Typography size="1rem" color="$primaryColor" family="Nunito" horizontal lineheight={1}>
                                 {Util.getLoaderName(config?.loader?.type) ?? `${config.loader.type} (Unknown)`}
                                 {LoaderStates[config.loader.type] &&
                                     <Tag margin="0 8px">

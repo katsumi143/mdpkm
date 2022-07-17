@@ -74,7 +74,9 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                     }
                 }}/>
                 <Grid margin="4px 0 0 12px" padding="2px 0" spacing="2px" direction="vertical">
-                    <Typography size="1.1rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                    <Typography size="1.1rem" color="$primaryColor" family="Nunito" spacing={4} horizontal lineheight={1} css={{
+                        width: 'fit-content'
+                    }}>
                         {mod.title}
                         {mod.author && 
                             <Typography size=".7rem" color="$secondaryColor" lineheight={1}>
@@ -104,7 +106,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                     position: 'absolute'
                 }}>
                     {typeof mod.downloads === 'number' &&
-                        <Typography color="$primaryColor" margin="0 8px 0 0" family="Nunito">
+                        <Typography color="$primaryColor" margin="0 8px 0 0" family="Nunito" spacing={4} horizontal>
                             {Intl.NumberFormat('en-us', {}).format(mod.downloads)}
                             <Typography size=".8rem" color="$secondaryColor" family="Nunito">
                                 {t('app.mdpkm.mod.downloads')}

@@ -91,7 +91,8 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                     </Grid>
                 </Grid>
                 {mod.embedded?.length > 0 &&
-                    <Typography size=".8rem" color="$secondaryColor" family="Nunito" onClick={() => toggleEmbedded()} lineheight={1} css={{
+                    <Typography size=".8rem" color="$secondaryColor" family="Nunito" horizontal onClick={() => toggleEmbedded()} lineheight={1} css={{
+                        width: 'fit-content',
                         cursor: 'pointer'
                     }}>
                         <CaretDownFill color="var(--colors-secondaryColor)" style={{

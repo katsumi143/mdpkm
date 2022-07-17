@@ -25,7 +25,7 @@ export default Patcher.register(function InstanceList({ id, onSelect }) {
     return <React.Fragment>
         <Grid width="100%" padding=".8rem 1.2rem" alignItems="center" background="$secondaryBackground" justifyContent="space-between">
             <Grid spacing={4} direction="vertical">
-                <Typography color="$primaryColor" weight={600} family="Nunito" spacing={12} lineheight={1}>
+                <Typography color="$primaryColor" weight={600} family="Nunito" spacing={12} horizontal lineheight={1}>
                     <Archive size={20}/>
                     {t('app.mdpkm.headers.instances')}
                     <Typography size=".6rem" color="$gray11" weight={300} family="Nunito" margin="2px 0 0 8px" lineheight={1}>

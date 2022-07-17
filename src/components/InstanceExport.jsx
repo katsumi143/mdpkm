@@ -124,7 +124,7 @@ export default Patcher.register(function InstanceExport({ instanceId }) {
                             setItems(items);
                         }}/>
                         <Icon color={banned ? "var(--colors-secondaryColor)" : "var(--colors-primaryColor)"}/>
-                        <Typography color={banned ? "$secondaryColor" : "$primaryColor"} family="Nunito">
+                        <Typography color={banned ? "$secondaryColor" : "$primaryColor"} family="Nunito" horizontal>
                             {name}
                             {banned && <Typography size=".7rem" color="$secondaryColor" weight={400} margin="0 0 0 8px" family="Nunito" lineheight={1}>
                                 {t('app.mdpkm.export_instance.files.banned')}
