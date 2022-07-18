@@ -92,8 +92,6 @@ export default Patcher.register(function Home() {
         try {
             if(loader === 'bedrock') {
                 const versions = await API.Minecraft.Bedrock.getLoaderVersions();
-                console.log(versions);
-
                 setLoaderVersions(versions);
             } else if(loader === 'modpack') {
                 setInstancePage('modpack-setup');

@@ -246,7 +246,6 @@ export class Instance extends EventEmitter {
                 }, { concurrency: 20 });
             }
         }
-        console.log(updates);
         return updates;
     }
 
@@ -413,8 +412,6 @@ export class Instance extends EventEmitter {
                 false,
                 javaArguments
             ).map(v => v.toString().replaceAll(appDirectory, '../../'));
-            console.log(jvmArguments);
-
             const window = tauri.window.getCurrent();
 
             const { sha1: loggingHash, id: loggingId } = manifest?.logging?.client?.file ?? {};
@@ -863,7 +860,6 @@ class Instances extends EventEmitter {
     }
 
     async patchForge(instance, loader, forge, update) {
-        console.log('patching forge', loader, forge);
         update(`Processing Forge`);
         const universalPath = forge.libraries.find(v =>
             (v.name ?? '').startsWith('net.minecraftforge:forge')
@@ -911,14 +907,11 @@ class Instances extends EventEmitter {
         const javaPath = await this.java.getExecutable(8, update);
 
         let counter = 1;
-        console.log(counter, processors);
         for (const key in processors) {
-            console.log(key);
             if (Object.prototype.hasOwnProperty.call(processors, key)) {
                 const p = processors[key];
                 if (p?.sides && !(p?.sides || []).includes('client'))
                     continue;
-                console.log(p);
                 const filePath = `${librariesPath}/${Util.mavenToString(p.jar)}`;
                 const args = p.args
                     .map(arg => replaceIfPossible(arg))
@@ -1009,7 +1002,6 @@ class Instances extends EventEmitter {
                     api = test;
                     break;
                 }
-            console.log(api.id, api.canImport(instanceDir));
             if (api?.finishImport)
                 await Util.writeFile(`${instanceDir}/config.json`,
                     await api.finishImport(instanceDir).then(([loader]) => JSON.stringify({
@@ -1131,7 +1123,6 @@ class Instances extends EventEmitter {
     }
 
     async installMinecraft(version, instance, updateToastState) {
-        console.log('Installing Minecraft');
         updateToastState?.('Installing Minecraft');
 
         const { loader } = await instance.getConfig();
@@ -1227,8 +1218,6 @@ class Instances extends EventEmitter {
 
             if(!await Util.fileExists(appPath)) {
                 const downloadLink = await API.Minecraft.Bedrock.getDownloadLink(version);
-                console.log(downloadLink);
-
                 await Util.downloadFilePath(downloadLink, `${basePath}/minecraft.appx`, true);
             }
 

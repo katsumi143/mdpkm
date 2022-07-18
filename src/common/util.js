@@ -115,7 +115,6 @@ export default class Util {
     }
 
     static writeBinaryToZip(path, name, contents) {
-        console.log(path, name, contents);
         return invoke('fs_write_binary', { path, name, contents }).catch(err => {throw new Error(`writeBinaryToZip failed: ${err}`)});
     }
 

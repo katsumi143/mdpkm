@@ -462,7 +462,6 @@ class API {
         static async uploadSkin({ token, tokenType }, image, variant) {
             if(!token) throw new Error(`Invalid Access Token: ${token}`);
             if(!tokenType) throw new Error(`Invalid Token Type: ${tokenType}`);
-            console.log(image, variant);
             const data = await API.makeRequest(`${MINECRAFT_SERVICES_API}/minecraft/profile/skins`, {
                 body: new Body('Form', {
                     file: {
@@ -478,7 +477,7 @@ class API {
                     'Content-Type': 'multipart/form-data'
                 }
             }).catch(console.warn);
-            console.log(data);
+            return data;
         }
 
         static async setCape({ token, tokenType }, id) {
@@ -493,7 +492,7 @@ class API {
                     Authorization: `${tokenType} ${token}`
                 }
             });
-            console.log(data);
+            return data;
         }
 
         static async getAccessData({ token, userHash }) {

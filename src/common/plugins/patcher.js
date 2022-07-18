@@ -3,13 +3,10 @@ export default class Patcher {
     static patches = {};
     static registered = {};
     static register(func) {
-        console.log(`Registered ${func.name}`);
         const newFunction = (...args) => {
             let returnValue = func(...args);
-            console.log(this.patches[func.name]);
             if (this.patches[func.name])
                 for (const patch of this.patches[func.name]) {
-                    console.log(`running patch for ${func.name}`);
                     try {
                         returnValue = patch(returnValue) ?? returnValue;
                     } catch(err) {
@@ -30,7 +27,6 @@ export default class Patcher {
         this.patch(name, child => ({...child, props: {
             ...child.props,
             children: Patcher.mapRecursive(child => {
-                console.log(child);
                 if (child?.type?.name === type)
                     return func(child) ?? child;
                 return child;

@@ -62,7 +62,6 @@ export default class MicrosoftStore {
                 const merged = `${serverId} ${updateId} ${packageMoniker}`;
                 if(knownVersions.some(v => v === updateId))
                     continue;
-                console.log(`new uwp version: ${merged}`);
                 hasAnyNewVersions = true;
                 
                 knownVersions.push(merged);
@@ -86,7 +85,6 @@ export default class MicrosoftStore {
             responseType: 'Text'
         });
         const data = create(response).end({ format: 'object' });
-        console.log(data);
 
         const { Expiration, EncryptedData } = data['s:Envelope']['s:Body'].GetCookieResponse.GetCookieResult;
         return {
@@ -104,7 +102,6 @@ export default class MicrosoftStore {
             responseType: 'Text'
         });
         const data = create(response).end({ format: 'object' });
-        console.log(data);
 
         return data['s:Envelope']['s:Body'].GetConfigResponse.GetConfigResult.LastChange;
     }
@@ -118,7 +115,6 @@ export default class MicrosoftStore {
             responseType: 'Text'
         });
         const data = create(response).end({ format: 'object' });
-        console.log(data);
 
         const result = data['s:Envelope']['s:Body'].SyncUpdatesResponse.SyncUpdatesResult;
         const updates = result.NewUpdates.UpdateInfo;
@@ -163,12 +159,10 @@ export default class MicrosoftStore {
             }
         });
         const xml = root.end({ prettyPrint: true });
-        console.log(xml);
         return xml;
     }
 
     static buildSyncRequest(cookie, version) {
-        console.log(cookie, version);
         const id = 'd25480ca-36aa-46e6-b76b-39608d49558c';
         const root = create({
             Envelope: {
@@ -290,7 +284,6 @@ export default class MicrosoftStore {
             }
         });
         const xml = root.end({ prettyPrint: true });
-        console.log(xml);
         return xml;
     }
 
@@ -323,7 +316,6 @@ export default class MicrosoftStore {
             }
         });
         const xml = root.end({ prettyPrint: true });
-        console.log(xml);
         return xml;
     }
 
@@ -441,7 +433,6 @@ export default class MicrosoftStore {
             }
         });
         const xml = root.end({ headless: true });
-        console.log(xml);
         return xml;
         return `<s:Envelope xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:s="http://www.w3.org/2003/05/soap-envelope">
             <s:Header>
@@ -484,8 +475,6 @@ export default class MicrosoftStore {
             responseType: 'Text'
         });
         const data = create(response).end({ format: 'object' });
-        console.log(data);
-
         return data['s:Envelope']['s:Body'].GetExtendedUpdateInfo2Response.GetExtendedUpdateInfo2Result.FileLocations.FileLocation.map(({ Url }) => ({
             url: Url.replace(/amp;/g, '')
         }));
@@ -509,8 +498,6 @@ class UpdateInfo {
 
         try {
             const xml = create(`<root>${txt.value}</root>`).toObject();
-            console.log(xml);
-
             this.updateId = xml.root.UpdateIdentity?.['@UpdateID'];
             this.packageMoniker = xml.root.ApplicabilityRules?.Metadata?.AppxPackageMetadata?.AppxMetadata?.['@PackageMoniker'];
         } catch(err) { console.warn(err); }

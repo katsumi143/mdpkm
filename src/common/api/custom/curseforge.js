@@ -94,7 +94,6 @@ class CurseForgeAPI {
 
     static async downloadModpack(id) {
         const version = (await this.getProjectVersions(id))[0];
-        console.log(version)
         return Util.downloadFile(version.downloadUrl, Util.tempPath, true);
     }
 
