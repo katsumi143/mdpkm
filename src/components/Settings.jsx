@@ -154,12 +154,14 @@ export default Patcher.register(function Settings() {
 
             const accessData = await API.Microsoft.getAccessData(accessCode);
             const xboxData = await API.XboxLive.getAccessData(accessData.token);
-            const xstsData = await API.XboxLive.getXSTSData(xboxData.token);
+            const xstsData = await API.XboxLive.getXSTSData(xboxData.token, 'rp://api.minecraftservices.com/');
+            const xstsData2 = await API.XboxLive.getXSTSData(xboxData.token);
             const minecraftData = await API.Minecraft.getAccessData(xstsData);
 
             const account = {
                 xbox: xboxData,
                 xsts: xstsData,
+                xsts2: xstsData2,
                 microsoft: accessData,
                 minecraft: minecraftData
             };
@@ -225,55 +227,7 @@ export default Patcher.register(function Settings() {
                     }}>
                         <Header>{t('app.mdpkm.settings.general')}</Header>
                         <Grid spacing={8} padding="0 1rem" direction="vertical">
-                            <Grid spacing="1rem">
-                                <Setting name="general.account">
-                                    <Select.Root value={new String(account).toString()} onChange={changeAccount} disabled={accounts.length === 0} defaultValue="undefined">
-                                        <Select.Group name={t('app.mdpkm.settings.general.account.category')}>
-                                            {accounts.map(({ profile }, key) =>
-                                                <Select.Item key={key} value={profile.id}>
-                                                    <Image src={`${SKIN_API_BASE}/face/24/${profile.id}`} size={24} borderRadius={4}/>
-                                                    {profile.name}
-                                                </Select.Item>
-                                            )}
-                                        </Select.Group>
-                                        <Select.Item value="undefined" disabled>
-                                            {t('app.mdpkm.settings.general.account.items.none')}
-                                        </Select.Item>
-                                    </Select.Root>
-                                    <Button theme="accent" onClick={addNewAccount} disabled={addingAccount} css={{
-                                        width: 'auto'
-                                    }}>
-                                        {addingAccount ? <BasicSpinner size={16}/> : <PlusLg size={14}/>}
-                                        {t('app.mdpkm.settings.general.account.add')}
-                                    </Button>
-                                    <DropdownMenu.Root>
-                                        <DropdownMenu.Trigger asChild>
-                                            <Button theme="secondary" css={{
-                                                width: 'auto'
-                                            }}>
-                                                <XLg/>
-                                                {t('app.mdpkm.settings.general.account.remove')}
-                                            </Button>
-                                        </DropdownMenu.Trigger>
-                                        <DropdownMenu.Content sideOffset={8}>
-                                            <DropdownMenu.Label>{t('app.mdpkm.settings.general.account.category')}</DropdownMenu.Label>
-                                            {accounts.map(({ profile: { id, name } }, key) =>
-                                                <DropdownMenu.Item key={key} onClick={() => deleteAccount(accounts[key])}>
-                                                    <Image src={`${SKIN_API_BASE}/face/24/${id}`} size={24} borderRadius={4}/>
-                                                    {name}
-                                                </DropdownMenu.Item>
-                                            )}
-                                            <DropdownMenu.Arrow/>
-                                        </DropdownMenu.Content>
-                                    </DropdownMenu.Root>
-                                </Setting>
-                                {account && <Grid width="100%" direction="vertical">
-                                    <InputLabel>Skin Preview</InputLabel>
-                                    <Image src={`${SKIN_API_BASE}/full/256/${account}`} width="100%" height="100%" borderRadius={4} css={{
-                                        backgroundPosition: 'left center'
-                                    }}/>
-                                </Grid>}
-                            </Grid>
+                            <Setting name="general.account"/>
                             <Setting name="general.theme">
                                 <Select.Root value={theme} onChange={v => changeTheme(v, setTheme)}>
                                     <Select.Group name={t('app.mdpkm.settings.general.theme.category')}>

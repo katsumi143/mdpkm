@@ -2,6 +2,7 @@
     "app.mdpkm.home.navigation.instances": "Your Instances",
     "app.mdpkm.home.navigation.skins": "Minecraft Skins",
     "app.mdpkm.home.navigation.news": "News",
+    "app.mdpkm.home.navigation.accounts": "Accounts",
     "app.mdpkm.home.navigation.settings": "Settings",
 
     "app.mdpkm.buttons.add_instance": "Add New Instance",
@@ -17,11 +18,7 @@
     "app.mdpkm.settings.about": "About this build",
 
     "app.mdpkm.settings.general.account": "Minecraft Account",
-    "app.mdpkm.settings.general.account.summary": "Account to use for Minecraft Java Edition.",
-    "app.mdpkm.settings.general.account.category": "Minecraft Accounts",
-    "app.mdpkm.settings.general.account.items.none": "None",
-    "app.mdpkm.settings.general.account.add": "Add New Account",
-    "app.mdpkm.settings.general.account.remove": "Remove an Account",
+    "app.mdpkm.settings.general.account.summary": "Moved to Account Management",
 
     "app.mdpkm.settings.general.theme": "Theme",
     "app.mdpkm.settings.general.theme.summary": "Choose a theme that suits you best!",
@@ -58,6 +55,15 @@
     "app.mdpkm.settings.about.check_for_updates": "Check for Updates",
     "app.mdpkm.settings.about.report_bug": "Report an issue",
     "app.mdpkm.settings.about.github": "Visit GitHub Site",
+
+    "app.mdpkm.accounts.header": "Account Management",
+    "app.mdpkm.accounts.select_account": "You don't have an account selected.\nYou must select or add an account to play Minecraft.",
+    "app.mdpkm.accounts.account.actions.label": "Account Actions",
+    "app.mdpkm.accounts.account.actions.manage_profile": "Manage Minecraft profile",
+    "app.mdpkm.accounts.account.actions.view_namemc": "View NameMC profile",
+    "app.mdpkm.accounts.account.actions.remove": "Remove account",
+    "app.mdpkm.accounts.account.active": "Active",
+    "app.mdpkm.accounts.add": "Add Microsoft Account",
 
     "app.mdpkm.settings.placeholder": "Unknown setting",
     "app.mdpkm.settings.placeholder.summary": "Placeholder",

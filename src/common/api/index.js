@@ -305,7 +305,8 @@ class API {
                     Properties: {
                         AuthMethod: 'RPS',
                         SiteName: 'user.auth.xboxlive.com',
-                        RpsTicket: `d=${accessToken}`
+                        RpsTicket: `d=${accessToken}`,
+                        OptionalDisplayClaims: ['mgt', 'umg']
                     },
                     RelyingParty: 'http://auth.xboxlive.com',
                     TokenType: 'JWT'
@@ -324,20 +325,23 @@ class API {
             account = {...account};
             const dateNow = Date.now();
             const { expireDate } = account.xsts;
-            if(dateNow >= expireDate) {
+            if(dateNow >= expireDate || (account.xsts2 && dateNow >= account.xsts2.expireDate) || !account.xsts || !account.xsts2) {
                 console.warn(`[API:XboxLive]: XSTS Token expired, refreshing...`);
                 if(dateNow >= account.xbox.expireDate) {
                     console.warn(`[API:XboxLive]: Token expired, refreshing...`);
                     [account] = await API.Microsoft.verifyAccount(account);
                     account.xbox = await this.getAccessData(account.microsoft.token);
                 }
-                account.xsts = await this.getXSTSData(account.xbox.token);
+                if (!account.xsts || dateNow >= expireDate)
+                    account.xsts = await this.getXSTSData(account.xbox.token, 'rp://api.minecraftservices.com/');
+                if (!account.xsts2 || dateNow >= account.xsts2.expireDate)
+                    account.xsts2 = await this.getXSTSData(account.xbox.token);
                 return [account, true];
             }
             return [account, false];
         }
 
-        static async getXSTSData(token) {
+        static async getXSTSData(token, relyingParty) {
             if(!token)
                 throw new Error(`Invalid Access Token: ${token}`);
             const xstsData = await API.makeRequest(`${XSTS_AUTH_BASE}/xsts/authorize`, {
@@ -347,7 +351,7 @@ class API {
                         SandboxId: 'RETAIL',
                         UserTokens: [ token ]
                     },
-                    RelyingParty: 'rp://api.minecraftservices.com/',
+                    RelyingParty: relyingParty ?? 'http://xboxlive.com',
                     TokenType: 'JWT'
                 })
             });
@@ -369,9 +373,27 @@ class API {
 
             console.warn('[API:XboxLive]: Acquired XSTS Token');
             return {
+                xuid: xstsData.DisplayClaims.xui[0].xid,
                 token: xstsData.Token,
                 userHash: xstsData.DisplayClaims.xui[0].uhs,
                 expireDate: new Date(xstsData.NotAfter).getTime()
+            };
+        }
+        
+        static async getProfile({ xuid, token, userHash }) {
+            const { profileUsers: [ profile ] } = await API.makeRequest(`https://profile.xboxlive.com/users/xuid(${xuid})/settings`, {
+                query: {
+                    settings: 'ModernGamertag,GameDisplayPicRaw,RealName'
+                },
+                headers: {
+                    Authorization: `XBL3.0 x=${userHash};${token}`,
+                    'x-xbl-contract-version': '2'
+                }
+            });
+            return {
+                avatar: profile.settings[1].value,
+                gamertag: profile.settings[0].value,
+                realName: profile.settings[2].value // All of this information is stored on only YOUR device.
             };
         }
     }

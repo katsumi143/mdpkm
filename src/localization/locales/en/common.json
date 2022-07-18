@@ -15,6 +15,7 @@
     "actions.launch": "Launch",
     "actions.delete": "Delete",
     "actions.search": "Search",
+    "actions.select": "Select",
     "actions.install": "Install",
     "actions.refresh": "Refresh",
     "actions.continue": "Continue",
