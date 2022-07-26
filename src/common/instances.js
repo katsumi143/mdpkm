@@ -516,10 +516,15 @@ export class Instance extends EventEmitter {
                     readOut(string, null, type);
             });
         } else if(isBedrock) {
-            await tauri.invoke('reregister_package', {
+            updateToastState('Preparing for launch');
+            await tauri.invoke('unregister_package', {
                 family: 'Microsoft.MinecraftUWP_8wekyb3d8bbwe',
                 gameDir: this.getClientPath()
             });
+            await tauri.invoke('reregister_package', {
+                gameDir: this.getClientPath()
+            });
+            updateToastState('Launching');
             await tauri.invoke('launch_package', {
                 family: 'Microsoft.MinecraftUWP_8wekyb3d8bbwe',
                 gameDir: this.getClientPath()
@@ -713,7 +718,7 @@ class Instances extends EventEmitter {
     }
 
     static async build() {
-        const path = `${appDirectory}/instances`;
+        const path = `${appDirectory}instances`;
         if(!await Util.fileExists(path))
             await Util.createDir(path);
         return new Instances(path, await Java.build());
@@ -1221,10 +1226,12 @@ class Instances extends EventEmitter {
                 await Util.downloadFilePath(downloadLink, `${basePath}/minecraft.appx`, true);
             }
 
-            updateToastState?.('Extracting minecraft.appx');
-            await Util.createDirAll(gamePath);
-            await Util.extractZip(appPath, gamePath);
-            await Util.removeFile(`${gamePath}/AppxSignature.p7x`);
+            if(!await Util.fileExists(gamePath)) {
+                updateToastState?.('Extracting minecraft.appx');
+                await Util.createDirAll(gamePath);
+                await Util.extractZip(appPath, gamePath);
+                await Util.removeFile(`${gamePath}/AppxSignature.p7x`);
+            }
         }
 
         updateToastState?.(null);

@@ -94,7 +94,7 @@ export default Patcher.register(function ResourcePackManagement({ instanceId }) 
                     {items === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
                     {t('app.mdpkm.common:actions.refresh')}
                 </Button>
-                <Button theme="accent" onClick={addResourcePack}>
+                <Button theme="accent" onClick={addResourcePack} disabled={instance?.config.loader.type === 'bedrock'}>
                     <PlusLg/>
                     {t('app.mdpkm.resourcepack_management.add')}
                 </Button>

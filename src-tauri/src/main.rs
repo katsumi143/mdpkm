@@ -38,6 +38,7 @@ fn main() {
             fs_read_text_file,
             fs_create_dir_all,
             reregister_package,
+            unregister_package,
             fs_write_binary_zip,
             fs_read_file_in_zip,
             get_microsoft_account,
@@ -511,10 +512,8 @@ async fn launch_package(family: String, game_dir: String) {
     let pkg = AppDiagnosticInfo::RequestInfoForPackageAsync(
         HSTRING::from(family)
     ).unwrap().await.unwrap();
-    println!("{}", &game_dir);
     if pkg.Size().unwrap() > 0 {
         for pk in pkg {
-            println!("{}", pk.AppInfo().unwrap().Package().unwrap().InstalledLocation().unwrap().Path().unwrap().to_string());
             if std::path::Path::new(&pk.AppInfo().unwrap().Package().unwrap().InstalledLocation().unwrap().Path().unwrap().to_string()).eq(game_path) {
                 pk.LaunchAsync().unwrap();
                 break;
@@ -524,15 +523,33 @@ async fn launch_package(family: String, game_dir: String) {
 }
 
 #[tauri::command]
-async fn reregister_package(_family: String, game_dir: String) {
+async fn unregister_package(family: String, game_dir: String) {
+    let game_path = std::path::Path::new(&game_dir);
+    let pkg = AppDiagnosticInfo::RequestInfoForPackageAsync(
+        HSTRING::from(family)
+    ).unwrap().await.unwrap();
+    if pkg.Size().unwrap() > 0 {
+        for pk in pkg {
+            /*if std::path::Path::new(&pk.AppInfo().unwrap().Package().unwrap().InstalledLocation().unwrap().Path().unwrap().to_string()).eq(game_path) {
+                continue;
+            }*/
+            PackageManager::new().unwrap().RemovePackageAsync(pk.AppInfo().unwrap().Package().unwrap().Id().unwrap().FullName().unwrap()).unwrap();
+        }
+    }
+}
+
+#[tauri::command]
+async fn reregister_package(game_dir: String) {
     let game_path = std::path::Path::new(&game_dir);
     let manifest_path = game_path.join("AppxManifest.xml");
     let options = RegisterPackageOptions::new().unwrap();
     options.SetDeveloperMode(true).unwrap();
-    PackageManager::new().unwrap().RegisterPackageByUriAsync(
+    let res = PackageManager::new().unwrap().RegisterPackageByUriAsync(
         Uri::CreateUri(HSTRING::from(manifest_path.to_str().unwrap())).unwrap(),
         options
     ).unwrap().await.unwrap();
+    println!("{}", res.ErrorText().unwrap());
+    println!("registered package");
 }
 
 use tauri::Manager;

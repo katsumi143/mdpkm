@@ -33,6 +33,6 @@ export const MINECRAFT_LIBRARIES_URL = "https://libraries.minecraft.net";
 export const LoaderStates = {
     forge: 'Disabled',
     quilt: 'Beta Software',
-    bedrock: 'Disabled'
+    bedrock: 'Unstable'
 };
-export const DisabledLoaders = ['forge', 'bedrock'];
+export const DisabledLoaders = ['forge'];
