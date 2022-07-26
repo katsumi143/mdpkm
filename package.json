@@ -1,6 +1,6 @@
 {
     "name": "mdpkm",
-    "version": "1.5.0",
+    "version": "1.6.0",
     "description": "Simple all-in-one instance manager for Minecraft Java & Bedrock",
     "repository": "github:Blookerss/mdpkm",
     "homepage": "https://github.com/Blookerss/mdpkm#readme",
@@ -14,7 +14,7 @@
         "tauricon": "tauricon --target ./src-tauri/icons ./app-icon.png"
     },
     "devDependencies": {
-        "@tauri-apps/cli": "1.0.0-rc.13",
+        "@tauri-apps/cli": "1.0.5",
         "@tauri-apps/tauricon": "github:tauri-apps/tauricon",
         "@vitejs/plugin-react": "^1.2.0",
         "env-cmd": "^10.1.0",
