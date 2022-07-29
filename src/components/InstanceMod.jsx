@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Breakpoint } from 'react-socks';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Trash3Fill, CaretDownFill, CloudArrowDown, ExclamationCircleFill } from 'react-bootstrap-icons';
@@ -68,25 +69,31 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                                 </Typography>
                             </Tag>
                         }
-                        <Tag>
-                            {sourceApi?.icon && <Image src={sourceApi?.icon} size={12} borderRadius={4}/>}
-                            <Typography size=".6rem" color="$tagColor" family="Nunito">
-                                {Util.getPlatformName(mod.source)}
-                            </Typography>
-                        </Tag>
-                        {!update && <Tag>
-                            {loaderData?.icon && <Image src={loaderData?.icon} size={12}/>}
-                            <Typography size=".6rem" color="$tagColor" family="Nunito">
-                                {Util.getLoaderName(mod?.loader)?.split(" ")?.[0]} {mod.gameVersion}
-                            </Typography>
-                        </Tag>}
+                        <Breakpoint customQuery="(min-width: 820px)">
+                            <Tag>
+                                {sourceApi?.icon && <Image src={sourceApi?.icon} size={12} borderRadius={4}/>}
+                                <Typography size=".6rem" color="$tagColor" family="Nunito">
+                                    {Util.getPlatformName(mod.source)}
+                                </Typography>
+                            </Tag>
+                        </Breakpoint>
+                        <Breakpoint customQuery="(min-width: 690px)">
+                            {!update && <Tag>
+                                {loaderData?.icon && <Image src={loaderData?.icon} size={12}/>}
+                                <Typography size=".6rem" color="$tagColor" family="Nunito">
+                                    {Util.getLoaderName(mod?.loader)?.split(" ")?.[0]} {mod.gameVersion}
+                                </Typography>
+                            </Tag>}
+                        </Breakpoint>
                         {update && <Button theme="accent" disabled>
                             <CloudArrowDown size={14}/>
                             Update
                         </Button>}
                         {!embedded && <Button theme="secondary" onClick={deleteMod}>
                             <Trash3Fill/>
-                            {t('app.mdpkm.common:actions.delete')}
+                            <Breakpoint customQuery="(min-width: 580px)">
+                                {t('app.mdpkm.common:actions.delete')}
+                            </Breakpoint>
                         </Button>}
                     </Grid>
                 </Grid>

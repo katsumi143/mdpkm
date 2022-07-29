@@ -8,9 +8,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { XLg, PlusLg, PencilFill, Folder2Open } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
+import Modal from './Modal';
 import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
-import Portal from '/voxeliface/components/Portal';
 import Divider from '/voxeliface/components/Divider';
 import Spinner from '/voxeliface/components/Spinner';
 import Markdown from '/voxeliface/components/Markdown';
@@ -169,97 +169,84 @@ export default Patcher.register(function SkinManagement() {
                 </React.Fragment>}
             </Grid>
         </Grid>
-        {adding && <Portal>
-            <Grid width="100vw" height="100vh" direction="vertical" alignItems="center" background="#00000099" justifyContent="center" css={{
-                top: 0,
-                left: 0,
-                zIndex: 100000,
-                position: 'absolute'
-            }}>
-                <Grid padding={12} direction="vertical" background="$secondaryBackground" borderRadius={8} css={{
-                    border: '1px solid $secondaryBorder2',
-                    minWidth: '24rem',
-                    position: 'relative'
-                }}>
-                    <TextHeader>{t('app.mdpkm.skin_management.adding.header')}</TextHeader>
-                    <Grid spacing="2rem" justifyContent="space-between">
-                        <SkinFrame
-                            walk
-                            skin={addingPath ? convertFileSrc(addingPath) : `img/skins/${addingModel}.png`}
-                            cape={capes.find(c => c.id === addingCape)?.url}
-                            width={150}
-                            model={SKIN_MODEL[addingModel]}
-                            height={256}
-                            control
-                            background="none"
-                        />
-                        <Grid direction="vertical">
-                            <InputLabel>{t('app.mdpkm.skin_management.skin_name.label')}</InputLabel>
-                            <TextInput
-                                width="100%"
-                                value={addingName}
-                                onChange={setAddingName}
-                                placeholder={t('app.mdpkm.skin_management.skin_name.placeholder')}
-                            />
+        {adding && <Modal>
+            <TextHeader>{t('app.mdpkm.skin_management.adding.header')}</TextHeader>
+            <Grid spacing="2rem" justifyContent="space-between">
+                <SkinFrame
+                    walk
+                    skin={addingPath ? convertFileSrc(addingPath) : `img/skins/${addingModel}.png`}
+                    cape={capes.find(c => c.id === addingCape)?.url}
+                    width={150}
+                    model={SKIN_MODEL[addingModel]}
+                    height={256}
+                    control
+                    background="none"
+                />
+                <Grid direction="vertical">
+                    <InputLabel>{t('app.mdpkm.skin_management.skin_name.label')}</InputLabel>
+                    <TextInput
+                        width="100%"
+                        value={addingName}
+                        onChange={setAddingName}
+                        placeholder={t('app.mdpkm.skin_management.skin_name.placeholder')}
+                    />
 
-                            <InputLabel spacious>{t('app.mdpkm.skin_management.skin_model.label')}</InputLabel>
-                            <Select.Root value={addingModel} onChange={setAddingModel}>
-                                <Select.Group name={t('app.mdpkm.skin_management.skin_model.category')}>
-                                    <Select.Item value="CLASSIC">
-                                        {t('app.mdpkm.skin_management.skin_model.items.classic')}
-                                    </Select.Item>
-                                    <Select.Item value="SLIM">
-                                        {t('app.mdpkm.skin_management.skin_model.items.slim')}
-                                    </Select.Item>
-                                </Select.Group>
-                            </Select.Root>
+                    <InputLabel spacious>{t('app.mdpkm.skin_management.skin_model.label')}</InputLabel>
+                    <Select.Root value={addingModel} onChange={setAddingModel}>
+                        <Select.Group name={t('app.mdpkm.skin_management.skin_model.category')}>
+                            <Select.Item value="CLASSIC">
+                                {t('app.mdpkm.skin_management.skin_model.items.classic')}
+                            </Select.Item>
+                            <Select.Item value="SLIM">
+                                {t('app.mdpkm.skin_management.skin_model.items.slim')}
+                            </Select.Item>
+                        </Select.Group>
+                    </Select.Root>
 
-                            <InputLabel spacious>{t('app.mdpkm.skin_management.skin_file.label')}</InputLabel>
-                            <TextInput
-                                width="100%"
-                                value={addingPath && `.../${addingPath.split('\\').slice(-2).join('/')}`}
-                                readOnly
-                                placeholder={t('app.mdpkm.import_instance.select_file.placeholder')}
-                            >
-                                <Button onClick={selectFile}>
-                                    <Folder2Open size={14}/>
-                                    {t('app.mdpkm.common:actions.select_file')}
-                                </Button>
-                            </TextInput>
+                    <InputLabel spacious>{t('app.mdpkm.skin_management.skin_file.label')}</InputLabel>
+                    <TextInput
+                        width="100%"
+                        value={addingPath && `.../${addingPath.split('\\').slice(-2).join('/')}`}
+                        readOnly
+                        placeholder={t('app.mdpkm.import_instance.select_file.placeholder')}
+                    >
+                        <Button onClick={selectFile}>
+                            <Folder2Open size={14}/>
+                            {t('app.mdpkm.common:actions.select_file')}
+                        </Button>
+                    </TextInput>
 
-                            <InputLabel spacious>{t('app.mdpkm.skin_management.cape.label')}</InputLabel>
-                            <Select.Root value={addingCape} onChange={setAddingCape} defaultValue="none">
-                                <Select.Group name={t('app.mdpkm.skin_management.cape.category')}>
-                                    {capes.map((cape, key) => <Select.Item key={key} value={cape.id}>
-                                        <Image src={cape.url} size={24} height={32} css={{
-                                            backgroundSize: '128px 66px',
-                                            imageRendering: 'pixelated',
-                                            backgroundColor: '#fff',
-                                            backgroundPosition: '0 7%'
-                                        }}/>
-                                        {cape.alias}
-                                    </Select.Item>)}
-                                </Select.Group>
-                                <Select.Item value="none">
-                                    {t('app.mdpkm.skin_management.cape.items.none')}
-                                </Select.Item>
-                            </Select.Root>
+                    <InputLabel spacious>{t('app.mdpkm.skin_management.cape.label')}</InputLabel>
+                    <Select.Root value={addingCape} onChange={setAddingCape} defaultValue="none">
+                        <Select.Group name={t('app.mdpkm.skin_management.cape.category')}>
+                            {capes.map((cape, key) => <Select.Item key={key} value={cape.id}>
+                                <Image src={cape.url} size={24} height={32} css={{
+                                    backgroundSize: '128px 66px',
+                                    imageRendering: 'pixelated',
+                                    backgroundColor: '#fff',
+                                    backgroundPosition: '0 7%'
+                                }}/>
+                                {cape.alias}
+                            </Select.Item>)}
+                        </Select.Group>
+                        <Select.Item value="none">
+                            {t('app.mdpkm.skin_management.cape.items.none')}
+                        </Select.Item>
+                    </Select.Root>
 
-                            <Grid margin="2rem 0 0" spacing={8}>
-                                <Button theme="accent" onClick={addNewSkin} disabled={!addingName}>
-                                    <PlusLg size={14}/>
-                                    {t('app.mdpkm.skin_management.adding.submit')}
-                                </Button>
-                                <Button theme="secondary" onClick={() => setAdding(false)}>
-                                    <XLg/>
-                                    {t('app.mdpkm.skin_management.adding.cancel')}
-                                </Button>
-                            </Grid>
-                        </Grid>
+                    <Grid margin="2rem 0 0" spacing={8}>
+                        <Button theme="accent" onClick={addNewSkin} disabled={!addingName}>
+                            <PlusLg size={14}/>
+                            {t('app.mdpkm.skin_management.adding.submit')}
+                        </Button>
+                        <Button theme="secondary" onClick={() => setAdding(false)}>
+                            <XLg/>
+                            {t('app.mdpkm.skin_management.adding.cancel')}
+                        </Button>
                     </Grid>
                 </Grid>
             </Grid>
-        </Portal>}
+        </Modal>}
     </Grid>;
 });
 

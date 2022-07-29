@@ -1,0 +1,121 @@
+{
+    "app.mdpkm.buttons.add_instance": "Pievienot Jaunu Instanci",
+
+    "app.mdpkm.settings.header.title": "Iestātījumi",
+    "app.mdpkm.settings.general": "Ģenerāli Iestātījumi",
+    "app.mdpkm.settings.instances": "Instances Iestātījumi",
+    "app.mdpkm.settings.java": "Java Iestātījumi",
+    "app.mdpkm.settings.plugins": "Pluginu Pārvalde - {{val}} Instalēts",
+    "app.mdpkm.settings.storage": "Krātuves Pārvalde",
+    "app.mdpkm.settings.about": "Par šo buildu",
+
+    "app.mdpkm.settings.general.account": "Minecraft Konts",
+    "app.mdpkm.settings.general.account.summary": "Konts, ko izmanto priekš Minecraft Java Izdevuma.",
+    "app.mdpkm.settings.general.account.category": "Minecraft Konti",
+    "app.mdpkm.settings.general.account.items.none": "Neviens",
+    "app.mdpkm.settings.general.account.add": "Pievienot Jaunu Kontu",
+    "app.mdpkm.settings.general.account.remove": "Dzēst Kontu",
+
+    "app.mdpkm.settings.general.theme": "Izskats",
+    "app.mdpkm.settings.general.theme.summary": "Izvēlies izskatu, kas tev piestāv vislabāk!",
+    "app.mdpkm.settings.general.theme.category": "Izskati",
+    "app.mdpkm.settings.general.theme.items.default": "Noklusējums",
+    "app.mdpkm.settings.general.theme.items.light": "Gaišs",
+    "app.mdpkm.settings.general.theme.items.dark": "Tumšs",
+    "app.mdpkm.settings.general.theme.items.purple": "Violets",
+
+    "app.mdpkm.settings.general.language": "Valoda",
+    "app.mdpkm.settings.general.language.summary": "Vietturis",
+    "app.mdpkm.settings.general.language.category": "Valodas",
+
+    "app.mdpkm.settings.instances.pageBanner": "Minecraft Versijas Baneris",
+    "app.mdpkm.settings.instances.pageBanner.summary": "Parādā atjauninājumu/palaidēju informāciju",
+
+    "app.mdpkm.settings.plugins.add": "Pievienot Pluginu",
+    "app.mdpkm.settings.plugins.item.adds_loader": "Pievienos {{val}} Palaidēju",
+    "app.mdpkm.settings.plugins.item.adds_loaders": "Pievienos {{val}} Palaidējus",
+
+    "app.mdpkm.settings.storage.clean_header": "Ja uzskatat, ka {{appName}} aizņem pārāk daudz vietas, jūs varat automātiski atbrīvoties no nevajadzīgiem failiem.",
+    "app.mdpkm.settings.storage.clean": "Tīra Instalācija",
+
+    "app.mdpkm.settings.about.tauri": "Running Tauri {{val}}",
+    "app.mdpkm.settings.about.check_for_updates": "Pārbaudīt Atjaunijājumus",
+    "app.mdpkm.settings.about.report_bug": "Ziņot par problēmu",
+    "app.mdpkm.settings.about.github": "Apmeklēt GitHub saiti",
+
+    "app.mdpkm.settings.placeholder": "Nezināms iestātījums",
+    "app.mdpkm.settings.placeholder.summary": "Vietturis",
+
+    "app.mdpkm.instance_page.tabs.mods": "Modifikācijas",
+    "app.mdpkm.instance_page.tabs.servers": "Serveri",
+    "app.mdpkm.instance_page.tabs.resource_packs": "Resursu Pakas",
+    "app.mdpkm.instance_page.tabs.essential": "Essential",
+    "app.mdpkm.instance_page.tabs.loader": "Spēļu Palaidējs",
+    "app.mdpkm.instance_page.tabs.settings": "Iestātījumi",
+    "app.mdpkm.instance_page.tabs.export": "Eksportēt",
+
+    "app.mdpkm.instance_page.tabs.settings.title": "Instances Iestātījumi",
+    "app.mdpkm.instance_page.tabs.settings.instance_name": "Instances Nosaukums",
+    "app.mdpkm.instance_page.tabs.settings.memory_alloc": "Atmiņas alokācija - {{val}}GB",
+    "app.mdpkm.instance_page.tabs.settings.delete": "Dzēst Instanci",
+
+    "app.mdpkm.instance_page.tabs.mods.tabs.manage": "Pārvāldīt Modifikācijas",
+    "app.mdpkm.instance_page.tabs.mods.tabs.search": "Modifikācijas Meklēšana",
+
+    "app.mdpkm.mod_management.title": "Modifikācijas Pārvalde",
+    "app.mdpkm.mod_management.count": "{{val}} Instalēti",
+    "app.mdpkm.mod_management.search": "Meklēt Modifikācijas",
+    "app.mdpkm.mod_management.get_updates": "Saņemt Atjauninājumus",
+
+    "app.mdpkm.mod.author": "no {{val}}",
+    "app.mdpkm.mod.platform": "{{id}} uz {{name}}.",
+    "app.mdpkm.mod.featured": "Izlasītie",
+    "app.mdpkm.mod.recommended": "Rekomendētie",
+    "app.mdpkm.mod.downloads": "Lejupielādes",
+    "app.mdpkm.mod.sides.unknown": "Nezināma modifikācija",
+    "app.mdpkm.mod.sides.universal": "Universālā modifikācija",
+    "app.mdpkm.mod.sides.server": "Serveru modifikācija",
+    "app.mdpkm.mod.sides.client": "Klientu modifikācija",
+    "app.mdpkm.mod.sides.unavailable": "Nav pieejams",
+    "app.mdpkm.mod.version": "Versija {{val}}",
+    "app.mdpkm.mod.show_embedded": "Parādīt Iegultas Modifikācijas ({{val}})",
+    "app.mdpkm.mod.hide_embedded": "Paslēpt Iegultas Modifikācijas ({{val}})",
+
+    "app.mdpkm.server_management.title": "Serveru Pārvalde",
+    "app.mdpkm.server_management.count": "{{val}} Serveri",
+    "app.mdpkm.server_management.count1": "{{val}} Servers",
+    "app.mdpkm.server_management.search": "Meklēt serverus",
+    "app.mdpkm.server_management.add": "Pievienot Serveri",
+
+    "app.mdpkm.resourcepack_management.title": "Resursu Pakas Pārvalde",
+    "app.mdpkm.resourcepack_management.count": "{{val}} Resursu Pakas",
+    "app.mdpkm.resourcepack_management.count1": "{{val}} Resursu Paka",
+    "app.mdpkm.resourcepack_management.add": "Pievienot Resursa Paku",
+
+    "app.mdpkm.import_instance.title": "Importēt Instanci",
+    "app.mdpkm.import_instance.select_file": "Izvēlēt eksportētu instanci",
+    "app.mdpkm.import_instance.select_file.placeholder": "Izvēlieties failu",
+    "app.mdpkm.import_instance.name_instance": "Nosaucat jūsu instanci",
+    "app.mdpkm.import_instance.inherit_config": "Pārmantot konfigurāciju no",
+    "app.mdpkm.import_instance.inherit_config.category": "Instances",
+    "app.mdpkm.import_instance.inherit_config.items.none": "Nepārmantot",
+    "app.mdpkm.import_instance.buttons.import": "Importēt Instanci",
+
+    "app.mdpkm.export_instance.title": "Eksportēt Instanci",
+    "app.mdpkm.export_instance.files.title": "Izvēlieties Failus",
+    "app.mdpkm.export_instance.files.banned": "Šis fails ir aizslēgts",
+    "app.mdpkm.export_instance.files.sensitive": "Var saturēt sensitīvu informāciju",
+    "app.mdpkm.export_instance.buttons.export_mdpki": "Eksportēt Instanci",
+    "app.mdpkm.export_instance.buttons.export_modrinth": "Eksportēt Modrinth Paku",
+    "app.mdpkm.export_instance.buttons.export_curseforge": "Eksportēt CurseForge Paku",
+
+    "app.mdpkm.select_instance_type.header": "Izvēlēties Palaidēju",
+    "app.mdpkm.select_instance_type.import.button": "Importēt Instanci",
+    "app.mdpkm.select_instance_type.unsupported": "Neatbalstīts",
+
+    "app.mdpkm.loader_setup.header": "Konfigurēt Palaidēju",
+    "app.mdpkm.loader_setup.instance_name": "Instances Nosaukums",
+    "app.mdpkm.loader_setup.game_version": "Minecraft Versija",
+    "app.mdpkm.loader_setup.loader_version": "Palaidēja Versija",
+    "app.mdpkm.loader_setup.version_type": "Versiju Kategorija"
+}

@@ -9,7 +9,7 @@ import { open as open2 } from '@tauri-apps/api/dialog';
 import { appWindow } from '@tauri-apps/api/window';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { useSelector, useDispatch } from 'react-redux';
-import { XLg, PlusLg, Github, Trash3Fill, Folder2Open, EnvelopeOpen, CloudArrowDown } from 'react-bootstrap-icons';
+import { PlusLg, Github, Trash3Fill, Folder2Open, EnvelopeOpen, CloudArrowDown } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -18,12 +18,11 @@ import Button from '/voxeliface/components/Button';
 import Header from '/voxeliface/components/Typography/Header';
 import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
-import InputLabel from '/voxeliface/components/Input/Label';
 import BrowserLink from './BrowserLink';
 import * as Select from '/voxeliface/components/Input/Select';
 import ThemeContext from '/voxeliface/contexts/theme';
+import * as Tooltip from '/voxeliface/components/Tooltip';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
-import * as DropdownMenu from '/voxeliface/components/DropdownMenu';
 
 import API from '../common/api';
 import Util from '../common/util';
@@ -126,64 +125,10 @@ export default Patcher.register(function Settings() {
         dispatch(saveSettings());
         i18n.changeLanguage(lang);
     };
-    const changeAccount = id => {
-        dispatch(setAccount(id));
-        dispatch(saveAccounts());
-    };
     const changeTheme = (theme, update) => {
         dispatch(setTheme(theme));
         dispatch(saveSettings());
         update(theme);
-    };
-    const deleteAccount = ({ profile: { id, name } }) => {
-        dispatch(removeAccount(id));
-        if (account === id)
-            dispatch(setAccount());
-        dispatch(saveAccounts());
-        toast.success(`Successfully removed ${name}`);
-    }
-    const addNewAccount = async() => {
-        dispatch(setAddingAccount(true));
-        try {
-            toast('Check your browser, a new tab has opened.');
-            const accessCode = await API.Microsoft.getAccessCode(true);
-            appWindow.setFocus();
-            toast.loading('Your account is being added...\nMake sure to close the browser tab!', {
-                duration: 3000
-            });
-
-            const accessData = await API.Microsoft.getAccessData(accessCode);
-            const xboxData = await API.XboxLive.getAccessData(accessData.token);
-            const xstsData = await API.XboxLive.getXSTSData(xboxData.token, 'rp://api.minecraftservices.com/');
-            const xstsData2 = await API.XboxLive.getXSTSData(xboxData.token);
-            const minecraftData = await API.Minecraft.getAccessData(xstsData);
-
-            const account = {
-                xbox: xboxData,
-                xsts: xstsData,
-                xsts2: xstsData2,
-                microsoft: accessData,
-                minecraft: minecraftData
-            };
-            account.profile = await API.Minecraft.getProfile(minecraftData);
-
-            const gameIsOwned = await API.Minecraft.ownsMinecraft(minecraftData);
-            if(!gameIsOwned) {
-                dispatch(setAddingAccount(false));
-                return toast.error('Failed to add your account.\nYou do not own Minecraft Java Edition.\nXbox Game Pass is unsupported.');
-            }
-            if(accounts.find(a => a.profile.id === account.profile.id)) {
-                dispatch(setAddingAccount(false));
-                return toast.error(`Failed to add your account.\nYou already have '${account.profile.name} added.'`);
-            }
-            dispatch(addAccount(account));
-            dispatch(saveAccounts());
-            toast.success(`Successfully added '${account.profile.name}'`);
-        } catch(err) {
-            console.error(err);
-            toast.error(`Failed to add your account.\n${err.message ?? 'Unknown Reason.'}`);
-        }
-        dispatch(setAddingAccount(false));
     };
     const addPlugin = async() => {
         const path = await open2({
@@ -208,7 +153,7 @@ export default Patcher.register(function Settings() {
         setUpdating(true);
         checkUpdate().then(({ shouldUpdate }) => {
             if (!shouldUpdate)
-                toast('No updates available!', { duration: 5000 });
+                toast.success('You\'re already up to date!', { duration: 5000 });
             setUpdating(false);
         });
     };
@@ -242,6 +187,15 @@ export default Patcher.register(function Settings() {
                                         </Select.Item>
                                         <Select.Item value="purple">
                                             {t('app.mdpkm.settings.general.theme.items.purple')}
+                                        </Select.Item>
+                                        <Select.Item value="blue">
+                                            {t('app.mdpkm.settings.general.theme.items.blue')}
+                                        </Select.Item>
+                                        <Select.Item value="green">
+                                            {t('app.mdpkm.settings.general.theme.items.green')}
+                                        </Select.Item>
+                                        <Select.Item value="yellow">
+                                            {t('app.mdpkm.settings.general.theme.items.yellow')}
                                         </Select.Item>
                                     </Select.Group>
                                 </Select.Root>
@@ -359,7 +313,7 @@ export default Patcher.register(function Settings() {
                                         position: 'absolute'
                                     }}>
                                         {pluginLoaders.length > 0 &&
-                                            <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" css={{ gap: 8 }}>
+                                            <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" spacing={8} horizontal>
                                                 {pluginLoaders.map(({ icon }, key) =>
                                                     <Image key={key} src={icon} size={20} background="$primaryBackground" borderRadius={4}/>
                                                 )}
@@ -368,10 +322,18 @@ export default Patcher.register(function Settings() {
                                                 })}
                                             </Typography>
                                         }
-                                        <Button theme="secondary" disabled>
-                                            <Trash3Fill/>
-                                            Remove
-                                        </Button>
+                                        <Tooltip.Root delayDuration={250}>
+                                            <Tooltip.Trigger asChild>
+                                                <Button theme="secondary" disabled>
+                                                    <Trash3Fill/>
+                                                    {t('app.mdpkm.common:actions.remove')}
+                                                </Button>
+                                            </Tooltip.Trigger>
+                                            <Tooltip.Content side="top" sideOffset={4}>
+                                                <Tooltip.Arrow/>
+                                                {t('app.mdpkm.common:tooltips.feature_unavailable')}
+                                            </Tooltip.Content>
+                                        </Tooltip.Root>
                                     </Grid>
                                 </Grid>
                             })}
@@ -384,9 +346,17 @@ export default Patcher.register(function Settings() {
                                     appName
                                 })}
                             </Typography>
-                            <Button theme="accent" onClick={cleanInstallation} disabled>
-                                {t('app.mdpkm.settings.storage.clean')}
-                            </Button>
+                            <Tooltip.Root delayDuration={250}>
+                                <Tooltip.Trigger asChild>
+                                    <Button theme="accent" onClick={cleanInstallation} disabled>
+                                        {t('app.mdpkm.settings.storage.clean')}
+                                    </Button>
+                                </Tooltip.Trigger>
+                                <Tooltip.Content side="top" sideOffset={4}>
+                                    <Tooltip.Arrow/>
+                                    {t('app.mdpkm.common:tooltips.feature_unavailable')}
+                                </Tooltip.Content>
+                            </Tooltip.Root>
                             {cleaning &&
                                 <Grid width="100%" height="100%" alignItems="center" background="$primaryBackground" borderRadius={8} justifyContent="center" css={{
                                     top: 0,

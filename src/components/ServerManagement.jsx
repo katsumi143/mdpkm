@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { XLg, PlusLg, ArrowClockwise } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
+import Modal from './Modal';
 import Server from './Server';
 import Button from '/voxeliface/components/Button';
-import Portal from '/voxeliface/components/Portal';
 import Header from '/voxeliface/components/Typography/Header';
 import Spinner from '/voxeliface/components/Spinner';
 import TextInput from '/voxeliface/components/Input/Text';
@@ -133,64 +133,52 @@ export default Patcher.register(function ServerManagement({ instanceId }) {
                 />
             )}
         </Grid>
-        {addingServer && <Portal>
-            <Grid width="100vw" height="100vh" direction="vertical" alignItems="center" background="#00000099" justifyContent="center" css={{
-                top: 0,
-                left: 0,
-                zIndex: 100000,
-                position: 'absolute'
-            }}>
-                <Grid padding={12} direction="vertical" background="$secondaryBackground" borderRadius={8} css={{
-                    border: '1px solid $secondaryBorder2',
-                    position: 'relative'
-                }}>
-                    <Header>
-                        {t('app.mdpkm.server_management.adding.header')}
-                        <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito">
-                            {t('app.mdpkm.server_management.adding.header_note')}
-                        </Typography>
-                    </Header>
-                    <Grid spacing="2rem" justifyContent="space-between">
-                        <Grid direction="vertical">
-                            <InputLabel>{t('app.mdpkm.server_management.server_name.label')}</InputLabel>
-                            <TextInput
-                                value={addingName}
-                                onChange={setAddingName}
-                                placeholder={t('app.mdpkm.server_management.server_name.placeholder')}
-                            />
+        {addingServer && <Modal>
+            <Header>
+                {t('app.mdpkm.server_management.adding.header')}
+                <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito">
+                    {t('app.mdpkm.server_management.adding.header_note')}
+                </Typography>
+            </Header>
+            <Grid spacing="2rem" justifyContent="space-between">
+                <Grid direction="vertical">
+                    <InputLabel>{t('app.mdpkm.server_management.server_name.label')}</InputLabel>
+                    <TextInput
+                        value={addingName}
+                        onChange={setAddingName}
+                        placeholder={t('app.mdpkm.server_management.server_name.placeholder')}
+                    />
 
-                            <InputLabel spacious>{t('app.mdpkm.server_management.server_ip.label')}</InputLabel>
-                            <TextInput
-                                value={addingAddress}
-                                onBlur={() => setAddingAddress2(() => addingAddress)}
-                                onChange={setAddingAddress}
-                                placeholder={t('app.mdpkm.server_management.server_ip.placeholder')}
-                            />
-                            <Grid margin="2rem 0 0" spacing={8}>
-                                <Button theme="accent" onClick={addServer} disabled={!addingAddress}>
-                                    <PlusLg size={14}/>
-                                    {t('app.mdpkm.server_management.adding.submit')}
-                                </Button>
-                                <Button theme="secondary" onClick={closeAdding}>
-                                    <XLg/>
-                                    {t('app.mdpkm.server_management.adding.cancel')}
-                                </Button>
-                            </Grid>
-                        </Grid>
-                        <Grid height="fit-content" spacing="1rem" alignItems="center">
-                            {addingInfo === 'loading' && <Spinner/>}
-                            <Server
-                                name={addingName}
-                                icon={addingInfo?.icon}
-                                motd={addingInfo?.motd?.html?.join('</br>')}
-                                type={addingInfo ? `${addingInfo?.software ?? ''} ${addingInfo?.version ?? ''}` : null}
-                                players={addingInfo?.players}
-                                address={addingAddress}
-                            />
-                        </Grid>
+                    <InputLabel spacious>{t('app.mdpkm.server_management.server_ip.label')}</InputLabel>
+                    <TextInput
+                        value={addingAddress}
+                        onBlur={() => setAddingAddress2(() => addingAddress)}
+                        onChange={setAddingAddress}
+                        placeholder={t('app.mdpkm.server_management.server_ip.placeholder')}
+                    />
+                    <Grid margin="2rem 0 0" spacing={8}>
+                        <Button theme="accent" onClick={addServer} disabled={!addingAddress}>
+                            <PlusLg size={14}/>
+                            {t('app.mdpkm.server_management.adding.submit')}
+                        </Button>
+                        <Button theme="secondary" onClick={closeAdding}>
+                            <XLg/>
+                            {t('app.mdpkm.server_management.adding.cancel')}
+                        </Button>
                     </Grid>
                 </Grid>
+                <Grid height="fit-content" spacing="1rem" alignItems="center">
+                    {addingInfo === 'loading' && <Spinner/>}
+                    <Server
+                        name={addingName}
+                        icon={addingInfo?.icon}
+                        motd={addingInfo?.motd?.html?.join('</br>')}
+                        type={addingInfo ? `${addingInfo?.software ?? ''} ${addingInfo?.version ?? ''}` : null}
+                        players={addingInfo?.players}
+                        address={addingAddress}
+                    />
+                </Grid>
             </Grid>
-        </Portal>}
+        </Modal>}
     </React.Fragment>;
 });

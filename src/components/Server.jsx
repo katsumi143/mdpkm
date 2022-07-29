@@ -31,7 +31,7 @@ export default Patcher.register(function Server({ name, icon, motd, type, player
                 }}
             />
             <Grid height="100%" spacing={4} direction="vertical">
-                <Typography size=".9rem" color="$primaryColor" family="Nunito" margin="6px 0 0" lineheight={1} whitespace="nowrap">
+                <Typography size=".9rem" color="$primaryColor" family="Nunito" margin="6px 0 0" horizontal lineheight={1} whitespace="nowrap">
                     {name || t('app.mdpkm.server.default_name')}
                     {acceptTextures === 1 &&
                         <Typography size=".7rem" color="$secondaryColor" weight={300} family="Nunito" margin="4px 0 0 8px" lineheight={1}>

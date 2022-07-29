@@ -14,6 +14,7 @@ import App from '/src/components/App';
 import Main from '/voxeliface/components/Main';
 import Grid from '/voxeliface/components/Grid';
 import Pages from '/src/components/Pages';
+import Modal from '/src/components/Modal';
 import Header from '/src/components/Header';
 import Button from '/voxeliface/components/Button';
 import Settings from '/src/components/Settings';
@@ -42,15 +43,12 @@ export default Patcher.register(function Home() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const [_, setBruh] = useState(0);
-    const [skin, setSkin] = useState();
     const [page, setPage] = useState(0);
     const [update, setUpdate] = useState();
     const [loading, setLoading] = useState(false);
     const [instance, setInstance] = useState();
     const [settingUp, setSettingUp] = useState();
     const [importPath, setImportPath] = useState();
-    const [addSkinName, setAddSkinName] = useState();
-    const [addSkinImage, setAddSkinImage] = useState();
     const [instancePage, setInstancePage] = useState('home');
     const [loaderVersions, setLoaderVersions] = useState();
     const setupBackToSelect = () => {
@@ -59,17 +57,6 @@ export default Patcher.register(function Home() {
         setSettingUp();
     };
     const selectBackToHome = () => setInstancePage('home');
-    const chooseSkinImage = () => {
-        open({
-            filters: [{ name: 'All files', extensions: ['png'] }]
-        }).then(path => {
-            if(!path)
-                return toast.error('Invalid image path');
-            Util.readBinaryFile(path).then(binary =>
-                setAddSkinImage(Buffer.from(binary).toString('base64'))
-            );
-        })
-    };
     const importInstance = () => {
         setInstancePage('import');
         setLoading(false);
@@ -116,16 +103,6 @@ export default Patcher.register(function Home() {
         setInstancePage('import');
         setImportPath(path);
     };
-    const selectSkin = () => {
-
-    };
-    const addNewSkin = () => {
-        dispatch(addSkin({
-            name: addSkinName,
-            image: addSkinImage
-        }));
-        dispatch(saveSkins());
-    };
     const updateApp = () => {
         setUpdate({
             ...update,
@@ -152,53 +129,43 @@ export default Patcher.register(function Home() {
                     flexDirection: 'row'
                 }}>
                     {update &&
-                        <Grid width="100%" height="100%" direction="vertical" alignItems="center" background="#00000099" justifyContent="center" css={{
-                            top: 0,
-                            left: 0,
-                            zIndex: 100000,
-                            position: 'absolute'
-                        }}>
-                            <Grid width="45%" padding={12} direction="vertical" background="$secondaryBackground" borderRadius={8} css={{
-                                border: '1px solid $secondaryBorder2',
-                                position: 'relative'
-                            }}>
-                                <Typography size="1.2rem" color="$primaryColor" weight={600} family="Nunito Sans">
-                                    New Update Available
-                                </Typography>
-                                <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito">
-                                    Version {update.version} - Released {new Date(update.date).getTime() ? new Intl.RelativeTimeFormat('en', {
-                                        numeric: 'always' 
-                                    }).format(-Math.round((Date.now() - new Date(update.date)) / 86400000), 'day') : 'at an unknown date'}
-                                </Typography>
+                        <Modal>
+                            <Typography size="1.2rem" color="$primaryColor" weight={600} family="Nunito Sans">
+                                New Update Available
+                            </Typography>
+                            <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito">
+                                Version {update.version} - Released {new Date(update.date).getTime() ? new Intl.RelativeTimeFormat('en', {
+                                    numeric: 'always' 
+                                }).format(-Math.round((Date.now() - new Date(update.date)) / 86400000), 'day') : 'at an unknown date'}
+                            </Typography>
 
-                                <Typography size=".9rem" color="$primaryColor" weight={400} margin="1rem 0 0" family="Nunito">
-                                    Release notes:
-                                </Typography>
-                                <Markdown text={update.body} css={{
-                                    padding: '.5rem .75rem',
-                                    overflow: 'hidden auto',
-                                    background: '$secondaryBackground2',
-                                    borderRadius: 8
-                                }}/>
+                            <Typography size=".9rem" color="$primaryColor" weight={400} margin="1rem 0 0" family="Nunito">
+                                Release notes:
+                            </Typography>
+                            <Markdown text={update.body} css={{
+                                padding: '.5rem .75rem',
+                                overflow: 'hidden auto',
+                                background: '$secondaryBackground2',
+                                borderRadius: 8
+                            }}/>
 
-                                <Grid margin="2rem 0 0" justifyContent="space-between">
-                                    <Grid spacing={8}>
-                                        <Button theme="accent" onClick={updateApp} disabled={update.updating}>
-                                            {update.updating ? <BasicSpinner size={16}/> : <Download size={14}/>}
-                                            Install Update
-                                        </Button>
-                                        <Button theme="secondary" onClick={() => setUpdate()} disabled={update.updating}>
-                                            <XLg/>
-                                            Later
-                                        </Button>
-                                    </Grid>
-                                    <Button theme="secondary" onClick={() => shell.open(`https://github.com/Blookerss/mdpkm/releases/tag/v${update.version}`)}>
-                                        <Github size={14}/>
-                                        View Release
+                            <Grid margin="2rem 0 0" justifyContent="space-between">
+                                <Grid spacing={8}>
+                                    <Button theme="accent" onClick={updateApp} disabled={update.updating}>
+                                        {update.updating ? <BasicSpinner size={16}/> : <Download size={14}/>}
+                                        Install Update
+                                    </Button>
+                                    <Button theme="secondary" onClick={() => setUpdate()} disabled={update.updating}>
+                                        <XLg/>
+                                        Later
                                     </Button>
                                 </Grid>
+                                <Button theme="secondary" onClick={() => shell.open(`https://github.com/Blookerss/mdpkm/releases/tag/v${update.version}`)}>
+                                    <Github size={14}/>
+                                    View Release
+                                </Button>
                             </Grid>
-                        </Grid>
+                        </Modal>
                     }
                     <SideNavigation value={page} onChange={setPage}>
                         <NavigationItem name={t('app.mdpkm.home.navigation.instances')} icon={<Archive size={16}/>} value={0} direction="horizontal">

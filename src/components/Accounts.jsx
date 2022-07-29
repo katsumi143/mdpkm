@@ -102,7 +102,7 @@ export default Patcher.register(function Settings() {
                 </Typography>}
                 <Grid spacing={8} direction="vertical">
                     {accounts.map(({ profile, xboxProfile }, key) =>
-                        <Grid width="40%" padding="8px" spacing={8} alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
+                        <Grid key={key} width="40%" padding="8px" spacing={8} alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
                             <Image src={xboxProfile?.avatar ?? `${SKIN_API_BASE}/face/24/${profile.id}`} size={32} borderRadius={xboxProfile ? 16 : 4}/>
                             <Typography color="$primaryColor" family="Nunito">
                                 {xboxProfile?.gamertag ?? profile.name}

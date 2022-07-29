@@ -1,0 +1,54 @@
+{
+    "headers.empty_list": "Te nekā nav!",
+    "headers.adding_instance": "Pievienjot Jauno Instanci",
+
+    "labels.platform": "Platforma",
+    "labels.search_query": "Meklēšanas vaicājums",
+    
+    "actions.view": "Skatīt",
+    "actions.edit": "Rediģēt",
+    "actions.retry": "Mēģināt vēlreiz",
+    "actions.launch": "Sākt",
+    "actions.delete": "Izdzēst",
+    "actions.search": "Meklēt",
+    "actions.install": "Instalēt",
+    "actions.refresh": "Atjaunot",
+    "actions.continue": "Turpināt",
+    "actions.open_folder": "Atvērt Mapi",
+    "actions.select_file": "Izvēlēties Failu",
+    "actions.save_changes": "Saglabāt Izmaiņas",
+    "actions.visit_website": "Apmeklēt saiti",
+
+    "states.waiting": "Gaida",
+    "states.loading": "Ielādējas",
+    "states.installed": "Instalēta",
+    "states.installing": "Notiek Instalēšana",
+    "states.unavailable": "Nav pieejama",
+
+    "buttons.back_to_instances": "Atpakaļ uz Instancēm",
+    "buttons.back_to_selection": "Atpakaļ uz Selekciju",
+
+    "loaders.java": "Minecraft Java Izdevums",
+    "loaders.java.summary": "Vienkārši Vaniļas Minecraft, bez modifikācijām vai kaut kā speciāla.",
+    "loaders.forge": "Forge Palaidējs",
+    "loaders.forge.summary": "Forge kopsavilkums",
+    "loaders.quilt": "Quilt Palaidējs",
+    "loaders.quilt.summary": "Fabric ir viegla, eksperimentāla modificēšanas rīku ķēde.",
+    "loaders.fabric": "Fabric Palaidējs",
+    "loaders.fabric.summary": "Fabric ir viegla, eksperimentāla modificēšanas rīku ķēde.",
+    "loaders.bedrock": "Minecraft Bedrock Izdevums",
+    "loaders.bedrock.summary": "Vienkārši Bedrock Izdevums ar lejupielādējamu kontentu.\nTikai Windows 10+, nepieciešams Microsoft veikala konts.",
+    "loaders.modpack": "Minecraft Modifikācijas Paki",
+    "loaders.modpack.summary": "Minecraft Java Izdevumu Modifikācijas Paki, ko izveidoja kopienas.",
+    "loaders.import": "Importēt Instanci",
+    "loaders.import.summary": "Importējiet lietotāja ģenerētas instances, izmantojot mdpki failus.",
+    "loaders.import2": "Importēt Pielāgoto Klientu",
+    "loaders.import2.summary": "Importējiet pielāgotu manifesta failu.\nJāatbalsta oficiālo Minecraft Palaidēju!",
+
+    "loaders.categories.first_party": "Mojang Studija",
+    "loaders.categories.third_party": "Trešās Puses Modifikāciju Palaidēji",
+    "loaders.categories.third_party_modpacks": "Trešās Puses Modifikācijas Paki",
+    "loaders.categories.other": "Citas Opcijas",
+
+    "platforms.local": "Lokāls"
+}

@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { keyframes } from '@stitches/react';
 import { open } from '@tauri-apps/api/shell';
+import { keyframes } from '@stitches/react';
+import { Breakpoint } from 'react-socks';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
-import { App, List, Gear, PlayFill, PencilFill, Trash3Fill, Folder2Open, FileEarmarkZip, ExclamationCircleFill } from 'react-bootstrap-icons';
+import { App, XLg, List, Gear, PlusLg, PlayFill, PencilFill, Trash3Fill, Folder2Open, FileEarmarkZip, ExclamationCircleFill } from 'react-bootstrap-icons';
 
 import Mod from './Mod';
 import Tag from './Tag';
 import Tabs from '/voxeliface/components/Tabs';
 import Grid from '/voxeliface/components/Grid';
+import Modal from './Modal';
 import Image from '/voxeliface/components/Image';
+import Toggle from './Toggle';
 import Button from '/voxeliface/components/Button';
 import Slider from '/voxeliface/components/Input/Slider';
+import * as Select from '/voxeliface/components/Input/Select';
 import Spinner from '/voxeliface/components/Spinner';
 import TabItem from '/voxeliface/components/Tabs/Item';
 import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
+import InputLabel from '/voxeliface/components/Input/Label';
+import TextHeader from '/voxeliface/components/Typography/Header';
 import BrowserLink from './BrowserLink';
 import * as Dialog from '/voxeliface/components/Dialog';
 import InstanceIcon from './InstanceIcon';
@@ -31,7 +37,7 @@ import ResourcePackManagement from './ResourcePackManagement';
 import API from '../common/api';
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
-import Instances from '../common/instances';
+import Instances, { Instance } from '../common/instances';
 import { saveAccounts, writeAccount } from '../common/slices/accounts';
 import { LoaderStates, DisabledLoaders } from '../common/constants';
 
@@ -60,9 +66,15 @@ export default Patcher.register(function InstancePage({ id }) {
     const [tabPage, setTabPage] = useState(0);
     const [launchable, setLaunchable] = useState();
     const [consoleOpen, setConsoleOpen] = useState(false);
+    const [gameVersion, setGameVersion] = useState(config?.loader?.game);
     const [instanceRam, setInstanceRam] = useState(initialState.instanceRam);
+    const [gameVersions, setGameVersions] = useState();
     const [instanceName, setInstanceName] = useState(initialState.instanceName ?? '');
+    const [editingLoader, setEditingLoader] = useState(false);
+    const [loaderVersion, setLoaderVersion] = useState(config?.loader?.version);
+    const [loaderVersions, setLoaderVersions] = useState();
     const [instanceResolution, setInstanceResolution] = useState(initialState.instanceResolution);
+    const [downloadLoaderChanges, setDownloadLoaderChanges] = useState(true);
     const saveSettings = async() => {
         setSaving(true);
 
@@ -110,6 +122,52 @@ export default Patcher.register(function InstancePage({ id }) {
         else
             toast.error(`getInstance failed.\nTry refreshing your instances.`);
     };
+    const saveGameLoaderChanges = async() => {
+        setEditingLoader('saving');
+        const Instance = Instances.getInstance(id);
+        const config = await Instance.getConfig();
+        await Instance.saveConfig({
+            ...config,
+            loader: { ...config.loader, game: gameVersion, version: loaderVersion }
+        });
+        Instance.updateStore();
+        setEditingLoader(false);
+
+        if(downloadLoaderChanges && config.loader.game !== gameVersion) {
+            const toastHead = 'Installing Minecraft';
+            const toastId = toast.loading(`${toastHead}\n${t('app.mdpkm.instances:states.preparing')}`, {
+                className: 'gotham',
+                position: 'bottom-right',
+                duration: 10000,
+                style: { whiteSpace: 'pre-wrap' }
+            });
+            await Instances.installMinecraft(gameVersion, Instance, text => {
+                Instance.setState(text);
+                toast.loading(`${toastHead}\n${text}`, {
+                    id: toastId
+                });
+            });
+            toast.success(`Minecraft ${gameVersion} has been installed!`, {
+                id: toastId,
+                duration: 3000
+            });
+        }
+        if(downloadLoaderChanges && config.loader.version !== loaderVersion) {
+            const toastHead = `Installing ${t(`app.mdpkm.common:loaders.${config.loader.type}`)}`;
+            const toastId = toast.loading(`${toastHead}\n${t('app.mdpkm.instances:states.preparing')}`, {
+                className: 'gotham',
+                position: 'bottom-right',
+                duration: 10000,
+                style: { whiteSpace: 'pre-wrap' }
+            });
+            await Instances.installLoader(Instance, toastId, toastHead, true);
+            toast.success(`${t(`app.mdpkm.common:loaders.${config.loader.type}`)} ${loaderVersion} has been installed!`, {
+                id: toastId,
+                duration: 3000
+            });
+        }
+        toast.success('Changes were applied successfully!', { duration: 5000 });
+    };
     const openFolder = () => open(path);
     useEffect(() => {
         if(typeof launchable !== 'boolean') {
@@ -125,10 +183,23 @@ export default Patcher.register(function InstancePage({ id }) {
     }, [launchable]);
     useEffect(() => {
         setLaunchable();
+        setGameVersion(config?.loader?.game);
         setInstanceRam(initialState.instanceRam);
         setInstanceName(initialState.instanceName);
+        setLoaderVersion(config?.loader?.version);
         setInstanceResolution(initialState.instanceResolution);
     }, [id]);
+    useEffect(() => {
+        if(editingLoader && !gameVersions) {
+            setGameVersions('loading');
+            setLoaderVersions('loading');
+            const loaderData = API.getLoader(config.loader.type);
+            loaderData.source.getVersions?.().then(versions => {
+                setGameVersions(Object.keys(versions));
+                setLoaderVersions(versions);
+            });
+        }
+    }, [editingLoader]);
 
     if(!instance)
         return;
@@ -168,29 +239,40 @@ export default Patcher.register(function InstancePage({ id }) {
                 }}>
                     <Button theme="secondary" onClick={openFolder}>
                         <Folder2Open/>
-                        {t('app.mdpkm.common:actions.open_folder')}
+                        <Breakpoint customQuery="(min-width: 850px)">
+                            {t('app.mdpkm.common:actions.open_folder')}
+                        </Breakpoint>
                     </Button>
                     <Button onClick={launchInstance} disabled={loaderDisabled || !!minState || !Account}>
                         {!!minState ? <BasicSpinner size={16}/> : <PlayFill/>}
-                        {t('app.mdpkm.common:actions.launch')}
+                        <Breakpoint customQuery="(min-width: 700px)">
+                            {t('app.mdpkm.common:actions.launch')}
+                        </Breakpoint>
                     </Button>
                 </Grid>
-                <Tag css={{
-                    right: 12,
-                    position: 'absolute'
-                }}>
-                    {loaderData?.icon ?
-                        <ImageTransition src={loaderData?.icon} size={16}/>
-                    : <ExclamationCircleFill size={14} color="#ffffffad"/>}
-                    <Typography size=".8rem" color="$tagColor" family="Nunito">
-                        <TextTransition inline noOverflow>
-                            {`${Util.getLoaderName(config?.loader?.type)} ${config?.loader?.game}${config?.loader?.version ? `-${config.loader.version}` : ''}`}
-                        </TextTransition>
-                    </Typography>
-                </Tag>
+                <Breakpoint customQuery="(min-width: 700px)">
+                    <Tag css={{
+                        right: 12,
+                        position: 'absolute'
+                    }}>
+                        {loaderData?.icon ?
+                            <ImageTransition src={loaderData?.icon} size={16}/>
+                        : <ExclamationCircleFill size={14} color="#ffffffad"/>}
+                        <Typography size=".8rem" color="$tagColor" family="Nunito" spacing={4} horizontal>
+                            <TextTransition inline noOverflow>
+                                {Util.getLoaderName(config?.loader?.type)}
+                            </TextTransition>
+                            <Breakpoint customQuery="(min-width: 850px)">
+                                <TextTransition inline noOverflow>
+                                    {config?.loader.game}{config?.loader?.version ? `-${config.loader.version}` : ''}
+                                </TextTransition>
+                            </Breakpoint>
+                        </Typography>
+                    </Tag>
+                </Breakpoint>
             </Grid>
             {instance.launchLogs &&
-                <Grid width="auto" height={consoleOpen ? '-webkit-fill-available' : 'auto'} margin="0 1rem 1rem" direction="vertical" background="$secondaryBackground2" borderRadius={8} css={{
+                <Grid width="auto" height={consoleOpen ? '100%' : 'auto'} margin="0 1rem 1rem" direction="vertical" background="$secondaryBackground2" borderRadius={8} css={{
                     overflow: 'hidden',
                     position: 'relative',
                     maxHeight: '40%',
@@ -409,11 +491,61 @@ export default Patcher.register(function InstancePage({ id }) {
                             right: 16,
                             position: 'absolute'
                         }}>
-                            <Button theme="accent" disabled>
+                            <Button theme="accent" onClick={() => setEditingLoader(true)}>
                                 <PencilFill/>
                                 {t('app.mdpkm.common:actions.edit')}
                             </Button>
                         </Grid>
+                        {editingLoader && <Modal width="40%">
+                            <TextHeader>Editing Game Loader</TextHeader>
+                            <Grid direction="vertical">
+                                <InputLabel>Minecraft Version</InputLabel>
+                                <Select.Root
+                                    value={gameVersion}
+                                    onChange={setGameVersion}
+                                    disabled={gameVersions === 'loading'}
+                                >
+                                    <Select.Group name={t('app.mdpkm.loader_setup.game_version.category')}>
+                                        {Array.isArray(gameVersions) && gameVersions.map((version, index) =>
+                                            <Select.Item key={index} value={version}>
+                                                {version}
+                                            </Select.Item>
+                                        )}
+                                    </Select.Group>
+                                </Select.Root>
+
+                                {Instances.getInstance(id)?.isModded() && <React.Fragment>
+                                    <InputLabel spacious>Loader Version</InputLabel>
+                                    <Select.Root
+                                        value={loaderVersion}
+                                        onChange={setLoaderVersion}
+                                        disabled={loaderVersions === 'loading'}
+                                    >
+                                        <Select.Group name={t('app.mdpkm.loader_setup.loader_version.category')}>
+                                            {typeof loaderVersions === 'object' && loaderVersions[gameVersion].map((version, index) =>
+                                                <Select.Item key={index} value={version}>
+                                                    {version}
+                                                </Select.Item>
+                                            )}
+                                        </Select.Group>
+                                    </Select.Root>
+                                </React.Fragment>}
+
+                                <InputLabel spacious>Download after saving</InputLabel>
+                                <Toggle size="small" value={downloadLoaderChanges} onChange={setDownloadLoaderChanges}/>
+
+                                <Grid margin="2rem 0 0" spacing={8}>
+                                    <Button theme="accent" onClick={saveGameLoaderChanges}>
+                                        <PlusLg size={14}/>
+                                        {t('app.mdpkm.common:actions.save_changes')}
+                                    </Button>
+                                    <Button theme="secondary" onClick={() => setEditingLoader(false)}>
+                                        <XLg/>
+                                        {t('app.mdpkm.common:actions.cancel')}
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Modal>}
                     </Grid>
                     {loaderData?.source?.recommendedMod &&
                         <Mod

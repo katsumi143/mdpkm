@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Archive } from 'react-bootstrap-icons';
+import { Archive, ArrowClockwise } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
 import Button from '/voxeliface/components/Button';
@@ -28,7 +28,7 @@ export default Patcher.register(function InstanceList({ id, onSelect }) {
                 <Typography color="$primaryColor" weight={600} family="Nunito" spacing={12} horizontal lineheight={1}>
                     <Archive size={20}/>
                     {t('app.mdpkm.headers.instances')}
-                    <Typography size=".6rem" color="$gray11" weight={300} family="Nunito" margin="2px 0 0 8px" lineheight={1}>
+                    <Typography size=".6rem" color="$secondaryColor" weight={300} family="Nunito" margin="2px 0 0 -6px" lineheight={1}>
                         ({Instances.gettingInstances || !instances ? "Loading" : instances.length})
                     </Typography>
                 </Typography>
@@ -39,7 +39,7 @@ export default Patcher.register(function InstanceList({ id, onSelect }) {
                 }
             </Grid>
             <Button theme="secondary" onClick={refresh} disabled={loading || Instances.gettingInstances || !instances}>
-                {loading && <BasicSpinner size={16}/>}
+                {loading ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
                 {t('app.mdpkm.common:actions.refresh')}
             </Button>
         </Grid>

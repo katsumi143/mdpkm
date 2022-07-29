@@ -27,6 +27,9 @@
     "app.mdpkm.settings.general.theme.items.light": "Light",
     "app.mdpkm.settings.general.theme.items.dark": "Dark",
     "app.mdpkm.settings.general.theme.items.purple": "Purple",
+    "app.mdpkm.settings.general.theme.items.blue": "Blueberry",
+    "app.mdpkm.settings.general.theme.items.green": "Green",
+    "app.mdpkm.settings.general.theme.items.yellow": "Yellow",
 
     "app.mdpkm.settings.general.uiStyle": "Display Style",
     "app.mdpkm.settings.general.uiStyle.summary": "Choose a style that suits you best!",

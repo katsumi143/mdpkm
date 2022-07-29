@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 
 import { useSpring, useTransition, animated, config } from "react-spring";
 
-const newChildren = data => ({ key: Date.now(), data: data.toString() });
+const newChildren = data => ({ key: Date.now(), data: React.Children.map(data, d => d.toString()).join('') });
 
 const types = {
     fade: {
