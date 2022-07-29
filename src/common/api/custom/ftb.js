@@ -1,23 +1,42 @@
+import pMap from 'p-map-browser';
+
+import Modpack from '/src/common/api/structs/modpack';
+
 import { FTB_API_BASE } from '/src/common/constants';
 export default class FTBApi {
     static id = 'ftb';
     static icon = 'img/icons/platforms/feedthebeast.png';
 
+    static getProjectVersion(id, projectId) {
+        return this.API.makeRequest(`${FTB_API_BASE}/public/modpack/${projectId}/${id}`);
+    }
+
+    static getProjectVersions(id) {
+        return this.API.makeRequest(`${FTB_API_BASE}/public/modpack/${id}`).then(m => m.versions);
+    }
+
+    static async downloadModpack(id) {
+        //const version = await this.getProjectVersions(id).then(v => v.reverse()[0]).then(v => this.getProjectVersion(v.id, id));
+        //const file = version.files.find(f => f.primary) ?? version.files[0];
+        //return Util.downloadFilePath(file.url, `${Util.tempPath}/${file.filename}`, true);
+        throw new Error('ftb support is incomplete');
+    }
+
     static Modpacks = class Modpacks {
         static modpacks;
 
-        static async get(options = {}) {
+        static async search(query, options = {}) {
             const tag = (m, v) => m.tags?.some(t => t.name === v);
             const filter = modpack =>
-                (!options.query || modpack.name.toLowerCase().includes(options.query.toLowerCase())) &&
-                (options.category === 0 || tag(modpack, options.category)) &&
-                (options.version === -1 || tag(modpack, options.version));
+                (!query || modpack.name.toLowerCase().includes(query.toLowerCase())) &&
+                (!options.category || tag(modpack, options.category)) &&
+                (!options.version || tag(modpack, options.version));
             const sort = (a, b) =>
                 a.featured && b.featured ? 0 :
                 a.featured ? 1 : -1
             if(this.modpacks)
-                return this.modpacks.filter(filter).sort(sort);
-            return API.makeRequest(`${FTB_API_BASE}/public/modpack/popular/installs/FTB/all`).then(async ({ packs: modpacks }) => {
+                return { hits: this.modpacks.filter(filter).sort(sort) };
+            return FTBApi.API.makeRequest(`${FTB_API_BASE}/public/modpack/popular/installs/FTB/all`).then(async ({ packs: modpacks }) => {
                 this.modpacks = [];
                 await pMap(
                     modpacks,
@@ -29,19 +48,17 @@ export default class FTBApi {
                             if (tries !== 1)
                                 await new Promise(resolve => setTimeout(resolve, 5000));
                             try {
-                                const modpack = await API.makeRequest(`${FTB_API_BASE}/public/modpack/${id}`);
+                                const modpack = await FTBApi.API.makeRequest(`${FTB_API_BASE}/public/modpack/${id}`);
                                 if(modpack.status !== 'error')
-                                    return this.modpacks.unshift(new API.FeedTheBeast.Modpack(
-                                        modpack
-                                    ));
+                                    return this.modpacks.unshift(new Modpack(modpack, FTBApi.id));
                             } catch (err) {
                                 console.error(err);
                             }
                         } while (!ok && tries <= 3);
                     },
-                    { concurrency: 60 }
+                    { concurrency: 50 }
                 );
-                return this.modpacks.filter(filter).sort(sort);
+                return { hits: this.modpacks.filter(filter).sort(sort) };
             });
         }
 

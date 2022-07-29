@@ -542,6 +542,15 @@ class API {
                 return MicrosoftStore.getDownloadLink(uuid, 1);
             }
 
+            static async getVersions() {
+                const versions = await MicrosoftStore.getVersions();
+                const ver = {};
+                for(const [version, id] of versions) {
+                    ver[version] = id;
+                }
+                return ver;
+            }
+
             static async getLoaderVersions() {
                 const versions = await MicrosoftStore.getVersions();
                 versions.reverse();

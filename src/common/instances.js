@@ -264,7 +264,7 @@ export class Instance extends EventEmitter {
 
         const updateToastState = text => {
             this.setState(text);
-            toast(`${toastHead}\n${text}`, {
+            toast.loading(`${toastHead}\n${text}`, {
                 id: toastId
             });
         };
@@ -728,7 +728,7 @@ class Instances extends EventEmitter {
         const updateToastState = typeof toastId == 'function' ? toastId : (text, min) => {
             instance.setState(text, min);
             if (toastId)
-                toast(`${toastHead}\n${text}`, {
+                toast.loading(`${toastHead}\n${text}`, {
                     id: toastId
                 });
         };
