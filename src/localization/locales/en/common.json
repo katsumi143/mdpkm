@@ -12,6 +12,7 @@
     "actions.view": "View",
     "actions.edit": "Edit",
     "actions.retry": "Retry",
+    "actions.close": "Close",
     "actions.launch": "Launch",
     "actions.delete": "Delete",
     "actions.search": "Search",
