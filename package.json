@@ -34,6 +34,7 @@
         "nbt": "^0.8.1",
         "p-map-browser": "^1.2.0",
         "path-browserify": "latest",
+        "prop-types": "^15.8.1",
         "react": "^18.0.0",
         "react-bootstrap-icons": "^1.8.1",
         "react-dom": "^18.0.0",

@@ -454,7 +454,7 @@ export default Patcher.register(function InstancePage({ id }) {
                     margin: '0 1rem 1rem'
                 }}
             >
-                <TabItem name={t('app.mdpkm.instance_page.tabs.mods')} icon={<List size={14}/>} value={0} padding={0} disabled={!instance.isModded}>
+                <TabItem name={t('app.mdpkm.instance_page.tabs.mods')} icon={<List size={14}/>} value={0} disabled={!instance.isModded}>
                     <ModManagement instanceId={id}/>
                 </TabItem>
                 <TabItem name={t('app.mdpkm.instance_page.tabs.servers')} icon={<List size={14}/>} value={1}>
