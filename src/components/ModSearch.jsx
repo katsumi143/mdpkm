@@ -104,14 +104,17 @@ export default Patcher.register(function ModSearch({ instanceId }) {
                 {mods && mods.map((mod, index) =>
                     <Mod key={index} data={mod} instanceId={instanceId}/>
                 )}
-                <Grid direction="vertical">
-                    <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
-                        {t('app.mdpkm.common:headers.empty_list')}
-                    </Typography>
-                    <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
-                        {t('app.mdpkm.common:headers.search_retry')}
-                    </Typography>
-                </Grid>
+                {mods && !mods.length &&
+                    <Grid direction="vertical">
+                        <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
+                            {t('app.mdpkm.common:headers.empty_list')}
+                        </Typography>
+                        <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                            {t('app.mdpkm.common:headers.search_retry')}
+                        </Typography>
+                    </Grid>
+                }
+
             </Grid>
         </Grid>
     );
