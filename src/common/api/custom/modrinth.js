@@ -11,6 +11,7 @@ class ModrinthAPI {
     static icon = 'img/icons/platforms/modrinth.svg';
     static projectCache = [];
 
+    // https://docs.mdpkm.voxelified.com/docs/plugin-api/classes/api-platform#search
     static search(query, options = {}) {
         const { facets = [], versions, categories, projectType } = options;
         return this.API.makeRequest(`${MODRINTH_API_BASE}/search`, {
@@ -26,6 +27,7 @@ class ModrinthAPI {
         });
     }
 
+    // https://docs.mdpkm.voxelified.com/docs/plugin-api/classes/api-platform#getproject
     static async getProject(id) {
         return this.projectCache[id] ??
             this.API.makeRequest(`${MODRINTH_API_BASE}/project/${id}`).then(project => {

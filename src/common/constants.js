@@ -1,3 +1,9 @@
+import { getName, getVersion, getTauriVersion } from '@tauri-apps/api/app';
+
+export const APP_NAME = await getName();
+export const APP_VERSION = await getVersion();
+export const TAURI_VERSION = await getTauriVersion();
+
 export const AZURE_CLIENT_ID = "be7dfb6a-789c-4622-8c97-dcd963ae0f89";
 export const AZURE_LOGIN_SCOPE = "Xboxlive.signin,Xboxlive.offline_access";
 export const CURSEFORGE_CORE_KEY = "$2a$10$jDvu9Kjp7bMAQqFEXz3/luw3vZoweBrgcDhyW5HwNung.wuaXeTji";

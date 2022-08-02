@@ -1,7 +1,6 @@
-import { create } from 'xmlbuilder2';
 import { Body } from '@tauri-apps/api/http';
+import { create } from 'xmlbuilder2';
 import { invoke } from '@tauri-apps/api';
-import { Buffer } from 'buffer';
 
 import API from './api';
 export default class MicrosoftStore {

@@ -18,6 +18,7 @@ class CurseForgeAPI {
         return this.API.makeRequest(url, options);
     }
 
+    // https://docs.mdpkm.voxelified.com/docs/plugin-api/classes/api-platform#search
     static search(query, options = {}) {
         const { game = gameId, versions = [], section = 4471, categories = [] } = options;
         return this.makeRequest(`${CURSEFORGE_API_BASE}/mods/search`, {
@@ -36,6 +37,7 @@ class CurseForgeAPI {
         }));
     }
 
+    // https://docs.mdpkm.voxelified.com/docs/plugin-api/classes/api-platform#getproject
     static getProject(id) {
         return this.makeRequest(`${CURSEFORGE_API_BASE}/mods/${id}`).then(project =>
             new Project(project.data, this.id)

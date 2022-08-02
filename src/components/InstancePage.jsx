@@ -204,7 +204,7 @@ export default Patcher.register(function InstancePage({ id }) {
     if(!instance)
         return;
     return (
-        <Grid height="100%" direction="vertical" css={{ flex: 1, overflow: 'hidden' }}>
+        <Grid height="100%" direction="vertical" instanceId={id} css={{ flex: 1, overflow: 'hidden' }}>
             <Grid margin="1rem" padding={12} background="$secondaryBackground2" borderRadius={16} css={{
                 position: 'relative'
             }}>
@@ -272,10 +272,9 @@ export default Patcher.register(function InstancePage({ id }) {
                 </Breakpoint>
             </Grid>
             {instance.launchLogs &&
-                <Grid width="auto" height={consoleOpen ? '100%' : 'auto'} margin="0 1rem 1rem" direction="vertical" background="$secondaryBackground2" borderRadius={8} css={{
+                <Grid width="auto" height={consoleOpen ? '70%' : 'auto'} margin="0 1rem 1rem" direction="vertical" background="$secondaryBackground2" borderRadius={8} css={{
                     overflow: 'hidden',
                     position: 'relative',
-                    maxHeight: '40%',
                     flexShrink: 0
                 }}>
                     <Grid padding="14px 10px" css={{
