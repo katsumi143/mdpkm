@@ -54,6 +54,9 @@ export default Patcher.register(function InstanceList({ id, onSelect }) {
                         '& > div': {
                             border: id === instance.id ? '1px solid $secondaryBorder2' : undefined,
                             background: id === instance.id ? '$secondaryBackground2' : undefined
+                        },
+                        '&:hover > div': {
+                            background: '$secondaryBackground'
                         }
                     }}/>;
                 }) : <Grid margin="1rem 0" direction="vertical" alignItems="center">
