@@ -172,7 +172,6 @@ export default Patcher.register(function Settings() {
                     }}>
                         <Header>{t('app.mdpkm.settings.general')}</Header>
                         <Grid spacing={8} padding="0 1rem" direction="vertical">
-                            <Setting name="general.account"/>
                             <Setting name="general.theme">
                                 <Select.Root value={theme} onChange={v => changeTheme(v, setTheme)}>
                                     <Select.Group name={t('app.mdpkm.settings.general.theme.category')}>

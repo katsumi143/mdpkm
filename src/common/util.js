@@ -8,6 +8,8 @@ import API from './api';
 import { MINECRAFT_LIBRARIES_URL } from './constants';
 
 const appDirectory = await appDir();
+
+// https://docs.mdpkm.voxelified.com/docs/plugin-api/util
 export default class Util {
     static appPath = appDirectory;
     static tempPath = `${appDirectory}/temp`;
@@ -52,6 +54,7 @@ export default class Util {
         }
     }
 
+    // https://docs.mdpkm.voxelified.com/docs/plugin-api/util#downloadfile
     static async downloadFile(url, directory, useCache, fileName) {
         const split = directory.replace(/\/+|\\+/g, '/').split('/');
         if (split.reverse()[0].includes('.')) {
@@ -88,14 +91,17 @@ export default class Util {
         return path;
     }
 
+    // https://docs.mdpkm.voxelified.com/docs/plugin-api/util#readtextfile
     static async readTextFile(path) {
         return invoke('fs_read_text_file', { path }).catch(err => {throw new Error(`readTextFile failed: ${err}`)});
     }
 
+    // https://docs.mdpkm.voxelified.com/docs/plugin-api/util#readbinaryfile
     static async readBinaryFile(path) {
         return invoke('fs_read_file', { path }).catch(err => {throw new Error(`readBinaryFile failed: ${err}`)});
     }
 
+    // https://docs.mdpkm.voxelified.com/docs/plugin-api/util#readfilebase64
     static async readFileBase64(path) {
         const binary = await this.readBinaryFile(path);
         return Buffer.from(binary).toString('base64');
@@ -106,6 +112,7 @@ export default class Util {
         return Buffer.from(binary).toString('base64');
     }
 
+    // https://docs.mdpkm.voxelified.com/docs/plugin-api/util#writefile
     static writeFile(path, contents) {
         return invoke('fs_write_file', { path, contents }).catch(err => {throw new Error(`writeFile failed: ${err}`)});
     }
@@ -122,6 +129,7 @@ export default class Util {
         return invoke('fs_remove_file', { path }).catch(err => {throw Error(`removeFile failed: ${err}`)});
     }
 
+    // https://docs.mdpkm.voxelified.com/docs/plugin-api/util#fileexists
     static fileExists(path) {
         return invoke('fs_file_exists', { path }).catch(err => {throw new Error(`fileExists failed: ${err}`)});
     }

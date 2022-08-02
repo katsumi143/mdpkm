@@ -1,6 +1,8 @@
 import React from 'react';
+import * as xml from 'xmlbuilder2';
 import { t } from 'i18next';
 import toast from 'react-hot-toast';
+import semver from 'semver';
 import * as http from '@tauri-apps/api/http';
 import { appDir } from '@tauri-apps/api/path';
 import * as Icons from 'react-bootstrap-icons';
@@ -9,11 +11,13 @@ import API from '../api';
 import Util from '../util';
 import Patcher from './patcher';
 import PluginAPI from './api';
+import Instances from '../instances';
 import PluginSystem from './system';
 import * as Voxeliface from '/voxeliface';
+import { APP_NAME, APP_VERSION } from '../constants';
 
 // For plugin developers:
-// http://docs.mdpkm.voxelified.com/docs/category/plugin-api
+// https://docs.mdpkm.voxelified.com/docs/category/plugin-api
 const compiler = await import('@nx-js/compiler-util');
 const appDirectory = await appDir();
 export default class PluginLoader {
@@ -23,15 +27,19 @@ export default class PluginLoader {
     static async loadPlugin(name, path) {
         const pluginPath = `${path}/main.js`;
         if (!await Util.fileExists(pluginPath))
-            throw new Error(`${name} failed to load; missing main.js`);
+            throw new Error(`missing main.js`);
 
         const manifestPath = `${path}/manifest.json`;
         if (!await Util.fileExists(manifestPath))
-            throw new Error(`${name} failed to load; missing manifest.json`);
+            throw new Error(`missing manifest.json`);
 
         const manifest = await Util.readTextFile(manifestPath).then(JSON.parse);
         if(this.loaded[manifest.id])
-            throw new Error(`${id} failed to load; plugin has already been loaded.`);
+            throw new Error(`plugin has already been loaded.`);
+
+        const depend = manifest.depends?.mdpkm;
+        if(depend && !semver.satisfies(APP_VERSION, depend))
+            throw new Error(`plugin requires ${APP_NAME} v${semver.minVersion(depend)}`)
 
         this.loaded[manifest.id] = {
             path,
@@ -41,6 +49,7 @@ export default class PluginLoader {
         const code = compiler.compileCode(await Util.readTextFile(pluginPath));
         await code({
             t,
+            xml,
             API,
             Util,
             http,
@@ -48,6 +57,7 @@ export default class PluginLoader {
             React,
             Icons,
             Patcher,
+            Instances,
             PluginAPI: this.pluginApi,
             Voxeliface,
             PluginSystem
@@ -78,7 +88,7 @@ export default class PluginLoader {
                     await this.loadPluginFile(name, path);
             } catch(err) {
                 console.warn(err);
-                toast.error(`'${name}' plugin failed to load.`);
+                toast.error(`'${name}' failed to load.\n${err.message}`);
             }
     }
 };

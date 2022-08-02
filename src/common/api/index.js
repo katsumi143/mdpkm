@@ -56,6 +56,7 @@ class API {
             await this[name].init();
     }
 
+    // https://docs.mdpkm.voxelified.com/docs/plugin-api/api#get
     static get(id) {
         return this.mapped[id];
     }
@@ -102,10 +103,12 @@ class API {
         });
     }
 
+    // https://docs.mdpkm.voxelified.com/docs/plugin-api/api#getloader
     static getLoader(id) {
         return this.loaders.find(l => l.id === id);
     }
 
+    // https://docs.mdpkm.voxelified.com/docs/plugin-api/api#makerequest
     static userAgent = `Blookerss/${appName}/${appVersion} (blookers@voxelified.com)`;
     static async makeRequest(url, options = {}) {
         console.log(options.method ?? 'GET', url, options);

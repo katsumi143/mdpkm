@@ -18,11 +18,15 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
     const { t } = useTranslation();
     const update = updates?.[mod?.config?.[1]];
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
+    const isCompact = useSelector(state => state.settings.uiStyle) === 'compact';
     const sourceApi = API.get(mod?.source);
     const loaderData = API.getLoader(mod?.loader);
     const [showEmbedded, setShowEmbedded] = useState(false);
     const toggleEmbedded = () => setShowEmbedded(!showEmbedded);
     const deleteMod = () => Instances.getInstance(instanceId).deleteMod(mod.id);
+
+    const tagSize = isCompact ? 9.25 : '.6rem';
+    const iconSize = embedded ? isCompact ? 24 : 32 : isCompact ? 32 : 40;
     return (
         <Grid direction="vertical">
             <Grid padding={8} spacing={8} direction="vertical" background="$secondaryBackground2" borderRadius={8} css={{
@@ -30,28 +34,28 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                 borderBottomLeftRadius: showEmbedded ? 0 : null,
                 borderBottomRightRadius: showEmbedded ? 0 : null
             }}>
-                <Grid width="100%" spacing={8} alignItems="center">
+                <Grid width="100%" spacing={isCompact ? 4 : 8} alignItems="center">
                     {mod.icon ?
-                        <Image src={`data:image/png;base64,${mod.icon}`} size={embedded ? 32 : 40} background="$secondaryBackground" borderRadius="8.33333333%" css={{
-                            minWidth: embedded ? 32 : 40,
-                            minHeight: embedded ? 32 : 40,
+                        <Image src={`data:image/png;base64,${mod.icon}`} size={iconSize} background="$secondaryBackground" borderRadius="8.33333333%" css={{
+                            minWidth: iconSize,
+                            minHeight: iconSize,
                             boxShadow: '$buttonShadow',
                             transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
                             imageRendering: 'pixelated',
 
                             '&:hover': {
-                                minWidth: 64,
-                                minHeight: 64
+                                minWidth: iconSize * 2,
+                                minHeight: iconSize * 2
                             }
                         }}/>
-                    : <Grid width={embedded ? 32 : 40} height={embedded ? 32 : 40} alignItems="center" background="$secondaryBackground" borderRadius={4} justifyContent="center">
+                    : <Grid width={iconSize} height={iconSize} alignItems="center" background="$secondaryBackground" borderRadius={4} justifyContent="center">
                         <ExclamationCircleFill size={embedded ? 16 : 20} color="#ffffff80"/>
                     </Grid>}
                     <Grid margin="0 0 0 4px" spacing={2} direction="vertical">
-                        <Typography size={embedded ? ".9rem" : "1rem"} color="$primaryColor" weight={400} family="Nunito" lineheight={1}>
+                        <Typography size={embedded ? '.9rem' : isCompact ? 14 : '1rem'} color="$primaryColor" weight={400} family="Nunito" lineheight={1}>
                             {mod.name ?? mod.id}
                         </Typography>
-                        <Typography size={embedded ? ".6rem" : ".7rem"} color="$secondaryColor" weight={300} family="Nunito" lineheight={1}>
+                        <Typography size={embedded ? '.6rem' : isCompact ? 10 : '.7rem'} color="$secondaryColor" weight={300} family="Nunito" lineheight={1}>
                             {t('app.mdpkm.mod.version', {
                                 val: mod.version
                             })}
@@ -64,7 +68,7 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                     }}>
                         {embedded &&
                             <Tag>
-                                <Typography size=".6rem" color="$tagColor" family="Nunito">
+                                <Typography size={tagSize} color="$tagColor" family="Nunito">
                                     Embedded
                                 </Typography>
                             </Tag>
@@ -72,7 +76,7 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                         <Breakpoint customQuery="(min-width: 820px)">
                             <Tag>
                                 {sourceApi?.icon && <Image src={sourceApi?.icon} size={12} borderRadius={4}/>}
-                                <Typography size=".6rem" color="$tagColor" family="Nunito">
+                                <Typography size={tagSize} color="$tagColor" family="Nunito">
                                     {Util.getPlatformName(mod.source)}
                                 </Typography>
                             </Tag>
@@ -80,16 +84,16 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                         <Breakpoint customQuery="(min-width: 690px)">
                             {!update && <Tag>
                                 {loaderData?.icon && <Image src={loaderData?.icon} size={12}/>}
-                                <Typography size=".6rem" color="$tagColor" family="Nunito">
+                                <Typography size={tagSize} color="$tagColor" family="Nunito">
                                     {Util.getLoaderName(mod?.loader)?.split(" ")?.[0]} {mod.gameVersion}
                                 </Typography>
                             </Tag>}
                         </Breakpoint>
-                        {update && <Button theme="accent" disabled>
+                        {update && <Button size={isCompact ? 'smaller' : 'small'} theme="accent" disabled>
                             <CloudArrowDown size={14}/>
                             Update
                         </Button>}
-                        {!embedded && <Button theme="secondary" onClick={deleteMod}>
+                        {!embedded && <Button size={isCompact ? 'smaller' : 'small'} theme="secondary" onClick={deleteMod}>
                             <Trash3Fill/>
                             <Breakpoint customQuery="(min-width: 580px)">
                                 {t('app.mdpkm.common:actions.delete')}
@@ -98,7 +102,7 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                     </Grid>
                 </Grid>
                 {mod.embedded?.length > 0 &&
-                    <Typography size=".8rem" color="$secondaryColor" family="Nunito" horizontal onClick={() => toggleEmbedded()} lineheight={1} css={{
+                    <Typography size={isCompact ? 10 : '.8rem'} color="$secondaryColor" family="Nunito" horizontal onClick={() => toggleEmbedded()} lineheight={1} css={{
                         width: 'fit-content',
                         cursor: 'pointer'
                     }}>

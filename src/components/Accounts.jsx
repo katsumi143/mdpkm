@@ -123,7 +123,7 @@ export default Patcher.register(function Settings() {
                                 </Button>}
                                 <DropdownMenu.Root>
                                     <DropdownMenu.Trigger asChild>
-                                        <Button theme="secondary" onClick={() => changeAccount(profile.id)}>
+                                        <Button theme="secondary">
                                             <ThreeDots size={17}/>
                                         </Button>
                                     </DropdownMenu.Trigger>

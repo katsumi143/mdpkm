@@ -310,6 +310,7 @@ export class Instance extends EventEmitter {
                     await this.instances.installLoader(this, toastId, toastHead, true);
                 
                 const loaderManifest = await Util.readTextFile(loaderManifestPath).then(JSON.parse);
+                console.log(loaderManifest);
                 libraries = libraries.concat(
                     Util.mapLibraries(loaderManifest.libraries, this.instances.getPath('libraries'))
                 );
@@ -317,10 +318,12 @@ export class Instance extends EventEmitter {
 
                 if(loaderManifest.minecraftArguments)
                     manifest.minecraftArguments = loaderManifest.minecraftArguments;
-                if(loaderManifest.arguments?.game)
-                    for (const argument of loaderManifest.arguments.game)
+
+                const gameArguments = loaderManifest.arguments?.game;
+                if(gameArguments)
+                    for (const argument of gameArguments)
                         manifest.arguments.game.push(argument);
-                /*if(loaderManifest.arguments?.jvm)
+                if(loader.type === 'forge' && loaderManifest.arguments?.jvm)
                     manifest.arguments.jvm = manifest.arguments.jvm.concat(
                         loaderManifest.arguments.jvm.map(arg =>
                             arg.replace(/\${version_name}/g, manifest.id)
@@ -337,7 +340,7 @@ export class Instance extends EventEmitter {
                                     Util.platform === 'win32' ? ';' : ':'
                                 ).replace(/ += +/g, '=')
                         )
-                    );*/
+                    );
             }
             libraries = Util.removeDuplicates(
                 libraries.concat(Util.mapLibraries(manifest.libraries, this.instances.getPath('libraries'))),
@@ -351,7 +354,13 @@ export class Instance extends EventEmitter {
                 if(!await Util.fileExists(resource.path) || (assetsJson.map_to_resources && resource.resourcesPath && !await Util.fileExists(resource.resourcesPath)))
                     missing.push(resource);
 
-            if(missing.length > 0)
+            if(missing.length > 0) {
+                this.launchLogs.push({
+                    type: 'INFO',
+                    text: `Downloading ${missing.length} missing libraries`,
+                    thread: 'mdpkm',
+                    timestamp: Date.now()
+                });
                 await this.instances.downloadLibraries(
                     missing,
                     updateToastState
@@ -359,8 +368,16 @@ export class Instance extends EventEmitter {
                     missing,
                     this.path
                 ));
+            }
+
             if(assetsJson.map_to_resources) {
                 updateToastState?.(t('app.mdpkm.instances:states.copying_legacy'));
+                this.launchLogs.push({
+                    type: 'INFO',
+                    text: 'Copying legacy Minecraft assets to instance directory',
+                    thread: 'mdpkm',
+                    timestamp: Date.now()
+                });
                 for (const asset of missing)
                     if(asset.resourcesPath)
                         await Util.copyFile(asset.path, asset.resourcesPath);
@@ -368,6 +385,12 @@ export class Instance extends EventEmitter {
 
             if (!await Util.fileExists(`${this.path}/natives/`)) {
                 updateToastState(t('app.mdpkm.instances:states.extracting'));
+                this.launchLogs.push({
+                    type: 'INFO',
+                    text: 'Extracting natives',
+                    thread: 'mdpkm',
+                    timestamp: Date.now()
+                });
                 
                 await this.instances.extractNatives(
                     libraries,
@@ -382,6 +405,12 @@ export class Instance extends EventEmitter {
                 Util.modernGetJVMArguments : Util.getJVMArguments;
 
             updateToastState('Authorizing');
+            this.launchLogs.push({
+                type: 'INFO',
+                text: 'Checking ownership of Minecraft Java Edition',
+                thread: 'mdpkm',
+                timestamp: Date.now()
+            });
             const ownsMinecraft = await API.Minecraft.ownsMinecraft(account.minecraft).catch(err => {
                 console.error(err);
                 toast.dismiss(toastId);
@@ -393,10 +422,32 @@ export class Instance extends EventEmitter {
                 this.setState();
                 throw new Error('You do not own Minecraft Java Edition');
             }
+            this.launchLogs.push({
+                type: 'INFO',
+                text: 'Confirmed ownership of Minecraft Java Edition',
+                thread: 'mdpkm',
+                timestamp: Date.now()
+            });
 
             updateToastState(t('app.mdpkm.instances:states.launching2'));
             const [width, height] = this.config.resolution ??
                 Store.getState().settings['instances.defaultResolution'];
+
+            const MODIFY_FINAL = this.instances.getLaunchTasks('MODIFY_FINAL');
+            this.launchLogs.push({
+                type: 'INFO',
+                text: `Running ${MODIFY_FINAL.length} MODIFY_FINAL tasks`,
+                thread: 'mdpkm',
+                timestamp: Date.now()
+            });
+            for (const task of MODIFY_FINAL)
+                task.func(this, {
+                    manifest,
+                    libraries,
+                    javaArguments,
+                    minecraftArtifact
+                });
+                
             const jvmArguments = getJvmArguments(
                 libraries,
                 minecraftArtifact,
@@ -414,6 +465,13 @@ export class Instance extends EventEmitter {
             ).map(v => v.toString().replaceAll(appDirectory, '../../'));
             const window = tauri.window.getCurrent();
 
+            console.log(`Launch Arguments:`, jvmArguments);
+            this.launchLogs.push({
+                type: 'INFO',
+                text: 'Executing Java Runtime',
+                thread: 'mdpkm',
+                timestamp: Date.now()
+            });
             const { sha1: loggingHash, id: loggingId } = manifest?.logging?.client?.file ?? {};
             const logger = await tauri.invoke('launch_minecraft', {
                 cwd: this.path,
@@ -428,6 +486,12 @@ export class Instance extends EventEmitter {
                             `-Dlog4j.configurationFile="${this.instances.getPath('mcAssets')}/objects/${loggingHash?.substring(0, 2)}/${loggingId}"`
                         )
                 )
+            });
+            this.launchLogs.push({
+                type: 'INFO',
+                text: 'Minecraft has launched!',
+                thread: 'mdpkm',
+                timestamp: Date.now()
             });
 
             const splashWindow = new tauri.window.WebviewWindow(logger, {
@@ -714,6 +778,7 @@ class Instances extends EventEmitter {
         super();
         this.path = path;
         this.java = java;
+        this.launchTasks = [];
         this.getInstances();
     }
 
@@ -722,6 +787,10 @@ class Instances extends EventEmitter {
         if(!await Util.fileExists(path))
             await Util.createDir(path);
         return new Instances(path, await Java.build());
+    }
+
+    getLaunchTasks(type) {
+        return this.launchTasks.filter(t => t.type === type);
     }
 
     async installLoader(instance, toastId, toastHead, skipDone) {
@@ -780,8 +849,8 @@ class Instances extends EventEmitter {
                 await Util.removeFile(installProfilePath);
                 await Util.createDirAll(loaderDir);
                 await Util.writeFile(
-                    `${this.getPath('versions')}/net/minecraftforge/${loader.game}-${loader.version}/${loader.game}-${loader.version}.json`,
-                    JSON.stringify(forge)
+                    `${loaderDir}/manifest.json`,
+                    JSON.stringify(forge.version)
                 );
 
                 updateToastState('Downloading Forge (90%)');
@@ -824,10 +893,9 @@ class Instances extends EventEmitter {
                     this.getPath('libraries')
                 );
 
+                await this.downloadLibraries(libraries, updateToastState);
                 if (forge.install?.processors?.length)
                     await this.patchForge(instance, loader, forge.install, updateToastState);
-
-                await this.downloadLibraries(libraries, updateToastState);
 
                 break;
             default:
@@ -926,6 +994,7 @@ class Instances extends EventEmitter {
                     cp => `"${librariesPath}/${Util.mavenToString(cp)}"`
                 );
 
+                console.log(filePath);
                 const mainClass = await Util.readJarManifest(filePath, 'Main-Class');
                 await tauri.invoke('launch_java', {
                     javaPath: javaPath.replace(/\/+|\\+/g, '\\'),
