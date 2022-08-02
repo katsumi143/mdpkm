@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { open } from '@tauri-apps/api/shell';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { XLg, Download, ArrowClockwise, BoxArrowUpRight } from 'react-bootstrap-icons';
 
@@ -17,6 +17,7 @@ import Instances from '../common/instances';
 export default Patcher.register(function Mod({ id, api, data, featured, instanceId, recommended }) {
     const { t } = useTranslation();
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
+    const isCompact = useSelector(state => state.settings.uiStyle) === 'compact';
     const [mod, setMod] = useState(data);
     const { config, downloading } = instance ?? {};
     const installed = config?.modifications.some(m => m[3] === mod?.slug);
@@ -40,6 +41,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
             setMod(data);
     }, [data]);
 
+    const iconSize = isCompact ? 32 : 48;
     return (
         <Grid padding={8} background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
             {mod ? mod.startsWith?.('error') ? <Grid width="100%" spacing={12} padding={4} css={{ position: 'relative' }}>
@@ -62,24 +64,24 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                     </Button>
                 </Grid>
             </Grid> : <React.Fragment>
-                <Image src={mod.icon} size={48} background="$secondaryBackground" borderRadius={4} css={{
-                    minWidth: 48,
-                    minHeight: 48,
+                <Image src={mod.icon} size={iconSize} background="$secondaryBackground" borderRadius={4} css={{
+                    minWidth: iconSize,
+                    minHeight: iconSize,
                     boxShadow: '$buttonShadow',
                     transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
 
                     '&:hover': {
-                        minWidth: 64,
-                        minHeight: 64
+                        minWidth: iconSize * 2,
+                        minHeight: iconSize * 2
                     }
                 }}/>
                 <Grid margin="4px 0 0 12px" padding="2px 0" spacing="2px" direction="vertical">
-                    <Typography size="1.1rem" color="$primaryColor" family="Nunito" spacing={4} horizontal lineheight={1} css={{
+                    <Typography size={isCompact ? 14 : '1.1rem'} color="$primaryColor" family="Nunito" spacing={4} horizontal lineheight={1} css={{
                         width: 'fit-content'
                     }}>
                         {mod.title}
                         {mod.author && 
-                            <Typography size=".7rem" color="$secondaryColor" lineheight={1}>
+                            <Typography size={isCompact ? 10 : '.7rem'} color="$secondaryColor" lineheight={1}>
                                 {t('app.mdpkm.mod.author', { val: mod.author })}
                             </Typography>
                         }
@@ -94,10 +96,10 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                             </Typography>
                         }
                     </Typography>
-                    <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                    {!isCompact && <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
                         {t(`app.mdpkm.mod.sides.${mod.getSide()}`)}
-                    </Typography>
-                    <Typography size=".9rem" color="$secondaryColor" family="Nunito" textalign="left" whitespace="pre-wrap">
+                    </Typography>}
+                    <Typography size={isCompact ? 12 : '.9rem'} color="$secondaryColor" family="Nunito" textalign="left" whitespace="pre-wrap">
                         {mod.summary}
                     </Typography>
                 </Grid>
@@ -106,21 +108,21 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                     position: 'absolute'
                 }}>
                     {typeof mod.downloads === 'number' &&
-                        <Typography color="$primaryColor" margin="0 8px 0 0" family="Nunito" spacing={4} horizontal>
+                        <Typography size={isCompact ? 12 : 16} color="$primaryColor" margin="0 8px 0 0" family="Nunito" spacing={4} horizontal>
                             {Intl.NumberFormat('en-us', {}).format(mod.downloads)}
-                            <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                            <Typography size={isCompact ? 10 : '.8rem'} color="$secondaryColor" family="Nunito">
                                 {t('app.mdpkm.mod.downloads')}
                             </Typography>
                         </Typography>
                     }
                     {mod.website &&
-                        <Button theme="secondary" onClick={() => open(mod.website)}>
+                        <Button size={isCompact ? 'smaller' : 'small'} theme="secondary" onClick={() => open(mod.website)}>
                             <BoxArrowUpRight/>
                             {t('app.mdpkm.common:actions.visit_website')}
                         </Button>
                     }
                     {instance &&
-                        <Button onClick={installMod} disabled={mod.client_side === "unsupported" || installing || downloading?.length > 0 || installed}>
+                        <Button size={isCompact ? 'smaller' : 'small'} onClick={installMod} disabled={mod.client_side === "unsupported" || installing || downloading?.length > 0 || installed}>
                             {(installing || downloading?.length > 0) ?
                                 <BasicSpinner size={16}/> : <Download/>
                             }
