@@ -1,4 +1,7 @@
 import React from 'react';
+
+// For plugin developers:
+// https://docs.mdpkm.voxelified.com/docs/plugin-api/patcher
 export default class Patcher {
     static patches = {};
     static registered = {};
@@ -19,17 +22,19 @@ export default class Patcher {
         return newFunction;
     }
     
+    // https://docs.mdpkm.voxelified.com/docs/plugin-api/patcher#patch
     static patch(name, func) {
         (this.patches[name] = this.patches[name] ?? []).push(func);
     }
 
+    // https://docs.mdpkm.voxelified.com/docs/plugin-api/patcher#patchchild
     static patchChild(name, type, func) {
         this.patch(name, child => ({...child, props: {
             ...child.props,
-            children: Patcher.mapRecursive(child => {
-                if (child?.type?.name === type)
-                    return func(child) ?? child;
-                return child;
+            children: Patcher.mapRecursive(child2 => {
+                if (child2?.type?.name === type)
+                    return func(child2, child) ?? child2;
+                return child2;
             }, child.props.children)
         }}));
     }

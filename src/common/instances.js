@@ -397,6 +397,13 @@ export class Instance extends EventEmitter {
             updateToastState(t('app.mdpkm.instances:states.launching2'));
             const [width, height] = this.config.resolution ??
                 Store.getState().settings['instances.defaultResolution'];
+            for (const task of this.instances.getLaunchTasks('MODIFY_FINAL'))
+                task.func(this, {
+                    manifest,
+                    libraries,
+                    javaArguments,
+                    minecraftArtifact
+                });
             const jvmArguments = getJvmArguments(
                 libraries,
                 minecraftArtifact,
@@ -714,6 +721,7 @@ class Instances extends EventEmitter {
         super();
         this.path = path;
         this.java = java;
+        this.launchTasks = [];
         this.getInstances();
     }
 
@@ -722,6 +730,10 @@ class Instances extends EventEmitter {
         if(!await Util.fileExists(path))
             await Util.createDir(path);
         return new Instances(path, await Java.build());
+    }
+
+    getLaunchTasks(type) {
+        return this.launchTasks.filter(t => t.type === type);
     }
 
     async installLoader(instance, toastId, toastHead, skipDone) {
