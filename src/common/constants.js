@@ -37,8 +37,8 @@ export const MINECRAFT_RESOURCES_URL = "https://resources.download.minecraft.net
 export const MINECRAFT_LIBRARIES_URL = "https://libraries.minecraft.net";
 
 export const LoaderStates = {
-    forge: 'Disabled',
+    forge: 'Unstable',
     quilt: 'Beta Software',
     bedrock: 'Unstable'
 };
-export const DisabledLoaders = ['forge'];
+export const DisabledLoaders = [];

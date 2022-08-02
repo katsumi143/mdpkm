@@ -183,6 +183,7 @@ export default Patcher.register(function InstancePage({ id }) {
     }, [launchable]);
     useEffect(() => {
         setLaunchable();
+        setConsoleOpen(false);
         setGameVersion(config?.loader?.game);
         setInstanceRam(initialState.instanceRam);
         setInstanceName(initialState.instanceName);
