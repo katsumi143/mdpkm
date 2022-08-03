@@ -44,7 +44,6 @@
         "react-socks": "^2.2.0",
         "react-spring": "^9.4.5",
         "redux": "^4.2.0",
-        "rehype-raw": "^6.1.1",
         "semver": "^7.3.7",
         "skinview3d": "^2.2.1",
         "three": "^0.141.0",
