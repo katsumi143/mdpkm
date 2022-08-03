@@ -11,7 +11,8 @@ const gameId = 432;
 class CurseForgeAPI {
     static id = 'curseforge';
     static icon = 'img/icons/platforms/curseforge.svg';
-    static announcement = 'Some CurseForge projects may be unavailable for download.';
+    static categories = [];
+    static announcement = 'Some CurseForge projects may be unavailable.';
 
     static makeRequest(url, options = {}) {
         (options.headers = options.headers ?? {})['x-api-key'] = CURSEFORGE_CORE_KEY;
@@ -20,17 +21,17 @@ class CurseForgeAPI {
 
     // https://docs.mdpkm.voxelified.com/docs/plugin-api/classes/api-platform#search
     static search(query, options = {}) {
-        const { game = gameId, versions = [], section = 4471, categories = [] } = options;
+        const { game = gameId, loaders = [], versions = [], section = 4471, categories = [] } = options;
         return this.makeRequest(`${CURSEFORGE_API_BASE}/mods/search`, {
             query: {
                 query,
                 gameId: game.toString(),
                 classId: section.toString(),
                 sortField: '2',
-                categoryId: categories[1],
+                categoryId: categories?.[0],
                 gameVersion: versions?.[0],
                 searchFilter: query,
-                modLoaderType: this.convertLoaderType(categories?.[0])
+                modLoaderType: this.convertLoaderType(loaders?.[0])
             }
         }).then(a => ({
             hits: a.data
@@ -58,7 +59,6 @@ class CurseForgeAPI {
             gameVersions.some(l => l === loaderType) && gameVersions.some(v => v === loader.game)
         );
     }
-
     static canImport(path) {
         return Util.fileExists(`${path}/manifest.json`).catch(() => false);
     }

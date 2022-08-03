@@ -18,6 +18,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
     const { t } = useTranslation();
     const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
     const isCompact = useSelector(state => state.settings.uiStyle) === 'compact';
+    const showSummary = useSelector(state => state.settings['instances.modSearchSummaries']);
     const [mod, setMod] = useState(data);
     const { config, downloading } = instance ?? {};
     const installed = config?.modifications.some(m => m[3] === mod?.slug);
@@ -41,7 +42,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
             setMod(data);
     }, [data]);
 
-    const iconSize = isCompact ? 32 : 48;
+    const iconSize = isCompact ? 32 : 44;
     return (
         <Grid padding={8} background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
             {mod ? mod.startsWith?.('error') ? <Grid width="100%" spacing={12} padding={4} css={{ position: 'relative' }}>
@@ -99,9 +100,9 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                     {!isCompact && <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
                         {t(`app.mdpkm.mod.sides.${mod.getSide()}`)}
                     </Typography>}
-                    <Typography size={isCompact ? 12 : '.9rem'} color="$secondaryColor" family="Nunito" textalign="left" whitespace="pre-wrap">
+                    {showSummary && <Typography size={isCompact ? 12 : '.9rem'} color="$secondaryColor" family="Nunito" textalign="left" whitespace="pre-wrap">
                         {mod.summary}
-                    </Typography>
+                    </Typography>}
                 </Grid>
                 <Grid spacing={8} css={{
                     right: 8,

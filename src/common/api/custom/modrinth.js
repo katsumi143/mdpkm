@@ -11,16 +11,23 @@ class ModrinthAPI {
     static icon = 'img/icons/platforms/modrinth.svg';
     static projectCache = [];
 
+    static async init() {
+        this.categories = await this.API.makeRequest(`${MODRINTH_API_BASE}/tag/category`);
+    }
+
     // https://docs.mdpkm.voxelified.com/docs/plugin-api/classes/api-platform#search
     static search(query, options = {}) {
-        const { facets = [], versions, categories, projectType } = options;
+        const { limit = 20, facets = [], offset = 0, loaders, versions, categories, projectType } = options;
         return this.API.makeRequest(`${MODRINTH_API_BASE}/search`, {
             query: {
                 query,
+                limit: limit.toString(),
+                offset: offset.toString(),
                 facets: JSON.stringify([
                     ...facets,
-                    versions?.filter(v => v).map(ver => `versions:${ver}`),
                     categories?.filter(v => v).map(cat => `categories:${cat}`),
+                    loaders?.filter(v => v).map(cat => `categories:${cat}`),
+                    versions?.filter(v => v).map(ver => `versions:${ver}`),
                     ...[projectType && [`project_type:${projectType}`]]
                 ].filter(v => v))
             }
@@ -75,7 +82,6 @@ class ModrinthAPI {
             loaders.some(l => l === loaderType) && game_versions.some(v => v === loader.game)
         );
     }
-
     static canImport(path) {
         return Util.fileExists(`${path}/modrinth.index.json`).catch(() => false);
     }
