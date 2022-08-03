@@ -3,12 +3,11 @@ import pMap from 'p-map-browser';
 import toast from 'react-hot-toast';
 import { open } from '@tauri-apps/api/shell';
 import { checkUpdate } from '@tauri-apps/api/updater';
-import { useTranslation } from 'react-i18next';
-import { getName, getVersion, getTauriVersion } from '@tauri-apps/api/app';
 import { open as open2 } from '@tauri-apps/api/dialog';
-import { appWindow } from '@tauri-apps/api/window';
+import { useTranslation } from 'react-i18next';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { useSelector, useDispatch } from 'react-redux';
+import { getName, getVersion, getTauriVersion } from '@tauri-apps/api/app';
 import { PlusLg, Github, Trash3Fill, Folder2Open, EnvelopeOpen, CloudArrowDown } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
@@ -30,9 +29,8 @@ import Plugins from '../common/plugins';
 import Patcher from '/src/common/plugins/patcher';
 import Instances from '../common/instances';
 import PluginLoader from '../common/plugins/loader';
-import { SKIN_API_BASE, MINECRAFT_RESOURCES_URL } from '../common/constants';
+import { MINECRAFT_RESOURCES_URL } from '../common/constants';
 import { set, setTheme, setLanguage, saveSettings } from '../common/slices/settings';
-import { addAccount, setAccount, saveAccounts, removeAccount, setAddingAccount } from '../common/slices/accounts';
 
 const appName = await getName();
 const appVersion = await getVersion();
@@ -41,12 +39,11 @@ export default Patcher.register(function Settings() {
     const { t, i18n } = useTranslation();
     const theme = useSelector(state => state.settings.theme);
     const uiStyle = useSelector(state => state.settings.uiStyle);
-    const account = useSelector(state => state.accounts.selected);
-    const accounts = useSelector(state => state.accounts.data);
     const dispatch = useDispatch();
     const language = useSelector(state => state.settings.language);
-    const addingAccount = useSelector(state => state.accounts.addingAccount);
+    const modSearchPopout = useSelector(state => state.settings['instances.modSearchPopout']);
     const showInstanceBanner = useSelector(state => state.settings['instances.showBanner']);
+    const modSearchSummaries = useSelector(state => state.settings['instances.modSearchSummaries']);
     const defaultInstanceResolution = useSelector(state => state.settings['instances.defaultResolution']);
     const [_, setRerender] = useState();
     const [cleaning, setCleaning] = useState();
@@ -271,6 +268,30 @@ export default Patcher.register(function Settings() {
                                         }
                                     />
                                 </Grid>
+                            </Setting>
+                            <Setting name="instances.modSearchPopout" direction="horizontal">
+                                <Toggle
+                                    size="small"
+                                    value={modSearchPopout}
+                                    onChange={() =>
+                                        setSetting('instances.modSearchPopout', !modSearchPopout)
+                                    }
+                                />
+                                <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                    {modSearchPopout ? 'On' : 'Off'}
+                                </Typography>
+                            </Setting>
+                            <Setting name="instances.modSearchSummaries" direction="horizontal">
+                                <Toggle
+                                    size="small"
+                                    value={modSearchSummaries}
+                                    onChange={() =>
+                                        setSetting('instances.modSearchSummaries', !modSearchSummaries)
+                                    }
+                                />
+                                <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                    {modSearchSummaries ? 'On' : 'Off'}
+                                </Typography>
                             </Setting>
                         </Grid>
 

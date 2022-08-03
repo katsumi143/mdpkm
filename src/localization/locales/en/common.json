@@ -1,16 +1,18 @@
 {
     "headers.empty_list": "There's nothing here!",
-    "headers.search_retry": "Try searching again, or wait a few seconds!",
+    "headers.search_retry": "Try searching again, or change your query.",
     "headers.adding_instance": "Adding New Instance",
 
     "labels.platform": "Platform",
-    "labels.search_query": "Search query",
+    "labels.category": "Category",
+    "labels.search_query": "Search Query",
 
     "tooltips.feature_unavailable": "This feature is unavailable.",
     
     "actions.use": "Use",
     "actions.view": "View",
     "actions.edit": "Edit",
+    "actions.back": "Back",
     "actions.retry": "Retry",
     "actions.close": "Close",
     "actions.launch": "Launch",

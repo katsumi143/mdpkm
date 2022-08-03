@@ -15,7 +15,7 @@
     },
     "devDependencies": {
         "@tauri-apps/cli": "1.0.5",
-        "@tauri-apps/tauricon": "github:tauri-apps/tauricon",
+        "@tauri-apps/tauricon": "1.0.3",
         "@vitejs/plugin-react": "^1.2.0",
         "env-cmd": "^10.1.0",
         "vite": "^2.8.6",
@@ -45,7 +45,6 @@
         "react-socks": "^2.2.0",
         "react-spring": "^9.4.5",
         "redux": "^4.2.0",
-        "rehype-raw": "^6.1.1",
         "semver": "^7.3.7",
         "skinview3d": "^2.2.1",
         "three": "^0.141.0",

@@ -12,7 +12,9 @@ export const settingsSlice = createSlice({
         account: settings?.account,
         language: settings?.language ?? 'en',
         'instances.showBanner': settings?.['instances.showBanner'] ?? true,
-        'instances.defaultResolution': settings?.['instances.defaultResolution'] ?? [900, 500]
+        'instances.modSearchPopout': settings?.['instances.modSearchPopout'] ?? false,
+        'instances.defaultResolution': settings?.['instances.defaultResolution'] ?? [900, 500],
+        'instances.modSearchSummaries': settings?.['instances.modSearchSummaries'] ?? true
     },
     reducers: {
         set: (state, { payload: [key, value] }) => {
