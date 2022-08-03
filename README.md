@@ -17,7 +17,7 @@ we've got a [discord server](https://discord.gg/YHDW77CMUw) now
 | Feature           | Summary                                                 | Status              |
 |-------------------|---------------------------------------------------------|---------------------|
 | Modloader Support | Vanilla not enough? Easily get more content with mods!  | ✅                 |
-| Bedrock Edition   |                                                         | 🚧                 |
+| Bedrock Edition   | Basic support for Minecraft for Windows!                | ✅                 |
 | Mod Installation  |                                                         | ✅                 |
 | Mod Management    |                                                         | ✅                 |
 | Modpacks          | Get pre-made community modpacks to instantly play with. | ✅                 |
@@ -26,7 +26,6 @@ we've got a [discord server](https://discord.gg/YHDW77CMUw) now
 
 ### Looking for more?<br/>
 Check out these awesome plugins!</br>
-<sup><sub>Most plugins are unofficial, we do not guarantee that these plugins are safe or functional.</sub></sub><br/>
 [mdpkm Plugin Example](https://github.com/Blookerss/mdpkm-example-plugin) (For plugin creators!)<br/>
 [LiteLoader for mdpkm](https://github.com/Blookerss/mdpkm-liteloader-plugin) (Official)<br/>
 [Legacy Fabric for mdpkm](https://github.com/Blookerss/mdpkm-legacy-fabric-plugin) (Official)<br/>
@@ -34,10 +33,10 @@ Check out these awesome plugins!</br>
 ## Loader/Minecraft Support
 | Loader Name                                                | Status             |
 |------------------------------------------------------------|--------------------|
-| Java Edition                                               | ✅                 |
-| Bedrock Edition                                            | 🚧                 |
+| Java Edition (Vanilla)                                     | ✅                 |
+| Bedrock Edition (Vanilla)                                  | ✅ (Unstable)      |
 | [Fabric Loader](https://fabricmc.net/)                     | ✅                 |
-| [Forge Modloader](https://minecraftforge.net/)             | 🚧                 |
+| [Forge Modloader](https://minecraftforge.net/)             | ✅ (Unstable)      |
 | [Quilt Loader](https://quiltmc.org/)                       | ✅ (Beta Software) |
 | Need more? Try out community [plugins](#looking-for-more)! |                     |
 
@@ -80,11 +79,12 @@ Download the latest release [here](https://github.com/Blookerss/mdpkm/releases/l
 <br/>
 
 ## 🤔 Usage
-Check out the [documentation](https://blookers.gitbook.io/mdpkm/getting-started)!
+Check out the [documentation](https://blookers.gitbook.io/mdpkm/getting-started)!<br/>
+Dedicated usage section coming soon!
 <br/>
 
 ## 🥰 Contributing
-pull requests.
+Dedicated contribution section coming soon!
 <br/>
 
 ## 🔗 Links
@@ -93,7 +93,3 @@ pull requests.
   
   [Documentation](https://docs.mdpkm.voxelified.com)
 </dl>
-
-## 🧩 Building Blocks
-**This list is incomplete!**
-<br/>
