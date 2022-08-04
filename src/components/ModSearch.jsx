@@ -146,14 +146,14 @@ export default Patcher.register(function ModSearch({ instanceId }) {
             </Grid>
             <Grid height="100%" spacing={8} direction="vertical" borderRadius={8} css={{ overflow: 'hidden auto' }}>
                 {mods.map((mod, index) => <Mod key={index} data={mod} instanceId={instanceId}/>)}
-                <Grid direction="vertical">
+                {mods.length === 0 && <Grid direction="vertical">
                     <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
                         {t('app.mdpkm.common:headers.empty_list')}
                     </Typography>
                     <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
                         {t('app.mdpkm.common:headers.search_retry')}
                     </Typography>
-                </Grid>
+                </Grid>}
             </Grid>
             <Grid width="100%" padding="0 8px" justifyContent="space-between">
                 <Pagination page={page} pages={pages} setPage={setPage}/>
