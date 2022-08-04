@@ -23,7 +23,7 @@ export default Patcher.register(function InstanceList({ id, onSelect }) {
         setLoading(false);
     };
     return <React.Fragment>
-        <Grid width="100%" padding=".8rem 1.2rem" alignItems="center" background="$secondaryBackground" justifyContent="space-between">
+        <Grid width="100%" padding="12px 16px" alignItems="center" background="$secondaryBackground" justifyContent="space-between">
             <Grid spacing={4} direction="vertical">
                 <Typography color="$primaryColor" weight={600} family="Nunito" spacing={12} horizontal lineheight={1}>
                     <Archive size={20}/>
@@ -43,7 +43,7 @@ export default Patcher.register(function InstanceList({ id, onSelect }) {
                 {t('app.mdpkm.common:actions.refresh')}
             </Button>
         </Grid>
-        <Grid height="100%" margin="8px 0 0" spacing={8} direction="vertical" alignItems="center" css={{
+        <Grid height="100%" spacing={8} padding="8px 0" direction="vertical" alignItems="center" css={{
             overflowY: "auto"
         }}>
             {instances && !Instances.gettingInstances ?

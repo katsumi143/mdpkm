@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft } from 'react-bootstrap-icons';
+import { ArrowLeft, ArrowRight, FileEarmarkArrowDown } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -67,10 +67,12 @@ export default Patcher.register(function SelectInstanceType({ back, types, loadi
                                 {isLoader && <Button theme="accent" onClick={() => chooseLoader(id)} disabled={loading}>
                                     {loading && <BasicSpinner size={16}/>}
                                     {t('app.mdpkm.common:actions.continue')}
+                                    {!loading && <ArrowRight size={14}/>}
                                 </Button>}
                                 {isImport && <Button theme="accent" onClick={importInstance} disabled={loading}>
                                     {loading && <BasicSpinner size={16}/>}
                                     {t('app.mdpkm.select_instance_type.import.button')}
+                                    {!loading && <FileEarmarkArrowDown size={14}/>}
                                 </Button>}
                                 {!isLoader && !isImport &&
                                     <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito">

@@ -176,9 +176,7 @@ export default Patcher.register(function Home() {
                                         borderRight: '1px solid $secondaryBorder'
                                     }}>
                                         <InstanceList id={instance} onSelect={selectInstance}/>
-                                        <Grid width="100%" spacing="1rem" background="$secondaryBackground" alignItems="center" justifyContent="center" css={{
-                                            minHeight: 64
-                                        }}>
+                                        <Grid width="100%" padding={16} background="$secondaryBackground" alignItems="center" justifyContent="center">
                                             <Button onClick={() => setInstancePage('add-instance')}>
                                                 <PlusLg size={14}/>
                                                 {t('app.mdpkm.buttons.add_instance')}

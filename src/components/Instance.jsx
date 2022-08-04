@@ -64,8 +64,8 @@ export default Patcher.register(function Instance({ css, data: instance, onView 
                 cursor: 'pointer',
             }}>
                 <Grid width="calc(100% - 80px)" spacing={isCompact ? '.6rem' : '1rem'} alignItems="center">
-                    <InstanceIcon size={isCompact ? 36 : 48} instance={instance} hideLoader={isCompact}/>
-                    <Grid width="inherit" spacing={isCompact ? 2 : 4} direction="vertical" alignItems="start">
+                    <InstanceIcon size={isCompact ? 36 : 46} instance={instance} hideLoader={isCompact}/>
+                    <Grid width="-webkit-fill-available" spacing={isCompact ? 2 : 4} direction="vertical" alignItems="start" css={{ overflow: 'hidden' }}>
                         <Typography
                             size={isCompact ? 13 : '1rem'}
                             width="100%"
@@ -75,9 +75,6 @@ export default Patcher.register(function Instance({ css, data: instance, onView 
                             textalign="start"
                             lineheight={1}
                             whitespace="nowrap"
-                            style={{
-                                overflow: "hidden"
-                            }}
                         >
                             {instance.name}
                         </Typography>
