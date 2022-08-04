@@ -206,7 +206,7 @@ export default Patcher.register(function InstancePage({ id }) {
         return;
     return (
         <Grid height="100%" direction="vertical" instanceId={id} css={{ flex: 1, overflow: 'hidden' }}>
-            <Grid margin="1rem" padding={12} background="$secondaryBackground2" borderRadius={16} css={{
+            <Grid margin={16} padding={12} background="$secondaryBackground2" borderRadius={16} css={{
                 position: 'relative'
             }}>
                 <InstanceIcon size={uiStyle === 'compact' ? 64 : 80} instance={instance} hideLoader props={{
@@ -273,7 +273,7 @@ export default Patcher.register(function InstancePage({ id }) {
                 </Breakpoint>
             </Grid>
             {instance.launchLogs &&
-                <Grid width="auto" height={consoleOpen ? '70%' : 'auto'} margin="0 1rem 1rem" direction="vertical" background="$secondaryBackground2" borderRadius={8} css={{
+                <Grid width="auto" height={consoleOpen ? '70%' : 'auto'} margin="0 8px 8px" direction="vertical" background="$secondaryBackground2" borderRadius={8} css={{
                     overflow: 'hidden',
                     position: 'relative',
                     flexShrink: 0
@@ -450,8 +450,8 @@ export default Patcher.register(function InstancePage({ id }) {
                 onChange={event => setTabPage(event.target.value)}
                 css={{
                     width: 'auto',
-                    height: '-webkit-fill-available',
-                    margin: '0 1rem 1rem'
+                    margin: '0 1rem 1rem',
+                    height: '-webkit-fill-available'
                 }}
             >
                 <TabItem name={t('app.mdpkm.instance_page.tabs.mods')} icon={<List size={14}/>} value={0} padding={0} disabled={!instance.isModded}>
@@ -669,7 +669,7 @@ const InstanceInfoAnimation = keyframes({
 });
 
 function InstanceInfo({ animate, children, css }) {
-    return <Grid margin="0 1rem 1rem" spacing=".8rem" padding="12px" alignItems="center" background="$secondaryBackground2" borderRadius="1rem" css={{
+    return <Grid margin="0 1rem 1rem" spacing=".8rem" padding={12} alignItems="center" background="$secondaryBackground2" borderRadius="1rem" css={{
         position: 'relative',
         animation: animate ? `${InstanceInfoAnimation} .5s cubic-bezier(0.4, 0, 0.2, 1)` : null,
         ...css
