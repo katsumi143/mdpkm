@@ -15,6 +15,7 @@ await Plugins.init().catch(err => {
     console.error(err);
     toast.error('An error occured while loading plugins.\nPlease report this!');
 });
+
 const root = createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
@@ -29,5 +30,4 @@ root.render(
         </Provider>
     </React.StrictMode>
 );
-window.test = Home;
-setInterval(() => checkUpdate(), 5 * 60000)
+setInterval(() => checkUpdate(), 5 * 60000);
