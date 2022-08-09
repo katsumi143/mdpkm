@@ -626,7 +626,7 @@ export class Instance extends EventEmitter {
         return `${this.instances.getPath('versions')}/java-${loader.game}/manifest.json`;
     }
 
-    async downloadMod(id, api) {
+    async downloadMod(id, api, versionId) {
         console.warn(`Downloading Mod ${id} via ${api.name}`);
         this.downloading.push({
             id,
@@ -634,14 +634,23 @@ export class Instance extends EventEmitter {
         });
         this.updateStore();
 
-        const config = await this.getConfig();
         try {
+            let config = await this.getConfig();
             const { slug, title } = await api.getProject(id);
-            const versions = await api.getProjectVersions(id, config);
-            const version = api.getCompatibleVersion(config, versions);
+            const version = versionId ?
+                await api.getProjectVersion(versionId, id) :
+                await api.getProjectVersions(id, config).then(versions =>
+                    api.getCompatibleVersion(config, versions)
+                );
             if(!version)
                 throw new Error(`'${title ?? slug}' is incompatible with '${this.name}'.`);
-
+            try {
+                for(const { project_id, version_id, dependency_type } of version.dependencies)
+                    if(dependency_type === 'required')
+                        await this.downloadMod(project_id, api, version_id);
+            } catch(err) {
+                console.warn(err);
+            }
             const file = version?.files?.find(f => f.primary && (f.url ?? f.downloadUrl)) ?? version?.files?.find(f => f.url ?? f.downloadUrl) ?? version;
             const fileName = file.filename ?? file.fileName;
             const downloadUrl = file.url ?? file.downloadUrl;
@@ -661,7 +670,14 @@ export class Instance extends EventEmitter {
                     description: 'error',
                     version: 'error'
                 })});
-            config.modifications.push([api.id, id, version.id, slug, mod?.id ?? slug]);
+            config = await this.getConfig();
+            await this.saveConfig({
+                ...config,
+                modifications: [
+                    ...config.modifications,
+                    [api.id, id, version.id, slug, mod?.id ?? slug]
+                ]
+            });
         } catch(err) {
             console.error(err);
             toast.error(`Failed to download ${id}.\n${err.message ?? 'Unknown Reason.'}`);
@@ -672,7 +688,6 @@ export class Instance extends EventEmitter {
             return false;
         }
 
-        await this.saveConfig(config);
         this.updateStore();
 
         console.warn(`Downloaded Mod ${id}`);
