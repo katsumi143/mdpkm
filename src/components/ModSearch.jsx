@@ -109,7 +109,7 @@ export default Patcher.register(function ModSearch({ instanceId }) {
                         <Select.Root value={category} onChange={setCategory} disabled={searching}>
                             <Select.Group name="Categories">
                                 <Select.Item value="none">
-                                    None
+                                    {t('app.mdpkm.mod_search.categories.none')}
                                 </Select.Item>
                                 {API.get(api).categories.filter(c => c.project_type === 'mod').map(({ name, icon }, index) =>
                                     <Select.Item key={index} value={name}>
@@ -158,7 +158,7 @@ export default Patcher.register(function ModSearch({ instanceId }) {
             <Grid width="100%" padding="0 8px" justifyContent="space-between">
                 <Pagination page={page} pages={pages} setPage={setPage}/>
                 <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito">
-                    {hits} Results
+                    {t('app.mdpkm.mod_search.results', { val: hits })}
                 </Typography>
             </Grid>
         </Grid>

@@ -5,7 +5,7 @@ import { initReactI18next } from 'react-i18next';
 await i18n
 .use(initReactI18next)
 .init({
-    resources: {
+    /*resources: {
         en: {
             'app.mdpkm.instances': (await import('./locales/en/instances')).default,
             'app.mdpkm.common': (await import('./locales/en/common')).default,
@@ -16,7 +16,7 @@ await i18n
             'app.mdpkm.common': (await import('./locales/lv/common')).default,
             translation: (await import('./locales/lv')).default
         }
-    },
+    },*/
     lng: settingsSlice.getInitialState().language,
     fallbackLng: 'en'
 });

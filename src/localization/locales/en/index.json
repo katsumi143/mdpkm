@@ -47,6 +47,12 @@
     "app.mdpkm.settings.instances.defaultResolution": "Default Window Resolution",
     "app.mdpkm.settings.instances.defaultResolution.summary": "Window resolution to use for new instances.",
 
+    "app.mdpkm.settings.instances.modSearchPopout": "Mod Search Popout",
+    "app.mdpkm.settings.instances.modSearchPopout.summary": "When enabled, the mod search will show in a expanded popup.",
+
+    "app.mdpkm.settings.instances.modSearchSummaries": "Mod Search Summaries",
+    "app.mdpkm.settings.instances.modSearchSummaries.summary": "Displays short descriptions for mods in mod search.",
+
     "app.mdpkm.settings.plugins.add": "Add Plugin",
     "app.mdpkm.settings.plugins.item.adds_loader": "Adds {{val}} Loader",
     "app.mdpkm.settings.plugins.item.adds_loaders": "Adds {{val}} Loaders",
@@ -95,6 +101,7 @@
     "app.mdpkm.mod_management.search": "Search mods",
     "app.mdpkm.mod_management.get_updates": "Get Updates",
 
+    "app.mdpkm.mod_search.categories.none": "None",
     "app.mdpkm.mod_search.categories.modrinth.adventure": "Adventure",
     "app.mdpkm.mod_search.categories.modrinth.cursed": "Cursed",
     "app.mdpkm.mod_search.categories.modrinth.decoration": "Decoration",
@@ -114,6 +121,7 @@
     "app.mdpkm.mod_search.categories.modrinth.transportation": "Transportation",
     "app.mdpkm.mod_search.categories.modrinth.utility": "Utility",
     "app.mdpkm.mod_search.categories.modrinth.worldgen": "Worldgen",
+    "app.mdpkm.mod_search.results": "{{val}} Results",
 
     "app.mdpkm.mod.author": "by {{val}}",
     "app.mdpkm.mod.platform": "{{id}} on {{name}}.",
@@ -128,6 +136,7 @@
     "app.mdpkm.mod.version": "Version {{val}}",
     "app.mdpkm.mod.show_embedded": "Show Embedded Mods ({{val}})",
     "app.mdpkm.mod.hide_embedded": "Hide Embedded Mods ({{val}})",
+    "app.mdpkm.mod.tags.embedded": "Embedded",
 
     "app.mdpkm.server.default_name": "Minecraft Server",
     "app.mdpkm.server.no_address": "Unknown server",

@@ -5,6 +5,8 @@
 
     "labels.platform": "Platform",
     "labels.category": "Category",
+    "labels.toggle_true": "On",
+    "labels.toggle_false": "Off",
     "labels.search_query": "Search Query",
 
     "tooltips.feature_unavailable": "This feature is unavailable.",

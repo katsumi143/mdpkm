@@ -1,6 +1,7 @@
 {
     "states.none": "Installed",
-    "states.preparing": "Preparing",
+    "states.launched": "Minecraft has launched!",
+    "states.preparing": "Preparing for launch",
     "states.launching": "Launching {{name}}",
     "states.verifying": "Verifying Resources",
     "states.extracting": "Extracting Natives",
@@ -8,5 +9,17 @@
     "states.copying_legacy": "Copying Assets to Legacy Resources",
     "states.modifying_info": "Modifying Launch Info for {{name}}",
     "states.reading_manifest": "Reading Minecraft Manifest",
-    "states.downloading_mods": "Download Mods {{val}}/{{len}}"
+    "states.downloading_mods": "Download Mods {{val}}/{{len}}",
+    "states.processing_forge": "Processing Forge ({{val}}/{{len}})",
+    "states.downloading_forge": "Download Forge ({{val}}%)",
+    "states.installing_loader": "Installing {{name}} {{version}}",
+    "states.downloading_libraries": "Downloading Libraries",
+
+    "toasts.import_success": "Imported {{name}} sucessfully!",
+
+    "errors.import_existing": "Import failed, a instance called {{name}} already exists.",
+    "errors.mod_file_invalid": "Mod file is invalid.",
+    "errors.mod_incompatible": "'{{mod}}' is incompatible with '{{instance}}'",
+    "errors.loader_unsupported": "{{name}} isn't supported by mdpkm!",
+    "errors.mod_download_failed": "Failed to download {{mod}}.\n{{error}}"
 }

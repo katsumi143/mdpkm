@@ -236,7 +236,7 @@ export default Patcher.register(function Settings() {
                                     }
                                 />
                                 <Typography size=".8rem" color="$secondaryColor" family="Nunito">
-                                    {showInstanceBanner ? 'On' : 'Off'}
+                                    {t(`app.mdpkm.common:labels.toggle_${showInstanceBanner}`)}
                                 </Typography>
                             </Setting>
                             <Setting name="instances.defaultResolution" direction="horizontal">
@@ -278,7 +278,7 @@ export default Patcher.register(function Settings() {
                                     }
                                 />
                                 <Typography size=".8rem" color="$secondaryColor" family="Nunito">
-                                    {modSearchPopout ? 'On' : 'Off'}
+                                    {t(`app.mdpkm.common:labels.toggle_${modSearchPopout}`)}
                                 </Typography>
                             </Setting>
                             <Setting name="instances.modSearchSummaries" direction="horizontal">
@@ -290,7 +290,7 @@ export default Patcher.register(function Settings() {
                                     }
                                 />
                                 <Typography size=".8rem" color="$secondaryColor" family="Nunito">
-                                    {modSearchSummaries ? 'On' : 'Off'}
+                                    {t(`app.mdpkm.common:labels.toggle_${modSearchSummaries}`)}
                                 </Typography>
                             </Setting>
                         </Grid>

@@ -580,7 +580,7 @@ export class Instance extends EventEmitter {
                     readOut(string, null, type);
             });
         } else if(isBedrock) {
-            updateToastState('Preparing for launch');
+            updateToastState(t('app.mdpkm.instances:states.verifying'));
             await tauri.invoke('unregister_package', {
                 family: 'Microsoft.MinecraftUWP_8wekyb3d8bbwe',
                 gameDir: this.getClientPath()
@@ -596,7 +596,7 @@ export class Instance extends EventEmitter {
         }
         
         this.setState(null);
-        toast.success(`${toastHead}\nMinecraft has launched!`, {
+        toast.success(`${toastHead}\n${t('app.mdpkm.instances:states.launched')}`, {
             id: toastId,
             duration: 3000
         });
@@ -643,7 +643,7 @@ export class Instance extends EventEmitter {
                     api.getCompatibleVersion(config, versions)
                 );
             if(!version)
-                throw new Error(`'${title ?? slug}' is incompatible with '${this.name}'.`);
+                throw new Error(t('app.mdpkm.instances:errors.mod_incompatible', { name: title ?? slug, instance: this.name }));
             try {
                 for(const { project_id, version_id, dependency_type } of version.dependencies)
                     if(dependency_type === 'required')
@@ -659,7 +659,7 @@ export class Instance extends EventEmitter {
 
             this.downloading.splice(this.downloading.findIndex(d => d.id === id), 1);
             if(!file)
-                throw new Error('File invalid.');
+                throw new Error(t('app.mdpkm.instances:errors.mod_file_invalid'));
             
             const mod = await this.readMod(`${this.path}/mods/${fileName}`);
             if(mod)
@@ -680,7 +680,10 @@ export class Instance extends EventEmitter {
             });
         } catch(err) {
             console.error(err);
-            toast.error(`Failed to download ${id}.\n${err.message ?? 'Unknown Reason.'}`);
+            toast.error(t('app.mdpkm.instances:errors.mod_download_failed', {
+                mod: id,
+                error: err.message ?? 'Unknown Reason.'
+            }));
             
             const index = this.downloading.findIndex(d => d.id === id);
             if(index >= 0)
@@ -818,7 +821,10 @@ class Instances extends EventEmitter {
         };
         const { loader } = await instance.getConfig();
         const loaderDir = `${this.getPath('versions')}/${loader.type}-${loader.game}-${loader.version}`;
-        updateToastState(`Installing ${Util.getLoaderName(loader.type)} ${loader.version ?? loader.game}`);
+        updateToastState(t('app.mdpkm.instances:states.installing_loader', {
+            name: Util.getLoaderName(loader.type),
+            version: loader.version ?? loader.game
+        }));
 
         let libraries = {};
         switch (loader.type) {
@@ -826,7 +832,7 @@ class Instances extends EventEmitter {
             case 'bedrock':
                 break;
             case 'forge':
-                updateToastState('Downloading Forge (0%)');
+                updateToastState(t('app.mdpkm.instances:states.downloading_forge', { val: 0 }));
 
                 const forge = {};
                 const tempForgeInstaller = await Util.downloadFile(
@@ -838,7 +844,7 @@ class Instances extends EventEmitter {
                     tempForgeInstaller,
                     `${directory}/forge-${loader.game}-${loader.version}-installer.jar`
                 );
-                updateToastState('Downloading Forge (50%)');
+                updateToastState(t('app.mdpkm.instances:states.downloading_forge', { val: 50 }));
 
                 //Install Profile
                 const installProfilePath = await Util.extractFile(
@@ -868,7 +874,7 @@ class Instances extends EventEmitter {
                     JSON.stringify(forge.version)
                 );
 
-                updateToastState('Downloading Forge (90%)');
+                updateToastState(t('app.mdpkm.instances:states.downloading_forge', { val: 90 }));
 
                 let skipForgeFilter = true;
                 if (forge.install.filePath) {
@@ -891,7 +897,7 @@ class Instances extends EventEmitter {
                 } else
                     skipForgeFilter = false;
 
-                updateToastState('Downloading Libraries');
+                updateToastState(t('app.mdpkm.instances:states.downloading_libraries'));
 
                 libraries = forge.version.libraries;
                 if (forge.install.libraries)
@@ -921,7 +927,7 @@ class Instances extends EventEmitter {
                         await loaderData.source.downloadManifest(manifestPath, loader.game, loader.version);
                     else {
                         if(toastId)
-                            toast.error(`${Util.getLoaderName(loader.type)} isn't supported by mdpkm!`, {
+                            toast.error(t('app.mdpkm.instances:errors.loader_unsupported', { name: Util.getLoaderName(loader.type) }), {
                                 position: 'bottom-right'
                             });
                         throw new Error(`${loader.type} ${loader.version} for ${loader.game} wasn't found.`);
@@ -1021,7 +1027,10 @@ class Instances extends EventEmitter {
                     ],
                     cwd: librariesPath
                 }).catch(err => {throw err});
-                update(`Processing Forge (${counter}/${processors.length})`);
+                update(t('app.mdpkm.instances:states.processing_forge', {
+                    val: counter,
+                    len: processors.length
+                }));
                 counter++;
             }
         }
@@ -1072,7 +1081,7 @@ class Instances extends EventEmitter {
 
     async importInstance(name, path, inherit) {
         if(this.instances.some(i => i.name === name))
-            return toast.error(`Import failed, a instance called ${name} already exists`, {
+            return toast.error(t('app.mdpkm.instances:errors.import_existing', { name }), {
                 position: 'bottom-right'
             });
 
@@ -1141,7 +1150,7 @@ class Instances extends EventEmitter {
         Store.dispatch(addInstance(instance.toSerial()));
         instance.setState(null);
 
-        toast(`Imported ${name} successfully`, {
+        toast(t('app.mdpkm.instances:toasts.import_success', { name }), {
             position: 'bottom-right'
         });
     }

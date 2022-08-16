@@ -69,7 +69,7 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                         {embedded &&
                             <Tag>
                                 <Typography size={tagSize} color="$tagColor" family="Nunito">
-                                    Embedded
+                                    {t('app.mdpkm.mod.tags.embedded')}
                                 </Typography>
                             </Tag>
                         }
