@@ -1,6 +1,6 @@
 {
     "name": "mdpkm",
-    "version": "1.8.0-beta.1",
+    "version": "1.8.0-beta.2",
     "description": "Simple all-in-one instance manager for Minecraft Java & Bedrock",
     "repository": "github:Blookerss/mdpkm",
     "homepage": "https://github.com/Blookerss/mdpkm#readme",
@@ -10,6 +10,7 @@
         "dev": "vite-tauri dev",
         "start": "vite-tauri",
         "build": "env-cmd vite-tauri build",
+        "build:tauri": "env-cmd tauri build",
         "serve": "vite preview",
         "tauricon": "tauricon --target ./src-tauri/icons ./app-icon.png"
     },
