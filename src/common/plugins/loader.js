@@ -37,9 +37,9 @@ export default class PluginLoader {
         if(this.loaded[manifest.id])
             throw new Error(`plugin has already been loaded.`);
 
-        const depend = manifest.depends?.mdpkm;
+        /*const depend = manifest.depends?.mdpkm;
         if(depend && !semver.satisfies(APP_VERSION, depend))
-            throw new Error(`plugin requires ${APP_NAME} v${semver.minVersion(depend)}`)
+            throw new Error(`plugin requires ${APP_NAME} v${semver.minVersion(depend)}`);*/
 
         this.loaded[manifest.id] = {
             path,
@@ -92,5 +92,5 @@ export default class PluginLoader {
             }
     }
 };
-compiler.expose('JSON', 'Array', 'console', 'window', 'Object', 'Promise');
+compiler.expose('Date', 'JSON', 'Array', 'console', 'window', 'Object', 'Promise');
 PluginSystem.prototype.api = PluginLoader.pluginApi;
