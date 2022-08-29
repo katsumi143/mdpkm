@@ -199,6 +199,7 @@
     "app.mdpkm.skin_management.adding.header": "Adding Minecraft Skin",
     "app.mdpkm.skin_management.adding.submit": "Save Skin",
     "app.mdpkm.skin_management.adding.cancel": "Cancel",
+    "app.mdpkm.skin_management.editing.header": "Editing: “{{val}}”",
     "app.mdpkm.skin_management.buttons.add_skin": "Add New Skin",
 
     "app.mdpkm.loader_setup.header": "Configure Loader",

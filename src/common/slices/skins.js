@@ -26,12 +26,8 @@ export const skinsSlice = createSlice({
         saveSkins: state => {
             Util.writeFile(skinsPath, JSON.stringify(state));
         },
-        writeSkin: (state, { payload }) => {
-            for (const [id, data] of Object.entries(state.data)) {
-                const index = data.findIndex(d => d.id === payload);
-                if(index >= 0)
-                    state.data[id][index] = payload;
-            }
+        writeSkin: (state, { payload: [key, data] }) => {
+            state.data[key] = data;
         }
     }
 });

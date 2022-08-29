@@ -20,12 +20,11 @@ import Typography from '/voxeliface/components/Typography';
 import InputLabel from '/voxeliface/components/Input/Label';
 import TextHeader from '/voxeliface/components/Typography/Header';
 import * as Select from '/voxeliface/components/Input/Select';
-import * as Tooltip from '/voxeliface/components/Tooltip';
 
 import API from '../common/api';
 import Util from '../common/util';
 import Patcher from '../common/plugins/patcher';
-import { addSkin, saveSkins } from '../common/slices/skins';
+import { addSkin, saveSkins, writeSkin } from '../common/slices/skins';
 import { saveAccounts, writeAccount } from '../common/slices/accounts';
 
 const SKIN_MODEL = { CLASSIC: 'default', SLIM: 'slim' };
@@ -44,10 +43,18 @@ export default Patcher.register(function SkinManagement() {
     const [addingCape, setAddingCape] = useState();
     const [addingName, setAddingName] = useState('');
     const [addingPath, setAddingPath] = useState('');
+    const [editingSkin, setEditingSkin] = useState();
     const [addingModel, setAddingModel] = useState('CLASSIC');
     const selectFile = () => open({
         filters: [{ name: 'PNG Image', extensions: ['png'] }]
     }).then(setAddingPath);
+    const startAdding = () => {
+        setAdding(true);
+        setAddingCape();
+        setAddingName('');
+        setAddingPath('');
+        setAddingModel('CLASSIC');
+    };
     const addNewSkin = async() => {
         const data = addingPath ? await Util.readBinaryFile(addingPath) : await fetch(
             `/img/skins/${addingModel}.png`
@@ -59,11 +66,41 @@ export default Patcher.register(function SkinManagement() {
             variant: addingModel
         }));
         dispatch(saveSkins());
+        toast.success(`Saved '${addingName}' successfully.`);
+
         setAdding(false);
         setAddingCape();
         setAddingName('');
         setAddingPath('');
         setAddingModel('CLASSIC');
+    };
+    const saveSkin = async() => {
+        const skin = skins[editingSkin];
+        if (skin) {
+            dispatch(writeSkin([editingSkin, {
+                name: addingName,
+                cape: addingCape,
+                image: addingPath.startsWith('data:') ? skin.image : Buffer.from(await Util.readBinaryFile(addingPath)).toString('base64'),
+                variant: addingModel
+            }]));
+            dispatch(saveSkins());
+            setAddingCape();
+            setAddingName('');
+            setAddingPath('');
+            setEditingSkin();
+            setAddingModel('CLASSIC');
+            toast.success(`Saved changes to '${skin.name}' successfully.`);
+        }
+    };
+    const editSkin = async key => {
+        const skin = skins[key];
+        if (skin) {
+            setAddingName(skin.name);
+            setAddingCape(skin.cape);
+            setAddingPath(`data:image/png;base64,${skin.image}`);
+            setEditingSkin(key);
+            setAddingModel(skin.variant);
+        }
     };
     const useSkin = async key => {
         const skin = skins[key];
@@ -141,7 +178,7 @@ export default Patcher.register(function SkinManagement() {
                         <Spinner/>
                     </Grid>}
                 </Grid>
-                <Button theme="accent" onClick={() => setAdding(true)} disabled={loading}>
+                <Button theme="accent" onClick={startAdding} disabled={loading}>
                     <PlusLg size={14}/>
                     {t('app.mdpkm.skin_management.buttons.add_skin')}
                 </Button>
@@ -157,7 +194,7 @@ export default Patcher.register(function SkinManagement() {
                     gridTemplateColumns: 'repeat(5, 1fr)'
                 }}>
                     {skins.map((skin, key) =>
-                        <Skin key={key} data={skin} capes={capes} index={key} useSkin={useSkin} loading={loading || setting} current={current}/>
+                        <Skin key={key} data={skin} capes={capes} index={key} useSkin={useSkin} editSkin={editSkin} loading={loading || setting} current={current}/>
                     )}
                 </Grid> : <React.Fragment>
                     <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
@@ -247,10 +284,88 @@ export default Patcher.register(function SkinManagement() {
                 </Grid>
             </Grid>
         </Modal>}
+        {typeof editingSkin === 'number' && <Modal>
+            <TextHeader>{t('app.mdpkm.skin_management.editing.header', { val: skins[editingSkin]?.name })}</TextHeader>
+            <Grid spacing="2rem" justifyContent="space-between">
+                <SkinFrame
+                    walk
+                    skin={addingPath.startsWith('data:') ? addingPath : convertFileSrc(addingPath)}
+                    cape={capes.find(c => c.id === addingCape)?.url}
+                    width={150}
+                    model={SKIN_MODEL[addingModel]}
+                    height={256}
+                    control
+                    background="none"
+                />
+                <Grid direction="vertical">
+                    <InputLabel>{t('app.mdpkm.skin_management.skin_name.label')}</InputLabel>
+                    <TextInput
+                        width="100%"
+                        value={addingName}
+                        onChange={setAddingName}
+                        placeholder={t('app.mdpkm.skin_management.skin_name.placeholder')}
+                    />
+
+                    <InputLabel spacious>{t('app.mdpkm.skin_management.skin_model.label')}</InputLabel>
+                    <Select.Root value={addingModel} onChange={setAddingModel}>
+                        <Select.Group name={t('app.mdpkm.skin_management.skin_model.category')}>
+                            <Select.Item value="CLASSIC">
+                                {t('app.mdpkm.skin_management.skin_model.items.classic')}
+                            </Select.Item>
+                            <Select.Item value="SLIM">
+                                {t('app.mdpkm.skin_management.skin_model.items.slim')}
+                            </Select.Item>
+                        </Select.Group>
+                    </Select.Root>
+
+                    <InputLabel spacious>{t('app.mdpkm.skin_management.skin_file.label')}</InputLabel>
+                    <TextInput
+                        width="100%"
+                        value={addingPath && `.../${addingPath.split('\\').slice(-2).join('/')}`}
+                        readOnly
+                        placeholder={t('app.mdpkm.import_instance.select_file.placeholder')}
+                    >
+                        <Button onClick={selectFile}>
+                            <Folder2Open size={14}/>
+                            {t('app.mdpkm.common:actions.select_file')}
+                        </Button>
+                    </TextInput>
+
+                    <InputLabel spacious>{t('app.mdpkm.skin_management.cape.label')}</InputLabel>
+                    <Select.Root value={addingCape} onChange={setAddingCape} defaultValue="none">
+                        <Select.Group name={t('app.mdpkm.skin_management.cape.category')}>
+                            {capes.map((cape, key) => <Select.Item key={key} value={cape.id}>
+                                <Image src={cape.url} size={24} height={32} css={{
+                                    backgroundSize: '128px 66px',
+                                    imageRendering: 'pixelated',
+                                    backgroundColor: '#fff',
+                                    backgroundPosition: '0 7%'
+                                }}/>
+                                {cape.alias}
+                            </Select.Item>)}
+                        </Select.Group>
+                        <Select.Item value="none">
+                            {t('app.mdpkm.skin_management.cape.items.none')}
+                        </Select.Item>
+                    </Select.Root>
+
+                    <Grid margin="2rem 0 0" spacing={8}>
+                        <Button theme="accent" onClick={saveSkin} disabled={!addingName}>
+                            <PlusLg size={14}/>
+                            {t('app.mdpkm.common:actions.save_changes')}
+                        </Button>
+                        <Button theme="secondary" onClick={() => setEditingSkin(false)}>
+                            <XLg/>
+                            {t('app.mdpkm.common:actions.cancel')}
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Modal>}
     </Grid>;
 });
 
-function Skin({ data, capes, index, useSkin, loading, current }) {
+function Skin({ data, capes, index, useSkin, editSkin, loading, current }) {
     const { t } = useTranslation();
     return <Grid padding={8} spacing={4} direction="vertical" alignItems="center" background="$primaryBackground" borderRadius="8px" justifyContent="space-between" css={{
         border: '$secondaryBorder solid 1px'
@@ -263,6 +378,7 @@ function Skin({ data, capes, index, useSkin, loading, current }) {
         </Grid> : <SkinFrame
             skin={`data:image/png;base64,${data.image}`}
             cape={capes?.find(c => c.id === data.cape)?.url}
+            image
             width={100}
             model={SKIN_MODEL[data.variant]}
             height={128}
@@ -273,18 +389,10 @@ function Skin({ data, capes, index, useSkin, loading, current }) {
             <Button size="smaller" theme="accent" onClick={() => useSkin(index)} disabled={loading || current === data.image}>
                 {t('app.mdpkm.common:actions.use')}
             </Button>
-            <Tooltip.Root delayDuration={250}>
-                <Tooltip.Trigger asChild>
-                    <Button size="smaller" theme="secondary" disabled>
-                        <PencilFill/>
-                        {t('app.mdpkm.common:actions.edit')}
-                    </Button>
-                </Tooltip.Trigger>
-                <Tooltip.Content side="top" sideOffset={4}>
-                    <Tooltip.Arrow/>
-                    {t('app.mdpkm.common:tooltips.feature_unavailable')}
-                </Tooltip.Content>
-            </Tooltip.Root>
+            <Button size="smaller" theme="secondary" onClick={() => editSkin(index)} disabled={loading}>
+                <PencilFill/>
+                {t('app.mdpkm.common:actions.edit')}
+            </Button>
         </Grid>
     </Grid>;
 };
