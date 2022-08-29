@@ -3,9 +3,9 @@ import { Vector3 } from 'three';
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { SkinViewer, RotatingAnimation, createOrbitControls } from 'skinview3d';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-export default function SkinFrame({ skin, cape, walk, zoom = false, model = 'auto-detect', width, height, rotate, control = false, stillWalk, background }) {
+import { SkinViewer, PlayerAnimation } from 'skinview3d';
+export default function SkinFrame({ skin, cape, walk, zoom = false, model = 'auto-detect', width, height, control = false, stillWalk, background }) {
     const canvas = React.useRef();
     React.useLayoutEffect(() => {
         const skinViewer = new SkinViewer({
@@ -33,15 +33,14 @@ export default function SkinFrame({ skin, cape, walk, zoom = false, model = 'aut
 
         skinViewer.render = () => {
             composer.render();
+            skinViewer.playerObject.lookAt(new Vector3(12, 0, 24));
         };
     
-        const viewerControl = createOrbitControls(skinViewer);
-        viewerControl.enablePan = false;
-        viewerControl.enableZoom = zoom;
-        viewerControl.autoRotate = false;
-        viewerControl.rotateSpeed = .25;
-        viewerControl.enableRotate = control;
-        skinViewer.playerObject.lookAt(new Vector3(12, 0, 24));
+        skinViewer.controls.enablePan = false;
+        skinViewer.controls.enableZoom = zoom;
+        skinViewer.controls.autoRotate = false;
+        skinViewer.controls.rotateSpeed = .25;
+        skinViewer.controls.enableRotate = control;
 
         if (background === 'none')
             skinViewer.renderer.setClearColor(0xffffff, 0);
@@ -49,34 +48,31 @@ export default function SkinFrame({ skin, cape, walk, zoom = false, model = 'aut
             skinViewer.background = background;
     
         if (walk) 
-            skinViewer.animations.add(WalkAnimation);
+            skinViewer.animation = new WalkAnimation();
         if (stillWalk)
-            skinViewer.animations.add(WalkAnimationStill);
-        if (rotate)
-            skinViewer.animations.add(RotatingAnimation);
+            skinViewer.animation = new WalkAnimationStill();
     
-        return () => {
-            if (control)
-                viewerControl.dispose();
-            skinViewer.dispose();
-        };
+        return () => skinViewer.dispose();
     }, [skin, cape, model, width, height, control, walk, background]);
     return <canvas ref={canvas}/>
 };
-function WalkAnimation({ skin }, time) {
-	time *= 4;
-    
-	skin.leftLeg.rotation.x = Math.sin(time) / 3;
-	skin.rightLeg.rotation.x = Math.sin(time + Math.PI) / 3;
+class WalkAnimation extends PlayerAnimation {
+    animate({ skin }) {
+        const time = this.progress * 4;
+        skin.leftLeg.rotation.x = Math.sin(time) / 3;
+        skin.rightLeg.rotation.x = Math.sin(time + Math.PI) / 3;
 
-	skin.leftArm.rotation.x = Math.sin(time + Math.PI) / 3;
-	skin.rightArm.rotation.x = Math.sin(time) / 3;
+        skin.leftArm.rotation.x = Math.sin(time + Math.PI) / 3;
+        skin.rightArm.rotation.x = Math.sin(time) / 3;
+    }
 };
-function WalkAnimationStill({ skin }, time) {
-	time = 5;
-	skin.leftLeg.rotation.x = Math.sin(time) / 3;
-	skin.rightLeg.rotation.x = Math.sin(time + Math.PI) / 3;
+class WalkAnimationStill extends PlayerAnimation {
+    animate({ skin }) {
+        const time = 5;
+        skin.leftLeg.rotation.x = Math.sin(time) / 3;
+        skin.rightLeg.rotation.x = Math.sin(time + Math.PI) / 3;
 
-	skin.leftArm.rotation.x = Math.sin(time + Math.PI) / 3;
-	skin.rightArm.rotation.x = Math.sin(time) / 3;
+        skin.leftArm.rotation.x = Math.sin(time + Math.PI) / 3;
+        skin.rightArm.rotation.x = Math.sin(time) / 3;
+    }
 };
