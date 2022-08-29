@@ -14,7 +14,9 @@ export default function SkinFrame({ skin, cape, walk, zoom = false, model = 'aut
             canvas: canvas.current
         });
         if (skin)
-            skinViewer.loadSkin(skin, model);
+            skinViewer.loadSkin(skin, {
+                model
+            });
         if (cape)
             skinViewer.loadCape(cape);
         skinViewer.fov = 8;
