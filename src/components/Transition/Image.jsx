@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTransition, animated } from "react-spring";
+import { useTransition, animated } from 'react-spring';
 
 import Image from '/voxeliface/components/Image';
 export default function ImageTransition(props) {

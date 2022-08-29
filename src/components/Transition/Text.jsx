@@ -1,10 +1,10 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-
+import { useRef, useState, useEffect, Children } from 'react';
 import { useSpring, useTransition, animated, config } from "react-spring";
 
-const newChildren = data => ({ key: Date.now(), data: React.Children.map(data, d => d.toString()).join('') });
-
+const newChildren = data => ({
+    key: Date.now(),
+    data: Children.map(data, d => d.toString()).join('')
+});
 const types = {
     fade: {
         from: { opacity: 0 },
@@ -18,19 +18,19 @@ const types = {
     }
 };
 export default function TextTransition({
-    type,
+    type = 'fadeUp',
+    delay = 0,
+    style = {},
+    inline = false,
     children,
-    inline,
-    delay,
-    className,
-    style,
-    noOverflow,
-    springConfig
+    className = '',
+    noOverflow = false,
+    springConfig = config.default
 }) {
-    const placeholderRef = React.useRef(null);
-    const [content, setContent] = React.useState(() => newChildren(children));
-    const [timeoutId, setTimeoutId] = React.useState(0);
-    const [width, setWidth] = React.useState({ width: inline ? 0 : "auto" });
+    const placeholderRef = useRef(null);
+    const [width, setWidth] = useState({ width: inline ? 0 : 'auto' });
+    const [content, setContent] = useState(() => newChildren(children));
+    const [timeoutId, setTimeoutId] = useState(0);
     const transitions = useTransition(content, {
         from: types[type].from,
         enter: types[type].enter,
@@ -41,7 +41,7 @@ export default function TextTransition({
         to: width,
         config: springConfig
     });
-    React.useEffect(() => {
+    useEffect(() => {
         setTimeoutId(
             setTimeout(() => {
                 if (!placeholderRef.current)
@@ -53,31 +53,32 @@ export default function TextTransition({
             }, delay)
         );
     }, [children]);
-
-    React.useEffect(() => () => clearTimeout(timeoutId), []);
+    useEffect(() => () => clearTimeout(timeoutId), []);
 
     return (
         <animated.div
             className={`transition ${className}`}
             style={{
                 ...animatedProps,
-                whiteSpace: inline ? "nowrap" : "normal",
-                display: inline ? "inline-block" : "block",
-                position: "relative",
+                display: inline ? 'inline-block' : 'block',
+                position: 'relative',
+                whiteSpace: inline ? 'nowrap' : 'normal',
                 ...style,
             }}
         >
-            <span ref={placeholderRef} style={{ visibility: "hidden" }} className="transition_placeholder"/>
+            <span ref={placeholderRef} className="transition_placeholder" style={{
+                visibility: 'hidden'
+            }}/>
             <div
                 className="transition_inner"
                 style={{
-                    overflow: noOverflow ? "hidden" : "visible",
-                    display: "flex",
-                    position: "absolute",
                     top: 0,
                     left: 0,
-                    height: "100%",
-                    width: "100%"
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    position: 'absolute',
+                    overflow: noOverflow ? 'hidden' : 'visible'
                 }}
             >
                 {transitions((style, { key, data }) =>
@@ -91,24 +92,4 @@ export default function TextTransition({
             </div>
         </animated.div>
     );
-};
-
-TextTransition.propTypes = {
-    type: PropTypes.oneOf(Object.keys(types)),
-    inline: PropTypes.bool,
-    noOverflow: PropTypes.bool,
-    delay: PropTypes.number,
-    className: PropTypes.string,
-    style: PropTypes.object,
-    springConfig: PropTypes.any,
-};
-
-TextTransition.defaultProps = {
-    type: "fadeUp",
-    noOverflow: false,
-    inline: false,
-    springConfig: config.default,
-    delay: 0,
-    className: "",
-    style: {},
 };

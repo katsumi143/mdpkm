@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTransition, animated } from "react-spring";
+import { useTransition, animated } from 'react-spring';
 
 export default function Transition({ type, ...props }) {
     const transitions = useTransition(props, {
