@@ -29,7 +29,7 @@
         "@reduxjs/toolkit": "^1.8.1",
         "@stitches/react": "^1.2.6",
         "@tauri-apps/api": "^1.1.0",
-        "buffer": "latest",
+        "buffer": "^6.0.3",
         "i18next": "^21.8.3",
         "nbt": "^0.8.1",
         "p-map-browser": "^1.2.0",

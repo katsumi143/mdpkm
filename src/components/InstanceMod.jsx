@@ -6,9 +6,11 @@ import { Trash3Fill, CaretDownFill, CloudArrowDown, ExclamationCircleFill } from
 
 import Tag from './Tag';
 import Grid from '/voxeliface/components/Grid';
+import Modal from './Modal';
 import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
 import Typography from '/voxeliface/components/Typography';
+import HeaderText from '/voxeliface/components/Typography/Header';
 
 import API from '../common/api';
 import Util from '../common/util';
@@ -21,6 +23,7 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
     const isCompact = useSelector(state => state.settings.uiStyle) === 'compact';
     const sourceApi = API.get(mod?.source);
     const loaderData = API.getLoader(mod?.loader);
+    const [showInfo, setShowInfo] = useState(false);
     const [showEmbedded, setShowEmbedded] = useState(false);
     const toggleEmbedded = () => setShowEmbedded(!showEmbedded);
     const deleteMod = () => Instances.getInstance(instanceId).deleteMod(mod.id);
@@ -34,23 +37,18 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                 borderBottomLeftRadius: showEmbedded ? 0 : null,
                 borderBottomRightRadius: showEmbedded ? 0 : null
             }}>
-                <Grid width="100%" spacing={isCompact ? 4 : 8} alignItems="center">
-                    {mod.icon ?
-                        <Image src={`data:image/png;base64,${mod.icon}`} size={iconSize} background="$secondaryBackground" borderRadius="8.33333333%" css={{
-                            minWidth: iconSize,
-                            minHeight: iconSize,
-                            boxShadow: '$buttonShadow',
-                            transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-                            imageRendering: 'pixelated',
-
-                            '&:hover': {
-                                minWidth: iconSize * 2,
-                                minHeight: iconSize * 2
-                            }
-                        }}/>
-                    : <Grid width={iconSize} height={iconSize} alignItems="center" background="$secondaryBackground" borderRadius={4} justifyContent="center">
-                        <ExclamationCircleFill size={embedded ? 16 : 20} color="#ffffff80"/>
-                    </Grid>}
+                <Grid width="100%" spacing={isCompact ? 4 : 8} onClick={() => setShowInfo(true)} alignItems="center" css={{
+                    '&:hover': {
+                        cursor: 'pointer'
+                    }
+                }}>
+                    <Image src={mod.webIcon} size={iconSize} background="$secondaryBackground" borderRadius="8.33333333%" css={{
+                        minWidth: iconSize,
+                        minHeight: iconSize,
+                        boxShadow: '$buttonShadow',
+                        transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+                        imageRendering: 'pixelated'
+                    }}/>
                     <Grid margin="0 0 0 4px" spacing={2} direction="vertical">
                         <Typography size={embedded ? '.9rem' : isCompact ? 14 : '1rem'} color="$primaryColor" weight={400} family="Nunito" lineheight={1}>
                             {mod.name ?? mod.id}
@@ -122,6 +120,34 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                         <InstanceMod key={index} mod={mod} instance={instance} embedded/>
                     )}
                 </Grid>
+            }
+            {showInfo &&
+                <Modal width="60%" height="50%">
+                    <HeaderText>Modification Information</HeaderText>
+                    <Grid padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" borderRadius={8}>
+                        <Image src={mod.webIcon} size={48} background="$secondaryBackground" borderRadius={4} css={{
+                            boxShadow: '$buttonShadow',
+                            imageRendering: 'pixelated'
+                        }}/>
+                        <Grid spacing={2} direction="vertical">
+                            <Typography size="1.1rem" color="$primaryColor" lineheight={1}>
+                                {mod.name}
+                            </Typography>
+                            <Typography size={12} color="$secondaryColor" lineheight={1}>
+                                Version {mod.version}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid margin="8px 0 0" padding={8} direction="vertical" background="$secondaryBackground2" borderRadius={8}>
+                        <Typography color="$primaryColor">
+                            Summary
+                        </Typography>
+                        <Typography size={12} color="$secondaryColor">
+                            {mod.metadata.description}
+                        </Typography>
+                    </Grid>
+                    <Button onClick={() => setShowInfo(false)}>close</Button>
+                </Modal>
             }
         </Grid>
     );

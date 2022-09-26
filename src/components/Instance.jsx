@@ -26,6 +26,8 @@ export default Patcher.register(function Instance({ id, css, onView }) {
     const { t } = useTranslation();
     const instance = useInstance(id);
     const isCompact = useSelector(state => state.settings.uiStyle) === 'compact';
+    if (!instance)
+        return;
     return (
         <Grid width="100%" padding={isCompact ? '0 8px' : '4px 16px'} alignItems="start" css={{
             opacity: 0,

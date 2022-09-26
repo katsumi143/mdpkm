@@ -44,7 +44,7 @@ fn main() {
             fs_read_dir_recursive,
             fs_read_binary_in_zip,
             send_window_event,
-            voxura::launch
+            voxura::voxura_launch
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
