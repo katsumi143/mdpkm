@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Buffer } from 'buffer/';
+import { Provider } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { open } from '@tauri-apps/api/dialog';
 import * as shell from '@tauri-apps/api/shell';
 import { listen } from '@tauri-apps/api/event';
 import { useTranslation } from 'react-i18next';
@@ -33,10 +32,8 @@ import NavigationItem from '/voxeliface/components/SideNavigation/Item';
 import SelectInstanceType from '/src/components/SelectInstanceType';
 
 import API from '/src/common/api';
-import Util from '/src/common/util';
 import Patcher from '/src/common/plugins/patcher';
 import Instances from '/src/common/instances';
-import { addSkin, saveSkins } from '/src/common/slices/skins';
 
 let updateListener;
 export default Patcher.register(function Home() {
