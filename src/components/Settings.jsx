@@ -27,8 +27,8 @@ import API from '../common/api';
 import Util from '../common/util';
 import Plugins from '../common/plugins';
 import Patcher from '/src/common/plugins/patcher';
-import Instances from '../common/instances';
 import PluginLoader from '../common/plugins/loader';
+import { VOXURA_VERSION } from '../../voxura';
 import { MINECRAFT_RESOURCES_URL } from '../common/constants';
 import { set, setTheme, setLanguage, saveSettings } from '../common/slices/settings';
 
@@ -48,75 +48,6 @@ export default Patcher.register(function Settings() {
     const [_, setRerender] = useState();
     const [cleaning, setCleaning] = useState();
     const [updating, setUpdating] = useState(false);
-    const cleanInstallation = async() => {
-        setCleaning(true);
-        const loaders = [];
-        const checked = [];
-        const libraries = [];
-        for (const instance of Instances.instances) {
-            try {
-                const { loader } = await instance.getConfig();
-                const loaderDir = `${loader.type}-${loader.game}-${loader.version}`;
-                const loaderPath = `${Instances.getPath('versions')}/${loaderDir}/manifest.json`;
-                if (await Util.fileExists(loaderPath)) {
-                    loaders.push(loaderDir);
-
-                    const manifest = await Util.readTextFile(loaderPath).then(JSON.parse);
-                    libraries.push(...Util.mapLibraries(manifest.libraries, Instances.getPath('libraries')));
-                }
-
-                if (!checked.some(c => c === loader.game)) {
-                    const javaDir = `java-${loader.game}`;
-                    const javaPath = `${Instances.getPath('versions')}/${javaDir}/manifest.json`;
-                    if (await Util.fileExists(javaPath)) {
-                        loaders.push(javaPath);
-
-                        const manifest = await Util.readTextFile(javaPath).then(JSON.parse);
-                        libraries.push(...Util.mapLibraries(manifest.libraries, Instances.getPath('libraries')));
-
-                        libraries.push({
-                            url: manifest.downloads.client.url,
-                            sha1: manifest.downloads.client.sha1,
-                            path: `${Instances.getPath('mcVersions')}/${manifest.id}.jar`
-                        });
-
-                        const assets = await Util.readTextFile(`${Instances.getPath('mcAssets')}/indexes/${manifest.assets}.json`).then(JSON.parse);
-                        libraries.push(...Object.values(assets.objects).map(
-                            ({ hash }) => ({
-                                url: `${MINECRAFT_RESOURCES_URL}/${hash.substring(0, 2)}/${hash}`,
-                                sha1: hash,
-                                path: `${Instances.getPath('mcAssets')}/objects/${hash.substring(0, 2)}/${hash}`
-                            })
-                        ));
-                    }
-                    checked.push(loader.game);
-                }
-            } catch(err) {
-                console.error(err);
-            }
-        }
-        let removed = 0;
-        await pMap(
-            await Util.readDirRecursive(Instances.getPath('libraries')),
-            ({ path, isDir }) => {
-                if (isDir || libraries.some(l => l.path.replace(/\/+|\\+/g, '/') === path.replace(/\/+|\\+/g, '/')))
-                    return;
-                return Util.removeFile(path).then(() => removed++).catch(console.warn);
-            },
-            { concurrency: 30 }
-        );
-        await pMap(
-            await Util.readDirRecursive(Instances.getPath('versions')),
-            ({ name, path, isDir }) => {
-                if (!isDir || loaders.some(l => l === name))
-                    return;
-                return Util.removeDir(path).then(() => removed++).catch(console.warn);
-            },
-            { concurrency: 30 }
-        );
-        toast.success(`Removed ${removed} files.`);
-        setCleaning(false);
-    };
     const changeLanguage = lang => {
         dispatch(setLanguage(lang));
         dispatch(saveSettings());
@@ -314,12 +245,12 @@ export default Patcher.register(function Settings() {
                                     {t('app.mdpkm.common:actions.open_folder')}
                                 </Button>
                             </Grid>
-                            {Object.entries(PluginLoader.loaded).map(([id, { path, manifest }]) => {
+                            {Object.entries(PluginLoader.loaded).map(([id, { icon, manifest }]) => {
                                 const pluginLoaders = API.loaders.filter(l => l.source?.id === id);
                                 return <Grid key={id} padding={8} spacing={8} background="$secondaryBackground" alignItems="center" borderRadius={8} css={{
                                     position: 'relative'
                                 }}>
-                                    <Image src={convertFileSrc(`${path}/icon.svg`)} size={48} background="$primaryBackground" borderRadius={4}/>
+                                    <Image src={icon} size={48} background="$primaryBackground" borderRadius={4}/>
                                     <Grid spacing={2} direction="vertical">
                                         <Typography color="$primaryColor" family="Nunito" lineheight={1}>
                                             {t(`app.mdpkm.plugin.${manifest.id}:name`)}
@@ -368,7 +299,7 @@ export default Patcher.register(function Settings() {
                             </Typography>
                             <Tooltip.Root delayDuration={250}>
                                 <Tooltip.Trigger asChild>
-                                    <Button theme="accent" onClick={cleanInstallation} disabled>
+                                    <Button theme="accent" disabled>
                                         {t('app.mdpkm.settings.storage.clean')}
                                     </Button>
                                 </Tooltip.Trigger>
@@ -407,7 +338,7 @@ export default Patcher.register(function Settings() {
                                     <Typography size=".7rem" color="$secondaryColor" family="Nunito" lineheight={1}>
                                         {t('app.mdpkm.settings.about.tauri', {
                                             val: tauriVersion
-                                        })}
+                                        })} & voxura {VOXURA_VERSION}
                                     </Typography>
                                 </Grid>
                             </Grid>

@@ -36,16 +36,17 @@ import ResourcePackManagement from './ResourcePackManagement';
 
 import API from '../common/api';
 import Util from '../common/util';
+import Voxura from '../common/voxura';
 import Patcher from '/src/common/plugins/patcher';
-import Instances, { Instance } from '../common/instances';
-import { saveAccounts, writeAccount } from '../common/slices/accounts';
+import Instances from '../common/instances';
+import { useInstance } from '../common/voxura';
 import { LoaderStates, DisabledLoaders } from '../common/constants';
 
 const totalMemory = await Util.getTotalMemory();
 export default Patcher.register(function InstancePage({ id }) {
     const { t } = useTranslation();
     const uiStyle = useSelector(state => state.settings.uiStyle);
-    const instance = useSelector(state => state.instances.data.find(i => i.id === id));
+    const instance = useInstance(id);
     const showBanner = useSelector(state => state.settings['instances.showBanner']);
     const defaultResolution = useSelector(state => state.settings['instances.defaultResolution'])
 
@@ -60,7 +61,6 @@ export default Patcher.register(function InstancePage({ id }) {
         instanceResolution: instance?.config?.resolution ?? defaultResolution
     };
     const Account = Util.getAccount(useSelector);
-    const dispatch = useDispatch();
     const logErrors = instance?.launchLogs?.filter(({ type }) => type === 'ERROR');
     const [saving, setSaving] = useState(false);
     const [tabPage, setTabPage] = useState(0);
@@ -104,7 +104,7 @@ export default Patcher.register(function InstancePage({ id }) {
         Instances.getInstance(id).delete();
     };
     const launchInstance = async() => {
-        const [verifiedAccount, changed] = await toast.promise(API.Minecraft.verifyAccount(Account), {
+        /*const [verifiedAccount, changed] = await toast.promise(API.Minecraft.verifyAccount(Account), {
             error: 'Failed to verify account',
             success: 'Minecraft Account verified',
             loading: `Verifying tokens for '${Account.profile.name}'`
@@ -120,7 +120,9 @@ export default Patcher.register(function InstancePage({ id }) {
                 toast.error(`Failed to launch ${instance.name}!\n${err.message ?? 'Unknown Reason.'}`);
             });
         else
-            toast.error(`getInstance failed.\nTry refreshing your instances.`);
+            toast.error(`getInstance failed.\nTry refreshing your instances.`);*/
+        const Instance = Voxura.getInstance(id);
+        Instance.launch();
     };
     const saveGameLoaderChanges = async() => {
         setEditingLoader('saving');
@@ -368,7 +370,7 @@ export default Patcher.register(function InstancePage({ id }) {
                     />
                 </InstanceInfo>
             }
-            {config.modpack.source !== "manual" &&
+            {config?.modpack?.source !== "manual" &&
                 <InstanceInfo css={{ alignItems: 'start' }}>
                     {modpack ? <React.Fragment>
                         <Image src={modpack.attachments.find(a => a.isDefault)?.url} size={48} borderRadius={8} css={{
@@ -408,7 +410,7 @@ export default Patcher.register(function InstancePage({ id }) {
                             Instance may not launch!
                         </Typography>
                         <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" textalign="start" lineheight={1.2}>
-                            '{config.loader.type}' is an unknown loader, and does not have any version files.<br/>
+                            '{config?.loader.type}' is an unknown loader, and does not have any version files.<br/>
                             Under normal circumstances, this instance will fail to launch.
                         </Typography>
                     </Grid>
@@ -425,7 +427,7 @@ export default Patcher.register(function InstancePage({ id }) {
                             Unknown Loader
                         </Typography>
                         <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" textalign="start" lineheight={1.2}>
-                            '{config.loader.type}' is an unknown and unsupported loader, and comes from an unknown source.<br/>
+                            '{config?.loader.type}' is an unknown and unsupported loader, and comes from an unknown source.<br/>
                             Be cautious when using unknown/unsupported loaders, anything can happen!
                         </Typography>
                     </Grid>
@@ -474,17 +476,17 @@ export default Patcher.register(function InstancePage({ id }) {
                         </Grid>}
                         <Grid spacing={4} direction="vertical" justifyContent="center">
                             <Typography size="1rem" color="$primaryColor" family="Nunito" horizontal lineheight={1}>
-                                {Util.getLoaderName(config?.loader?.type) ?? `${config.loader.type} (Unknown)`}
-                                {LoaderStates[config.loader.type] &&
+                                {Util.getLoaderName(config?.loader?.type) ?? `${config?.loader.type} (Unknown)`}
+                                {LoaderStates[config?.loader.type] &&
                                     <Tag margin="0 8px">
                                         <Typography size="0.7rem" color="$tagColor" weight={600} family="Nunito">
-                                            {LoaderStates[config.loader.type]}
+                                            {LoaderStates[config?.loader.type]}
                                         </Typography>
                                     </Tag>
                                 }
                             </Typography>
                             <Typography size=".7rem" color="$secondaryColor" family="Nunito" lineheight={1}>
-                                {config.loader.game}{config.loader.version && `-${config.loader.version}`}
+                                {config?.loader.game}{config?.loader.version && `-${config?.loader.version}`}
                             </Typography>
                         </Grid>
                         <Grid css={{

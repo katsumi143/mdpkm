@@ -10,6 +10,7 @@ import Typography from '/voxeliface/components/Typography';
 import InstanceIcon from './InstanceIcon';
 
 import Patcher from '/src/common/plugins/patcher';
+import { useInstance } from '../common/voxura';
 const Animation = keyframes({
     '0%': {
         opacity: 0,
@@ -21,8 +22,9 @@ const Animation = keyframes({
     }
 });
 
-export default Patcher.register(function Instance({ css, data: instance, onView }) {
+export default Patcher.register(function Instance({ id, css, onView }) {
     const { t } = useTranslation();
+    const instance = useInstance(id);
     const isCompact = useSelector(state => state.settings.uiStyle) === 'compact';
     return (
         <Grid width="100%" padding={isCompact ? '0 8px' : '4px 16px'} alignItems="start" css={{

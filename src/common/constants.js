@@ -1,8 +1,11 @@
+import { appDir } from '@tauri-apps/api/path';
 import { getName, getVersion, getTauriVersion } from '@tauri-apps/api/app';
 
 export const APP_NAME = await getName();
 export const APP_VERSION = await getVersion();
 export const TAURI_VERSION = await getTauriVersion();
+
+export const APP_PATH = await appDir();
 
 export const AZURE_CLIENT_ID = "be7dfb6a-789c-4622-8c97-dcd963ae0f89";
 export const AZURE_LOGIN_SCOPE = "Xboxlive.signin,Xboxlive.offline_access";
@@ -35,6 +38,8 @@ export const FORGE_MAVEN_BASE_URL = "https://maven.minecraftforge.net/net/minecr
 
 export const MINECRAFT_RESOURCES_URL = "https://resources.download.minecraft.net";
 export const MINECRAFT_LIBRARIES_URL = "https://libraries.minecraft.net";
+
+export const IMAGE_CACHE = {};
 
 export const LoaderStates = {
     forge: 'Unstable',

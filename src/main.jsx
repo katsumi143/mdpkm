@@ -10,6 +10,7 @@ import Plugins from './common/plugins';
 import { Home, NotFound, InstanceSplash } from './pages';
 
 import './localization';
+import './common/voxura';
 import '/voxeliface/src/index.css';
 await Plugins.init().catch(err => {
     console.error(err);

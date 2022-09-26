@@ -17,9 +17,10 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import API from '../common/api';
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
+import { useInstance } from '../common/voxura';
 export default Patcher.register(function ModSearch({ instanceId }) {
     const { t } = useTranslation();
-    const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
+    const instance = useInstance(instanceId);
 
     const { config } = instance;
     const loaderData = API.getLoader(config?.loader?.type);

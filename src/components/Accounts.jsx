@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
-import pMap from 'p-map-browser';
 import toast from 'react-hot-toast';
 import { open } from '@tauri-apps/api/shell';
-import { checkUpdate } from '@tauri-apps/api/updater';
 import { useTranslation } from 'react-i18next';
-import { getName, getVersion, getTauriVersion } from '@tauri-apps/api/app';
-import { open as open2 } from '@tauri-apps/api/dialog';
 import { appWindow } from '@tauri-apps/api/window';
-import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { useSelector, useDispatch } from 'react-redux';
 import { XLg, PlusLg, ThreeDots, BoxArrowUpRight } from 'react-bootstrap-icons';
 
@@ -18,31 +13,22 @@ import Button from '/voxeliface/components/Button';
 import Portal from '/voxeliface/components/Portal';
 import Header from '/voxeliface/components/Typography/Header';
 import Typography from '/voxeliface/components/Typography';
-import InputLabel from '/voxeliface/components/Input/Label';
-import * as Select from '/voxeliface/components/Input/Select';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import * as DropdownMenu from '/voxeliface/components/DropdownMenu';
 
 import API from '../common/api';
 import Patcher from '/src/common/plugins/patcher';
-import { SKIN_API_BASE } from '../common/constants';
-import { addAccount, setAccount, saveAccounts, removeAccount, setAddingAccount } from '../common/slices/accounts';
+import voxura, { AvatarType, useAccounts, useCurrentAccount } from '../common/voxura';
 export default Patcher.register(function Settings() {
     const { t } = useTranslation();
-    const account = useSelector(state => state.accounts.selected);
-    const accounts = useSelector(state => state.accounts.data);
+    const current = useCurrentAccount();
+    const accounts = useAccounts();
     const dispatch = useDispatch();
     const addingAccount = useSelector(state => state.accounts.addingAccount);
     const [error, setError] = useState();
-    const changeAccount = id => {
-        dispatch(setAccount(id));
-        dispatch(saveAccounts());
-    };
-    const deleteAccount = ({ profile: { id, name } }) => {
-        dispatch(removeAccount(id));
-        if (account === id)
-            dispatch(setAccount());
-        dispatch(saveAccounts());
+    const changeAccount = account => voxura.auth.selectAccount(account);
+    const deleteAccount = async account => {
+        await account.remove();
         toast.success(`Successfully removed ${name}`);
     }
     const addNewAccount = async() => {
@@ -55,34 +41,8 @@ export default Patcher.register(function Settings() {
                 duration: 3000
             });
 
-            const accessData = await API.Microsoft.getAccessData(accessCode);
-            const xboxData = await API.XboxLive.getAccessData(accessData.token);
-            const xstsData = await API.XboxLive.getXSTSData(xboxData.token, 'rp://api.minecraftservices.com/');
-            const xstsData2 = await API.XboxLive.getXSTSData(xboxData.token);
-            const minecraftData = await API.Minecraft.getAccessData(xstsData);
-            const gameIsOwned = await API.Minecraft.ownsMinecraft(minecraftData);
-            if(!gameIsOwned) {
-                dispatch(setAddingAccount(false));
-                return setError('NOT_OWNED');
-            }
-
-            const account = {
-                xbox: xboxData,
-                xsts: xstsData,
-                xsts2: xstsData2,
-                microsoft: accessData,
-                minecraft: minecraftData,
-                xboxProfile: await API.XboxLive.getProfile(xstsData2)
-            };
-            account.profile = await API.Minecraft.getProfile(minecraftData);
-
-            if(accounts.find(a => a.profile.id === account.profile.id)) {
-                dispatch(setAddingAccount(false));
-                return toast.error(`Failed to add your account.\nYou already have '${account.profile.name}' added.`);
-            }
-            dispatch(addAccount(account));
-            dispatch(saveAccounts());
-            toast.success(`Successfully added '${account.profile.name}'`);
+            const account = await voxura.auth.login(accessCode);
+            toast.success(`Successfully added '${account.name}'`);
         } catch(err) {
             console.error(err);
             if (err.includes('Network Error'))
@@ -97,28 +57,28 @@ export default Patcher.register(function Settings() {
             <Header>{t('app.mdpkm.accounts.header')}</Header>
             <Grid spacing={8} padding="0 1rem" direction="vertical">
                 <Image src="img/banners/microsoft.svg" width={112} height={24} margin="0 0 8px"/>
-                {!account && <Typography size=".8rem" color="$secondaryColor" family="Nunito" whitespace="pre">
+                {!current && <Typography size=".8rem" color="$secondaryColor" family="Nunito" whitespace="pre">
                     {t('app.mdpkm.accounts.select_account')}
                 </Typography>}
                 <Grid spacing={8} direction="vertical">
-                    {accounts.map(({ profile, xboxProfile }, key) =>
-                        <Grid key={key} width="40%" padding="8px" spacing={8} alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
-                            <Image src={xboxProfile?.avatar ?? `${SKIN_API_BASE}/face/24/${profile.id}`} size={32} borderRadius={xboxProfile ? 16 : 4}/>
+                    {accounts.map((account, key) =>
+                        <Grid key={key} width="40%" padding={8} spacing={8} alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
+                            <Image src={account.getAvatarUrl(AvatarType.Xbox)} size={32} borderRadius={16}/>
                             <Typography color="$primaryColor" family="Nunito">
-                                {xboxProfile?.gamertag ?? profile.name}
+                                {account.xboxName}
                                 <Typography size=".75rem" color="$secondaryColor" family="Nunito Sans" lineheight={1}>
-                                    {profile.name}
+                                    {account.name}
                                 </Typography>
                             </Typography>
                             <Grid spacing={8} alignItems="center" css={{
                                 right: 8,
                                 position: 'absolute'
                             }}>
-                                {account === profile.id ? <Tag>
+                                {account === current ? <Tag>
                                     <Typography size=".7rem" color="$tagColor">
                                         {t('app.mdpkm.accounts.account.active')}
                                     </Typography>
-                                </Tag> : <Button theme="accent" onClick={() => changeAccount(profile.id)}>
+                                </Tag> : <Button theme="accent" onClick={() => changeAccount(account)}>
                                     {t('app.mdpkm.common:actions.select')}
                                 </Button>}
                                 <DropdownMenu.Root>

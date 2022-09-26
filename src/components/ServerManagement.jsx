@@ -18,9 +18,10 @@ import TextTransition from './Transition/Text';
 
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
+import { useInstance } from '../common/voxura';
 export default Patcher.register(function ServerManagement({ instanceId }) {
     const { t } = useTranslation();
-    const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
+    const instance = useInstance(instanceId);
     const [data, setData] = useState();
     const [items, setItems] = useState();
     const [filter, setFilter] = useState('');

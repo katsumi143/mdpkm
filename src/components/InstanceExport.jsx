@@ -13,7 +13,7 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
-import Instances from '../common/instances';
+import { useInstance } from '../common/voxura';
 
 const banned = [
     'icon\\.(png|jpg|svg)',
@@ -42,7 +42,7 @@ const select = [
 ];
 export default Patcher.register(function InstanceExport({ instanceId }) {
     const { t } = useTranslation();
-    const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
+    const instance = useInstance(instanceId);
     const [items, setItems] = useState();
     const exportInstance = () => Instances.exportInstance(instanceId,
         items.filter(e => e.selected).map(e => e.path)

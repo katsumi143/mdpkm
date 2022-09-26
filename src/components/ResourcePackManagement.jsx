@@ -14,21 +14,20 @@ import TextTransition from './Transition/Text';
 
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
-import Instances from '../common/instances';
+import { useInstance } from '../common/voxura';
 export default Patcher.register(function ResourcePackManagement({ instanceId }) {
     const { t } = useTranslation();
-    const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
+    const instance = useInstance(instanceId);
     const [items, setItems] = useState();
     const [filter, setFilter] = useState('');
     const addResourcePack = async() => {
-        const Instance = Instances.getInstance(instanceId);
         const path = await open({
             title: 'Select Resource Pack',
             filters: [{ name: 'Resource Packs', extensions: ['zip'] }]
         });
         const split = path.split(/\/+|\\+/);
         const packName = split.reverse()[0];
-        const packsPath = `${Instance.path}/resourcepacks`;
+        const packsPath = `${instance.path}/resourcepacks`;
         await Util.createDirAll(packsPath);
         await Util.moveFolder(path, `${packsPath}/${packName}`);
 

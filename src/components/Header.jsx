@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 
 import Tag from './Tag';
 import Image from '/voxeliface/components/Image';
@@ -7,10 +6,9 @@ import Typography from '/voxeliface/components/Typography';
 import DefaultHeader from '/voxeliface/components/Header/Tauri';
 import ImageTransition from './Transition/Image';
 
-import { SKIN_API_BASE } from '../common/constants';
+import { AvatarType, useCurrentAccount } from '../common/voxura';
 export default function Header(props) {
-    const uuid = useSelector(state => state.accounts.selected);
-    const { profile } = useSelector(state => state.accounts.data).find(a => a.profile.id === uuid) ?? {};
+    const account = useCurrentAccount();
     return (
         <DefaultHeader brand={<>
             {props.image ??
@@ -21,7 +19,7 @@ export default function Header(props) {
                 />
             }
         </>} {...props}>
-            {profile && <Tag css={{
+            {account && <Tag css={{
                 gap: 10,
                 right: '8rem',
                 padding: '4px 8px',
@@ -29,11 +27,11 @@ export default function Header(props) {
                 background: '$primaryBackground',
                 borderColor: '$secondaryBorder'
             }}>
-                <ImageTransition src={`${SKIN_API_BASE}/face/24/${uuid}`} size={24} borderRadius={8} css={{
+                <ImageTransition src={account.getAvatarUrl(AvatarType.Minecraft)} size={24} borderRadius={8} css={{
                     backgroundColor: '$primaryBackground'
                 }}/>
                 <Typography size=".75rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
-                    {profile.name}
+                    {account.name}
                 </Typography>
             </Tag>}
         </DefaultHeader>

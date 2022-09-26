@@ -97,6 +97,10 @@
                         "args": true
                     }
                 ]
+            },
+            "fs": {
+                "all": true,
+                "scope": ["$APP/*"]
             }
         },
         "windows": [

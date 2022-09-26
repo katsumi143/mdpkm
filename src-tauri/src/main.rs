@@ -3,6 +3,7 @@
     windows_subsystem = "windows"
 )]
 
+#[path = "../../voxura/rust/main.rs"] mod voxura;
 fn main() {
     tauri::Builder::default()
         .on_page_load(| window: tauri::window::Window, _ | {
@@ -20,7 +21,6 @@ fn main() {
             move_dir,
             fs_copy,
             create_zip,
-            launch_java,
             extract_zip,
             fs_read_dir,
             fs_read_file,
@@ -33,7 +33,6 @@ fn main() {
             fs_file_exists,
             launch_package,
             fs_write_binary,
-            launch_minecraft,
             get_total_memory,
             fs_read_text_file,
             fs_create_dir_all,
@@ -44,7 +43,8 @@ fn main() {
             get_microsoft_account,
             fs_read_dir_recursive,
             fs_read_binary_in_zip,
-            send_window_event
+            send_window_event,
+            voxura::launch
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -404,68 +404,6 @@ fn extract_files(
     return Ok("yay".into());
 }
 
-use rand::{ distributions::Alphanumeric, Rng };
-
-fn gen_log_str() -> String {
-    return format!("java_logger_{}", rand::thread_rng()
-        .sample_iter(&Alphanumeric)
-        .take(8)
-        .map(char::from)
-        .collect::<String>());
-}
-
-use std::io::{ BufRead, BufReader };
-use std::process::{ Stdio };
-
-#[tauri::command]
-fn launch_minecraft(window: tauri::window::Window, cwd: String, java_path: String, args: Vec<String>) -> String {
-    let logger = gen_log_str();
-    let _logger = logger.clone();
-    std::thread::spawn(move || {
-        let mut child = child_runner::run(&java_path, &args.join(" "), &cwd, Stdio::piped(), Stdio::piped());
-        BufReader::new(child.stdout.take().unwrap())
-            .lines()
-            .filter_map(| line | line.ok())
-            .for_each(| line | {
-                let result = window.emit(&_logger, format!("out:{}", &line));
-                if !result.is_ok() {
-                    println!("failed to log to window (out): {}", result.unwrap_err());
-                }
-            });
-        BufReader::new(child.stderr.take().unwrap())
-            .lines()
-            .filter_map(| line | line.ok())
-            .for_each(| line | {
-                let result = window.emit(&_logger, format!("err:{}", &line));
-                if !result.is_ok() {
-                    println!("failed to log to window (err): {}", result.unwrap_err());
-                }
-            });
-        std::thread::spawn(move || {
-            child.wait().unwrap();
-            window.emit(&_logger, "finished").unwrap();
-        });
-    });
-    return logger;
-}
-
-#[tauri::command]
-fn launch_java(java_path: String, args: Vec<String>, cwd: String) {
-    let child = child_runner::run(&java_path, &args.join(" "), &cwd, Stdio::piped(), Stdio::piped());
-    BufReader::new(child.stdout.unwrap())
-        .lines()
-        .filter_map(| line | line.ok())
-        .for_each(| line | {
-            println!("stdout {}", &line);
-        });
-    BufReader::new(child.stderr.unwrap())
-        .lines()
-        .filter_map(| line | line.ok())
-        .for_each(| line | {
-            println!("stderr {}", &line);
-        });
-}
-
 extern crate reqwest;
 
 #[tauri::command]
@@ -569,52 +507,4 @@ fn get_total_memory() -> u64 {
     let mut sys = System::new_all();
     sys.refresh_all();
     return sys.total_memory();
-}
-
-#[cfg(windows)]
-mod child_runner {
-    use std::str;
-    use std::process::{ Command, Stdio };
-    use std::os::windows::process::CommandExt;
-    pub fn run (program: &str, arguments: &str, cwd: &str, out: Stdio, err: Stdio) -> std::process::Child {
-        let launcher = "powershell.exe";
-        let build_string: String;
-        {
-            if arguments.trim() == "" {
-                build_string = format!(r#"& '{}'"#,program);
-            }
-            else {
-                let mut arguments_reformatting: Vec<&str> = Vec::new();
-                for argument in arguments.split(" ") {
-                    arguments_reformatting.push(argument);
-                }
-                let arguments_reformatted = arguments_reformatting.join("','");
-                build_string = format!(r#"& '{}' @('{}')"#,program,arguments_reformatted);
-            }
-        }
-
-        Command::new(launcher)
-            .creation_flags(0x08000000)
-            .current_dir(cwd)
-            .args(&[build_string])
-            .stdout(out)
-            .stderr(err)
-            .spawn()
-            .expect("failed to run child program")
-    }
-}
-
-#[cfg(unix)]
-mod child_runner {
-    use std::str;
-    use std::process::{ Command, Stdio };
-    pub fn run (program: &str, arguments: &str, cwd: &str, out: Stdio, err: Stdio) -> std::process::Child {
-        Command::new("sh")
-            .current_dir(cwd)
-            .arg(arguments)
-            .stdout(out)
-            .stderr(err)
-            .spawn()
-            .expect("failed to run child program")
-    }
 }

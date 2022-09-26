@@ -13,11 +13,11 @@ import Typography from '/voxeliface/components/Typography';
 import API from '../common/api';
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
-import Instances from '../common/instances';
+import { useInstance } from '../common/voxura';
 export default Patcher.register(function InstanceMod({ mod, updates, embedded, instanceId }) {
     const { t } = useTranslation();
     const update = updates?.[mod?.config?.[1]];
-    const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
+    const instance = useInstance(instanceId);
     const isCompact = useSelector(state => state.settings.uiStyle) === 'compact';
     const sourceApi = API.get(mod?.source);
     const loaderData = API.getLoader(mod?.loader);

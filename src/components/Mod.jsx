@@ -13,10 +13,10 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
 import Patcher from '/src/common/plugins/patcher';
-import Instances from '../common/instances';
+import { useInstance } from '../common/voxura';
 export default Patcher.register(function Mod({ id, api, data, featured, instanceId, recommended }) {
     const { t } = useTranslation();
-    const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
+    const instance = useInstance(instanceId);
     const isCompact = useSelector(state => state.settings.uiStyle) === 'compact';
     const showSummary = useSelector(state => state.settings['instances.modSearchSummaries']);
     const [mod, setMod] = useState(data);

@@ -797,7 +797,7 @@ class Instances extends EventEmitter {
         this.path = path;
         this.java = java;
         this.launchTasks = [];
-        this.getInstances();
+        //this.getInstances();
     }
 
     static async build() {

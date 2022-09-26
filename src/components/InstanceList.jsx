@@ -12,14 +12,16 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import Patcher from '/src/common/plugins/patcher';
 import Instances from '../common/instances';
+import { useInstances } from '../common/voxura';
 export default Patcher.register(function InstanceList({ id, onSelect }) {
     const { t } = useTranslation();
-    const state = useSelector(state => state.instances.state);
-    const instances = useSelector(state => state.instances.data);
+    const state = null;
+    const manager = useInstances();
+    const instances = manager.getAll();
     const [loading, setLoading] = useState(false);
     const refresh = async() => {
         setLoading(true);
-        await Instances.getInstances();
+        await manager.refreshInstances();
         setLoading(false);
     };
     return <React.Fragment>
@@ -48,7 +50,7 @@ export default Patcher.register(function InstanceList({ id, onSelect }) {
         }}>
             {instances && !Instances.gettingInstances ?
                 instances.length > 0 ? instances.map((instance, index) => {
-                    return <Instance key={index} data={instance} onView={() => onSelect(instance.id)} css={{
+                    return <Instance id={instance.id} key={index} onView={() => onSelect(instance.id)} css={{
                         animationDelay: `${100 * index}ms`,
 
                         '& > div': {

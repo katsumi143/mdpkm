@@ -19,45 +19,39 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import TextTransition from './Transition/Text';
 
 import Patcher from '/src/common/plugins/patcher';
-import Instances from '../common/instances';
+import { useInstance } from '../common/voxura';
 export default Patcher.register(function ModManagement({ instanceId }) {
     const { t } = useTranslation();
-    const instance = useSelector(state => state.instances.data.find(i => i.id === instanceId));
+    const instance = useInstance(instanceId);
     const canPopout = useSelector(state => state.settings['instances.modSearchPopout']);
     const [tab, setTab] = useState();
-    const [items, setItems] = useState(instance.mods);
+    const [items, setItems] = useState('loading');
     const [filter, setFilter] = useState('');
     const [updates, setUpdates] = useState();
     const [updateChecking, setUpdateChecking] = useState(false);
     const checkForUpdates = () => {
-        const Instance = Instances.getInstance(instanceId);
         setUpdateChecking(true);
-        Instance.checkForUpdates().then(updates => {
+        instance.checkForUpdates().then(updates => {
             setUpdates(updates);
             setUpdateChecking(false);
         });
     };
     useEffect(() => {
-        if (instance.mods && instance.mods !== items)
-            setItems(instance.mods);
-        if (!items) {
-            setItems('loading');
-
-            const Instance = Instances.getInstance(instanceId);
-            Instance.getMods().then(mods => {
-                Instance.mods = mods;
-                Instance.updateStore();
-            });
-        }
-    }, [items, instance]);
-    useEffect(() => setItems(), [instanceId]);
+        setItems('loading');
+        console.log('reading mods lol');
+        if (instance.modifications.length > 0)
+            setItems(instance.modifications);
+        else
+            instance.readMods().then(setItems);
+    }, [instanceId]);
     return <React.Fragment>
         <Tabs
             value={tab}
             onChange={event => setTab(event.target.value)}
             borderRadius={0}
             css={{
-                height: '100%'
+                height: '100%',
+                willChange: 'contents'
             }}
         >
             <TabItem name={t('app.mdpkm.instance_page.tabs.mods.tabs.manage')} icon={<List size={14}/>} value={0}>

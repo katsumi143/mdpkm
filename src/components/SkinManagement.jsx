@@ -24,14 +24,15 @@ import * as Select from '/voxeliface/components/Input/Select';
 import API from '../common/api';
 import Util from '../common/util';
 import Patcher from '../common/plugins/patcher';
+import { IMAGE_CACHE } from '../common/constants';
+import { useCurrentAccount } from '../common/voxura';
 import { addSkin, saveSkins, writeSkin } from '../common/slices/skins';
-import { saveAccounts, writeAccount } from '../common/slices/accounts';
 
 const SKIN_MODEL = { CLASSIC: 'default', SLIM: 'slim' };
 export default Patcher.register(function SkinManagement() {
     const { t } = useTranslation();
     const skins = useSelector(state => state.skins.data);
-    const account = Util.getAccount(useSelector);
+    const account = useCurrentAccount();
     const dispatch = useDispatch();
     const [capes, setCapes] = useState([]);
     const [adding, setAdding] = useState(false);
@@ -119,38 +120,35 @@ export default Patcher.register(function SkinManagement() {
         }
     };
     useEffect(() => {
-        if (!profile && !loading) {
+        if (account && !profile && !loading) {
             setLoading(true);
-            API.Minecraft.verifyAccount(account).then(async([verifiedAccount, changed]) => {
-                if(changed) {
-                    dispatch(writeAccount(verifiedAccount));
-                    dispatch(saveAccounts());
-                }
-                const profile = await API.Minecraft.getProfile(verifiedAccount.minecraft, true);
-                setProfile(profile);
-
+            account.refresh().then(async() => {
+                const profile = await account.requestProfile();
                 const skin = profile.skins.find(s => s.state === 'ACTIVE');
                 const data = await API.makeRequest(skin?.url.replace(/^http/, 'https'), {
                     responseType: 'Binary'
                 });
                 const capes = [];
-                for (const cape of profile.capes)
+                for (const cape of profile.capes) {
+                    const url = cape.url.replace(/^http/, 'https');
+                    const data = IMAGE_CACHE[url] ?? `data:image/png;base64,${Buffer.from(await API.makeRequest(
+                        url, {
+                            responseType: 'Binary'
+                        }
+                    )).toString('base64')}`;
+
+                    IMAGE_CACHE[url] = data;
                     capes.push({
                         ...cape,
-                        url: `data:image/png;base64,${Buffer.from(await API.makeRequest(
-                            cape.url.replace(/^http/, 'https'), {
-                                responseType: 'Binary'
-                            }
-                        )).toString('base64')}`
+                        url: data
                     });
+                }
+
                 setCapes(capes);
+                setProfile(profile);
                 setCurrent(Buffer.from(data).toString('base64'));
                 setSkinModel(SKIN_MODEL[skin?.variant]);
                 setLoading(false);
-            }).catch(err => {
-                console.warn(err);
-                setLoading(false);
-                toast.error('Failed to load profile');
             });
         }
     }, [profile, account]);

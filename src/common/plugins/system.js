@@ -13,9 +13,9 @@ export default class PluginSystem {
     addLoader(id, options = {}) {
         const { icon, banner, ...restOptions } = options;
         API.addLoader(id,
-            icon ? this.api.getPath(this.id, icon) : null,
+            icon,
             this, {
-                banner: banner ? this.api.getPath(this.id, banner) : null,
+                banner,
                 ...restOptions
             }
         );

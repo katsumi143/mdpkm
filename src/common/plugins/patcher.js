@@ -11,9 +11,10 @@ export default class Patcher {
             if (this.patches[func.name])
                 for (const patch of this.patches[func.name]) {
                     try {
-                        returnValue = patch(returnValue) ?? returnValue;
+                        if (returnValue)
+                            returnValue = patch(returnValue) ?? returnValue;
                     } catch(err) {
-                        console.error(err);
+                        console.warn(err);
                     }
                 }
             return returnValue;
