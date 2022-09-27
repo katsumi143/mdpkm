@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { open } from '@tauri-apps/api/shell';
-import { Download, BoxArrowUpRight } from 'react-bootstrap-icons';
+import React, { useState, useEffect } from 'react';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -86,12 +85,12 @@ export default Patcher.register(function Modpack({ id, api, data, loading, featu
                     }
                     {modpack.website_url &&
                         <Button theme="secondary" onClick={() => open(modpack.website_url)}>
-                            <BoxArrowUpRight/>
+                            <IconBiBoxArrowUpRight/>
                             Visit Website
                         </Button>
                     }
                     <Button onClick={installModpack} disabled={loading || modpack.client_side === "unsupported"}>
-                        {loading ? <BasicSpinner size={16}/> : <Download/>}
+                        {loading ? <BasicSpinner size={16}/> : <IconBiDownload/>}
                         Install
                     </Button>
                 </Grid>

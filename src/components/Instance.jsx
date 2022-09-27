@@ -2,7 +2,6 @@ import React from 'react';
 import { keyframes } from '@stitches/react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { CaretRightFill } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
 import Button from '/voxeliface/components/Button';
@@ -73,7 +72,7 @@ export default Patcher.register(function Instance({ id, css, onView }) {
                 }}>
                     <Button size={isCompact ? 'smaller' : 'small'} theme="secondary" onClick={onView} disabled={instance.corrupt}>
                         {t('app.mdpkm.common:actions.view')}
-                        <CaretRightFill/>
+                        <IconBiCaretRightFill/>
                     </Button>
                 </Grid>
             </Grid>

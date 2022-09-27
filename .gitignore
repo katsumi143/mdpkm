@@ -3,3 +3,4 @@ src-tauri/target/
 src-tauri/WixTools/
 build
 .tauri/
+yarn-error.*

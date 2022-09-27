@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { ArrowLeft } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
 import Button from '/voxeliface/components/Button';
@@ -34,7 +33,7 @@ export default Patcher.register(function ModpackSetup({ back, importModpack }) {
                 borderTop: '1px solid $tagBorder'
             }}>
                 <Button theme="secondary" onClick={back}>
-                    <ArrowLeft size={14}/>
+                    <IconBiArrowLeft size={14}/>
                     Back to Selection
                 </Button>
                 <Typography size=".8rem" color="$secondaryColor"><span>

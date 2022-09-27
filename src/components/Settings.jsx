@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
-import pMap from 'p-map-browser';
 import toast from 'react-hot-toast';
 import { open } from '@tauri-apps/api/shell';
 import { checkUpdate } from '@tauri-apps/api/updater';
 import { open as open2 } from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
-import { convertFileSrc } from '@tauri-apps/api/tauri';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getName, getVersion, getTauriVersion } from '@tauri-apps/api/app';
-import { PlusLg, Github, Trash3Fill, Folder2Open, EnvelopeOpen, CloudArrowDown } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -29,7 +26,6 @@ import Plugins from '../common/plugins';
 import Patcher from '/src/common/plugins/patcher';
 import PluginLoader from '../common/plugins/loader';
 import { VOXURA_VERSION } from '../../voxura';
-import { MINECRAFT_RESOURCES_URL } from '../common/constants';
 import { set, setTheme, setLanguage, saveSettings } from '../common/slices/settings';
 
 const appName = await getName();
@@ -237,11 +233,11 @@ export default Patcher.register(function Settings() {
                             </span></Typography>
                             <Grid spacing={8}>
                                 <Button theme="accent" onClick={addPlugin}>
-                                    <PlusLg/>
+                                    <IconBiPlusLg/>
                                     {t('app.mdpkm.settings.plugins.add')}
                                 </Button>
                                 <Button theme="secondary" onClick={() => open(Plugins.path)}>
-                                    <Folder2Open/>
+                                    <IconBiFolder2Open/>
                                     {t('app.mdpkm.common:actions.open_folder')}
                                 </Button>
                             </Grid>
@@ -276,7 +272,7 @@ export default Patcher.register(function Settings() {
                                         <Tooltip.Root delayDuration={250}>
                                             <Tooltip.Trigger asChild>
                                                 <Button theme="secondary" disabled>
-                                                    <Trash3Fill/>
+                                                    <IconBiTrash3Fill/>
                                                     {t('app.mdpkm.common:actions.remove')}
                                                 </Button>
                                             </Tooltip.Trigger>
@@ -344,15 +340,15 @@ export default Patcher.register(function Settings() {
                             </Grid>
                             <Grid spacing={8}>
                                 <Button theme="accent" onClick={updateCheck} disabled={updating}>
-                                    {updating ? <BasicSpinner size={16}/> : <CloudArrowDown size={14}/>}
+                                    {updating ? <BasicSpinner size={16}/> : <IconBiCloudArrowDown size={14}/>}
                                     {t('app.mdpkm.settings.about.check_for_updates')}
                                 </Button>
                                 <Button theme="accent" onClick={reportIssue}>
-                                    <EnvelopeOpen size={14}/>
+                                    <IconBiEnvelopeOpen size={14}/>
                                     {t('app.mdpkm.settings.about.report_bug')}
                                 </Button>
                                 <Button theme="secondary" onClick={openGithub}>
-                                    <Github size={14}/>
+                                    <IconBiGithub size={14}/>
                                     {t('app.mdpkm.settings.about.github')}
                                 </Button>
                             </Grid>

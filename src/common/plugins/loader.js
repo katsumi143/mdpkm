@@ -3,7 +3,6 @@ import { t } from 'i18next';
 import toast from 'react-hot-toast';
 import * as xml from 'xmlbuilder2';
 import * as http from '@tauri-apps/api/http';
-import * as Icons from 'react-bootstrap-icons';
 
 import API from '../api';
 import Util from '../util';
@@ -37,7 +36,6 @@ export default class PluginLoader {
             http,
             toast,
             React,
-            Icons,
             voxura,
             Patcher,
             PluginAPI: this.pluginApi,

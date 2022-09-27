@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { styled } from '@stitches/react';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Search, ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
+import React, { useEffect, useState } from 'react';
 
 import Mod from './Mod';
 import Grid from '/voxeliface/components/Grid';
@@ -97,7 +95,7 @@ export default Patcher.register(function ModSearch({ instanceId }) {
                     </Typography>
                     <TextInput width="100%" value={query} onChange={setQuery}>
                         <Button theme="secondary" onClick={() => search(api)} disabled={searching}>
-                            {searching ? <BasicSpinner size={16}/> : <Search/>}
+                            {searching ? <BasicSpinner size={16}/> : <IconBiSearch/>}
                             {t('app.mdpkm.common:actions.search')}
                         </Button>
                     </TextInput>
@@ -189,7 +187,7 @@ const StyledPage = styled('button', {
 function Pagination({ page, pages, setPage }) {
     return <Grid spacing={4} alignItems="center">
         <StyledPage onClick={() => setPage(Math.max(page - 1, 1))}>
-            <ChevronLeft/>
+            <IconBiChevronLeft style={{fontSize: 10}}/>
         </StyledPage>
         {pages.map(page2 =>
             page2 === '-' ?
@@ -203,7 +201,7 @@ function Pagination({ page, pages, setPage }) {
             </StyledPage>
         )}
         <StyledPage onClick={() => setPage(Math.min(page + 1, pages[pages.length - 1]))}>
-            <ChevronRight/>
+            <IconBiChevronRight style={{fontSize: 10}}/>
         </StyledPage>
     </Grid>;
 };

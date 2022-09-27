@@ -19,15 +19,19 @@
         "@tauri-apps/tauricon": "1.0.3",
         "@vitejs/plugin-react": "^2.0.1",
         "env-cmd": "^10.1.0",
+        "unplugin-icons": "^0.14.10",
         "vite": "^3.0.8",
         "vite-plugin-i18n-hot-reload": "^1.0.2",
+        "vite-plugin-svgr": "^2.2.1",
         "vite-plugin-tauri": "2.2.0",
         "yarn": "^1.22.18"
     },
     "dependencies": {
+        "@iconify-json/bi": "^1.1.8",
         "@radix-ui/colors": "^0.1.8",
         "@reduxjs/toolkit": "^1.8.1",
         "@stitches/react": "^1.2.6",
+        "@svgr/core": "^6.3.1",
         "@tauri-apps/api": "^1.1.0",
         "buffer": "^6.0.3",
         "i18next": "^21.8.3",
@@ -35,7 +39,6 @@
         "p-map-browser": "^1.2.0",
         "path-browserify": "latest",
         "react": "^18.0.0",
-        "react-bootstrap-icons": "^1.8.1",
         "react-dom": "^18.0.0",
         "react-hot-toast": "^2.2.0",
         "react-i18next": "^11.16.9",
@@ -47,6 +50,7 @@
         "semver": "^7.3.7",
         "skinview3d": "^3.0.0-alpha.1",
         "three": "^0.143.0",
+        "unplugin-auto-import": "^0.11.2",
         "uuid": "^8.3.2",
         "xmlbuilder2": "^3.0.2"
     }

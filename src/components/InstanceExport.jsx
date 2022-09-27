@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Save2, FileText, FolderFill, FiletypePng, FiletypeJpg, FiletypeSvg, FiletypeTxt, FiletypeJson, ArrowClockwise, FileEarmarkZip } from 'react-bootstrap-icons';
+import React, { useState, useEffect } from 'react';
+
+import FolderFill from '~icons/bi/folder-fill';
+import FiletypeTxt from '~icons/bi/filetype-txt';
+import FiletypePng from '~icons/bi/filetype-png';
+import FiletypeJpg from '~icons/bi/filetype-jpg';
+import FiletypeSvg from '~icons/bi/filetype-svg';
+import FiletypeJson from '~icons/bi/filetype-json';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -72,7 +77,7 @@ export default Patcher.register(function InstanceExport({ instanceId }) {
             </Typography>
             <Grid spacing={8}>
                 <Button theme="accent" onClick={exportInstance}>
-                    <Save2/>
+                    <IconBiSave2/>
                     {t('app.mdpkm.export_instance.buttons.export_mdpki')}
                 </Button>
                 <Button theme="secondary" disabled>
@@ -80,7 +85,7 @@ export default Patcher.register(function InstanceExport({ instanceId }) {
                     {t('app.mdpkm.export_instance.buttons.export_modrinth')}
                 </Button>
                 <Button theme="secondary" disabled>
-                    <FileEarmarkZip/>
+                    <IconBiFileEarmarkZip/>
                     {t('app.mdpkm.export_instance.buttons.export_curseforge')}
                 </Button>
             </Grid>
@@ -91,7 +96,7 @@ export default Patcher.register(function InstanceExport({ instanceId }) {
                 {t('app.mdpkm.export_instance.files.title')}
             </Typography>
             <Button theme="secondary" onClick={() => setItems()} disabled={items === 'loading'}>
-                {items === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
+                {items === 'loading' ? <BasicSpinner size={16}/> : <IconBiArrowClockwise size={14}/>}
                 {t('app.mdpkm.common:actions.refresh')}
             </Button>
         </Grid>
@@ -123,8 +128,8 @@ export default Patcher.register(function InstanceExport({ instanceId }) {
                                         file.selected = event.target.value;
                             setItems(items);
                         }}/>
-                        <Icon color={banned ? "var(--colors-secondaryColor)" : "var(--colors-primaryColor)"}/>
-                        <Typography color={banned ? "$secondaryColor" : "$primaryColor"} family="Nunito" horizontal>
+                        <Icon color={banned ? 'var(--colors-secondaryColor)' : 'var(--colors-primaryColor)'} style={{fontSize: 14}}/>
+                        <Typography color={banned ? '$secondaryColor' : '$primaryColor'} family="Nunito" horizontal>
                             {name}
                             {banned && <Typography size=".7rem" color="$secondaryColor" weight={400} margin="0 0 0 8px" family="Nunito" lineheight={1}>
                                 {t('app.mdpkm.export_instance.files.banned')}

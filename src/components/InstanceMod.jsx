@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
 import { Breakpoint } from 'react-socks';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Trash3Fill, CaretDownFill, CloudArrowDown, ExclamationCircleFill } from 'react-bootstrap-icons';
+import React, { useState } from 'react';
 
 import Tag from './Tag';
 import Grid from '/voxeliface/components/Grid';
@@ -88,11 +87,11 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                             </Tag>}
                         </Breakpoint>
                         {update && <Button size={isCompact ? 'smaller' : 'small'} theme="accent" disabled>
-                            <CloudArrowDown size={14}/>
+                            <IconBiCloudArrowDown size={14}/>
                             Update
                         </Button>}
                         {!embedded && <Button size={isCompact ? 'smaller' : 'small'} theme="secondary" onClick={deleteMod}>
-                            <Trash3Fill/>
+                            <IconBiTrash3Fill/>
                             <Breakpoint customQuery="(min-width: 580px)">
                                 {t('app.mdpkm.common:actions.delete')}
                             </Breakpoint>
@@ -104,7 +103,7 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                         width: 'fit-content',
                         cursor: 'pointer'
                     }}>
-                        <CaretDownFill color="var(--colors-secondaryColor)" style={{
+                        <IconBiCaretDownFill color="var(--colors-secondaryColor)" style={{
                             transform: showEmbedded ? 'rotate(180deg)' : 'none',
                             marginRight: 4
                         }}/>

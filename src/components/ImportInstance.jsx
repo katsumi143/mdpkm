@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { open } from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Folder2Open } from 'react-bootstrap-icons';
+import React, { useEffect, useState } from 'react';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -17,9 +16,10 @@ import InstanceIcon from './InstanceIcon';
 import API from '../common/api';
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
+import { useInstances } from '../common/voxura';
 export default Patcher.register(function ImportInstance({ path: epath, back }) {
     const { t } = useTranslation();
-    const instances = useSelector(state => state.instances.data);
+    const instances = useInstances();
 
     const [name, setName] = useState('');
     const [path, setPath] = useState(epath);
@@ -149,7 +149,7 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
                         placeholder={t('app.mdpkm.import_instance.select_file.placeholder')}
                     >
                         <Button onClick={selectFile} disabled={!!importState}>
-                            <Folder2Open size={14}/>
+                            <IconBiFolder2Open size={14}/>
                             {t('app.mdpkm.common:actions.select_file')}
                         </Button>
                     </TextInput>
@@ -175,7 +175,7 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
                                 {t('app.mdpkm.import_instance.inherit_config.items.none')}
                             </Select.Item>
                             <Select.Group name={t('app.mdpkm.import_instance.inherit_config.category')}>
-                                {instances.map((instance, index) =>
+                                {instances.getAll().map((instance, index) =>
                                     <Select.Item key={index} value={index}>
                                         <InstanceIcon size={24} instance={instance} hideLoader/>
                                         {instance.name}
@@ -195,7 +195,7 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
                     </Typography>
                 :
                     <Button theme="secondary" onClick={back}>
-                        <ArrowLeft size={14}/>
+                        <IconBiArrowLeft size={14}/>
                         {t('app.mdpkm.common:buttons.back_to_selection')}
                     </Button>
                 }

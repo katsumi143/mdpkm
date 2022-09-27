@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { open } from '@tauri-apps/api/dialog';
 import { Buffer } from 'buffer/';
 import { useTranslation } from 'react-i18next';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { useDispatch, useSelector } from 'react-redux';
-import { XLg, PlusLg, PencilFill, Folder2Open } from 'react-bootstrap-icons';
+import React, { useState, useEffect } from 'react';
 
 import Grid from '/voxeliface/components/Grid';
 import Modal from './Modal';
@@ -177,7 +176,7 @@ export default Patcher.register(function SkinManagement() {
                     </Grid>}
                 </Grid>
                 <Button theme="accent" onClick={startAdding} disabled={loading}>
-                    <PlusLg size={14}/>
+                    <IconBiPlusLg size={14}/>
                     {t('app.mdpkm.skin_management.buttons.add_skin')}
                 </Button>
             </Grid>
@@ -246,7 +245,7 @@ export default Patcher.register(function SkinManagement() {
                         placeholder={t('app.mdpkm.import_instance.select_file.placeholder')}
                     >
                         <Button onClick={selectFile}>
-                            <Folder2Open size={14}/>
+                            <IconBiFolder2Open size={14}/>
                             {t('app.mdpkm.common:actions.select_file')}
                         </Button>
                     </TextInput>
@@ -271,11 +270,11 @@ export default Patcher.register(function SkinManagement() {
 
                     <Grid margin="2rem 0 0" spacing={8}>
                         <Button theme="accent" onClick={addNewSkin} disabled={!addingName}>
-                            <PlusLg size={14}/>
+                            <IconBiPlusLg size={14}/>
                             {t('app.mdpkm.skin_management.adding.submit')}
                         </Button>
                         <Button theme="secondary" onClick={() => setAdding(false)}>
-                            <XLg/>
+                            <IconBiXLg/>
                             {t('app.mdpkm.skin_management.adding.cancel')}
                         </Button>
                     </Grid>
@@ -324,7 +323,7 @@ export default Patcher.register(function SkinManagement() {
                         placeholder={t('app.mdpkm.import_instance.select_file.placeholder')}
                     >
                         <Button onClick={selectFile}>
-                            <Folder2Open size={14}/>
+                            <IconBiFolder2Open size={14}/>
                             {t('app.mdpkm.common:actions.select_file')}
                         </Button>
                     </TextInput>
@@ -349,11 +348,11 @@ export default Patcher.register(function SkinManagement() {
 
                     <Grid margin="2rem 0 0" spacing={8}>
                         <Button theme="accent" onClick={saveSkin} disabled={!addingName}>
-                            <PlusLg size={14}/>
+                            <IconBiPlusLg size={14}/>
                             {t('app.mdpkm.common:actions.save_changes')}
                         </Button>
                         <Button theme="secondary" onClick={() => setEditingSkin(false)}>
-                            <XLg/>
+                            <IconBiXLg/>
                             {t('app.mdpkm.common:actions.cancel')}
                         </Button>
                     </Grid>
@@ -388,7 +387,7 @@ function Skin({ data, capes, index, useSkin, editSkin, loading, current }) {
                 {t('app.mdpkm.common:actions.use')}
             </Button>
             <Button size="smaller" theme="secondary" onClick={() => editSkin(index)} disabled={loading}>
-                <PencilFill/>
+                <IconBiPencilFill style={{fontSize: 10}}/>
                 {t('app.mdpkm.common:actions.edit')}
             </Button>
         </Grid>

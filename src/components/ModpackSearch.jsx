@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Search } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
+import React, { useEffect, useState } from 'react';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -59,7 +58,7 @@ export default Patcher.register(function ModpackSearch({ css, loading, setLoadin
                         </Typography>
                         <TextInput value={query} onChange={setQuery}>
                             <Button theme="secondary" onClick={() => search(api)} disabled={searching}>
-                                {searching ? <BasicSpinner size={16}/> : <Search/>}
+                                {searching ? <BasicSpinner size={16}/> : <IconBiSearch/>}
                                 {t('app.mdpkm.common:actions.search')}
                             </Button>
                         </TextInput>

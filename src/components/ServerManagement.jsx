@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
 import nbt from 'nbt';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { XLg, PlusLg, ArrowClockwise } from 'react-bootstrap-icons';
+import React, { useState, useEffect } from 'react';
 
 import Grid from '/voxeliface/components/Grid';
 import Modal from './Modal';
@@ -59,7 +57,7 @@ export default Patcher.register(function ServerManagement({ instanceId }) {
             if(!instance?.path)
                 return;
             const path = `${instance.path}/servers.dat`;
-            setData();
+            setData({});
             setItems('loading');
             Util.fileExists(path).then(exists => {
                 if (exists)
@@ -69,7 +67,7 @@ export default Patcher.register(function ServerManagement({ instanceId }) {
                         setItems(data.value.servers.value.value);
                     }));
                 else {
-                    setData();
+                    setData({});
                     setItems([]);
                 }
             });
@@ -110,11 +108,11 @@ export default Patcher.register(function ServerManagement({ instanceId }) {
                     placeholder={t('app.mdpkm.server_management.search')}
                 />
                 <Button theme="secondary" onClick={() => setItems()} disabled={items === 'loading'}>
-                    {items === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
+                    {items === 'loading' ? <BasicSpinner size={16}/> : <IconBiArrowClockwise size={14}/>}
                     {t('app.mdpkm.common:actions.refresh')}
                 </Button>
                 <Button theme="accent" onClick={openAdding} disabled={!data}>
-                    <PlusLg size={14}/>
+                    <IconBiPlusLg size={14}/>
                     {t('app.mdpkm.server_management.buttons.add')}
                 </Button>
             </Grid>
@@ -159,11 +157,11 @@ export default Patcher.register(function ServerManagement({ instanceId }) {
                     />
                     <Grid margin="2rem 0 0" spacing={8}>
                         <Button theme="accent" onClick={addServer} disabled={!addingAddress}>
-                            <PlusLg size={14}/>
+                            <IconBiPlusLg size={14}/>
                             {t('app.mdpkm.server_management.adding.submit')}
                         </Button>
                         <Button theme="secondary" onClick={closeAdding}>
-                            <XLg/>
+                            <IconBiXLg/>
                             {t('app.mdpkm.server_management.adding.cancel')}
                         </Button>
                     </Grid>

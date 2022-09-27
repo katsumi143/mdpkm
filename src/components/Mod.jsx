@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
 import { open } from '@tauri-apps/api/shell';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { XLg, Download, ArrowClockwise, BoxArrowUpRight } from 'react-bootstrap-icons';
+import React, { useState, useEffect } from 'react';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -46,7 +45,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
     return (
         <Grid padding={8} background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
             {mod ? mod.startsWith?.('error') ? <Grid width="100%" spacing={12} padding={4} css={{ position: 'relative' }}>
-                <XLg size={24} color="var(--colors-secondaryColor)"/>
+                <IconBiXLg size={24} color="var(--colors-secondaryColor)"/>
                 <Grid width="100%" spacing={2} direction="vertical" justifyContent="center">
                     <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
                         {mod.split(':')[1]}
@@ -60,7 +59,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                         right: 8,
                         position: 'absolute'
                     }}>
-                        <ArrowClockwise size={14}/>
+                        <IconBiArrowClockwise size={14}/>
                         {t('app.mdpkm.common:actions.retry')}
                     </Button>
                 </Grid>
@@ -118,14 +117,14 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                     }
                     {mod.website &&
                         <Button size={isCompact ? 'smaller' : 'small'} theme="secondary" onClick={() => open(mod.website)}>
-                            <BoxArrowUpRight/>
+                            <IconBiBoxArrowUpRight/>
                             {t('app.mdpkm.common:actions.visit_website')}
                         </Button>
                     }
                     {instance &&
                         <Button size={isCompact ? 'smaller' : 'small'} onClick={installMod} disabled={mod.client_side === "unsupported" || installing || downloading?.length > 0 || installed}>
                             {(installing || downloading?.length > 0) ?
-                                <BasicSpinner size={16}/> : <Download/>
+                                <BasicSpinner size={16}/> : <IconBiDownload/>
                             }
                             {installed ? t('app.mdpkm.common:states.installed') : mod.client_side === "unsupported" ? t('app.mdpkm.common:states.unavailable') :
                                 installing ? t('app.mdpkm.common:states.installing') : downloading?.length > 0 ? t('app.mdpkm.common:states.waiting') : t('app.mdpkm.common:actions.install')

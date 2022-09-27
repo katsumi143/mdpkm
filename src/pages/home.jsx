@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Provider } from 'react-redux';
-import { useDispatch } from 'react-redux';
 import * as shell from '@tauri-apps/api/shell';
 import { listen } from '@tauri-apps/api/event';
+import { relaunch } from '@tauri-apps/api/process';
 import { useTranslation } from 'react-i18next';
 import toast, { Toaster } from 'react-hot-toast';
-import { relaunch } from '@tauri-apps/api/process';
+import React, { useEffect, useState } from 'react';
 import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
-import { XLg, Gear, PlusLg, Github, Person, Archive, Download, PersonBadge } from 'react-bootstrap-icons';
 
 import App from '/src/components/App';
 import Main from '/voxeliface/components/Main';
@@ -162,7 +159,7 @@ export default Patcher.register(function Home() {
                         </Modal>
                     }
                     <SideNavigation value={page} onChange={setPage}>
-                        <NavigationItem name={t('app.mdpkm.home.navigation.instances')} icon={<Archive size={16}/>} value={0} direction="horizontal">
+                        <NavigationItem name={t('app.mdpkm.home.navigation.instances')} icon={<IconBiArchive size={16}/>} value={0} direction="horizontal">
                             <Pages value={instancePage}>
                                 <PageItem value="home">
                                     <Grid width="35%" height="100%" direction="vertical" background="$blackA2" justifyContent="space-between" css={{
@@ -172,7 +169,7 @@ export default Patcher.register(function Home() {
                                         <InstanceList id={instance} onSelect={selectInstance}/>
                                         <Grid width="100%" padding={16} background="$secondaryBackground" alignItems="center" justifyContent="center">
                                             <Button onClick={() => setInstancePage('add-instance')}>
-                                                <PlusLg size={14}/>
+                                                <IconBiPlusLg size={14}/>
                                                 {t('app.mdpkm.buttons.add_instance')}
                                             </Button>
                                         </Grid>
@@ -204,16 +201,16 @@ export default Patcher.register(function Home() {
                                 </PageItem>
                             </Pages>
                         </NavigationItem>
-                        <NavigationItem name={t('app.mdpkm.home.navigation.skins')} icon={<PersonBadge size={16}/>} value={1}>
+                        <NavigationItem name={t('app.mdpkm.home.navigation.skins')} icon={<IconBiPersonBadge size={16}/>} value={1}>
                             <SkinManagement/>
                         </NavigationItem>
                         {/*<NavigationItem name={t('app.mdpkm.home.navigation.news')} icon={<Newspaper size={16}/>} value={2}>
                             news
                         </NavigationItem>*/}
-                        <NavigationItem name={t('app.mdpkm.home.navigation.accounts')} icon={<Person size={16}/>} value={3} footer>
+                        <NavigationItem name={t('app.mdpkm.home.navigation.accounts')} icon={<IconBiPerson size={16}/>} value={3} footer>
                             <Accounts/>
                         </NavigationItem>
-                        <NavigationItem name={t('app.mdpkm.home.navigation.settings')} icon={<Gear size={16}/>} value={4} footer>
+                        <NavigationItem name={t('app.mdpkm.home.navigation.settings')} icon={<IconBiGear size={16}/>} value={4} footer>
                             <Settings/>
                         </NavigationItem>
                     </SideNavigation>

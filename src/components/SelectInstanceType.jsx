@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, ArrowRight, FileEarmarkArrowDown } from 'react-bootstrap-icons';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -67,12 +66,12 @@ export default Patcher.register(function SelectInstanceType({ back, types, loadi
                                 {isLoader && <Button theme="accent" onClick={() => chooseLoader(id)} disabled={loading}>
                                     {loading && <BasicSpinner size={16}/>}
                                     {t('app.mdpkm.common:actions.continue')}
-                                    {!loading && <ArrowRight size={14}/>}
+                                    {!loading && <IconBiArrowRight size={14}/>}
                                 </Button>}
                                 {isImport && <Button theme="accent" onClick={importInstance} disabled={loading}>
                                     {loading && <BasicSpinner size={16}/>}
                                     {t('app.mdpkm.select_instance_type.import.button')}
-                                    {!loading && <FileEarmarkArrowDown size={14}/>}
+                                    {!loading && <IconBiFileEarmarkArrowDown size={14}/>}
                                 </Button>}
                                 {!isLoader && !isImport &&
                                     <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito">
@@ -88,7 +87,7 @@ export default Patcher.register(function SelectInstanceType({ back, types, loadi
                 borderTop: '1px solid $tagBorder'
             }}>
                 <Button theme="secondary" onClick={back} disabled={loading}>
-                    <ArrowLeft size={14}/>
+                    <IconBiArrowLeft size={14}/>
                     {t('app.mdpkm.common:buttons.back_to_instances')}
                 </Button>
                 <Typography size=".8rem" color="$secondaryColor"><span>

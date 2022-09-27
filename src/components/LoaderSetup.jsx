@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft } from 'react-bootstrap-icons';
+import React, { useState } from 'react';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -199,7 +198,7 @@ export default Patcher.register(function LoaderSetup({ back, loader, install, ve
                     </Typography>
                 :
                     <Button theme="secondary" onClick={back}>
-                        <ArrowLeft size={14}/>
+                        <IconBiArrowLeft size={14}/>
                         {t('app.mdpkm.common:buttons.back_to_selection')}
                     </Button>
                 }

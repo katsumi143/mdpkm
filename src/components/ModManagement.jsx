@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { List, Search, Diamond, ArrowLeft, ArrowClockwise, CloudArrowDown } from 'react-bootstrap-icons';
+import React, { useState, useEffect } from 'react';
 
 import Mod from './Mod';
 import Tabs from '/voxeliface/components/Tabs';
@@ -54,7 +53,7 @@ export default Patcher.register(function ModManagement({ instanceId }) {
                 willChange: 'contents'
             }}
         >
-            <TabItem name={t('app.mdpkm.instance_page.tabs.mods.tabs.manage')} icon={<List size={14}/>} value={0}>
+            <TabItem name={t('app.mdpkm.instance_page.tabs.mods.tabs.manage')} icon={<IconBiList size={14}/>} value={0}>
                 <Grid margin="4px 0" spacing={8} justifyContent="space-between">
                     <Grid direction="vertical">
                         <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
@@ -77,11 +76,11 @@ export default Patcher.register(function ModManagement({ instanceId }) {
                             placeholder={t('app.mdpkm.mod_management.search')}
                         />
                         <Button theme="secondary" onClick={() => setItems()} disabled={items === 'loading'}>
-                            {items === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
+                            {items === 'loading' ? <BasicSpinner size={16}/> : <IconBiArrowClockwise size={14}/>}
                             {t('app.mdpkm.common:actions.refresh')}
                         </Button>
                         <Button theme="accent" onClick={checkForUpdates} disabled={updateChecking}>
-                            {updateChecking ? <BasicSpinner size={16}/> : <CloudArrowDown size={14}/>}
+                            {updateChecking ? <BasicSpinner size={16}/> : <IconBiCloudArrowDown size={14}/>}
                             {t('app.mdpkm.mod_management.get_updates')}
                         </Button>
                     </Grid>
@@ -102,10 +101,10 @@ export default Patcher.register(function ModManagement({ instanceId }) {
                     <InstanceMod key={index} mod={mod} updates={updates} instanceId={instanceId}/>
                 ) : <Spinner/>}
             </TabItem>
-            <TabItem name={t('app.mdpkm.instance_page.tabs.mods.tabs.search')} icon={<Search/>} value={1}>
+            <TabItem name={t('app.mdpkm.instance_page.tabs.mods.tabs.search')} icon={<IconBiSearch/>} value={1}>
                 {!canPopout && <ModSearch instanceId={instanceId}/>}
             </TabItem>
-            <TabItem name={t('app.mdpkm.instance_page.tabs.essential')} icon={<Diamond size={14}/>} value={2} spacing={4} disabled={!instance.isModded}>
+            <TabItem name={t('app.mdpkm.instance_page.tabs.essential')} icon={<IconBiDiamond size={14}/>} value={2} spacing={4} disabled={!instance.isModded}>
                 <svg width="1266" height="183" viewBox="0 0 1266 183" xmlns="http://www.w3.org/2000/svg" style={{
                     width: 'fit-content',
                     height: '2rem',
@@ -128,7 +127,7 @@ export default Patcher.register(function ModManagement({ instanceId }) {
                     Modification Search
                 </TextHeader>
                 <Button theme="accent" onClick={() => setTab(0)}>
-                    <ArrowLeft size={14}/>
+                    <IconBiArrowLeft size={14}/>
                     {t('app.mdpkm.common:actions.back')}
                 </Button>
             </Grid>

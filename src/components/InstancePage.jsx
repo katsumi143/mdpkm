@@ -5,7 +5,6 @@ import { keyframes } from '@stitches/react';
 import { Breakpoint } from 'react-socks';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
-import { App, XLg, List, Gear, PlusLg, PlayFill, PencilFill, Trash3Fill, Folder2Open, FileEarmarkZip, ExclamationCircleFill } from 'react-bootstrap-icons';
 
 import Mod from './Mod';
 import Tag from './Tag';
@@ -240,13 +239,13 @@ export default Patcher.register(function InstancePage({ id }) {
                     position: 'absolute'
                 }}>
                     <Button theme="secondary" onClick={openFolder}>
-                        <Folder2Open/>
+                        <IconBiFolder2Open/>
                         <Breakpoint customQuery="(min-width: 850px)">
                             {t('app.mdpkm.common:actions.open_folder')}
                         </Breakpoint>
                     </Button>
                     <Button onClick={launchInstance} disabled={loaderDisabled || !!minState || !Account}>
-                        {!!minState ? <BasicSpinner size={16}/> : <PlayFill/>}
+                        {!!minState ? <BasicSpinner size={16}/> : <IconBiPlayFill/>}
                         <Breakpoint customQuery="(min-width: 700px)">
                             {t('app.mdpkm.common:actions.launch')}
                         </Breakpoint>
@@ -259,7 +258,7 @@ export default Patcher.register(function InstancePage({ id }) {
                     }}>
                         {loaderData?.icon ?
                             <ImageTransition src={loaderData?.icon} size={16}/>
-                        : <ExclamationCircleFill size={14} color="#ffffffad"/>}
+                        : <IconBiExclamationCircleFill size={14} color="#ffffffad"/>}
                         <Typography size=".8rem" color="$tagColor" family="Nunito" spacing={4} horizontal>
                             <TextTransition inline noOverflow>
                                 {Util.getLoaderName(config?.loader?.type)}
@@ -321,7 +320,7 @@ export default Patcher.register(function InstancePage({ id }) {
             }
             {!Account &&
                 <InstanceInfo animate css={{ alignItems: 'start' }}>
-                    <ExclamationCircleFill size={24} color="var(--colors-primaryColor)"/>
+                    <IconBiExclamationCircleFill size={24} color="var(--colors-primaryColor)"/>
                     <Grid spacing={4} direction="vertical">
                         <Typography color="$primaryColor" family="Nunito" lineheight={1}>
                             Account Required
@@ -403,7 +402,7 @@ export default Patcher.register(function InstancePage({ id }) {
             }
             {launchable === false &&
                 <InstanceInfo animate css={{ alignItems: 'start' }}>
-                    <ExclamationCircleFill size={24} color="var(--colors-primaryColor)"/>
+                    <IconBiExclamationCircleFill size={24} color="var(--colors-primaryColor)"/>
                     <Grid spacing={4} direction="vertical">
                         <Typography color="$primaryColor" family="Nunito" lineheight={1}>
                             Instance may not launch!
@@ -420,7 +419,7 @@ export default Patcher.register(function InstancePage({ id }) {
             }
             {!loaderData &&
                 <InstanceInfo animate css={{ alignItems: 'start' }}>
-                    <ExclamationCircleFill size={24} color="var(--colors-primaryColor)"/>
+                    <IconBiExclamationCircleFill size={24} color="var(--colors-primaryColor)"/>
                     <Grid spacing={4} direction="vertical">
                         <Typography color="$primaryColor" family="Nunito" lineheight={1}>
                             Unknown Loader
@@ -434,7 +433,7 @@ export default Patcher.register(function InstancePage({ id }) {
             }
             {loaderDisabled &&
                 <InstanceInfo animate css={{ alignItems: 'start' }}>
-                    <ExclamationCircleFill size={24} color="var(--colors-primaryColor)"/>
+                    <IconBiExclamationCircleFill size={24} color="var(--colors-primaryColor)"/>
                     <Grid spacing={4} direction="vertical">
                         <Typography color="$primaryColor" family="Nunito" lineheight={1}>
                             {Util.getLoaderName(config?.loader?.type)} is unavailable
@@ -455,23 +454,23 @@ export default Patcher.register(function InstancePage({ id }) {
                     height: '-webkit-fill-available'
                 }}
             >
-                <TabItem name={t('app.mdpkm.instance_page.tabs.mods')} icon={<List size={14}/>} value={0} padding={0} disabled={!instance.isModded}>
+                <TabItem name={t('app.mdpkm.instance_page.tabs.mods')} icon={<IconBiList size={14}/>} value={0} padding={0} disabled={!instance.isModded}>
                     <ModManagement instanceId={id}/>
                 </TabItem>
-                <TabItem name={t('app.mdpkm.instance_page.tabs.servers')} icon={<List size={14}/>} value={1}>
+                <TabItem name={t('app.mdpkm.instance_page.tabs.servers')} icon={<IconBiList size={14}/>} value={1}>
                     <ServerManagement instanceId={id}/>
                 </TabItem>
-                <TabItem name={t('app.mdpkm.instance_page.tabs.resource_packs')} icon={<List size={14}/>} value={2}>
+                <TabItem name={t('app.mdpkm.instance_page.tabs.resource_packs')} icon={<IconBiList size={14}/>} value={2}>
                     <ResourcePackManagement instanceId={id}/>
                 </TabItem>
-                <TabItem name={t('app.mdpkm.instance_page.tabs.loader')} icon={<App size={14}/>} value={3}>
+                <TabItem name={t('app.mdpkm.instance_page.tabs.loader')} icon={<IconBiApp size={14}/>} value={3}>
                     <Grid spacing={12} padding={8} alignItems="center" background="$secondaryBackground2" borderRadius={4} css={{
                         position: 'relative'
                     }}>
                         {loaderData?.icon ?
                             <Image src={loaderData?.icon} size={48} background="$secondaryBackground" borderRadius={4}/>
                         : <Grid width={48} height={48} alignItems="center" background="$gray10" borderRadius={4} justifyContent="center">
-                            <ExclamationCircleFill size={24} color="#ffffff80"/>
+                            <IconBiExclamationCircleFill size={24} color="#ffffff80"/>
                         </Grid>}
                         <Grid spacing={4} direction="vertical" justifyContent="center">
                             <Typography size="1rem" color="$primaryColor" family="Nunito" horizontal lineheight={1}>
@@ -493,7 +492,7 @@ export default Patcher.register(function InstancePage({ id }) {
                             position: 'absolute'
                         }}>
                             <Button theme="accent" onClick={() => setEditingLoader(true)}>
-                                <PencilFill/>
+                                <IconBiPencilFill style={{fontSize: 10}}/>
                                 {t('app.mdpkm.common:actions.edit')}
                             </Button>
                         </Grid>
@@ -557,7 +556,7 @@ export default Patcher.register(function InstancePage({ id }) {
                         />
                     }
                 </TabItem>
-                <TabItem name={t('app.mdpkm.instance_page.tabs.settings')} icon={<Gear size={14}/>} value={4} padding={0}>
+                <TabItem name={t('app.mdpkm.instance_page.tabs.settings')} icon={<IconBiGear size={14}/>} value={4} padding={0}>
                     <Grid padding={8} justifyContent="space-between" css={{
                         borderBottom: '1px solid $secondaryBorder'
                     }}>
@@ -565,7 +564,7 @@ export default Patcher.register(function InstancePage({ id }) {
                             {t('app.mdpkm.instance_page.tabs.settings.title')}
                         </Typography>
                         <Button theme="accent" onClick={saveSettings} disabled={saving}>
-                            {saving ? <BasicSpinner size={16}/> : <PencilFill/>}
+                            {saving ? <BasicSpinner size={16}/> : <IconBiPencilFill style={{fontSize: 10}}/>}
                             {t('app.mdpkm.common:actions.save_changes')}
                         </Button>
                     </Grid>
@@ -630,7 +629,7 @@ export default Patcher.register(function InstancePage({ id }) {
                             <Dialog.Root>
                                 <Dialog.Trigger asChild>
                                     <Button theme="secondary" disabled={saving}>
-                                        <Trash3Fill/>
+                                        <IconBiTrash3Fill/>
                                         {t('app.mdpkm.common:actions.delete')}
                                     </Button>
                                 </Dialog.Trigger>
@@ -652,7 +651,7 @@ export default Patcher.register(function InstancePage({ id }) {
                         </Grid>
                     </Grid>
                 </TabItem>
-                <TabItem name={t('app.mdpkm.instance_page.tabs.export')} icon={<FileEarmarkZip size={14}/>} value={5}>
+                <TabItem name={t('app.mdpkm.instance_page.tabs.export')} icon={<IconBiFileEarmarkZip size={14}/>} value={5}>
                     <InstanceExport instanceId={id}/>
                 </TabItem>
             </Tabs>}

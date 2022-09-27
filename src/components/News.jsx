@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { t } from 'i18next';
 import { open } from '@tauri-apps/api/shell';
-import { BoxArrowUpRight } from 'react-bootstrap-icons';
+import React, { useState, useEffect } from 'react';
 
 import Tag from './Tag';
 import Grid from '/voxeliface/components/Grid';

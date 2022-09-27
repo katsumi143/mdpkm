@@ -118,7 +118,9 @@
         ],
         "security": {
             "csp": {
+                "img-src": "'self' data: https:",
                 "style-src": "'unsafe-inline' 'self'",
+                "script-src": "'self' data:",
                 "default-src": "'self' data: asset:"
             }
         }

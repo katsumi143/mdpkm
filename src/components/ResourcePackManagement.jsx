@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { open } from '@tauri-apps/api/dialog';
 import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
+import { open } from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
-import { PlusLg, Trash3Fill, ArrowClockwise } from 'react-bootstrap-icons';
+import React, { useState, useEffect } from 'react';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
@@ -90,11 +88,11 @@ export default Patcher.register(function ResourcePackManagement({ instanceId }) 
             </Grid>
             <Grid spacing={8}>
                 <Button theme="secondary" onClick={() => setItems()} disabled={items === 'loading'}>
-                    {items === 'loading' ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
+                    {items === 'loading' ? <BasicSpinner size={16}/> : <IconBiArrowClockwise size={14}/>}
                     {t('app.mdpkm.common:actions.refresh')}
                 </Button>
                 <Button theme="accent" onClick={addResourcePack} disabled={instance?.config.loader.type === 'bedrock'}>
-                    <PlusLg/>
+                    <IconBiPlusLg/>
                     {t('app.mdpkm.resourcepack_management.add')}
                 </Button>
             </Grid>
@@ -134,7 +132,7 @@ export default Patcher.register(function ResourcePackManagement({ instanceId }) 
                     position: 'absolute'
                 }}>
                     <Button theme="secondary" disabled>
-                        <Trash3Fill/>
+                        <IconBiTrash3Fill/>
                         {t('app.mdpkm.common:actions.delete')}
                     </Button>
                 </Grid>

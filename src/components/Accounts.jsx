@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { open } from '@tauri-apps/api/shell';
-import { useTranslation } from 'react-i18next';
 import { appWindow } from '@tauri-apps/api/window';
+import { useTranslation } from 'react-i18next';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { XLg, PlusLg, ThreeDots, BoxArrowUpRight } from 'react-bootstrap-icons';
 
 import Tag from './Tag';
 import Grid from '/voxeliface/components/Grid';
@@ -84,18 +83,18 @@ export default Patcher.register(function Settings() {
                                 <DropdownMenu.Root>
                                     <DropdownMenu.Trigger asChild>
                                         <Button theme="secondary">
-                                            <ThreeDots size={17}/>
+                                            <IconBiThreeDots size={17}/>
                                         </Button>
                                     </DropdownMenu.Trigger>
                                     <DropdownMenu.Content sideOffset={8}>
                                         <DropdownMenu.Label>{t('app.mdpkm.accounts.account.actions.label')}</DropdownMenu.Label>
                                         <DropdownMenu.Item onClick={() => open('https://minecraft.net/profile')}>
                                             {t('app.mdpkm.accounts.account.actions.manage_profile')}
-                                            <BoxArrowUpRight/>
+                                            <IconBiBoxArrowUpRight/>
                                         </DropdownMenu.Item>
                                         <DropdownMenu.Item onClick={() => open(`https://namemc.com/profile/${profile.id}`)}>
                                             {t('app.mdpkm.accounts.account.actions.view_namemc')}
-                                            <BoxArrowUpRight/>
+                                            <IconBiBoxArrowUpRight/>
                                         </DropdownMenu.Item>
                                         <DropdownMenu.Item onClick={() => deleteAccount(accounts[key])}>
                                             {t('app.mdpkm.accounts.account.actions.remove')}
@@ -108,7 +107,7 @@ export default Patcher.register(function Settings() {
                     )}
                 </Grid>
                 <Button theme="accent" onClick={addNewAccount} disabled={addingAccount}>
-                    {addingAccount ? <BasicSpinner size={16}/> : <PlusLg size={14}/>}
+                    {addingAccount ? <BasicSpinner size={16}/> : <IconBiPlusLg size={14}/>}
                     {t('app.mdpkm.accounts.add')}
                 </Button>
             </Grid>
@@ -133,7 +132,7 @@ export default Patcher.register(function Settings() {
                         </Typography>}
                         <Grid margin="2rem 0 0" spacing={8}>
                             <Button theme="secondary" onClick={() => setError()} >
-                                <XLg/>
+                                <IconBiXLg/>
                                 Close
                             </Button>
                         </Grid>
