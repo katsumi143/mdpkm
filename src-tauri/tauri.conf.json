@@ -117,7 +117,10 @@
             }
         ],
         "security": {
-            "csp": "default-src * 'self' 'unsafe-inline' data:; img-src: 'self' data:; asset: https://asset.localhost; style-src: 'self' 'unsafe-inline'"
+            "csp": {
+                "style-src": "'unsafe-inline' 'self'",
+                "default-src": "'self' data: asset:"
+            }
         }
     }
 }
