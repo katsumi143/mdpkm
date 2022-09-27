@@ -1,5 +1,4 @@
 import API from '../api';
-import Instances from '../instances';
 
 // For plugin developers:
 // https://docs.mdpkm.voxelified.com/docs/plugin-api/pluginsystem
@@ -24,10 +23,10 @@ export default class PluginSystem {
     registerLaunchTask(type, func) {
         if(!VALID_TASKS.some(v => v === type))
             throw new TypeError(`Invalid Launch Task "${type}"`);
-        Instances.launchTasks.push({
+        /*Instances.launchTasks.push({
             type,
             func,
             source: this
-        });
+        });*/
     }
 };

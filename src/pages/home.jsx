@@ -33,13 +33,10 @@ import SelectInstanceType from '/src/components/SelectInstanceType';
 
 import API from '/src/common/api';
 import Patcher from '/src/common/plugins/patcher';
-import Instances from '/src/common/instances';
 
 let updateListener;
 export default Patcher.register(function Home() {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
-    const [_, setBruh] = useState(0);
     const [page, setPage] = useState(0);
     const [update, setUpdate] = useState();
     const [loading, setLoading] = useState(false);

@@ -1,9 +1,9 @@
-import Util from '../util';
 import { appDir } from '@tauri-apps/api/path';
 import { createSlice } from '@reduxjs/toolkit';
+import { readJsonFile, writeJsonFile } from '../../util';
 
 const accountsPath = `${await appDir()}/accounts.json`;
-const accounts = await Util.readTextFile(accountsPath).then(JSON.parse).catch(console.warn);
+const accounts = await readJsonFile(accountsPath).catch(console.warn);
 export const accountsSlice = createSlice({
     name: 'accounts',
     initialState: {
@@ -30,7 +30,7 @@ export const accountsSlice = createSlice({
             state.data = [...state.data.slice(0, index), ...state.data.slice(index + 1)];
         },
         saveAccounts: state => {
-            Util.writeFile(accountsPath, JSON.stringify(state));
+            writeJsonFile(accountsPath, state);
         },
         setAddingAccount: (state, { payload }) => {
             state.addingAccount = payload;

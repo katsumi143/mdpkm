@@ -38,7 +38,6 @@ import API from '../common/api';
 import Util from '../common/util';
 import Voxura from '../common/voxura';
 import Patcher from '/src/common/plugins/patcher';
-import Instances from '../common/instances';
 import { useInstance } from '../common/voxura';
 import { LoaderStates, DisabledLoaders } from '../common/constants';
 
@@ -172,7 +171,7 @@ export default Patcher.register(function InstancePage({ id }) {
     };
     const openFolder = () => open(path);
     useEffect(() => {
-        if(typeof launchable !== 'boolean') {
+        /*if(typeof launchable !== 'boolean') {
             const { type, game, version } = config?.loader ?? {};
             const loaderType = Util.getLoaderType(type);
             if(loaderType === 'unknown')
@@ -181,7 +180,7 @@ export default Patcher.register(function InstancePage({ id }) {
                 ).then(setLaunchable);
             else
                 setLaunchable(true);
-        }
+        }*/
     }, [launchable]);
     useEffect(() => {
         setLaunchable();

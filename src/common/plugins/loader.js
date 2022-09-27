@@ -9,7 +9,6 @@ import API from '../api';
 import Util from '../util';
 import Patcher from './patcher';
 import PluginAPI from './api';
-import Instances from '../instances';
 import * as voxura from '../voxura';
 import PluginSystem from './system';
 import * as Voxeliface from '/voxeliface';
@@ -41,7 +40,6 @@ export default class PluginLoader {
             Icons,
             voxura,
             Patcher,
-            Instances,
             PluginAPI: this.pluginApi,
             Voxeliface,
             PluginSystem

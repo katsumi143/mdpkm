@@ -11,7 +11,6 @@ import Typography from '/voxeliface/components/Typography';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import Patcher from '/src/common/plugins/patcher';
-import Instances from '../common/instances';
 import { useInstances } from '../common/voxura';
 export default Patcher.register(function InstanceList({ id, onSelect }) {
     const { t } = useTranslation();
@@ -31,7 +30,7 @@ export default Patcher.register(function InstanceList({ id, onSelect }) {
                     <Archive size={20}/>
                     {t('app.mdpkm.headers.instances')}
                     <Typography size=".6rem" color="$secondaryColor" weight={300} family="Nunito" margin="2px 0 0 -6px" lineheight={1}>
-                        ({Instances.gettingInstances || !instances ? "Loading" : instances.length})
+                        ({!instances ? "Loading" : instances.length})
                     </Typography>
                 </Typography>
                 {typeof state === "string" &&
@@ -40,7 +39,7 @@ export default Patcher.register(function InstanceList({ id, onSelect }) {
                     </Typography>
                 }
             </Grid>
-            <Button theme="secondary" onClick={refresh} disabled={loading || Instances.gettingInstances || !instances}>
+            <Button theme="secondary" onClick={refresh} disabled={loading || !instances}>
                 {loading ? <BasicSpinner size={16}/> : <ArrowClockwise size={14}/>}
                 {t('app.mdpkm.common:actions.refresh')}
             </Button>
@@ -48,7 +47,7 @@ export default Patcher.register(function InstanceList({ id, onSelect }) {
         <Grid height="100%" spacing={8} padding="8px 0" direction="vertical" alignItems="center" css={{
             overflowY: "auto"
         }}>
-            {instances && !Instances.gettingInstances ?
+            {instances ?
                 instances.length > 0 ? instances.map((instance, index) => {
                     return <Instance id={instance.id} key={index} onView={() => onSelect(instance.id)} css={{
                         animationDelay: `${100 * index}ms`,
