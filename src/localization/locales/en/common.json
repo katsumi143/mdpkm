@@ -49,7 +49,7 @@
     "loaders.forge": "Forge Loader",
     "loaders.forge.summary": "Forge is a free, open-source modding API.",
     "loaders.quilt": "Quilt Loader",
-    "loaders.quilt.summary": "Fabric is a lightweight, experimental modding toolchain.",
+    "loaders.quilt.summary": "Quilt is an open-source, community-driven modding toolchain.",
     "loaders.fabric": "Fabric Loader",
     "loaders.fabric.summary": "Fabric is a lightweight, experimental modding toolchain.",
     "loaders.bedrock": "Minecraft Bedrock Edition",
