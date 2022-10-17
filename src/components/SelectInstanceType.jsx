@@ -19,10 +19,10 @@ export default Patcher.register(function SelectInstanceType({ back, types, loadi
             <Grid width="100%" padding="1rem 0" spacing={8} direction="vertical" alignItems="center" css={{
                 borderBottom: '1px solid $tagBorder'
             }}>
-                <Typography size="1.2rem" color="$primaryColor" family="Raleway" lineheight={1}>
+                <Typography size="1.2rem" family="Raleway" lineheight={1}>
                     {t('app.mdpkm.common:headers.adding_instance')}
                 </Typography>
-                <Typography size=".9rem" color="$secondaryColor" family="Nunito" lineheight={1}>
+                <Typography size=".9rem" color="$secondaryColor" lineheight={1}>
                     {t('app.mdpkm.select_instance_type.header')}
                 </Typography>
             </Grid>
@@ -31,13 +31,13 @@ export default Patcher.register(function SelectInstanceType({ back, types, loadi
             }}>
                 {types.filter(({ types }) => types.length > 0).map(({ name, types }) => <React.Fragment key={name}>
                     <Grid width="70%" height={2} margin="8px 0" background="$tagBorder" borderRadius={1}>
-                        <Typography size=".9rem" color="$secondaryColor" weight={600} family="Nunito" css={{
+                        <Typography size=".9rem" color="$secondaryColor" weight={400} css={{
                             top: 0,
-                            left: "50%",
-                            padding: "0 8px",
-                            position: "relative",
-                            transform: "translateX(-50%)",
-                            background: "$primaryBackground"
+                            left: '50%',
+                            padding: '0 8px',
+                            position: 'relative',
+                            transform: 'translateX(-50%)',
+                            background: '$primaryBackground'
                         }}>
                             {t(`app.mdpkm.common:loaders.categories.${name}`)}
                         </Typography>
@@ -49,10 +49,10 @@ export default Patcher.register(function SelectInstanceType({ back, types, loadi
                             <Grid alignItems="center">
                                 <Image src={icon ?? 'img/icons/brand_default.svg'} size={48} borderRadius={4}/>
                                 <Grid margin="0 0 0 24px" direction="vertical" alignItems="start">
-                                    <Typography color="$primaryColor" whitespace="nowrap" spacing={6} horizontal>
+                                    <Typography whitespace="nowrap" spacing={6} horizontal>
                                         {t(`app.mdpkm.common:loaders.${id}`)}
                                         {loaderData?.source instanceof PluginSystem &&
-                                            <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                            <Typography size=".8rem" color="$secondaryColor">
                                                 added by {pluginData?.manifest.name}
                                             </Typography>
                                         }
@@ -74,7 +74,7 @@ export default Patcher.register(function SelectInstanceType({ back, types, loadi
                                     {!loading && <IconBiFileEarmarkArrowDown size={14}/>}
                                 </Button>}
                                 {!isLoader && !isImport &&
-                                    <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito">
+                                    <Typography size=".8rem" color="$secondaryColor" weight={400}>
                                         {t('app.mdpkm.select_instance_type.unsupported')}
                                     </Typography>
                                 }

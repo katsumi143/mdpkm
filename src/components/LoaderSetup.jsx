@@ -74,10 +74,10 @@ export default Patcher.register(function LoaderSetup({ back, loader, install, ve
             <Grid width="100%" padding="1rem 0" spacing={8} direction="vertical" alignItems="center" css={{
                 borderBottom: '1px solid $tagBorder'
             }}>
-                <Typography size="1.2rem" color="$primaryColor" family="Raleway" lineheight={1}>
+                <Typography size="1.2rem" family="Raleway" lineheight={1}>
                     {t('app.mdpkm.common:headers.adding_instance')}
                 </Typography>
-                <Typography size=".9rem" color="$secondaryColor" family="Nunito" lineheight={1}>
+                <Typography size=".9rem" color="$secondaryColor" lineheight={1}>
                     {t('app.mdpkm.loader_setup.header')}
                 </Typography>
             </Grid>
@@ -86,7 +86,7 @@ export default Patcher.register(function LoaderSetup({ back, loader, install, ve
             }}>
                 <Image src={loaderData?.banner} width="100%" height="3.5rem"/>
                 {installState && <React.Fragment>
-                    <Typography size="1.1rem" color="$primaryColor" margin="1rem 0 0">
+                    <Typography size="1.1rem" margin="1rem 0 0">
                         Installing {Util.getLoaderName(loader)} for {gameVersion}
                     </Typography>
                     <Typography size=".9rem" color="$secondaryColor" weight={400} margin="4px 0 0">
@@ -95,7 +95,7 @@ export default Patcher.register(function LoaderSetup({ back, loader, install, ve
                 </React.Fragment>}
 
                 {!installState && <Grid margin="2rem 0 0 0" spacing={4} direction="vertical">
-                    <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
+                    <Typography size={14} color="$secondaryColor" weight={400}>
                         {t('app.mdpkm.loader_setup.instance_name')}
                     </Typography>
                     <TextInput
@@ -108,7 +108,7 @@ export default Patcher.register(function LoaderSetup({ back, loader, install, ve
 
                 {installState ? null : loaderVersions ?
                     <Grid width={210} margin="24px 0 0 0" spacing={4} direction="vertical">
-                        <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
+                        <Typography size={14} color="$secondaryColor" weight={400}>
                             {t('app.mdpkm.loader_setup.game_version')}
                         </Typography>
                         <Select.Root
@@ -129,7 +129,7 @@ export default Patcher.register(function LoaderSetup({ back, loader, install, ve
                     </Grid> :
                     <React.Fragment>
                         <Grid width={210} margin="16px 0 0 0" spacing={4} direction="vertical">
-                            <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
+                            <Typography size={14} color="$secondaryColor" weight={400}>
                                 {t('app.mdpkm.loader_setup.version_type')}
                             </Typography>
                             <Select.Root
@@ -150,7 +150,7 @@ export default Patcher.register(function LoaderSetup({ back, loader, install, ve
                             </Select.Root>
                         </Grid>
                         <Grid width={210} margin="16px 0 0 0" spacing={4} direction="vertical">
-                            <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
+                            <Typography size={14} color="$secondaryColor" weight={400}>
                                 {t('app.mdpkm.loader_setup.game_version')}
                             </Typography>
                             <Select.Root
@@ -170,7 +170,7 @@ export default Patcher.register(function LoaderSetup({ back, loader, install, ve
                 }
 
                 {installState ? null : loaderVersions && <Grid width={210} margin="16px 0" spacing={4} direction="vertical">
-                    <Typography size={14} color="$secondaryColor" weight={400} family="Nunito">
+                    <Typography size={14} color="$secondaryColor" weight={400}>
                         {t('app.mdpkm.loader_setup.loader_version')}
                     </Typography>
                     <Select.Root
@@ -193,7 +193,7 @@ export default Patcher.register(function LoaderSetup({ back, loader, install, ve
                 borderImage: installState ? `linear-gradient(to right, #73c280 50%, $headerBackground 50%) 100% 1` : null
             }}>
                 {installState ?
-                    <Typography size="1.1rem" color="$primaryColor" weight={600} family="Nunito">
+                    <Typography size="1.1rem" weight={600}>
                         {installState}
                     </Typography>
                 :

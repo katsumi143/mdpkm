@@ -44,8 +44,6 @@ export default Patcher.register(function Instance({ id, css, onView }) {
                         <Typography
                             size={isCompact ? 13 : '1rem'}
                             width="100%"
-                            color="$primaryColor"
-                            family="Nunito"
                             weight={isCompact ? 400 : 500}
                             textalign="start"
                             lineheight={1}
@@ -56,7 +54,6 @@ export default Patcher.register(function Instance({ id, css, onView }) {
                         <Typography
                             size={isCompact ? 11 : '.8rem'}
                             color="$secondaryColor"
-                            family="Nunito"
                             weight={isCompact ? 300 : 400}
                             textalign="start"
                             lineheight={1}

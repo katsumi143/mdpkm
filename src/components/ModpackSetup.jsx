@@ -14,10 +14,10 @@ export default Patcher.register(function ModpackSetup({ back, importModpack }) {
             <Grid width="100%" padding="1rem 0" spacing={8} direction="vertical" alignItems="center" css={{
                 borderBottom: '1px solid $tagBorder'
             }}>
-                <Typography size="1.2rem" color="$primaryColor" family="Raleway" lineheight={1}>
+                <Typography size="1.2rem" family="Raleway" lineheight={1}>
                     Adding New Instance
                 </Typography>
-                <Typography size=".9rem" color="$secondaryColor" family="Nunito" lineheight={1}>
+                <Typography size=".9rem" color="$secondaryColor" lineheight={1}>
                     Select Modpack
                 </Typography>
             </Grid>

@@ -224,10 +224,10 @@ export default Patcher.register(function InstancePage({ id }) {
                     }
                 }}/>
                 <Grid margin={uiStyle === 'compact' ? '0 0 0 1rem' : '0 0 0 1.2rem'} spacing={uiStyle === 'compact' ? 4 : 6} direction="vertical" justifyContent="center">
-                    <Typography size={uiStyle === 'compact' ? '1.2rem' : '1.3rem'} color="$primaryColor" weight={600} family="Nunito" lineheight={1}>
+                    <Typography size={uiStyle === 'compact' ? '1.2rem' : '1.3rem'} weight={600} lineheight={1}>
                         <TextTransition inline>{name}</TextTransition>
                     </Typography>
-                    <Typography size={uiStyle === 'compact' ? '.9rem' : '1rem'} color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                    <Typography size={uiStyle === 'compact' ? '.9rem' : '1rem'} color="$secondaryColor" weight={400} lineheight={1}>
                         <TextTransition inline noOverflow>
                             {minState ?? t('app.mdpkm.instances:states.none')}
                         </TextTransition>
@@ -259,7 +259,7 @@ export default Patcher.register(function InstancePage({ id }) {
                         {loaderData?.icon ?
                             <ImageTransition src={loaderData?.icon} size={16}/>
                         : <IconBiExclamationCircleFill size={14} color="#ffffffad"/>}
-                        <Typography size=".8rem" color="$tagColor" family="Nunito" spacing={4} horizontal>
+                        <Typography size=".8rem" color="$tagColor" spacing={4} horizontal>
                             <TextTransition inline noOverflow>
                                 {Util.getLoaderName(config?.loader?.type)}
                             </TextTransition>
@@ -281,7 +281,7 @@ export default Patcher.register(function InstancePage({ id }) {
                     <Grid padding="14px 10px" css={{
                         borderBottom: consoleOpen ? '1px solid $secondaryBorder2' : null
                     }}>
-                        <Typography color="$primaryColor" family="Nunito" lineheight={1}>
+                        <Typography lineheight={1}>
                             Instance Console {logErrors.length ? `(${logErrors.length} Errors!)` : ''}
                         </Typography>
                     </Grid>
@@ -299,16 +299,16 @@ export default Patcher.register(function InstancePage({ id }) {
                             const date = new Date(parseInt(timestamp));
                             return <Grid key={key} padding="4px 8px" spacing={8}>
                                 <Grid spacing={2} direction="vertical">
-                                    <Typography size=".8rem" color="$secondaryColor" family="Nunito" textalign="start" lineheight={1}>
+                                    <Typography size=".8rem" color="$secondaryColor" textalign="start" lineheight={1}>
                                         [{thread ?? 'main'}/{type}]
                                     </Typography>
-                                    <Typography size=".8rem" color="$secondaryColor" family="Nunito" textalign="start" lineheight={1}>
+                                    <Typography size=".8rem" color="$secondaryColor" textalign="start" lineheight={1}>
                                         {date.toLocaleTimeString()}
                                     </Typography>
                                 </Grid>
                                 <Typography color={{
                                     ERROR: '#d39a9a'
-                                }[type] ?? '$primaryColor'} family="Nunito" textalign="start" lineheight={1} css={{
+                                }[type] ?? '$primaryColor'} textalign="start" lineheight={1} css={{
                                     height: 'fit-content'
                                 }}>
                                     {text}
@@ -322,10 +322,10 @@ export default Patcher.register(function InstancePage({ id }) {
                 <InstanceInfo animate css={{ alignItems: 'start' }}>
                     <IconBiExclamationCircleFill size={24} color="var(--colors-primaryColor)"/>
                     <Grid spacing={4} direction="vertical">
-                        <Typography color="$primaryColor" family="Nunito" lineheight={1}>
+                        <Typography lineheight={1}>
                             Account Required
                         </Typography>
-                        <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" textalign="start" lineheight={1.2}>
+                        <Typography size=".8rem" color="$secondaryColor" weight={400} textalign="start" lineheight={1.2}>
                             You don't have a Minecraft Account selected.<br/>
                             Add a Minecraft Account or choose one in Settings.<br/>
                             <span>
@@ -350,10 +350,10 @@ export default Patcher.register(function InstancePage({ id }) {
                             }}
                         />
                         <Grid spacing={4} direction="vertical" justifyContent="center">
-                            <Typography size={uiStyle === 'compact' ? '.9rem' : '1rem'} color="$primaryColor" family="Nunito" lineheight={1}>
+                            <Typography size={uiStyle === 'compact' ? '.9rem' : '1rem'} lineheight={1}>
                                 <TextTransition inline>{versionBanner[2]}</TextTransition>
                             </Typography>
-                            <Typography size={uiStyle === 'compact' ? '.7rem' : '.8rem'} color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                            <Typography size={uiStyle === 'compact' ? '.7rem' : '.8rem'} color="$secondaryColor" weight={400} lineheight={1}>
                                 <TextTransition inline>
                                     {`${Util.getLoaderName(config?.loader?.type)} ${config?.loader?.game}`}
                                 </TextTransition>
@@ -387,13 +387,13 @@ export default Patcher.register(function InstancePage({ id }) {
                             View Website
                         </Button>
                         <Grid margin="4px 0 0" spacing={4} direction="vertical" justifyContent="center">
-                            <Typography color="$primaryColor" family="Nunito" lineheight={1}>
+                            <Typography lineheight={1}>
                                 {modpack.name}
                             </Typography>
-                            <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                            <Typography size=".8rem" color="$secondaryColor" weight={400} lineheight={1}>
                                 Downloaded from {Util.getPlatformName(config.modpack.source)}
                             </Typography>
-                            <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" margin="4px 0 0" lineheight={1}>
+                            <Typography size=".8rem" color="$secondaryColor" weight={400} margin="4px 0 0" lineheight={1}>
                                 {modpack.summary}
                             </Typography>
                         </Grid>
@@ -404,10 +404,10 @@ export default Patcher.register(function InstancePage({ id }) {
                 <InstanceInfo animate css={{ alignItems: 'start' }}>
                     <IconBiExclamationCircleFill size={24} color="var(--colors-primaryColor)"/>
                     <Grid spacing={4} direction="vertical">
-                        <Typography color="$primaryColor" family="Nunito" lineheight={1}>
+                        <Typography lineheight={1}>
                             Instance may not launch!
                         </Typography>
-                        <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" textalign="start" lineheight={1.2}>
+                        <Typography size=".8rem" color="$secondaryColor" weight={400} textalign="start" lineheight={1.2}>
                             '{config?.loader.type}' is an unknown loader, and does not have any version files.<br/>
                             Under normal circumstances, this instance will fail to launch.
                         </Typography>
@@ -421,10 +421,10 @@ export default Patcher.register(function InstancePage({ id }) {
                 <InstanceInfo animate css={{ alignItems: 'start' }}>
                     <IconBiExclamationCircleFill size={24} color="var(--colors-primaryColor)"/>
                     <Grid spacing={4} direction="vertical">
-                        <Typography color="$primaryColor" family="Nunito" lineheight={1}>
+                        <Typography lineheight={1}>
                             Unknown Loader
                         </Typography>
-                        <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" textalign="start" lineheight={1.2}>
+                        <Typography size=".8rem" color="$secondaryColor" weight={400} textalign="start" lineheight={1.2}>
                             '{config?.loader.type}' is an unknown and unsupported loader, and comes from an unknown source.<br/>
                             Be cautious when using unknown/unsupported loaders, anything can happen!
                         </Typography>
@@ -435,10 +435,10 @@ export default Patcher.register(function InstancePage({ id }) {
                 <InstanceInfo animate css={{ alignItems: 'start' }}>
                     <IconBiExclamationCircleFill size={24} color="var(--colors-primaryColor)"/>
                     <Grid spacing={4} direction="vertical">
-                        <Typography color="$primaryColor" family="Nunito" lineheight={1}>
+                        <Typography lineheight={1}>
                             {Util.getLoaderName(config?.loader?.type)} is unavailable
                         </Typography>
-                        <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" textalign="start" lineheight={1.2}>
+                        <Typography size=".8rem" color="$secondaryColor" weight={400} textalign="start" lineheight={1.2}>
                             This loader may have some issues and has been temporarily disabled.<br/>
                             Make sure to check for new mdpkm updates!
                         </Typography>
@@ -473,17 +473,17 @@ export default Patcher.register(function InstancePage({ id }) {
                             <IconBiExclamationCircleFill size={24} color="#ffffff80"/>
                         </Grid>}
                         <Grid spacing={4} direction="vertical" justifyContent="center">
-                            <Typography size="1rem" color="$primaryColor" family="Nunito" horizontal lineheight={1}>
+                            <Typography size="1rem" horizontal lineheight={1}>
                                 {Util.getLoaderName(config?.loader?.type) ?? `${config?.loader.type} (Unknown)`}
                                 {LoaderStates[config?.loader.type] &&
                                     <Tag margin="0 8px">
-                                        <Typography size="0.7rem" color="$tagColor" weight={600} family="Nunito">
+                                        <Typography size="0.7rem" color="$tagColor" weight={600}>
                                             {LoaderStates[config?.loader.type]}
                                         </Typography>
                                     </Tag>
                                 }
                             </Typography>
-                            <Typography size=".7rem" color="$secondaryColor" family="Nunito" lineheight={1}>
+                            <Typography size=".7rem" color="$secondaryColor" lineheight={1}>
                                 {config?.loader.game}{config?.loader.version && `-${config?.loader.version}`}
                             </Typography>
                         </Grid>
@@ -492,7 +492,7 @@ export default Patcher.register(function InstancePage({ id }) {
                             position: 'absolute'
                         }}>
                             <Button theme="accent" onClick={() => setEditingLoader(true)}>
-                                <IconBiPencilFill style={{fontSize: 10}}/>
+                                <IconBiPencilFill style={{fontSize: 11}}/>
                                 {t('app.mdpkm.common:actions.edit')}
                             </Button>
                         </Grid>
@@ -560,23 +560,23 @@ export default Patcher.register(function InstancePage({ id }) {
                     <Grid padding={8} justifyContent="space-between" css={{
                         borderBottom: '1px solid $secondaryBorder'
                     }}>
-                        <Typography color="$primaryColor" family="Nunito">
+                        <Typography>
                             {t('app.mdpkm.instance_page.tabs.settings.title')}
                         </Typography>
                         <Button theme="accent" onClick={saveSettings} disabled={saving}>
-                            {saving ? <BasicSpinner size={16}/> : <IconBiPencilFill style={{fontSize: 10}}/>}
+                            {saving ? <BasicSpinner size={16}/> : <IconBiPencilFill style={{fontSize: 11}}/>}
                             {t('app.mdpkm.common:actions.save_changes')}
                         </Button>
                     </Grid>
                     <Grid padding=".6rem .8rem" spacing={16} direction="vertical">
                         <Grid spacing={4} direction="vertical">
-                            <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                            <Typography size=".9rem" color="$secondaryColor">
                                 {t('app.mdpkm.instance_page.tabs.settings.instance_name')}
                             </Typography>
                             <TextInput value={instanceName} onChange={setInstanceName}/>
                         </Grid>
                         <Grid spacing={4} direction="vertical">
-                            <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                            <Typography size=".9rem" color="$secondaryColor">
                                 {t('app.mdpkm.instance_page.tabs.settings.memory_alloc', {
                                     val: instanceRam.toLocaleString('en', { minimumFractionDigits: 1 })
                                 })}
@@ -590,12 +590,12 @@ export default Patcher.register(function InstancePage({ id }) {
                             />
                         </Grid>
                         <Grid spacing={4} direction="vertical">
-                            <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                            <Typography size=".9rem" color="$secondaryColor">
                                 {t('app.mdpkm.instance_page.tabs.settings.resolution')}
                             </Typography>
                             <Grid spacing={8}>
                                 <Grid direction="vertical">
-                                    <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                    <Typography size=".8rem" color="$secondaryColor">
                                         {t('app.mdpkm.instance_page.tabs.settings.resolution.width')}
                                     </Typography>
                                     <TextInput
@@ -608,7 +608,7 @@ export default Patcher.register(function InstancePage({ id }) {
                                     />
                                 </Grid>
                                 <Grid direction="vertical">
-                                    <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                    <Typography size=".8rem" color="$secondaryColor">
                                         {t('app.mdpkm.instance_page.tabs.settings.resolution.height')}
                                     </Typography>
                                     <TextInput
@@ -623,13 +623,13 @@ export default Patcher.register(function InstancePage({ id }) {
                             </Grid>
                         </Grid>
                         <Grid width="fit-content" spacing={4} direction="vertical">
-                            <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                            <Typography size=".9rem" color="$secondaryColor">
                                 {t('app.mdpkm.instance_page.tabs.settings.delete')}
                             </Typography>
                             <Dialog.Root>
                                 <Dialog.Trigger asChild>
                                     <Button theme="secondary" disabled={saving}>
-                                        <IconBiTrash3Fill/>
+                                        <IconBiTrash3Fill style={{fontSize: 11}}/>
                                         {t('app.mdpkm.common:actions.delete')}
                                     </Button>
                                 </Dialog.Trigger>

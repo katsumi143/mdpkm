@@ -158,7 +158,7 @@ export default Patcher.register(function SkinManagement() {
         <Grid height="100%">
             <Grid padding="0 0 2rem" direction="vertical" alignItems="center" justifyContent="space-between">
                 <Grid spacing="1rem" direction="vertical" alignItems="center">
-                    <Typography color="$primaryColor" family="Nunito">
+                    <Typography>
                         {t('app.mdpkm.skin_management.current.header')}
                     </Typography>
                     {!loading && current ? <SkinFrame
@@ -182,7 +182,7 @@ export default Patcher.register(function SkinManagement() {
             </Grid>
             <Divider width={1} height="100%"/>
             <Grid width="100%" height="100%" direction="vertical" alignItems="center">
-                <Typography color="$primaryColor" family="Nunito" margin="0 0 1rem">
+                <Typography margin="0 0 1rem">
                     {t('app.mdpkm.skin_management.library.header')}
                 </Typography>
                 {skins.length > 0 ? <Grid spacing={8} css={{
@@ -194,7 +194,7 @@ export default Patcher.register(function SkinManagement() {
                         <Skin key={key} data={skin} capes={capes} index={key} useSkin={useSkin} editSkin={editSkin} loading={loading || setting} current={current}/>
                     )}
                 </Grid> : <React.Fragment>
-                    <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
+                    <Typography size="1.2rem" family="$primaryFontSans">
                         {t('app.mdpkm.common:headers.empty_list')}
                     </Typography>
                     <Markdown text={t('app.mdpkm.skin_management.library.empty')} css={{
@@ -367,7 +367,7 @@ function Skin({ data, capes, index, useSkin, editSkin, loading, current }) {
     return <Grid padding={8} spacing={4} direction="vertical" alignItems="center" background="$primaryBackground" borderRadius="8px" justifyContent="space-between" css={{
         border: '$secondaryBorder solid 1px'
     }}>
-        <Typography color="$primaryColor" family="Nunito">
+        <Typography>
             {data.name}
         </Typography>
         {loading ? <Grid width={100} height={128} alignItems="center" justifyContent="center">
@@ -387,7 +387,7 @@ function Skin({ data, capes, index, useSkin, editSkin, loading, current }) {
                 {t('app.mdpkm.common:actions.use')}
             </Button>
             <Button size="smaller" theme="secondary" onClick={() => editSkin(index)} disabled={loading}>
-                <IconBiPencilFill style={{fontSize: 10}}/>
+                <IconBiPencilFill style={{fontSize: 11}}/>
                 {t('app.mdpkm.common:actions.edit')}
             </Button>
         </Grid>

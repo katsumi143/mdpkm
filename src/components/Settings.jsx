@@ -162,13 +162,13 @@ export default Patcher.register(function Settings() {
                                         setSetting('instances.showBanner', !showInstanceBanner)
                                     }
                                 />
-                                <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                <Typography size=".8rem" color="$secondaryColor">
                                     {t(`app.mdpkm.common:labels.toggle_${showInstanceBanner}`)}
                                 </Typography>
                             </Setting>
                             <Setting name="instances.defaultResolution" direction="horizontal">
                                 <Grid direction="vertical">
-                                    <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                    <Typography size=".8rem" color="$secondaryColor">
                                         {t('app.mdpkm.instance_page.tabs.settings.resolution.width')}
                                     </Typography>
                                     <TextInput
@@ -182,7 +182,7 @@ export default Patcher.register(function Settings() {
                                     />
                                 </Grid>
                                 <Grid direction="vertical">
-                                    <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                    <Typography size=".8rem" color="$secondaryColor">
                                         {t('app.mdpkm.instance_page.tabs.settings.resolution.height')}
                                     </Typography>
                                     <TextInput
@@ -204,7 +204,7 @@ export default Patcher.register(function Settings() {
                                         setSetting('instances.modSearchPopout', !modSearchPopout)
                                     }
                                 />
-                                <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                <Typography size=".8rem" color="$secondaryColor">
                                     {t(`app.mdpkm.common:labels.toggle_${modSearchPopout}`)}
                                 </Typography>
                             </Setting>
@@ -216,7 +216,7 @@ export default Patcher.register(function Settings() {
                                         setSetting('instances.modSearchSummaries', !modSearchSummaries)
                                     }
                                 />
-                                <Typography size=".8rem" color="$secondaryColor" family="Nunito">
+                                <Typography size=".8rem" color="$secondaryColor">
                                     {t(`app.mdpkm.common:labels.toggle_${modSearchSummaries}`)}
                                 </Typography>
                             </Setting>
@@ -248,10 +248,10 @@ export default Patcher.register(function Settings() {
                                 }}>
                                     <Image src={plugin.icon} size={48}/>
                                     <Grid spacing={2} direction="vertical">
-                                        <Typography color="$primaryColor" family="Nunito" lineheight={1}>
+                                        <Typography lineheight={1}>
                                             {t(`app.mdpkm.plugin.${plugin.id}:name`)}
                                         </Typography>
-                                        <Typography size=".8rem" color="$secondaryColor" family="Nunito" lineheight={1}>
+                                        <Typography size=".8rem" color="$secondaryColor" lineheight={1}>
                                             {plugin.id} {plugin.version}
                                         </Typography>
                                     </Grid>
@@ -260,7 +260,7 @@ export default Patcher.register(function Settings() {
                                         position: 'absolute'
                                     }}>
                                         {pluginLoaders.length > 0 &&
-                                            <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" spacing={8} horizontal>
+                                            <Typography size=".8rem" color="$secondaryColor" weight={400} spacing={8} horizontal>
                                                 {pluginLoaders.map(({ icon }, key) =>
                                                     <Image key={key} src={icon} size={20} background="$primaryBackground" borderRadius={4}/>
                                                 )}
@@ -288,7 +288,7 @@ export default Patcher.register(function Settings() {
 
                         <Header spacious>{t('app.mdpkm.settings.storage')}</Header>
                         <Grid spacing={8} padding="0 1rem" direction="vertical">
-                            <Typography size=".9rem" color="$primaryColor" family="Nunito">
+                            <Typography size=".9rem">
                                 {t('app.mdpkm.settings.storage.clean_header', {
                                     appName
                                 })}
@@ -312,10 +312,10 @@ export default Patcher.register(function Settings() {
                                     position: 'fixed'
                                 }}>
                                     <Grid width="40%" height="fit-content" padding="1rem" spacing={4} direction="vertical" background="$secondaryBackground" borderRadius={8}>
-                                        <Typography size="1.1rem" color="$primaryColor" weight={600} family="Nunito Sans" lineheight={1}>
+                                        <Typography size="1.1rem" weight={600} family="$primaryFontSans" lineheight={1}>
                                             Cleaning {appName} Installation
                                         </Typography>
-                                        <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                                        <Typography size=".8rem" color="$secondaryColor" weight={400} lineheight={1}>
                                             Do not close the application!
                                         </Typography>
                                     </Grid>
@@ -328,10 +328,10 @@ export default Patcher.register(function Settings() {
                             <Grid spacing={8} alignItems="center">
                                 <Image src="img/icons/brand_default.svg" size={48}/>
                                 <Grid spacing={2} direction="vertical">
-                                    <Typography color="$primaryColor" family="Nunito" lineheight={1}>
+                                    <Typography lineheight={1}>
                                         {appName} v{appVersion}
                                     </Typography>
-                                    <Typography size=".7rem" color="$secondaryColor" family="Nunito" lineheight={1}>
+                                    <Typography size=".7rem" color="$secondaryColor" lineheight={1}>
                                         {t('app.mdpkm.settings.about.tauri', {
                                             val: tauriVersion
                                         })} & voxura {VOXURA_VERSION}
@@ -367,11 +367,11 @@ function Setting({ name, children, direction, noSummary }) {
         marginBottom: 8
     }}>
         <Grid spacing={4} padding=".5rem .6rem" direction="vertical">
-            <Typography color="$primaryColor" family="Nunito" lineheight={1}>
+            <Typography lineheight={1}>
                 {t(stringBase)}
             </Typography>
             {!noSummary &&
-                <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1.2} whitespace="pre-wrap" textalign="start">
+                <Typography size=".8rem" color="$secondaryColor" weight={400} lineheight={1.2} whitespace="pre-wrap" textalign="start">
                     {t(`${stringBase}.summary`)}
                 </Typography>
             }

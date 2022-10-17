@@ -30,7 +30,7 @@ export default function Header(props) {
                 <ImageTransition src={account.getAvatarUrl(AvatarType.Minecraft)} size={24} borderRadius={8} css={{
                     backgroundColor: '$primaryBackground'
                 }}/>
-                <Typography size=".75rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                <Typography size=".75rem" color="$secondaryColor" weight={400} lineheight={1}>
                     {account.name}
                 </Typography>
             </Tag>}

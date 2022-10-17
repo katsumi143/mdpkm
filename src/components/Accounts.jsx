@@ -56,16 +56,16 @@ export default Patcher.register(function Settings() {
             <Header>{t('app.mdpkm.accounts.header')}</Header>
             <Grid spacing={8} padding="0 1rem" direction="vertical">
                 <Image src="img/banners/microsoft.svg" width={112} height={24} margin="0 0 8px"/>
-                {!current && <Typography size=".8rem" color="$secondaryColor" family="Nunito" whitespace="pre">
+                {!current && <Typography size=".8rem" color="$secondaryColor" whitespace="pre">
                     {t('app.mdpkm.accounts.select_account')}
                 </Typography>}
                 <Grid spacing={8} direction="vertical">
                     {accounts.map((account, key) =>
                         <Grid key={key} width="40%" padding={8} spacing={8} alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
                             <Image src={account.getAvatarUrl(AvatarType.Xbox)} size={32} borderRadius={16}/>
-                            <Typography color="$primaryColor" family="Nunito">
+                            <Typography>
                                 {account.xboxName}
-                                <Typography size=".75rem" color="$secondaryColor" family="Nunito Sans" lineheight={1}>
+                                <Typography size=".75rem" color="$secondaryColor" family="$primaryFontSans" lineheight={1}>
                                     {account.name}
                                 </Typography>
                             </Typography>
@@ -118,13 +118,13 @@ export default Patcher.register(function Settings() {
                         position: 'relative'
                     }}>
                         <Header>Account Error</Header>
-                        {error == 'NOT_OWNED' && <Typography color="$primaryColor">
+                        {error == 'NOT_OWNED' && <Typography>
                             You do not own Minecraft: Java Edition.<br/>
                             <Typography size=".9rem" color="$secondaryColor">
                                 Xbox Game Pass is unsupported.
                             </Typography>
                         </Typography>}
-                        {error == 'NETWORK_ERR' && <Typography color="$primaryColor">
+                        {error == 'NETWORK_ERR' && <Typography>
                             A network error occured.<br/>
                             <Typography size=".9rem" color="$secondaryColor">
                                 Check your internet connection, you might be offline.

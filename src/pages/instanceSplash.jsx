@@ -47,9 +47,8 @@ export default Patcher.register(function InstanceSplash() {
                 />
                 <Typography
                     size="1.1rem"
-                    color="$primaryColor"
                     margin=".6rem 0 0"
-                    family="Nunito Sans"
+                    family="$primaryFontSans"
                 >
                     Launching Instance
                 </Typography>
@@ -57,7 +56,6 @@ export default Patcher.register(function InstanceSplash() {
                     size=".9rem"
                     color="$secondaryColor"
                     weight={400}
-                    family="Nunito"
                 >
                     {name ?? "Unknown"}
                 </Typography>
@@ -67,7 +65,7 @@ export default Patcher.register(function InstanceSplash() {
                     position: "absolute"
                 }}>
                     <Spinner size={24}/>
-                    <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito">
+                    <Typography size=".9rem" color="$secondaryColor" weight={400}>
                         {text}
                     </Typography>
                 </Grid>

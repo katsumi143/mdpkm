@@ -49,10 +49,10 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                         imageRendering: 'pixelated'
                     }}/>
                     <Grid margin="0 0 0 4px" spacing={2} direction="vertical">
-                        <Typography size={embedded ? '.9rem' : isCompact ? 14 : '1rem'} color="$primaryColor" weight={400} family="Nunito" lineheight={1}>
+                        <Typography size={embedded ? '.9rem' : isCompact ? 14 : '1rem'} weight={400} lineheight={1}>
                             {mod.name ?? mod.id}
                         </Typography>
-                        <Typography size={embedded ? '.6rem' : isCompact ? 10 : '.7rem'} color="$secondaryColor" weight={300} family="Nunito" lineheight={1}>
+                        <Typography size={embedded ? '.6rem' : isCompact ? 10 : '.7rem'} color="$secondaryColor" weight={300} lineheight={1}>
                             {t('app.mdpkm.mod.version', {
                                 val: mod.version
                             })}
@@ -65,7 +65,7 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                     }}>
                         {embedded &&
                             <Tag>
-                                <Typography size={tagSize} color="$tagColor" family="Nunito">
+                                <Typography size={tagSize} color="$tagColor">
                                     {t('app.mdpkm.mod.tags.embedded')}
                                 </Typography>
                             </Tag>
@@ -73,7 +73,7 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                         <Breakpoint customQuery="(min-width: 820px)">
                             <Tag>
                                 {sourceApi?.icon && <Image src={sourceApi?.icon} size={12} borderRadius={4}/>}
-                                <Typography size={tagSize} color="$tagColor" family="Nunito">
+                                <Typography size={tagSize} color="$tagColor">
                                     {Util.getPlatformName(mod.source)}
                                 </Typography>
                             </Tag>
@@ -81,7 +81,7 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                         <Breakpoint customQuery="(min-width: 690px)">
                             {!update && <Tag>
                                 {loaderData?.icon && <Image src={loaderData?.icon} size={12}/>}
-                                <Typography size={tagSize} color="$tagColor" family="Nunito">
+                                <Typography size={tagSize} color="$tagColor">
                                     {Util.getLoaderName(mod?.loader)?.split(" ")?.[0]} {mod.gameVersion}
                                 </Typography>
                             </Tag>}
@@ -99,7 +99,7 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                     </Grid>
                 </Grid>
                 {mod.embedded?.length > 0 &&
-                    <Typography size={isCompact ? 10 : '.8rem'} color="$secondaryColor" family="Nunito" horizontal onClick={() => toggleEmbedded()} lineheight={1} css={{
+                    <Typography size={isCompact ? 10 : '.8rem'} color="$secondaryColor" horizontal onClick={() => toggleEmbedded()} lineheight={1} css={{
                         width: 'fit-content',
                         cursor: 'pointer'
                     }}>
@@ -129,7 +129,7 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                             imageRendering: 'pixelated'
                         }}/>
                         <Grid spacing={2} direction="vertical">
-                            <Typography size="1.1rem" color="$primaryColor" lineheight={1}>
+                            <Typography size="1.1rem" lineheight={1}>
                                 {mod.name}
                             </Typography>
                             <Typography size={12} color="$secondaryColor" lineheight={1}>
@@ -138,7 +138,7 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                         </Grid>
                     </Grid>
                     <Grid margin="8px 0 0" padding={8} direction="vertical" background="$secondaryBackground2" borderRadius={8}>
-                        <Typography color="$primaryColor">
+                        <Typography>
                             Summary
                         </Typography>
                         <Typography size={12} color="$secondaryColor">

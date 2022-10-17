@@ -53,7 +53,7 @@ export default Patcher.register(function ModpackSearch({ css, loading, setLoadin
             <Grid justifyContent="space-between">
                 <Grid>
                     <Grid spacing={4} direction="vertical">
-                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                        <Typography size=".9rem" color="$secondaryColor">
                             {t('app.mdpkm.common:labels.search_query')}
                         </Typography>
                         <TextInput value={query} onChange={setQuery}>
@@ -66,7 +66,7 @@ export default Patcher.register(function ModpackSearch({ css, loading, setLoadin
                 </Grid>
                 <Grid>
                     <Grid spacing={4} direction="vertical">
-                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                        <Typography size=".9rem" color="$secondaryColor">
                             {t('app.mdpkm.common:labels.platform')}
                         </Typography>
                         <Select.Root value={api} onChange={setAPI} disabled={searching}>
@@ -79,7 +79,7 @@ export default Patcher.register(function ModpackSearch({ css, loading, setLoadin
                                 )}
                             </Select.Group>
                         </Select.Root>
-                        {API.get(api)?.announcement && <Typography size=".6rem" color="$secondaryColor" family="Nunito" whitespace="nowrap">
+                        {API.get(api)?.announcement && <Typography size=".6rem" color="$secondaryColor" whitespace="nowrap">
                             {API.get(api).announcement}
                         </Typography>}
                     </Grid>
@@ -97,10 +97,10 @@ export default Patcher.register(function ModpackSearch({ css, loading, setLoadin
                     />
                 )}
                 <Grid direction="vertical">
-                    <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
+                    <Typography size="1.2rem" family="$primaryFontSans">
                         {t('app.mdpkm.common:headers.empty_list')}
                     </Typography>
-                    <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                    <Typography size=".9rem" color="$secondaryColor" weight={400} lineheight={1}>
                         {t('app.mdpkm.common:headers.search_retry')}
                     </Typography>
                 </Grid>

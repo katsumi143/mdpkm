@@ -49,7 +49,7 @@ export default Patcher.register(function Modpack({ id, api, data, loading, featu
                     }
                 }}/>
                 <Grid margin="4px 0 0 12px" padding="2px 0" spacing={2} direction="vertical">
-                    <Typography size="1.1rem" color="$primaryColor" family="Nunito" horizontal lineheight={1} css={{
+                    <Typography size="1.1rem" horizontal lineheight={1} css={{
                         width: 'fit-content'
                     }}>
                         {modpack.title}
@@ -69,7 +69,7 @@ export default Patcher.register(function Modpack({ id, api, data, loading, featu
                             </Typography>
                         }
                     </Typography>
-                    <Typography size=".9rem" color="$secondaryColor" family="Nunito" textalign="left">
+                    <Typography size=".9rem" color="$secondaryColor" textalign="left">
                         {modpack.summary}
                     </Typography>
                 </Grid>
@@ -78,9 +78,9 @@ export default Patcher.register(function Modpack({ id, api, data, loading, featu
                     position: 'absolute'
                 }}>
                     {typeof modpack.downloads === 'number' &&
-                        <Typography color="$primaryColor" margin="0 8px 0 0" family="Nunito" horizontal>
+                        <Typography margin="0 8px 0 0" horizontal>
                             {Intl.NumberFormat('en-us', {}).format(modpack.downloads)}
-                            <Typography size=".8rem" text="Downloads" color="$secondaryColor" family="Nunito" margin="0 0 0 4px"/>
+                            <Typography size=".8rem" text="Downloads" color="$secondaryColor" margin="0 0 0 4px"/>
                         </Typography>
                     }
                     {modpack.website_url &&

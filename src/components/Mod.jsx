@@ -47,11 +47,11 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
             {mod ? mod.startsWith?.('error') ? <Grid width="100%" spacing={12} padding={4} css={{ position: 'relative' }}>
                 <IconBiXLg size={24} color="var(--colors-secondaryColor)"/>
                 <Grid width="100%" spacing={2} direction="vertical" justifyContent="center">
-                    <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                    <Typography size=".9rem" lineheight={1}>
                         {mod.split(':')[1]}
                     </Typography>
                     {id && api &&
-                        <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                        <Typography size=".7rem" color="$secondaryColor" weight={400} lineheight={1}>
                             {id} on {t(`app.mdpkm.common:platforms.${api}`)}.
                         </Typography>
                     }
@@ -76,7 +76,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                     }
                 }}/>
                 <Grid margin="4px 0 0 12px" padding="2px 0" spacing="2px" direction="vertical">
-                    <Typography size={isCompact ? 14 : '1.1rem'} color="$primaryColor" family="Nunito" spacing={4} horizontal lineheight={1} css={{
+                    <Typography size={isCompact ? 14 : '1.1rem'} spacing={4} horizontal lineheight={1} css={{
                         width: 'fit-content'
                     }}>
                         {mod.title}
@@ -96,10 +96,10 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                             </Typography>
                         }
                     </Typography>
-                    {!isCompact && <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                    {!isCompact && <Typography size=".8rem" color="$secondaryColor" weight={400} lineheight={1}>
                         {t(`app.mdpkm.mod.sides.${mod.getSide()}`)}
                     </Typography>}
-                    {showSummary && <Typography size={isCompact ? 12 : '.9rem'} color="$secondaryColor" family="Nunito" textalign="left" whitespace="pre-wrap">
+                    {showSummary && <Typography size={isCompact ? 12 : '.9rem'} color="$secondaryColor" textalign="left" whitespace="pre-wrap">
                         {mod.summary}
                     </Typography>}
                 </Grid>
@@ -108,9 +108,9 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                     position: 'absolute'
                 }}>
                     {typeof mod.downloads === 'number' &&
-                        <Typography size={isCompact ? 12 : 16} color="$primaryColor" margin="0 8px 0 0" family="Nunito" spacing={4} horizontal>
+                        <Typography size={isCompact ? 12 : 16} margin="0 8px 0 0" spacing={4} horizontal>
                             {Intl.NumberFormat('en-us', {}).format(mod.downloads)}
-                            <Typography size={isCompact ? 10 : '.8rem'} color="$secondaryColor" family="Nunito">
+                            <Typography size={isCompact ? 10 : '.8rem'} color="$secondaryColor">
                                 {t('app.mdpkm.mod.downloads')}
                             </Typography>
                         </Typography>
@@ -135,11 +135,11 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
             </React.Fragment> : <Grid spacing={12} padding={4}>
                 <Spinner/>
                 <Grid spacing={2} direction="vertical" justifyContent="center">
-                    <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                    <Typography size=".9rem" lineheight={1}>
                         {t('app.mdpkm.common:states.loading')}
                     </Typography>
                     {id && api &&
-                        <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                        <Typography size=".7rem" color="$secondaryColor" weight={400} lineheight={1}>
                             {t('app.mdpkm.mod.platform', {
                                 id,
                                 name: t(`app.mdpkm.common:platforms.${api}`)

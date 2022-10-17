@@ -72,7 +72,7 @@ export default Patcher.register(function InstanceExport({ instanceId }) {
     useEffect(() => setItems(), [instanceId]);
     return <React.Fragment>
         <Grid width="fit-content" spacing={4} direction="vertical">
-            <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+            <Typography size=".9rem" color="$secondaryColor">
                 {t('app.mdpkm.export_instance.title')}
             </Typography>
             <Grid spacing={8}>
@@ -92,7 +92,7 @@ export default Patcher.register(function InstanceExport({ instanceId }) {
         </Grid>
         <Divider width="100%" height={1}/>
         <Grid justifyContent="space-between">
-            <Typography size=".9rem" color="$secondaryColor" family="Nunito" lineheight={1}>
+            <Typography size=".9rem" color="$secondaryColor" lineheight={1}>
                 {t('app.mdpkm.export_instance.files.title')}
             </Typography>
             <Button theme="secondary" onClick={() => setItems()} disabled={items === 'loading'}>
@@ -117,7 +117,7 @@ export default Patcher.register(function InstanceExport({ instanceId }) {
                     '\\.jpg$': FiletypeJpg,
                     '\\.svg$': FiletypeSvg,
                     '\\.json$': FiletypeJson,
-                }).find(([reg]) => new RegExp(reg).test(name))?.[1] ?? (isDir ? FolderFill : FileText);
+                }).find(([reg]) => new RegExp(reg).test(name))?.[1] ?? (isDir ? FolderFill : IconBiFileText);
                 return <React.Fragment key={index}>
                     <Grid spacing={8} padding="4px 8px" alignItems="center">
                         <Toggle size="small" value={selected} disabled={banned} onChange={event => {
@@ -129,12 +129,12 @@ export default Patcher.register(function InstanceExport({ instanceId }) {
                             setItems(items);
                         }}/>
                         <Icon color={banned ? 'var(--colors-secondaryColor)' : 'var(--colors-primaryColor)'} style={{fontSize: 14}}/>
-                        <Typography color={banned ? '$secondaryColor' : '$primaryColor'} family="Nunito" horizontal>
+                        <Typography color={banned ? '$secondaryColor' : '$primaryColor'} horizontal>
                             {name}
-                            {banned && <Typography size=".7rem" color="$secondaryColor" weight={400} margin="0 0 0 8px" family="Nunito" lineheight={1}>
+                            {banned && <Typography size=".7rem" color="$secondaryColor" weight={400} margin="0 0 0 8px" lineheight={1}>
                                 {t('app.mdpkm.export_instance.files.banned')}
                             </Typography>}
-                            {sensitive && <Typography size=".7rem" color="$secondaryColor" weight={400} margin="0 0 0 8px" family="Nunito" lineheight={1}>
+                            {sensitive && <Typography size=".7rem" color="$secondaryColor" weight={400} margin="0 0 0 8px" lineheight={1}>
                                 {t('app.mdpkm.export_instance.files.sensitive')}
                             </Typography>}
                         </Typography>

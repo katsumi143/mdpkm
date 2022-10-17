@@ -72,10 +72,10 @@ export default Patcher.register(function ResourcePackManagement({ instanceId }) 
     return <React.Fragment>
         <Grid margin="4px 0" spacing={8} justifyContent="space-between">
             <Grid direction="vertical">
-                <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                <Typography size=".9rem" lineheight={1}>
                     {t('app.mdpkm.resourcepack_management.title')}
                 </Typography>
-                <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito">
+                <Typography size=".7rem" color="$secondaryColor" weight={400}>
                     <TextTransition inline>
                         {items === 'loading' || !items ?
                             t('app.mdpkm.common:states.loading') :
@@ -120,10 +120,10 @@ export default Patcher.register(function ResourcePackManagement({ instanceId }) 
                     }}
                 />
                 <Grid spacing={4} direction="vertical">
-                    <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                    <Typography size=".9rem" lineheight={1}>
                         {item.name}
                     </Typography>
-                    <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                    <Typography size=".8rem" color="$secondaryColor" weight={400} lineheight={1}>
                         {item.metadata.pack?.description}
                     </Typography>
                 </Grid>
@@ -132,7 +132,7 @@ export default Patcher.register(function ResourcePackManagement({ instanceId }) 
                     position: 'absolute'
                 }}>
                     <Button theme="secondary" disabled>
-                        <IconBiTrash3Fill/>
+                        <IconBiTrash3Fill style={{fontSize: 11}}/>
                         {t('app.mdpkm.common:actions.delete')}
                     </Button>
                 </Grid>

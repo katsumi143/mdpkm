@@ -104,10 +104,10 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
             <Grid width="100%" padding="1rem 0" spacing={8} direction="vertical" alignItems="center" css={{
                 borderBottom: '1px solid $tagBorder'
             }}>
-                <Typography size="1.2rem" color="$primaryColor" family="Raleway" lineheight={1}>
+                <Typography size="1.2rem" family="Raleway" lineheight={1}>
                     {t('app.mdpkm.common:headers.adding_instance')}
                 </Typography>
-                <Typography size=".9rem" color="$secondaryColor" family="Nunito" lineheight={1}>
+                <Typography size=".9rem" color="$secondaryColor" lineheight={1}>
                     {t('app.mdpkm.import_instance.title')}
                 </Typography>
             </Grid>
@@ -127,10 +127,10 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
                             }
                         }}/>
                         <Grid spacing={4} direction="vertical" justifyContent="center">
-                            <Typography size="1.1rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                            <Typography size="1.1rem" lineheight={1}>
                                 {data.name}
                             </Typography>
-                            <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                            <Typography size=".8rem" color="$secondaryColor" weight={400} lineheight={1}>
                                 {!data.config.loader && "Couldn't read config.json"}{t(`app.mdpkm.common:loaders.${data.config.loader?.type}`)} {data.config.loader?.version} {data.config.loader?.game}
                             </Typography>
                         </Grid>
@@ -138,7 +138,7 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
                     {sourceImg && <Image src={sourceImg} size="3rem" width="10rem"/>}
                 </Grid>
                 {!epath && <Grid spacing={4} direction="vertical">
-                    <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                    <Typography size=".9rem" color="$secondaryColor">
                         {t('app.mdpkm.import_instance.select_file')}
                     </Typography>
                     <TextInput
@@ -156,7 +156,7 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
                 </Grid>}
                 {data && <React.Fragment>
                     <Grid spacing={4} direction="vertical">
-                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                        <Typography size=".9rem" color="$secondaryColor">
                             {t('app.mdpkm.import_instance.name_instance')}
                         </Typography>
                         <TextInput
@@ -167,7 +167,7 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
                         />
                     </Grid>
                     <Grid spacing={4} direction="vertical" css={{ width: 320 }}>
-                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                        <Typography size=".9rem" color="$secondaryColor">
                             {t('app.mdpkm.import_instance.inherit_config')}
                         </Typography>
                         <Select.Root value={inherit} onChange={setInherit} disabled={!!importState}>
@@ -190,7 +190,7 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
                 borderTop: `1px solid $tagBorder`
             }}>
                 {importState ?
-                    <Typography size="1.1rem" color="$primaryColor" weight={600} family="Nunito">
+                    <Typography size="1.1rem" weight={600}>
                         {importState}
                     </Typography>
                 :

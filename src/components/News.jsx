@@ -29,10 +29,10 @@ export default function News({ render, backButton }) {
                 <Grid width="100%" padding="1rem 0" spacing={4} direction="vertical" alignItems="center" css={{
                     borderBottom: '1px solid $tagBorder'
                 }}>
-                    <Typography size="1.4rem" color="$primaryColor" family="Raleway">
+                    <Typography size="1.4rem" family="Raleway">
                         Minecraft News
                     </Typography>
-                    <Typography color="$secondaryColor" family="Nunito">
+                    <Typography color="$secondaryColor">
                         {data.description}
                     </Typography>
                 </Grid>
@@ -41,15 +41,15 @@ export default function News({ render, backButton }) {
                         <Grid key={key} width="80%" padding={8} spacing="1rem" alignItems="center" background="$secondaryBackground" borderRadius={8} css={{ position: 'relative' }}>
                             <Image src={`https://minecraft.net${imageURL}`} size={64} borderRadius={4}/>
                             <Grid spacing={4} direction="vertical">
-                                <Typography size="1.2rem" color="$primaryColor" weight={600} family="Nunito" lineheight={1} css={{ gap: 8 }}>
+                                <Typography size="1.2rem" weight={600} lineheight={1} css={{ gap: 8 }}>
                                     {title}
                                     <Tag>
-                                        <Typography size=".6rem" color="$tagColor" family="Nunito">
+                                        <Typography size=".6rem" color="$tagColor">
                                             {primaryTag}
                                         </Typography>
                                     </Tag>
                                 </Typography>
-                                <Typography size=".95rem" color="$secondaryColor" family="Nunito" lineheight={1}>
+                                <Typography size=".95rem" color="$secondaryColor" lineheight={1}>
                                     {description}
                                 </Typography>
                             </Grid>
@@ -58,10 +58,10 @@ export default function News({ render, backButton }) {
                                 position: 'absolute'
                             }}>
                                 <Grid margin="0 8px" spacing={4} direction="vertical" alignItems="end">
-                                    <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                                    <Typography size=".9rem" lineheight={1}>
                                         Published
                                     </Typography>
-                                    <Typography size=".7rem" color="$secondaryColor" family="Nunito" lineheight={1}>
+                                    <Typography size=".7rem" color="$secondaryColor" lineheight={1}>
                                         {Util.formatDateBetween(new Date(pubDate), new Date(), 'x-ymhs-ago')}
                                     </Typography>
                                 </Grid>

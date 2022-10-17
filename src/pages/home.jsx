@@ -114,114 +114,114 @@ export default Patcher.register(function Home() {
     return (
         <App>
             <Header icon="/text.png"/>
-                <Main css={{
-                    padding: 0,
-                    overflow: 'hidden auto',
-                    flexDirection: 'row'
-                }}>
-                    {update &&
-                        <Modal>
-                            <Typography size="1.2rem" color="$primaryColor" weight={600} family="Nunito Sans">
-                                New Update Available
-                            </Typography>
-                            <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito">
-                                Version {update.version} - Released {new Date(update.date).getTime() ? new Intl.RelativeTimeFormat('en', {
-                                    numeric: 'always' 
-                                }).format(-Math.round((Date.now() - new Date(update.date)) / 86400000), 'day') : 'at an unknown date'}
-                            </Typography>
+            <Main css={{
+                padding: 0,
+                overflow: 'hidden auto',
+                flexDirection: 'row'
+            }}>
+                {update &&
+                    <Modal>
+                        <Typography size="1.2rem" weight={600} family="$primaryFontSans">
+                            New Update Available
+                        </Typography>
+                        <Typography size=".9rem" color="$secondaryColor" weight={400}>
+                            Version {update.version} - Released {new Date(update.date).getTime() ? new Intl.RelativeTimeFormat('en', {
+                                numeric: 'always' 
+                            }).format(-Math.round((Date.now() - new Date(update.date)) / 86400000), 'day') : 'at an unknown date'}
+                        </Typography>
 
-                            <Typography size=".9rem" color="$primaryColor" weight={400} margin="1rem 0 0" family="Nunito">
-                                Release notes:
-                            </Typography>
-                            <Markdown text={update.body} css={{
-                                padding: '.5rem .75rem',
-                                overflow: 'hidden auto',
-                                background: '$secondaryBackground2',
-                                borderRadius: 8
-                            }}/>
+                        <Typography size=".9rem" weight={400} margin="1rem 0 0">
+                            Release notes:
+                        </Typography>
+                        <Markdown text={update.body} css={{
+                            padding: '.5rem .75rem',
+                            overflow: 'hidden auto',
+                            background: '$secondaryBackground2',
+                            borderRadius: 8
+                        }}/>
 
-                            <Grid margin="2rem 0 0" justifyContent="space-between">
-                                <Grid spacing={8}>
-                                    <Button theme="accent" onClick={updateApp} disabled={update.updating}>
-                                        {update.updating ? <BasicSpinner size={16}/> : <Download size={14}/>}
-                                        Install Update
-                                    </Button>
-                                    <Button theme="secondary" onClick={() => setUpdate()} disabled={update.updating}>
-                                        <XLg/>
-                                        Later
-                                    </Button>
-                                </Grid>
-                                <Button theme="secondary" onClick={() => shell.open(`https://github.com/Blookerss/mdpkm/releases/tag/v${update.version}`)}>
-                                    <Github size={14}/>
-                                    View Release
+                        <Grid margin="2rem 0 0" justifyContent="space-between">
+                            <Grid spacing={8}>
+                                <Button theme="accent" onClick={updateApp} disabled={update.updating}>
+                                    {update.updating ? <BasicSpinner size={16}/> : <Download size={14}/>}
+                                    Install Update
+                                </Button>
+                                <Button theme="secondary" onClick={() => setUpdate()} disabled={update.updating}>
+                                    <XLg/>
+                                    Later
                                 </Button>
                             </Grid>
-                        </Modal>
-                    }
-                    <SideNavigation value={page} onChange={setPage}>
-                        <NavigationItem name={t('app.mdpkm.home.navigation.instances')} icon={<IconBiArchive size={16}/>} value={0} direction="horizontal">
-                            <Pages value={instancePage}>
-                                <PageItem value="home">
-                                    <Grid width="35%" height="100%" direction="vertical" background="$blackA2" justifyContent="space-between" css={{
-                                        maxWidth: '35%',
-                                        borderRight: '1px solid $secondaryBorder'
-                                    }}>
-                                        <InstanceList id={instance} onSelect={selectInstance}/>
-                                        <Grid width="100%" padding={16} background="$secondaryBackground" alignItems="center" justifyContent="center">
-                                            <Button onClick={() => setInstancePage('add-instance')}>
-                                                <IconBiPlusLg size={14}/>
-                                                {t('app.mdpkm.buttons.add_instance')}
-                                            </Button>
-                                        </Grid>
+                            <Button theme="secondary" onClick={() => shell.open(`https://github.com/Blookerss/mdpkm/releases/tag/v${update.version}`)}>
+                                <Github size={14}/>
+                                View Release
+                            </Button>
+                        </Grid>
+                    </Modal>
+                }
+                <SideNavigation value={page} onChange={setPage}>
+                    <NavigationItem name={t('app.mdpkm.home.navigation.instances')} icon={<IconBiArchive size={16}/>} value={0} direction="horizontal">
+                        <Pages value={instancePage}>
+                            <PageItem value="home">
+                                <Grid width="35%" height="100%" direction="vertical" background="$blackA2" justifyContent="space-between" css={{
+                                    maxWidth: '35%',
+                                    borderRight: '1px solid $secondaryBorder'
+                                }}>
+                                    <InstanceList id={instance} onSelect={selectInstance}/>
+                                    <Grid width="100%" padding={16} background="$secondaryBackground" alignItems="center" justifyContent="center">
+                                        <Button onClick={() => setInstancePage('add-instance')}>
+                                            <IconBiPlusLg size={14}/>
+                                            {t('app.mdpkm.buttons.add_instance')}
+                                        </Button>
                                     </Grid>
-                                    <InstancePage id={instance}/>
-                                </PageItem>
-                                <PageItem value="add-instance">
-                                    <SelectInstanceType
-                                        back={selectBackToHome}
-                                        types={API.instanceTypes}
-                                        loading={loading}
-                                        chooseLoader={chooseLoader}
-                                        importInstance={importInstance}
-                                    />
-                                </PageItem>
-                                <PageItem value="setup-loader">
-                                    <LoaderSetup
-                                        back={setupBackToSelect}
-                                        loader={settingUp}
-                                        install={installLoader}
-                                        versions={loaderVersions}
-                                    />
-                                </PageItem>
-                                <PageItem value="modpack-setup">
-                                    <ModpackSetup back={setupBackToSelect} importModpack={importModpack}/>
-                                </PageItem>
-                                <PageItem value="import">
-                                    <ImportInstance path={importPath} back={setupBackToSelect}/>
-                                </PageItem>
-                            </Pages>
-                        </NavigationItem>
-                        <NavigationItem name={t('app.mdpkm.home.navigation.skins')} icon={<IconBiPersonBadge size={16}/>} value={1}>
-                            <SkinManagement/>
-                        </NavigationItem>
-                        {/*<NavigationItem name={t('app.mdpkm.home.navigation.news')} icon={<Newspaper size={16}/>} value={2}>
-                            news
-                        </NavigationItem>*/}
-                        <NavigationItem name={t('app.mdpkm.home.navigation.accounts')} icon={<IconBiPerson size={16}/>} value={3} footer>
-                            <Accounts/>
-                        </NavigationItem>
-                        <NavigationItem name={t('app.mdpkm.home.navigation.settings')} icon={<IconBiGear size={16}/>} value={4} footer>
-                            <Settings/>
-                        </NavigationItem>
-                    </SideNavigation>
-                </Main>
-                <Toaster position="bottom-right" toastOptions={{
-                    style: {
-                        color: 'var(--colors-primaryColor)',
-                        fontSize: '.9rem',
-                        background: 'var(--colors-secondaryBackground)'
-                    }
-                }}/>
+                                </Grid>
+                                <InstancePage id={instance}/>
+                            </PageItem>
+                            <PageItem value="add-instance">
+                                <SelectInstanceType
+                                    back={selectBackToHome}
+                                    types={API.instanceTypes}
+                                    loading={loading}
+                                    chooseLoader={chooseLoader}
+                                    importInstance={importInstance}
+                                />
+                            </PageItem>
+                            <PageItem value="setup-loader">
+                                <LoaderSetup
+                                    back={setupBackToSelect}
+                                    loader={settingUp}
+                                    install={installLoader}
+                                    versions={loaderVersions}
+                                />
+                            </PageItem>
+                            <PageItem value="modpack-setup">
+                                <ModpackSetup back={setupBackToSelect} importModpack={importModpack}/>
+                            </PageItem>
+                            <PageItem value="import">
+                                <ImportInstance path={importPath} back={setupBackToSelect}/>
+                            </PageItem>
+                        </Pages>
+                    </NavigationItem>
+                    <NavigationItem name={t('app.mdpkm.home.navigation.skins')} icon={<IconBiPersonBadge size={16}/>} value={1}>
+                        <SkinManagement/>
+                    </NavigationItem>
+                    {/*<NavigationItem name={t('app.mdpkm.home.navigation.news')} icon={<Newspaper size={16}/>} value={2}>
+                        news
+                    </NavigationItem>*/}
+                    <NavigationItem name={t('app.mdpkm.home.navigation.accounts')} icon={<IconBiPerson size={16}/>} value={3} footer>
+                        <Accounts/>
+                    </NavigationItem>
+                    <NavigationItem name={t('app.mdpkm.home.navigation.settings')} icon={<IconBiGear size={16}/>} value={4} footer>
+                        <Settings/>
+                    </NavigationItem>
+                </SideNavigation>
+            </Main>
+            <Toaster position="bottom-right" toastOptions={{
+                style: {
+                    color: 'var(--colors-primaryColor)',
+                    fontSize: '.9rem',
+                    background: 'var(--colors-secondaryBackground)'
+                }
+            }}/>
         </App>
     );
 });

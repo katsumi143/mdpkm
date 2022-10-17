@@ -86,10 +86,10 @@ export default Patcher.register(function ServerManagement({ instanceId }) {
     return <React.Fragment>
         <Grid spacing={8} padding="4px 0" justifyContent="space-between">
             <Grid direction="vertical">
-                <Typography size=".9rem" color="$primaryColor" family="Nunito" lineheight={1}>
+                <Typography size=".9rem" lineheight={1}>
                     {t('app.mdpkm.server_management.title')}
                 </Typography>
-                <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito">
+                <Typography size=".7rem" color="$secondaryColor" weight={400}>
                     <TextTransition inline>
                         {items === 'loading' || !items ?
                             t('app.mdpkm.common:states.loading') :
@@ -135,7 +135,7 @@ export default Patcher.register(function ServerManagement({ instanceId }) {
         {addingServer && <Modal>
             <Header>
                 {t('app.mdpkm.server_management.adding.header')}
-                <Typography size=".7rem" color="$secondaryColor" weight={400} family="Nunito">
+                <Typography size=".7rem" color="$secondaryColor" weight={400}>
                     {t('app.mdpkm.server_management.adding.header_note')}
                 </Typography>
             </Header>

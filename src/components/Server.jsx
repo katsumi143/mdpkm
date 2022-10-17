@@ -34,10 +34,10 @@ export default Patcher.register(function Server({ name, icon, motd, type, player
                 }}
             />
             <Grid height="100%" spacing={isCompact ? 2 : 4} direction="vertical">
-                <Typography size={isCompact ? 14 : '.9rem'} color="$primaryColor" family="Nunito" margin="6px 0 0" horizontal lineheight={1} whitespace="nowrap">
+                <Typography size={isCompact ? 14 : '.9rem'} margin="6px 0 0" horizontal lineheight={1} whitespace="nowrap">
                     {name || t('app.mdpkm.server.default_name')}
                     {acceptTextures === 1 &&
-                        <Typography size={isCompact ? 10 : '.7rem'} color="$secondaryColor" weight={300} family="Nunito" margin="4px 0 0 8px" lineheight={1}>
+                        <Typography size={isCompact ? 10 : '.7rem'} color="$secondaryColor" weight={300} margin="4px 0 0 8px" lineheight={1}>
                             {t('app.mdpkm.server.textures_accepted')}
                         </Typography>
                     }
@@ -49,7 +49,7 @@ export default Patcher.register(function Server({ name, icon, motd, type, player
                         fontFamily: 'Nunito'
                     }}/>
                 :
-                    <Typography size={isCompact ? 12 : '.8rem'} color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                    <Typography size={isCompact ? 12 : '.8rem'} color="$secondaryColor" weight={400} lineheight={1}>
                         {address || t('app.mdpkm.server.no_address')}
                     </Typography>
                 }
@@ -57,23 +57,23 @@ export default Patcher.register(function Server({ name, icon, motd, type, player
         </Grid>
         <Grid spacing={8} alignItems="center">
             <Grid height="100%" spacing={4} padding={4} direction="vertical" alignItems="end">
-                {players && <Typography size=".8rem" color="$secondaryColor" family="Nunito" spacing={4} lineheight={1}>
+                {players && <Typography size=".8rem" color="$secondaryColor" spacing={4} lineheight={1}>
                     {t('app.mdpkm.server.players', {
                         val: players.online,
                         max: players.max
                     })}
                 </Typography>}
-                {type && <Typography size=".8rem" color="$secondaryColor" family="Nunito" spacing={4} lineheight={1}>
+                {type && <Typography size=".8rem" color="$secondaryColor" spacing={4} lineheight={1}>
                     {type}
                 </Typography>}
             </Grid>
             {instanceId && <React.Fragment>
                 <Button theme="secondary" disabled>
-                    <PencilFill/>
+                    <IconBiPencilFill style={{fontSize: 11}}/>
                     {t('app.mdpkm.common:actions.edit')}
                 </Button>
                 <Button theme="secondary" disabled>
-                    <Trash3Fill/>
+                    <IconBiTrash3Fill style={{fontSize: 11}}/>
                     {t('app.mdpkm.common:actions.delete')}
                 </Button>
             </React.Fragment>}

@@ -90,7 +90,7 @@ export default Patcher.register(function ModSearch({ instanceId }) {
         <Grid width="100%" height="100%" spacing={8} direction="vertical" css={{ overflow: 'hidden' }}>
             <Grid width="100%" spacing={8} justifyContent="space-between">
                 <Grid width="100%" spacing={4} direction="vertical">
-                    <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                    <Typography size=".9rem" color="$secondaryColor">
                         {t('app.mdpkm.common:labels.search_query')}
                     </Typography>
                     <TextInput width="100%" value={query} onChange={setQuery}>
@@ -102,7 +102,7 @@ export default Patcher.register(function ModSearch({ instanceId }) {
                 </Grid>
                 <Grid spacing={8}>
                     <Grid spacing={4} direction="vertical">
-                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                        <Typography size=".9rem" color="$secondaryColor">
                             {t('app.mdpkm.common:labels.category')}
                         </Typography>
                         <Select.Root value={category} onChange={setCategory} disabled={searching}>
@@ -124,7 +124,7 @@ export default Patcher.register(function ModSearch({ instanceId }) {
                         </Select.Root>
                     </Grid>
                     <Grid spacing={4} direction="vertical">
-                        <Typography size=".9rem" color="$secondaryColor" family="Nunito">
+                        <Typography size=".9rem" color="$secondaryColor">
                             {t('app.mdpkm.common:labels.platform')}
                         </Typography>
                         <Select.Root value={api} onChange={setApi} disabled={searching}>
@@ -137,7 +137,7 @@ export default Patcher.register(function ModSearch({ instanceId }) {
                                 )}
                             </Select.Group>
                         </Select.Root>
-                        {API.get(api)?.announcement && <Typography size=".6rem" color="$secondaryColor" family="Nunito" whitespace="nowrap">
+                        {API.get(api)?.announcement && <Typography size=".6rem" color="$secondaryColor" whitespace="nowrap">
                             {API.get(api).announcement}
                         </Typography>}
                     </Grid>
@@ -146,17 +146,17 @@ export default Patcher.register(function ModSearch({ instanceId }) {
             <Grid height="100%" spacing={8} direction="vertical" borderRadius={8} css={{ overflow: 'hidden auto' }}>
                 {mods.map((mod, index) => <Mod key={index} data={mod} instanceId={instanceId}/>)}
                 {mods.length === 0 && <Grid direction="vertical">
-                    <Typography size="1.2rem" color="$primaryColor" family="Nunito Sans">
+                    <Typography size="1.2rem" family="$primaryFontSans">
                         {t('app.mdpkm.common:headers.empty_list')}
                     </Typography>
-                    <Typography size=".9rem" color="$secondaryColor" weight={400} family="Nunito" lineheight={1}>
+                    <Typography size=".9rem" color="$secondaryColor" weight={400} lineheight={1}>
                         {t('app.mdpkm.common:headers.search_retry')}
                     </Typography>
                 </Grid>}
             </Grid>
             <Grid width="100%" padding="0 8px" justifyContent="space-between">
                 <Pagination page={page} pages={pages} setPage={setPage}/>
-                <Typography size=".8rem" color="$secondaryColor" weight={400} family="Nunito">
+                <Typography size=".8rem" color="$secondaryColor" weight={400}>
                     {t('app.mdpkm.mod_search.results', { val: hits })}
                 </Typography>
             </Grid>
