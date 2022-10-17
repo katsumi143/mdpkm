@@ -462,14 +462,22 @@ export default Patcher.register(function InstancePage({ id }) {
                     <ResourcePackManagement instanceId={id}/>
                 </TabItem>
                 <TabItem name={t('app.mdpkm.instance_page.tabs.loader')} icon={<IconBiApp size={14}/>} value={3}>
-                    <Grid spacing={12} padding={8} alignItems="center" background="$secondaryBackground2" borderRadius={4} css={{
+                    <Grid spacing={8} padding="4px 0" justifyContent="space-between">
+                        <Grid direction="vertical">
+                            <Typography size=".9rem" lineheight={1}>
+                                {t('app.mdpkm.instance_page.tabs.loader.title')}
+                            </Typography>
+                            <Typography size=".7rem" color="$secondaryColor" weight={400}>
+                                {name}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid spacing={12} padding={8} alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{
                         position: 'relative'
                     }}>
-                        {loaderData?.icon ?
-                            <Image src={loaderData?.icon} size={48} background="$secondaryBackground" borderRadius={4}/>
-                        : <Grid width={48} height={48} alignItems="center" background="$gray10" borderRadius={4} justifyContent="center">
-                            <IconBiExclamationCircleFill size={24} color="#ffffff80"/>
-                        </Grid>}
+                        <Image src={loaderData?.icon ?? 'img/icons/unknown_mod.svg'} size={44} background="$secondaryBackground" borderRadius={4} css={{
+                            boxShadow: '$buttonShadow'
+                        }}/>
                         <Grid spacing={4} direction="vertical" justifyContent="center">
                             <Typography size="1rem" horizontal lineheight={1}>
                                 {Util.getLoaderName(config?.loader?.type) ?? `${config?.loader.type} (Unknown)`}
@@ -482,7 +490,7 @@ export default Patcher.register(function InstancePage({ id }) {
                                 }
                             </Typography>
                             <Typography size=".7rem" color="$secondaryColor" lineheight={1}>
-                                {config?.loader.game}{config?.loader.version && `-${config?.loader.version}`}
+                                Version {config?.loader.version} for Minecraft {config?.loader.game}
                             </Typography>
                         </Grid>
                         <Grid css={{
@@ -491,7 +499,7 @@ export default Patcher.register(function InstancePage({ id }) {
                         }}>
                             <Button theme="accent" onClick={() => setEditingLoader(true)}>
                                 <IconBiPencilFill style={{fontSize: 11}}/>
-                                {t('app.mdpkm.common:actions.edit')}
+                                {t('app.mdpkm.common:actions.change')}
                             </Button>
                         </Grid>
                         {editingLoader && <Modal width="40%">
@@ -554,99 +562,99 @@ export default Patcher.register(function InstancePage({ id }) {
                         />
                     }
                 </TabItem>
-                <TabItem name={t('app.mdpkm.instance_page.tabs.settings')} icon={<IconBiGear size={14}/>} value={4} padding={0}>
-                    <Grid padding={8} justifyContent="space-between" css={{
-                        borderBottom: '1px solid $secondaryBorder'
-                    }}>
-                        <Typography>
-                            {t('app.mdpkm.instance_page.tabs.settings.title')}
-                        </Typography>
-                        <Button theme="accent" onClick={saveSettings} disabled={saving}>
-                            {saving ? <BasicSpinner size={16}/> : <IconBiPencilFill style={{fontSize: 11}}/>}
-                            {t('app.mdpkm.common:actions.save_changes')}
-                        </Button>
+                <TabItem name={t('app.mdpkm.instance_page.tabs.settings')} icon={<IconBiGear size={14}/>} value={4}>
+                    <Grid spacing={8} padding="4px 0" justifyContent="space-between">
+                        <Grid direction="vertical">
+                            <Typography size=".9rem" lineheight={1}>
+                                {t('app.mdpkm.instance_page.tabs.settings.title')}
+                            </Typography>
+                            <Typography size=".7rem" color="$secondaryColor" weight={400}>
+                                {name}
+                            </Typography>
+                        </Grid>
+                        <Grid spacing={8}>
+                            <Button theme="accent" onClick={saveSettings} disabled={saving}>
+                                {saving ? <BasicSpinner size={16}/> : <IconBiPencilFill style={{fontSize: 11}}/>}
+                                {t('app.mdpkm.common:actions.save_changes')}
+                            </Button>
+                        </Grid>
                     </Grid>
-                    <Grid padding=".6rem .8rem" spacing={16} direction="vertical">
-                        <Grid spacing={4} direction="vertical">
-                            <Typography size=".9rem" color="$secondaryColor">
-                                {t('app.mdpkm.instance_page.tabs.settings.instance_name')}
-                            </Typography>
-                            <TextInput value={instanceName} onChange={setInstanceName}/>
-                        </Grid>
-                        <Grid spacing={4} direction="vertical">
-                            <Typography size=".9rem" color="$secondaryColor">
-                                {t('app.mdpkm.instance_page.tabs.settings.memory_alloc', {
-                                    val: instanceRam.toLocaleString('en', { minimumFractionDigits: 1 })
-                                })}
-                            </Typography>
-                            <Slider
-                                min={1}
-                                max={Math.floor((totalMemory / 1000000) / 1.4)}
-                                step={.5}
-                                value={[instanceRam]}
-                                onChange={setInstanceRam}
-                            />
-                        </Grid>
-                        <Grid spacing={4} direction="vertical">
-                            <Typography size=".9rem" color="$secondaryColor">
-                                {t('app.mdpkm.instance_page.tabs.settings.resolution')}
-                            </Typography>
-                            <Grid spacing={8}>
-                                <Grid direction="vertical">
-                                    <Typography size=".8rem" color="$secondaryColor">
-                                        {t('app.mdpkm.instance_page.tabs.settings.resolution.width')}
-                                    </Typography>
-                                    <TextInput
-                                        width={80}
-                                        value={Math.max(0, instanceResolution[0] || 0)}
-                                        onChange={value => {
-                                            const number = parseInt(value);
-                                            setInstanceResolution(val => [number, val[1]]);
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid direction="vertical">
-                                    <Typography size=".8rem" color="$secondaryColor">
-                                        {t('app.mdpkm.instance_page.tabs.settings.resolution.height')}
-                                    </Typography>
-                                    <TextInput
-                                        width={80}
-                                        value={Math.max(0, instanceResolution[1] || 0)}
-                                        onChange={value => {
-                                            const number = parseInt(value);
-                                            setInstanceResolution(val => [val[0], number]);
-                                        }}
-                                    />
-                                </Grid>
+                    <Grid direction="vertical">
+                        <InputLabel>
+                            {t('app.mdpkm.instance_page.tabs.settings.instance_name')}
+                        </InputLabel>
+                        <TextInput value={instanceName} onChange={setInstanceName}/>
+
+                        <InputLabel spaciouser>
+                            {t('app.mdpkm.instance_page.tabs.settings.memory_alloc', {
+                                val: instanceRam.toLocaleString('en', { minimumFractionDigits: 1 })
+                            })}
+                        </InputLabel>
+                        <Slider
+                            min={1}
+                            max={Math.floor((totalMemory / 1000000) / 1.4)}
+                            step={.5}
+                            value={[instanceRam]}
+                            onChange={setInstanceRam}
+                        />
+
+                        <InputLabel spaciouser>
+                            {t('app.mdpkm.instance_page.tabs.settings.resolution')}
+                        </InputLabel>
+                        <Grid spacing={8}>
+                            <Grid direction="vertical">
+                                <Typography size=".8rem" color="$secondaryColor">
+                                    {t('app.mdpkm.instance_page.tabs.settings.resolution.width')}
+                                </Typography>
+                                <TextInput
+                                    width={80}
+                                    value={Math.max(0, instanceResolution[0] || 0)}
+                                    onChange={value => {
+                                        const number = parseInt(value);
+                                        setInstanceResolution(val => [number, val[1]]);
+                                    }}
+                                />
+                            </Grid>
+                            <Grid direction="vertical">
+                                <Typography size=".8rem" color="$secondaryColor">
+                                    {t('app.mdpkm.instance_page.tabs.settings.resolution.height')}
+                                </Typography>
+                                <TextInput
+                                    width={80}
+                                    value={Math.max(0, instanceResolution[1] || 0)}
+                                    onChange={value => {
+                                        const number = parseInt(value);
+                                        setInstanceResolution(val => [val[0], number]);
+                                    }}
+                                />
                             </Grid>
                         </Grid>
-                        <Grid width="fit-content" spacing={4} direction="vertical">
-                            <Typography size=".9rem" color="$secondaryColor">
-                                {t('app.mdpkm.instance_page.tabs.settings.delete')}
-                            </Typography>
-                            <Dialog.Root>
-                                <Dialog.Trigger asChild>
-                                    <Button theme="secondary" disabled={saving}>
-                                        <IconBiTrash3Fill style={{fontSize: 11}}/>
-                                        {t('app.mdpkm.common:actions.delete')}
-                                    </Button>
-                                </Dialog.Trigger>
-                                <Dialog.Content>
-                                    <Dialog.Title>Are you absolutely sure?</Dialog.Title>
-                                    <Dialog.Description>
-                                        This action cannot be undone.<br/>
-                                        '{instance.name}' will be lost forever! (A long time!)
-                                    </Dialog.Description>
-                                    <Grid margin="25 0 0" justifyContent="end">
-                                        <Dialog.Close asChild>
-                                            <Button theme="accent" onClick={deleteInstance}>
-                                                Yes, delete Instance
-                                            </Button>
-                                        </Dialog.Close>
-                                    </Grid>
-                                </Dialog.Content>
-                            </Dialog.Root>
-                        </Grid>
+                        
+                        <InputLabel spaciouser>
+                            {t('app.mdpkm.instance_page.tabs.settings.delete')}
+                        </InputLabel>
+                        <Dialog.Root>
+                            <Dialog.Trigger asChild>
+                                <Button theme="secondary" disabled={saving}>
+                                    <IconBiTrash3Fill style={{fontSize: 11}}/>
+                                    {t('app.mdpkm.common:actions.delete')}
+                                </Button>
+                            </Dialog.Trigger>
+                            <Dialog.Content>
+                                <Dialog.Title>Are you absolutely sure?</Dialog.Title>
+                                <Dialog.Description>
+                                    This action cannot be undone.<br/>
+                                    '{instance.name}' will be lost forever! (A long time!)
+                                </Dialog.Description>
+                                <Grid margin="25 0 0" justifyContent="end">
+                                    <Dialog.Close asChild>
+                                        <Button theme="accent" onClick={deleteInstance}>
+                                            Yes, delete Instance
+                                        </Button>
+                                    </Dialog.Close>
+                                </Grid>
+                            </Dialog.Content>
+                        </Dialog.Root>
                     </Grid>
                 </TabItem>
                 <TabItem name={t('app.mdpkm.instance_page.tabs.export')} icon={<IconBiFileEarmarkZip size={14}/>} value={5}>

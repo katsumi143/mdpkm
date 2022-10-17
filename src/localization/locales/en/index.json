@@ -81,9 +81,11 @@
     "app.mdpkm.instance_page.tabs.servers": "Servers",
     "app.mdpkm.instance_page.tabs.resource_packs": "Resource Packs",
     "app.mdpkm.instance_page.tabs.essential": "Essential",
-    "app.mdpkm.instance_page.tabs.loader": "Game Loader",
+    "app.mdpkm.instance_page.tabs.loader": "Loader",
     "app.mdpkm.instance_page.tabs.settings": "Settings",
     "app.mdpkm.instance_page.tabs.export": "Export",
+
+    "app.mdpkm.instance_page.tabs.loader.title": "Instance Loader",
 
     "app.mdpkm.instance_page.tabs.settings.title": "Instance Settings",
     "app.mdpkm.instance_page.tabs.settings.instance_name": "Instance Name",

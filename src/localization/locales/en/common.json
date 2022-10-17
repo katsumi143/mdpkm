@@ -22,6 +22,7 @@
     "actions.select": "Select",
     "actions.cancel": "Cancel",
     "actions.remove": "Remove",
+    "actions.change": "Change",
     "actions.install": "Install",
     "actions.refresh": "Refresh",
     "actions.continue": "Continue",
