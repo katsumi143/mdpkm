@@ -264,9 +264,7 @@ export default Patcher.register(function InstancePage({ id }) {
                                 {Util.getLoaderName(config?.loader?.type)}
                             </TextTransition>
                             <Breakpoint customQuery="(min-width: 850px)">
-                                <TextTransition inline noOverflow>
-                                    {config?.loader.game}{config?.loader?.version ? `-${config.loader.version}` : ''}
-                                </TextTransition>
+                                {config?.loader.game}{config?.loader?.version ? `-${config.loader.version}` : ''}
                             </Breakpoint>
                         </Typography>
                     </Tag>
