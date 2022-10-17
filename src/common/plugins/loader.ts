@@ -1,53 +1,46 @@
 import React from 'react';
-import { t } from 'i18next';
 import toast from 'react-hot-toast';
+import i18next from 'i18next';
 import * as xml from 'xmlbuilder2';
 import * as http from '@tauri-apps/api/http';
+import { encode } from 'js-base64';
 
 import API from '../api';
 import Util from '../util';
+import Plugin from './plugin';
 import Patcher from './patcher';
-import PluginAPI from './api';
 import * as voxura from '../voxura';
 import PluginSystem from './system';
-import * as Voxeliface from '/voxeliface';
+import * as PluginUtil from './util';
+import * as Voxeliface from '../../../voxeliface';
 
 // For plugin developers:
 // https://docs.mdpkm.voxelified.com/docs/category/plugin-api
+export interface PluginManifest {
+    id: string,
+    name: string,
+    version: string
+};
+interface PluginModule {
+    default: any,
+    manifest: PluginManifest
+};
 export default class PluginLoader {
     static loaded = {};
-    static pluginApi = new PluginAPI(this);
-
-    static async loadPlugin(name, path, { default: func, icon, manifest }) {
-        if(this.loaded[manifest.id])
+    static async loadPlugin(name: string, path: string, { default: PluginClass, manifest }: PluginModule) {
+        if (this.loaded[manifest.id])
             throw new Error(`plugin has already been loaded.`);
+        
+        const plugin: Plugin = this.loaded[manifest.id] = new PluginClass(this);
+        console.log(plugin);
+        await plugin.init();
 
-        this.loaded[manifest.id] = {
-            icon,
-            path,
-            manifest
-        };
-
-        await func({
-            t,
-            xml,
-            API,
-            Util,
-            http,
-            toast,
-            React,
-            voxura,
-            Patcher,
-            PluginAPI: this.pluginApi,
-            Voxeliface,
-            PluginSystem
-        });
         toast.success(`'${name}' has loaded.`);
     }
 
-    static async loadPluginFile(name, path) {
+    static async loadPluginFile(name: string, path: string) {
         const code = await Util.readTextFile(path);
-        const module = await import(/* @vite-ignore */`data:text/javascript;base64,${btoa(code)}`);
+        const module = await import(/* @vite-ignore */`data:text/javascript;base64,${encode(code)}`);
         const { manifest } = module;
         console.log(module);
         if (manifest && (manifest.id ?? manifest.name)) {
@@ -56,13 +49,11 @@ export default class PluginLoader {
             throw new Error('Invalid Manifest');
     }
 
-    static async loadDirectory(dir) {
+    static async loadDirectory(dir: string) {
         const files = await Util.readDir(dir);
         for (const { name, path, isDir } of files)
             try {
-                if (isDir)
-                    await this.loadPlugin(name, path);
-                else if (name.endsWith('.plugin.js'))
+                if (!isDir && name.endsWith('.plugin.js'))
                     await this.loadPluginFile(name, path);
             } catch(err) {
                 console.warn(err);
@@ -70,4 +61,19 @@ export default class PluginLoader {
             }
     }
 };
-PluginSystem.prototype.api = PluginLoader.pluginApi;
+
+globalThis.__mdpkm__ = {
+    xml,
+    API,
+    Util,
+    http,
+    toast,
+    React,
+    Plugin,
+    voxura,
+    i18next,
+    Patcher,
+    Voxeliface,
+    PluginUtil,
+    PluginSystem
+};

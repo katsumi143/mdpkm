@@ -241,18 +241,18 @@ export default Patcher.register(function Settings() {
                                     {t('app.mdpkm.common:actions.open_folder')}
                                 </Button>
                             </Grid>
-                            {Object.entries(PluginLoader.loaded).map(([id, { icon, manifest }]) => {
+                            {Object.entries(PluginLoader.loaded).map(([id, plugin]) => {
                                 const pluginLoaders = API.loaders.filter(l => l.source?.id === id);
                                 return <Grid key={id} padding={8} spacing={8} background="$secondaryBackground" alignItems="center" borderRadius={8} css={{
                                     position: 'relative'
                                 }}>
-                                    <Image src={icon} size={48} background="$primaryBackground" borderRadius={4}/>
+                                    <Image src={plugin.icon} size={48}/>
                                     <Grid spacing={2} direction="vertical">
                                         <Typography color="$primaryColor" family="Nunito" lineheight={1}>
-                                            {t(`app.mdpkm.plugin.${manifest.id}:name`)}
+                                            {t(`app.mdpkm.plugin.${plugin.id}:name`)}
                                         </Typography>
                                         <Typography size=".8rem" color="$secondaryColor" family="Nunito" lineheight={1}>
-                                            {manifest.id} {manifest.version}
+                                            {plugin.id} {plugin.version}
                                         </Typography>
                                     </Grid>
                                     <Grid spacing={8} css={{

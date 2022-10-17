@@ -35,6 +35,7 @@
         "@tauri-apps/api": "^1.1.0",
         "buffer": "^6.0.3",
         "i18next": "^21.8.3",
+        "js-base64": "^3.7.2",
         "nbt": "^0.8.1",
         "p-map-browser": "^1.2.0",
         "path-browserify": "latest",

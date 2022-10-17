@@ -11,7 +11,7 @@ import Image from '../voxeliface/components/Image';
 import Spinner from '../voxeliface/components/Spinner';
 import Typography from '../voxeliface/components/Typography';
 
-import '/voxeliface/src/index.css';
+import '/voxeliface/src/style.css';
 let loadingState = 'Loading...';
 let setLoadingState;
 const useLoadingState = () => {

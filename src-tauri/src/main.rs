@@ -3,7 +3,7 @@
     windows_subsystem = "windows"
 )]
 
-#[path = "../../voxura/rust/main.rs"] mod voxura;
+#[path = "../../voxura/src/lib.rs"] mod voxura;
 fn main() {
     tauri::Builder::default()
         .on_page_load(| window: tauri::window::Window, _ | {
@@ -44,7 +44,8 @@ fn main() {
             fs_read_dir_recursive,
             fs_read_binary_in_zip,
             send_window_event,
-            voxura::voxura_launch
+            voxura::voxura_launch,
+            voxura::voxura_read_mods
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
