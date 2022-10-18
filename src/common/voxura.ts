@@ -1,14 +1,10 @@
 import { useMemo, useState, useEffect } from 'react';
 
-import store from './store';
 import { Voxura } from '../../voxura';
 import { APP_PATH } from './constants';
 import type Account from '../../voxura/src/auth/account';
-import type Instance from '../../voxura/src/instances/instance';
 
 const voxura = new Voxura(APP_PATH);
-voxura.useStore(store);
-
 await voxura.startInstances();
 await voxura.auth.loadFromFile();
 await voxura.auth.refreshAccounts();

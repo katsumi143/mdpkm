@@ -29,6 +29,7 @@ import NavigationItem from '/voxeliface/components/SideNavigation/Item';
 import SelectInstanceType from '/src/components/SelectInstanceType';
 
 import API from '/src/common/api';
+import voxura from '../common/voxura';
 import Patcher from '/src/common/plugins/patcher';
 
 let updateListener;
@@ -55,13 +56,17 @@ export default Patcher.register(function Home() {
     const selectInstance = id => setInstance(id);
     const installLoader = async(name, loader, gameVersion, loaderVersion, setState) => {
         setState('Preparing...');
-        await Instances.installInstanceWithLoader(name, loader, gameVersion, loaderVersion, setState).catch(err => {
+        /*await Instances.installInstanceWithLoader(name, loader, gameVersion, loaderVersion, setState).catch(err => {
             console.error(err);
             toast.error(`Instance Installation Failed!\n${err.message ?? 'Unknown Reason.'}`);
-        });
+        });*/
+        const instance = await voxura.instances.createInstance(name);
+        await instance.changeLoader(loader, loaderVersion);
+        await instance.changeVersion(gameVersion);
+
         toast.success(`${name} was created successfully.`);
         setInstancePage('home');
-        setInstance(Instances.instances.findIndex(i => i.name === name));
+        setInstance(instance.id);
         setSettingUp();
         setLoaderVersions();
     };
