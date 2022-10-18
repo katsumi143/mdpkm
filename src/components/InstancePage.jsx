@@ -366,7 +366,7 @@ export default Patcher.register(function InstancePage({ id }) {
                     />
                 </InstanceInfo>
             }
-            {config?.modpack?.source !== "manual" &&
+            {(config?.modpack?.source && config.modpack.source !== "manual") &&
                 <InstanceInfo css={{ alignItems: 'start' }}>
                     {modpack ? <React.Fragment>
                         <Image src={modpack.attachments.find(a => a.isDefault)?.url} size={48} borderRadius={8} css={{
