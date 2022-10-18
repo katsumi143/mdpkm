@@ -20,7 +20,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
     const showSummary = useSelector(state => state.settings['instances.modSearchSummaries']);
     const [mod, setMod] = useState(data);
     const { config, downloading } = instance ?? {};
-    const installed = config?.modifications.some(m => m[3] === mod?.slug);
+    const installed = config?.modifications?.some(m => m[3] === mod?.slug);
     const installing = downloading?.some(d => d.id === (mod?.id ?? mod?.project_id));
     const installMod = () => Instances.getInstance(instanceId).downloadMod(
         mod?.id ?? mod?.project_id,
