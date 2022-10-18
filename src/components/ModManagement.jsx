@@ -35,13 +35,17 @@ export default Patcher.register(function ModManagement({ instanceId }) {
             setUpdateChecking(false);
         });
     };
+    const refreshList = () => {
+        setItems('loading');
+        instance.readMods().then(setItems);
+    };
     useEffect(() => {
         setItems('loading');
         console.log('reading mods lol');
         if (instance.modifications.length > 0)
             setItems(instance.modifications);
         else
-            instance.readMods().then(setItems);
+            refreshList();
     }, [instanceId]);
     return <React.Fragment>
         <Tabs
@@ -75,7 +79,7 @@ export default Patcher.register(function ModManagement({ instanceId }) {
                             onChange={setFilter}
                             placeholder={t('app.mdpkm.mod_management.search')}
                         />
-                        <Button theme="secondary" onClick={() => setItems()} disabled={items === 'loading'}>
+                        <Button theme="secondary" onClick={refreshList} disabled={items === 'loading'}>
                             {items === 'loading' ? <BasicSpinner size={16}/> : <IconBiArrowClockwise size={14}/>}
                             {t('app.mdpkm.common:actions.refresh')}
                         </Button>
