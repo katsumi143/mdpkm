@@ -164,7 +164,7 @@ export default Patcher.register(function Home() {
                     </Modal>
                 }
                 <SideNavigation value={page} onChange={setPage}>
-                    <NavigationItem name={t('app.mdpkm.home.navigation.instances')} icon={<IconBiArchive size={16}/>} value={0} direction="horizontal">
+                    <NavigationItem name={t('app.mdpkm.home.navigation.instances')} icon={<IconBiListUl size={16}/>} value={0} direction="horizontal">
                         <Pages value={instancePage}>
                             <PageItem value="home">
                                 <Grid width="35%" height="100%" direction="vertical" background="$blackA2" justifyContent="space-between" css={{

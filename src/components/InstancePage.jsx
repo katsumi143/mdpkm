@@ -252,22 +252,22 @@ export default Patcher.register(function InstancePage({ id }) {
                     </Button>
                 </Grid>
                 <Breakpoint customQuery="(min-width: 700px)">
-                    <Tag css={{
+                    <Grid width={200} spacing={12} css={{
                         right: 12,
                         position: 'absolute'
                     }}>
-                        {loaderData?.icon ?
-                            <ImageTransition src={loaderData?.icon} size={16}/>
-                        : <IconBiExclamationCircleFill size={14} color="#ffffffad"/>}
-                        <Typography size=".8rem" color="$tagColor" spacing={4} horizontal>
-                            <TextTransition inline noOverflow>
-                                {Util.getLoaderName(config?.loader?.type)}
-                            </TextTransition>
-                            <Breakpoint customQuery="(min-width: 850px)">
-                                {config?.loader.game}{config?.loader?.version ? `-${config.loader.version}` : ''}
-                            </Breakpoint>
-                        </Typography>
-                    </Tag>
+                        <Image src={loaderData?.icon ?? 'img/icons/unknown_mod.svg'} size={44} background="$secondaryBackground" borderRadius={4} css={{
+                            boxShadow: '$buttonShadow'
+                        }}/>
+                        <Grid spacing={4} direction="vertical" justifyContent="center">
+                            <Typography size="1rem" horizontal lineheight={1}>
+                                {Util.getLoaderName(config?.loader?.type) ?? `${config?.loader.type} (Unknown)`}
+                            </Typography>
+                            <Typography size=".7rem" color="$secondaryColor" lineheight={1}>
+                                Version {config?.loader.version} for {config?.loader.game}
+                            </Typography>
+                        </Grid>
+                    </Grid>
                 </Breakpoint>
             </Grid>
             {instance.launchLogs &&

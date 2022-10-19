@@ -23,19 +23,16 @@ export default Patcher.register(function InstanceList({ id, onSelect }) {
     };
     return <React.Fragment>
         <Grid width="100%" padding="12px 16px" alignItems="center" background="$secondaryBackground" justifyContent="space-between">
-            <Grid spacing={4} direction="vertical">
-                <Typography weight={600} spacing={12} horizontal lineheight={1}>
-                    <IconBiArchive size={20}/>
-                    {t('app.mdpkm.headers.instances')}
-                    <Typography size=".6rem" color="$secondaryColor" weight={300} margin="2px 0 0 -6px" lineheight={1}>
-                        ({!instances ? "Loading" : instances.length})
+            <Grid spacing={12} alignItems="center">
+                <IconBiListUl/>
+                <Grid spacing={2} direction="vertical">
+                    <Typography size=".9rem" lineheight={1}>
+                        {t('app.mdpkm.headers.instances')}
                     </Typography>
-                </Typography>
-                {typeof state === "string" &&
                     <Typography size=".7rem" color="$secondaryColor" weight={400} lineheight={1}>
-                        {state}
+                        {!instances ? 'Loading' : instances.length + ' Installed'}
                     </Typography>
-                }
+                </Grid>
             </Grid>
             <Button theme="secondary" onClick={refresh} disabled={loading || !instances}>
                 {loading ? <BasicSpinner size={16}/> : <IconBiArrowClockwise size={14}/>}
