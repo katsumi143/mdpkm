@@ -6,23 +6,23 @@
 
 **mdpkm is yet another instance manager for Minecraft Java *and Bedrock!***</br>
 Minecraft instance management made a bit easier, plus a few other useful things too.</br>
-mdpkm is a work-in-progress project, issues should be expected, plus a bit of annoyances!</br></br>
+mdpkm is a work-in-progress project, major issues should be expected!</br></br>
 
 If you're new to mdpkm, have a look at the new [guides](https://docs.mdpkm.voxelified.com/docs/intro)!
-<img src="https://user-images.githubusercontent.com/32640219/176095361-4a7f7d6f-ac0c-4ffa-9c51-7a37e8f38d3c.png" alt="Screenshot of mdpkm v1.4.1" height="512"/>
+<img src="https://user-images.githubusercontent.com/32640219/196414715-b4f49f2e-1952-456d-ab29-5a40f0fbaf12.png" alt="Screenshot of mdpkm v2.0.0-dev" height="512"/>
+###### the above screenshot contains a mdpkm development build
+<br/>
 
 we've got a [discord server](https://discord.gg/YHDW77CMUw) now
 
 ## Features
-| Feature           | Summary                                                 | Status              |
-|-------------------|---------------------------------------------------------|---------------------|
-| Modloader Support | Vanilla not enough? Easily get more content with mods!  | ✅                 |
-| Bedrock Edition   | Basic support for Minecraft for Windows!                | ✅                 |
-| Mod Installation  |                                                         | ✅                 |
-| Mod Management    |                                                         | ✅                 |
-| Modpacks          | Get pre-made community modpacks to instantly play with. | ✅                 |
-| Exporting         | Share instances with your friends!                      | ✅ (Custom Format) |
-| Plugins           | Add features using community plugins!                   | ✅                 |
+| Feature           | Summary                                                           | Status                 |
+|-------------------|-------------------------------------------------------------------|------------------------|
+| Game Mods         | Vanilla Minecraft not enough? Easily get more content with mods!  | ✅                    |
+| Modpacks          | Get community-made modpacks to play with!                         | ✅                    |
+| Bedrock Edition   | Basic support for Minecraft Bedrock Edition!                      | ✅ (Windows 10+ only) |
+| Exporting         | Your Instances can be exported to share with the world!           | ✅ (Custom Format)    |
+| Plugins           | Extend mdpkm's functionality with community-made plugins!         | ✅                    |
 
 ### Looking for more?<br/>
 Check out these awesome plugins!</br>
