@@ -1,4 +1,3 @@
-import toast from 'react-hot-toast';
 import { open } from '@tauri-apps/api/shell';
 import { checkUpdate } from '@tauri-apps/api/updater';
 import { open as open2 } from '@tauri-apps/api/dialog';
@@ -24,6 +23,7 @@ import API from '../common/api';
 import Util from '../common/util';
 import Plugins from '../common/plugins';
 import Patcher from '/src/common/plugins/patcher';
+import { toast } from '../util';
 import PluginLoader from '../common/plugins/loader';
 import { VOXURA_VERSION } from '../../voxura';
 import { set, setTheme, setLanguage, saveSettings } from '../common/slices/settings';
@@ -67,17 +67,17 @@ export default Patcher.register(function Settings() {
         const manifest = await Util.readFileInZip(pluginPath, 'manifest.json').then(JSON.parse).catch(console.warn);
         if(!manifest || !manifest.id || !manifest.name) {
             await Util.removeFile(pluginPath);
-            return toast.error(`Invalid plugin.`);
+            return toast(`Invalid plugin.`);
         }
         await PluginLoader.loadPluginFile(manifest.name, pluginPath);
         setRerender(Date.now());
-        toast.success(`Successfully added ${manifest.name}!`, { duration: 5000 });
+        toast(`Successfully added ${manifest.name}!`, { duration: 5000 });
     };
     const updateCheck = () => {
         setUpdating(true);
         checkUpdate().then(({ shouldUpdate }) => {
             if (!shouldUpdate)
-                toast.success('You\'re already up to date!', { duration: 5000 });
+                toast('No updates available', 'You\'re already up to date!');
             setUpdating(false);
         });
     };
