@@ -257,14 +257,21 @@ export default Patcher.register(function InstancePage({ id }) {
                         position: 'absolute'
                     }}>
                         <Image src={loaderData?.icon ?? 'img/icons/unknown_mod.svg'} size={44} background="$secondaryBackground" borderRadius={4} css={{
+                            minWidth: 44,
                             boxShadow: '$buttonShadow'
                         }}/>
-                        <Grid spacing={4} direction="vertical" justifyContent="center">
-                            <Typography size="1rem" horizontal lineheight={1}>
+                        <Grid spacing={4} direction="vertical" justifyContent="center" css={{
+                            overflow: 'hidden'
+                        }}>
+                            <Typography size="1rem" horizontal lineheight={1} whitespace="nowrap" css={{
+                                display: 'block',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis'
+                            }}>
                                 {Util.getLoaderName(config?.loader?.type) ?? `${config?.loader.type} (Unknown)`}
                             </Typography>
                             <Typography size=".7rem" color="$secondaryColor" lineheight={1}>
-                                Version {config?.loader.version} for {config?.loader.game}
+                                Version {config?.loader.version ? `${config.loader.version} for ` : ''}{config?.loader.game}
                             </Typography>
                         </Grid>
                     </Grid>
