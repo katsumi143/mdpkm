@@ -8,6 +8,7 @@ import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
 import Spinner from '/voxeliface/components/Spinner';
 import Typography from '/voxeliface/components/Typography';
+import ImagePreview from './ImagePreview';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
@@ -19,6 +20,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
     const isCompact = useSelector(state => state.settings.uiStyle) === 'compact';
     const showSummary = useSelector(state => state.settings['instances.modSearchSummaries']);
     const [mod, setMod] = useState(data);
+    const [previewIcon, setPreviewIcon] = useState(false);
     const { config, downloading } = instance ?? {};
     const installed = config?.modifications?.some(m => m[3] === mod?.slug);
     const installing = downloading?.some(d => d.id === (mod?.id ?? mod?.project_id));
@@ -61,17 +63,13 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                     </Button>
                 </Grid>
             </Grid> : <React.Fragment>
-                <Image src={mod.webIcon} size={iconSize} background="$secondaryBackground" borderRadius={4} css={{
+                <Image src={mod.webIcon} size={iconSize} onClick={() => setPreviewIcon(true)} background="$secondaryBackground" borderRadius={4} css={{
+                    cursor: 'zoom-in',
                     minWidth: iconSize,
                     minHeight: iconSize,
-                    boxShadow: '$buttonShadow',
-                    transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-
-                    '&:hover': {
-                        minWidth: iconSize * 2,
-                        minHeight: iconSize * 2
-                    }
+                    boxShadow: '$buttonShadow'
                 }}/>
+                {previewIcon && <ImagePreview src={mod.webIcon} size={192} onClose={() => setPreviewIcon(false)}/>}
                 <Grid margin="4px 0 0 12px" padding="2px 0" spacing="2px" direction="vertical">
                     <Typography size={isCompact ? 14 : '1.1rem'} spacing={4} horizontal lineheight={1} css={{
                         width: 'fit-content'

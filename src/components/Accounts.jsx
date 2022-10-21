@@ -11,6 +11,7 @@ import Button from '/voxeliface/components/Button';
 import Portal from '/voxeliface/components/Portal';
 import Header from '/voxeliface/components/Typography/Header';
 import Typography from '/voxeliface/components/Typography';
+import ImagePreview from './ImagePreview';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import * as DropdownMenu from '/voxeliface/components/DropdownMenu';
 
@@ -56,49 +57,7 @@ export default Patcher.register(function Settings() {
                 </Typography>}
                 <Grid spacing={8} direction="vertical">
                     {accounts.map((account, key) =>
-                        <Grid key={key} width="40%" padding={8} spacing={8} alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
-                            <Image src={account.getAvatarUrl(AvatarType.Xbox)} size={32} borderRadius={16}/>
-                            <Typography>
-                                {account.xboxName}
-                                <Typography size=".75rem" color="$secondaryColor" family="$primaryFontSans" lineheight={1}>
-                                    {account.name}
-                                </Typography>
-                            </Typography>
-                            <Grid spacing={8} alignItems="center" css={{
-                                right: 8,
-                                position: 'absolute'
-                            }}>
-                                {account === current ? <Tag>
-                                    <Typography size=".7rem" color="$tagColor">
-                                        {t('app.mdpkm.accounts.account.active')}
-                                    </Typography>
-                                </Tag> : <Button theme="accent" onClick={() => changeAccount(account)}>
-                                    {t('app.mdpkm.common:actions.select')}
-                                </Button>}
-                                <DropdownMenu.Root>
-                                    <DropdownMenu.Trigger asChild>
-                                        <Button theme="secondary">
-                                            <IconBiThreeDots size={17}/>
-                                        </Button>
-                                    </DropdownMenu.Trigger>
-                                    <DropdownMenu.Content sideOffset={8}>
-                                        <DropdownMenu.Label>{t('app.mdpkm.accounts.account.actions.label')}</DropdownMenu.Label>
-                                        <DropdownMenu.Item onClick={() => open('https://minecraft.net/profile')}>
-                                            {t('app.mdpkm.accounts.account.actions.manage_profile')}
-                                            <IconBiBoxArrowUpRight/>
-                                        </DropdownMenu.Item>
-                                        <DropdownMenu.Item onClick={() => open(`https://namemc.com/profile/${profile.id}`)}>
-                                            {t('app.mdpkm.accounts.account.actions.view_namemc')}
-                                            <IconBiBoxArrowUpRight/>
-                                        </DropdownMenu.Item>
-                                        <DropdownMenu.Item onClick={() => deleteAccount(accounts[key])}>
-                                            {t('app.mdpkm.accounts.account.actions.remove')}
-                                        </DropdownMenu.Item>
-                                        <DropdownMenu.Arrow/>
-                                    </DropdownMenu.Content>
-                                </DropdownMenu.Root>
-                            </Grid>
-                        </Grid>
+                        <Account key={key} account={account} current={current} changeAccount={changeAccount} deleteAccount={deleteAccount}/>
                     )}
                 </Grid>
                 <Button theme="accent" onClick={addNewAccount} disabled={addingAccount}>
@@ -137,3 +96,55 @@ export default Patcher.register(function Settings() {
         </Grid>
     );
 });
+
+function Account({ account, current, changeAccount, deleteAccount }) {
+    const { t } = useTranslation();
+    const avatarUrl = account.getAvatarUrl(AvatarType.Xbox);
+    const [previewAvatar, setPreviewAvatar] = useState(false);
+    return <Grid width="40%" padding={8} spacing={8} alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
+        <Image src={avatarUrl} size={32} onClick={() => setPreviewAvatar(true)} borderRadius={16} css={{
+            cursor: 'zoom-in'
+        }}/>
+        {previewAvatar && <ImagePreview src={avatarUrl} size={192} onClose={() => setPreviewAvatar(false)}/>}
+        <Typography>
+            {account.xboxName}
+            <Typography size=".75rem" color="$secondaryColor" family="$primaryFontSans" lineheight={1}>
+                {account.name}
+            </Typography>
+        </Typography>
+        <Grid spacing={8} alignItems="center" css={{
+            right: 8,
+            position: 'absolute'
+        }}>
+            {account === current ? <Tag>
+                <Typography size=".7rem" color="$tagColor">
+                    {t('app.mdpkm.accounts.account.active')}
+                </Typography>
+            </Tag> : <Button theme="accent" onClick={() => changeAccount(account)}>
+                {t('app.mdpkm.common:actions.select')}
+            </Button>}
+            <DropdownMenu.Root>
+                <DropdownMenu.Trigger asChild>
+                    <Button theme="secondary">
+                        <IconBiThreeDots size={17}/>
+                    </Button>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content sideOffset={8}>
+                    <DropdownMenu.Label>{t('app.mdpkm.accounts.account.actions.label')}</DropdownMenu.Label>
+                    <DropdownMenu.Item onClick={() => open('https://minecraft.net/profile')}>
+                        {t('app.mdpkm.accounts.account.actions.manage_profile')}
+                        <IconBiBoxArrowUpRight/>
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item onClick={() => open(`https://namemc.com/profile/${profile.id}`)}>
+                        {t('app.mdpkm.accounts.account.actions.view_namemc')}
+                        <IconBiBoxArrowUpRight/>
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item onClick={() => deleteAccount(account)}>
+                        {t('app.mdpkm.accounts.account.actions.remove')}
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Arrow/>
+                </DropdownMenu.Content>
+            </DropdownMenu.Root>
+        </Grid>
+    </Grid>;
+}

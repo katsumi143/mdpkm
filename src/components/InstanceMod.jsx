@@ -10,6 +10,7 @@ import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
 import Typography from '/voxeliface/components/Typography';
 import HeaderText from '/voxeliface/components/Typography/Header';
+import ImagePreview from './ImagePreview';
 
 import API from '../common/api';
 import Util from '../common/util';
@@ -23,6 +24,7 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
     const sourceApi = API.get(mod?.source);
     const loaderData = API.getLoader(mod?.loader);
     const [showInfo, setShowInfo] = useState(false);
+    const [previewIcon, setPreviewIcon] = useState(false);
     const [showEmbedded, setShowEmbedded] = useState(false);
     const toggleEmbedded = () => setShowEmbedded(!showEmbedded);
     const deleteMod = () => Instances.getInstance(instanceId).deleteMod(mod.id);
@@ -124,10 +126,12 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                 <Modal width="60%" height="50%">
                     <HeaderText>Modification Information</HeaderText>
                     <Grid padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" borderRadius={8}>
-                        <Image src={mod.webIcon} size={48} background="$secondaryBackground" borderRadius={4} css={{
+                        <Image src={mod.webIcon} size={48} onClick={() => setPreviewIcon(true)} background="$secondaryBackground" borderRadius={4} css={{
+                            cursor: 'zoom-in',
                             boxShadow: '$buttonShadow',
                             imageRendering: 'pixelated'
                         }}/>
+                        {previewIcon && <ImagePreview src={mod.webIcon} size={192} onClose={() => setPreviewIcon(false)}/>}
                         <Grid spacing={2} direction="vertical">
                             <Typography size="1.1rem" lineheight={1}>
                                 {mod.name}

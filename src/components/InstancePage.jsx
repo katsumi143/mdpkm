@@ -21,7 +21,6 @@ import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
 import InputLabel from '/voxeliface/components/Input/Label';
 import TextHeader from '/voxeliface/components/Typography/Header';
-import BrowserLink from './BrowserLink';
 import * as Dialog from '/voxeliface/components/Dialog';
 import InstanceIcon from './InstanceIcon';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
@@ -197,16 +196,7 @@ export default Patcher.register(function InstancePage({ id }) {
             }}>
                 <InstanceIcon size={uiStyle === 'compact' ? 64 : 80} instance={instance} hideLoader props={{
                     css: {
-                        zIndex: 2,
-                        background: '$primaryBackground',
-                        transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-
-                        '&:hover': {
-                            zIndex: 3,
-                            minWidth: 144,
-                            position: 'absolute',
-                            minHeight: 144
-                        }
+                        background: '$primaryBackground'
                     }
                 }}/>
                 <Grid margin={uiStyle === 'compact' ? '0 0 0 1rem' : '0 0 0 1.2rem'} spacing={uiStyle === 'compact' ? 4 : 6} direction="vertical" justifyContent="center">
