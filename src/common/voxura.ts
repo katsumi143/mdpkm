@@ -1,13 +1,26 @@
+import CheckCircle from '~icons/bi/check-circle';
+import DownloadIcon from '~icons/bi/download';
 import { useMemo, useState, useEffect } from 'react';
 
+import { toast } from '../util';
 import { Voxura } from '../../voxura';
 import { APP_PATH } from './constants';
 import type Account from '../../voxura/src/auth/account';
+import type { Download } from '../../voxura/src/downloader';
 
 const voxura = new Voxura(APP_PATH);
 await voxura.startInstances();
 await voxura.auth.loadFromFile();
 await voxura.auth.refreshAccounts();
+
+voxura.downloader.listenForEvent('downloadStarted', (download: Download) => {
+    if (download.visible)
+        toast('Download Started', download.displayName, DownloadIcon);
+});
+voxura.downloader.listenForEvent('downloadFinished', (download: Download) => {
+    if (download.visible)
+        toast('Download Finished', download.displayName, CheckCircle);
+})
 
 export function useAccounts(): Account[] {
     const subscription = useMemo(() => ({
@@ -36,7 +49,7 @@ export function useInstance(id: string) {
             voxura.instances.listenForEvent('listChanged', callback);
             return () => voxura.instances.unlistenForEvent('listChanged', callback);
         },
-        getCurrentValue: () => voxura.instances.get(id)
+        getCurrentValue: () => voxura.getInstance(id)
     }), [id]);
     return useSubscription(subscription);
 };
@@ -51,10 +64,21 @@ export function useInstances() {
     return useSubscription(subscription);
 };
 
+export function useDownloads() {
+    const subscription = useMemo(() => ({
+        subscribe: (callback: any) => {
+            voxura.downloader.listenForEvent('changed', callback);
+            return () => voxura.downloader.unlistenForEvent('changed', callback);
+        },
+        getCurrentValue: () => voxura.downloader.downloads
+    }), []);
+    return useSubscription(subscription, true);
+};
+
 function useSubscription<T>({ subscribe, getCurrentValue }: {
     subscribe: (callback: Function) => () => void,
     getCurrentValue: () => T
-}): T {
+}, skipCheck?: boolean): T {
     const [state, setState] = useState(() => ({
         getCurrentValue,
         subscribe,
@@ -81,7 +105,7 @@ function useSubscription<T>({ subscribe, getCurrentValue }: {
                 if (prevState.getCurrentValue !== getCurrentValue || prevState.subscribe !== subscribe)
                     return prevState;
                 const value = getCurrentValue();
-                if (prevState.value === value)
+                if (!skipCheck && prevState.value === value)
                     return prevState;
 
                 return { ...prevState, value };
@@ -101,5 +125,5 @@ function useSubscription<T>({ subscribe, getCurrentValue }: {
 export { AvatarType } from '../../voxura/src/auth/account';
 
 console.log('started voxura', voxura);
-globalThis.voxura = voxura;
+(globalThis as any).voxura = voxura;
 export default voxura;

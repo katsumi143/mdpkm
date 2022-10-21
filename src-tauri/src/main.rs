@@ -45,7 +45,11 @@ fn main() {
             fs_read_binary_in_zip,
             send_window_event,
             voxura::voxura_launch,
-            voxura::voxura_read_mods
+            voxura::voxura_read_mods,
+            voxura::voxura_files_exist,
+            voxura::voxura_download_file,
+            voxura::voxura_extract_archive,
+            voxura::voxura_extract_archive_contains
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

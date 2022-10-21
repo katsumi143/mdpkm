@@ -23,6 +23,7 @@ sysinfo = "0.23.13"
 reqwest = "0.11.10"
 windows = { version = "0.35.0", features = ["System", "Storage", "Management_Deployment", "ApplicationModel", "Foundation", "Foundation_Collections", "Security_Authentication_Web_Core", "Security_Credentials"] }
 walkdir = "2.3.2"
+futures = "0.3"
 jwalk = "0.6.0"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.1.1", features = ["clipboard-write-text", "dialog-open", "dialog-save", "fs-all", "http-multipart", "http-request", "os-all", "path-all", "process-exit", "process-relaunch", "protocol-asset", "shell-open", "updater", "window-close", "window-create", "window-maximize", "window-minimize", "window-set-focus", "window-start-dragging", "window-unmaximize"] }

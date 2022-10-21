@@ -1,0 +1,19 @@
+{
+    "exclude": ["build", "src-tauri"],
+    "compilerOptions": {
+        "types": [
+            "unplugin-icons/types/react",
+        ],
+        "jsx": "react",
+        "strict": true,
+        "target": "ESNext",
+        "module": "ESNext",
+        "allowJs": true,
+        "isolatedModules": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "useDefineForClassFields": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true
+    }
+}

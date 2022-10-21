@@ -17,6 +17,7 @@ import Settings from '/src/components/Settings';
 import Accounts from '/src/components/Accounts';
 import PageItem from '/src/components/Pages/Item';
 import Markdown from '/voxeliface/components/Markdown';
+import Downloads from '../components/Downloads';
 import Typography from '/voxeliface/components/Typography';
 import LoaderSetup from '/src/components/LoaderSetup';
 import ModpackSetup from '/src/components/ModpackSetup';
@@ -212,21 +213,18 @@ export default Patcher.register(function Home() {
                     {/*<NavigationItem name={t('app.mdpkm.home.navigation.news')} icon={<Newspaper size={16}/>} value={2}>
                         news
                     </NavigationItem>*/}
-                    <NavigationItem name={t('app.mdpkm.home.navigation.accounts')} icon={<IconBiPerson size={16}/>} value={3} footer>
+                    <NavigationItem name={t('app.mdpkm.home.navigation.downloads')} icon={<IconBiDownload size={16}/>} value={3} footer>
+                        <Downloads/>
+                    </NavigationItem>
+                    <NavigationItem name={t('app.mdpkm.home.navigation.accounts')} icon={<IconBiPerson size={16}/>} value={4} footer>
                         <Accounts/>
                     </NavigationItem>
-                    <NavigationItem name={t('app.mdpkm.home.navigation.settings')} icon={<IconBiGear size={16}/>} value={4} footer>
+                    <NavigationItem name={t('app.mdpkm.home.navigation.settings')} icon={<IconBiGear size={16}/>} value={5} footer>
                         <Settings/>
                     </NavigationItem>
                 </SideNavigation>
             </Main>
-            <Toaster position="bottom-right" toastOptions={{
-                style: {
-                    color: 'var(--colors-primaryColor)',
-                    fontSize: '.9rem',
-                    background: 'var(--colors-secondaryBackground)'
-                }
-            }}/>
+            <Toaster position="bottom-right"/>
         </App>
     );
 });
