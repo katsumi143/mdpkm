@@ -1,6 +1,6 @@
 import CheckCircle from '~icons/bi/check-circle';
 import DownloadIcon from '~icons/bi/download';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useSyncExternalStore } from 'react';
 
 import { toast } from '../util';
 import { Voxura } from '../../voxura';
@@ -24,20 +24,14 @@ voxura.downloader.listenForEvent('downloadFinished', (download: Download) => {
 
 export function useAccounts(): Account[] {
     const subscription = useMemo(() => ({
-        subscribe: (callback: any) => {
-            voxura.auth.listenForEvent('accountsChanged', callback);
-            return () => voxura.auth.unlistenForEvent('accountsChanged', callback);
-        },
+        subscribe: (callback: any) => voxura.auth.listenForEvent('accountsChanged', callback),
         getCurrentValue: () => voxura.auth.accounts
     }), []);
     return useSubscription(subscription);
 };
 export function useCurrentAccount(): Account | undefined {
     const subscription = useMemo(() => ({
-        subscribe: (callback: any) => {
-            voxura.auth.listenForEvent('selectedChanged', callback);
-            return () => voxura.auth.unlistenForEvent('selectedChanged', callback);
-        },
+        subscribe: (callback: any) => voxura.auth.listenForEvent('selectedChanged', callback),
         getCurrentValue: () => voxura.auth.getCurrent()
     }), []);
     return useSubscription(subscription);
@@ -46,8 +40,10 @@ export function useCurrentAccount(): Account | undefined {
 export function useInstance(id: string) {
     const subscription = useMemo(() => ({
         subscribe: (callback: any) => {
-            voxura.instances.listenForEvent('listChanged', callback);
-            return () => voxura.instances.unlistenForEvent('listChanged', callback);
+            const instance = voxura.getInstance(id);
+            if (instance)
+                return instance.listenForEvent('changed', callback);
+            return voxura.instances.listenForEvent('listChanged', callback);
         },
         getCurrentValue: () => voxura.getInstance(id)
     }), [id]);
@@ -55,30 +51,24 @@ export function useInstance(id: string) {
 };
 export function useInstances() {
     const subscription = useMemo(() => ({
-        subscribe: (callback: any) => {
-            voxura.instances.listenForEvent('listChanged', callback);
-            return () => voxura.instances.unlistenForEvent('listChanged', callback);
-        },
-        getCurrentValue: () => voxura.instances
+        subscribe: (callback: any) => voxura.instances.listenForEvent('listChanged', callback),
+        getCurrentValue: () => voxura.instances.getAll()
     }), []);
     return useSubscription(subscription);
 };
 
 export function useDownloads() {
     const subscription = useMemo(() => ({
-        subscribe: (callback: any) => {
-            voxura.downloader.listenForEvent('changed', callback);
-            return () => voxura.downloader.unlistenForEvent('changed', callback);
-        },
+        subscribe: (callback: any) => voxura.downloader.listenForEvent('changed', callback),
         getCurrentValue: () => voxura.downloader.downloads
     }), []);
-    return useSubscription(subscription, true);
+    return useSubscription(subscription);
 };
 
 function useSubscription<T>({ subscribe, getCurrentValue }: {
     subscribe: (callback: Function) => () => void,
     getCurrentValue: () => T
-}, skipCheck?: boolean): T {
+}): T {
     const [state, setState] = useState(() => ({
         getCurrentValue,
         subscribe,
@@ -105,8 +95,8 @@ function useSubscription<T>({ subscribe, getCurrentValue }: {
                 if (prevState.getCurrentValue !== getCurrentValue || prevState.subscribe !== subscribe)
                     return prevState;
                 const value = getCurrentValue();
-                if (!skipCheck && prevState.value === value)
-                    return prevState;
+                /*if (prevState.value === value)
+                    return prevState;*/
 
                 return { ...prevState, value };
             });
