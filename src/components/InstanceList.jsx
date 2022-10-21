@@ -12,15 +12,14 @@ import Patcher from '/src/common/plugins/patcher';
 import { useInstances } from '../common/voxura';
 export default Patcher.register(function InstanceList({ id, onSelect }) {
     const { t } = useTranslation();
-    const state = null;
-    const manager = useInstances();
-    const instances = manager.getAll();
+    const instances = useInstances();
     const [loading, setLoading] = useState(false);
     const refresh = async() => {
         setLoading(true);
         await manager.refreshInstances();
         setLoading(false);
     };
+    console.log(instances);
     return <React.Fragment>
         <Grid width="100%" padding="12px 16px" alignItems="center" background="$secondaryBackground" justifyContent="space-between">
             <Grid spacing={12} alignItems="center">
@@ -44,7 +43,7 @@ export default Patcher.register(function InstanceList({ id, onSelect }) {
         }}>
             {instances ?
                 instances.length > 0 ? instances.map((instance, index) => {
-                    return <Instance id={instance.id} key={index} onView={() => onSelect(instance.id)} css={{
+                    return <Instance key={index} onView={() => onSelect(instance.id)} instance={instance} css={{
                         animationDelay: `${100 * index}ms`,
 
                         '& > div': {

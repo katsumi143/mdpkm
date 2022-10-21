@@ -1,19 +1,7 @@
 {
-    "states.none": "Installed",
-    "states.launched": "Minecraft has launched!",
-    "states.preparing": "Preparing for launch",
-    "states.launching": "Launching {{name}}",
-    "states.verifying": "Verifying Resources",
-    "states.extracting": "Extracting Natives",
-    "states.launching2": "Launching Minecraft",
-    "states.copying_legacy": "Copying Assets to Legacy Resources",
-    "states.modifying_info": "Modifying Launch Info for {{name}}",
-    "states.reading_manifest": "Reading Minecraft Manifest",
-    "states.downloading_mods": "Download Mods {{val}}/{{len}}",
-    "states.processing_forge": "Processing Forge ({{val}}/{{len}})",
-    "states.downloading_forge": "Download Forge ({{val}}%)",
-    "states.installing_loader": "Installing {{name}} {{version}}",
-    "states.downloading_libraries": "Downloading Libraries",
+    "state.0": "Ready to launch",
+    "state.1": "Launching client",
+    "state.2": "Client is running",
 
     "toasts.import_success": "Imported {{name}} sucessfully!",
 

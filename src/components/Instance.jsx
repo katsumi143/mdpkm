@@ -9,7 +9,7 @@ import Typography from '/voxeliface/components/Typography';
 import InstanceIcon from './InstanceIcon';
 
 import Patcher from '/src/common/plugins/patcher';
-import { useInstance } from '../common/voxura';
+import { INSTANCE_STATE_ICONS } from '../util/constants';
 const Animation = keyframes({
     '0%': {
         opacity: 0,
@@ -21,9 +21,9 @@ const Animation = keyframes({
     }
 });
 
-export default Patcher.register(function Instance({ id, css, onView }) {
+export default Patcher.register(function Instance({ css, onView, instance }) {
     const { t } = useTranslation();
-    const instance = useInstance(id);
+    const StateIcon = INSTANCE_STATE_ICONS[instance.state];
     const isCompact = useSelector(state => state.settings.uiStyle) === 'compact';
     if (!instance)
         return;
@@ -55,11 +55,14 @@ export default Patcher.register(function Instance({ id, css, onView }) {
                             size={isCompact ? 11 : '.8rem'}
                             color="$secondaryColor"
                             weight={isCompact ? 300 : 400}
+                            spacing={5}
                             textalign="start"
                             lineheight={1}
+                            horizontal
                             whitespace="nowrap"
                         >
-                            {instance.state ?? t('app.mdpkm.instances:states.none')}
+                            <StateIcon fontSize={10}/>
+                            {t(`app.mdpkm.instances:state.${instance.state}`)}
                         </Typography>
                     </Grid>
                 </Grid>

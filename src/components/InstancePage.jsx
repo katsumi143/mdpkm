@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
 import { open } from '@tauri-apps/api/shell';
 import { keyframes } from '@stitches/react';
 import { Breakpoint } from 'react-socks';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useSelector, useDispatch } from 'react-redux';
 
 import Mod from './Mod';
 import Tag from './Tag';
@@ -35,20 +34,23 @@ import ResourcePackManagement from './ResourcePackManagement';
 
 import API from '../common/api';
 import Util from '../common/util';
-import Voxura from '../common/voxura';
 import Patcher from '/src/common/plugins/patcher';
-import { useInstance } from '../common/voxura';
+import { toast } from '../util';
+import { useInstance, useCurrentAccount } from '../common/voxura';
+import { INSTANCE_STATE_ICONS } from '../util/constants';
 import { LoaderStates, DisabledLoaders } from '../common/constants';
 
 const totalMemory = await Util.getTotalMemory();
 export default Patcher.register(function InstancePage({ id }) {
     const { t } = useTranslation();
+    const account = useCurrentAccount();
     const uiStyle = useSelector(state => state.settings.uiStyle);
     const instance = useInstance(id);
+    const StateIcon = INSTANCE_STATE_ICONS[instance?.state];
     const showBanner = useSelector(state => state.settings['instances.showBanner']);
     const defaultResolution = useSelector(state => state.settings['instances.defaultResolution'])
 
-    const { name, path, config, modpack, minState } = instance ?? {};
+    const { name, path, config, modpack } = instance ?? {};
     const loaderData = API.getLoader(config?.loader?.type);
     const versionBanner = (loaderData?.versionBanners ?? API.getLoader('java')?.versionBanners)?.find(v => v?.[0].test(config?.loader?.game));
     const loaderDisabled = DisabledLoaders.some(d => d === config?.loader?.type);
@@ -58,7 +60,6 @@ export default Patcher.register(function InstancePage({ id }) {
         instanceName: name,
         instanceResolution: instance?.config?.resolution ?? defaultResolution
     };
-    const Account = Util.getAccount(useSelector);
     const logErrors = instance?.launchLogs?.filter(({ type }) => type === 'ERROR');
     const [saving, setSaving] = useState(false);
     const [tabPage, setTabPage] = useState(0);
@@ -102,25 +103,9 @@ export default Patcher.register(function InstancePage({ id }) {
         Instances.getInstance(id).delete();
     };
     const launchInstance = async() => {
-        /*const [verifiedAccount, changed] = await toast.promise(API.Minecraft.verifyAccount(Account), {
-            error: 'Failed to verify account',
-            success: 'Minecraft Account verified',
-            loading: `Verifying tokens for '${Account.profile.name}'`
-        });
-        if(changed) {
-            dispatch(writeAccount(verifiedAccount));
-            dispatch(saveAccounts());
-        }
-        const Instance = Instances.getInstance(id);
-        if (Instance)
-            Instance.launch(verifiedAccount).catch(err => {
-                console.error(err);
-                toast.error(`Failed to launch ${instance.name}!\n${err.message ?? 'Unknown Reason.'}`);
-            });
-        else
-            toast.error(`getInstance failed.\nTry refreshing your instances.`);*/
-        const Instance = Voxura.getInstance(id);
-        Instance.launch();
+        await instance.launch();
+
+        toast('Minecraft has launched', instance.name);
     };
     const saveGameLoaderChanges = async() => {
         setEditingLoader('saving');
@@ -201,6 +186,7 @@ export default Patcher.register(function InstancePage({ id }) {
             });
         }
     }, [editingLoader]);
+    console.log('rendering InstancePage', instance);
 
     if(!instance)
         return;
@@ -227,9 +213,10 @@ export default Patcher.register(function InstancePage({ id }) {
                     <Typography size={uiStyle === 'compact' ? '1.2rem' : '1.3rem'} weight={600} lineheight={1}>
                         <TextTransition inline>{name}</TextTransition>
                     </Typography>
-                    <Typography size={uiStyle === 'compact' ? '.9rem' : '1rem'} color="$secondaryColor" weight={400} lineheight={1}>
+                    <Typography size={uiStyle === 'compact' ? '.9rem' : '1rem'} color="$secondaryColor" weight={400} spacing={6} horizontal lineheight={1}>
+                        <StateIcon fontSize={12}/>
                         <TextTransition inline noOverflow>
-                            {minState ?? t('app.mdpkm.instances:states.none')}
+                            {t(`app.mdpkm.instances:state.${instance.state}`)}
                         </TextTransition>
                     </Typography>
                 </Grid>
@@ -244,8 +231,8 @@ export default Patcher.register(function InstancePage({ id }) {
                             {t('app.mdpkm.common:actions.open_folder')}
                         </Breakpoint>
                     </Button>
-                    <Button onClick={launchInstance} disabled={loaderDisabled || !!minState || !Account}>
-                        {!!minState ? <BasicSpinner size={16}/> : <IconBiPlayFill/>}
+                    <Button onClick={launchInstance} disabled={loaderDisabled || instance.isLaunching || instance.isRunning || !account}>
+                        {instance.isLaunching ? <BasicSpinner size={16}/> : <IconBiPlayFill/>}
                         <Breakpoint customQuery="(min-width: 700px)">
                             {t('app.mdpkm.common:actions.launch')}
                         </Breakpoint>
@@ -323,26 +310,22 @@ export default Patcher.register(function InstancePage({ id }) {
                     </Grid>}
                 </Grid>
             }
-            {!Account &&
-                <InstanceInfo animate css={{ alignItems: 'start' }}>
-                    <IconBiExclamationCircleFill size={24} color="var(--colors-primaryColor)"/>
+            {!account &&
+                <InstanceInfo animate>
+                    <Typography>
+                        <IconBiExclamationCircle/>
+                    </Typography>
                     <Grid spacing={4} direction="vertical">
-                        <Typography lineheight={1}>
-                            Account Required
+                        <Typography size=".9rem" lineheight={1}>
+                            No Minecraft Account selected
                         </Typography>
-                        <Typography size=".8rem" color="$secondaryColor" weight={400} textalign="start" lineheight={1.2}>
-                            You don't have a Minecraft Account selected.<br/>
-                            Add a Minecraft Account or choose one in Settings.<br/>
-                            <span>
-                                Need some help? Read the <BrowserLink href="https://docs.mdpkm.voxelified.com/docs/tutorials/account-login">
-                                    guide
-                                </BrowserLink>!
-                            </span>
+                        <Typography size=".8rem" color="$secondaryColor" weight={400} textalign="start" lineheight={1.2} css={{display:'block'}}>
+                            Add a new account or choose one in <b>Accounts</b>.
                         </Typography>
                     </Grid>
                 </InstanceInfo>
             }
-            {Account && versionBanner && !instance.launchLogs && showBanner &&
+            {account && versionBanner && !instance.launchLogs && showBanner &&
                 <InstanceInfo css={{ justifyContent: 'space-between' }}>
                     <Grid spacing={uiStyle === 'compact' ? '.3rem' : '.8rem'}>
                         <ImageTransition
@@ -682,7 +665,7 @@ const InstanceInfoAnimation = keyframes({
 });
 
 function InstanceInfo({ animate, children, css }) {
-    return <Grid margin="0 1rem 1rem" spacing=".8rem" padding={12} alignItems="center" background="$secondaryBackground2" borderRadius="1rem" css={{
+    return <Grid margin="0 1rem 1rem" spacing={16} padding="16px 24px" alignItems="center" background="$secondaryBackground2" borderRadius="1rem" css={{
         position: 'relative',
         animation: animate ? `${InstanceInfoAnimation} .5s cubic-bezier(0.4, 0, 0.2, 1)` : null,
         ...css
