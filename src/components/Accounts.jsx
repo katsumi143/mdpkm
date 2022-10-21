@@ -1,9 +1,8 @@
-import toast from 'react-hot-toast';
 import { open } from '@tauri-apps/api/shell';
 import { appWindow } from '@tauri-apps/api/window';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 
 import Tag from './Tag';
 import Grid from '/voxeliface/components/Grid';
@@ -17,37 +16,33 @@ import * as DropdownMenu from '/voxeliface/components/DropdownMenu';
 
 import API from '../common/api';
 import Patcher from '/src/common/plugins/patcher';
+import { toast } from '../util';
 import voxura, { AvatarType, useAccounts, useCurrentAccount } from '../common/voxura';
 export default Patcher.register(function Settings() {
     const { t } = useTranslation();
     const current = useCurrentAccount();
     const accounts = useAccounts();
-    const dispatch = useDispatch();
     const addingAccount = useSelector(state => state.accounts.addingAccount);
     const [error, setError] = useState();
     const changeAccount = account => voxura.auth.selectAccount(account);
     const deleteAccount = async account => {
         await account.remove();
-        toast.success(`Successfully removed ${name}`);
+        toast(`Account removed`, `${account.name} has been removed.`);
     }
     const addNewAccount = async() => {
-        dispatch(setAddingAccount(true));
         try {
-            toast('Check your browser, a new tab has opened.');
+            toast('Check your browser', 'A new tab has opened in your default browser.');
             const accessCode = await API.Microsoft.getAccessCode(true);
             appWindow.setFocus();
-            toast.loading('Your account is being added...\nMake sure to close the browser tab!', {
-                duration: 3000
-            });
+            toast('Adding account', 'Make sure to close the browser tab!');
 
             const account = await voxura.auth.login(accessCode);
-            toast.success(`Successfully added '${account.name}'`);
+            toast('Account added', `${account.name} has been added.`);
         } catch(err) {
             console.error(err);
             if (err.includes('Network Error'))
                 setError('NETWORK_ERR');
         }
-        dispatch(setAddingAccount(false));
     };
     return (
         <Grid height="-webkit-fill-available" padding=".75rem 1rem" direction="vertical" css={{
