@@ -41,7 +41,7 @@ export default function TextTransition({
         >
             <span ref={placeholderRef} style={{
                 visibility: 'hidden'
-            }}>{trildren[0]}</span>
+            }}>{trildren?.[0]}</span>
             <div
                 style={{
                     top: 0,
