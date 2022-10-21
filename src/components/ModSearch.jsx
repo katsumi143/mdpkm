@@ -14,6 +14,7 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
 import Util from '../common/util';
+import voxura from '../common/voxura';
 import Patcher from '/src/common/plugins/patcher';
 import { useInstance } from '../common/voxura';
 export default Patcher.register(function ModSearch({ instanceId }) {
@@ -40,7 +41,8 @@ export default Patcher.register(function ModSearch({ instanceId }) {
             return toast.error(`API.${api}.Mods is missing`);
         }
         setSearching(true);
-        API.get(api).Mods.search(query, {
+        //API.get(api).Mods.search(query, {
+        voxura.getPlatform(api).searchMods(query, {
             limit: pageLimit,
             offset: (page - 1) * pageLimit,
             loaders: [loaderData?.asLoader ?? config.loader.type],

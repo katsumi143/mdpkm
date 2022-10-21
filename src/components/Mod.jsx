@@ -22,10 +22,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
     const { config, downloading } = instance ?? {};
     const installed = config?.modifications?.some(m => m[3] === mod?.slug);
     const installing = downloading?.some(d => d.id === (mod?.id ?? mod?.project_id));
-    const installMod = () => Instances.getInstance(instanceId).downloadMod(
-        mod?.id ?? mod?.project_id,
-        mod.source ? API.get(mod.source) : API.Modrinth
-    );
+    const installMod = () => instance.installMod(mod);
     useEffect(() => {
         if(id && typeof api === 'string' && !mod)
             API.get(api).Mods.get(id).then(setMod).catch(err => {
@@ -64,7 +61,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                     </Button>
                 </Grid>
             </Grid> : <React.Fragment>
-                <Image src={mod.icon} size={iconSize} background="$secondaryBackground" borderRadius={4} css={{
+                <Image src={mod.webIcon} size={iconSize} background="$secondaryBackground" borderRadius={4} css={{
                     minWidth: iconSize,
                     minHeight: iconSize,
                     boxShadow: '$buttonShadow',
@@ -79,7 +76,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                     <Typography size={isCompact ? 14 : '1.1rem'} spacing={4} horizontal lineheight={1} css={{
                         width: 'fit-content'
                     }}>
-                        {mod.title}
+                        {mod.displayName}
                         {mod.author && 
                             <Typography size={isCompact ? 10 : '.7rem'} color="$secondaryColor" lineheight={1}>
                                 {t('app.mdpkm.mod.author', { val: mod.author })}
