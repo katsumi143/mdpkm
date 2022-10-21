@@ -1,10 +1,6 @@
-import { useRef, useState, useEffect, Children } from 'react';
-import { useSpring, useTransition, animated, config } from "react-spring";
+import { useRef, Children } from 'react';
+import { useTransition, animated, config } from "react-spring";
 
-const newChildren = data => ({
-    key: Date.now(),
-    data: Children.map(data, d => d.toString()).join('')
-});
 const types = {
     fade: {
         from: { opacity: 0 },
@@ -12,65 +8,41 @@ const types = {
         leave: { opacity: 0 }
     },
     fadeUp: {
-        from: { opacity: 0, transform: 'translate3d(0, 100%, 0)' },
+        from: { opacity: 0, transform: 'translate3d(0, 50%, 0)' },
         enter: { opacity: 1, transform: 'translate3d(0, 0, 0)' },
-        leave: { opacity: 0, transform: 'translate3d(0, -100%, 0)' }
+        leave: { opacity: 0, transform: 'translate3d(0, -50%, 0)' }
     }
 };
 export default function TextTransition({
     type = 'fadeUp',
-    delay = 0,
     style = {},
     inline = false,
     children,
-    className = '',
     noOverflow = false,
     springConfig = config.default
 }) {
     const placeholderRef = useRef(null);
-    const [width, setWidth] = useState({ width: inline ? 0 : 'auto' });
-    const [content, setContent] = useState(() => newChildren(children));
-    const [timeoutId, setTimeoutId] = useState(0);
-    const transitions = useTransition(content, {
+    const trildren = Children.map(children, c => c.toString());
+    const transitions = useTransition(trildren, {
         from: types[type].from,
         enter: types[type].enter,
         leave: types[type].leave,
         config: springConfig
     });
-    const animatedProps = useSpring({
-        to: width,
-        config: springConfig
-    });
-    useEffect(() => {
-        setTimeoutId(
-            setTimeout(() => {
-                if (!placeholderRef.current)
-                    return;
-                placeholderRef.current.innerHTML = children.toString();
-                if (inline)
-                    setWidth({ width: placeholderRef.current.offsetWidth });
-                setContent(newChildren(children));
-            }, delay)
-        );
-    }, [children]);
-    useEffect(() => () => clearTimeout(timeoutId), []);
 
     return (
         <animated.div
-            className={`transition ${className}`}
             style={{
-                ...animatedProps,
                 display: inline ? 'inline-block' : 'block',
                 position: 'relative',
                 whiteSpace: inline ? 'nowrap' : 'normal',
                 ...style,
             }}
         >
-            <span ref={placeholderRef} className="transition_placeholder" style={{
+            <span ref={placeholderRef} style={{
                 visibility: 'hidden'
-            }}/>
+            }}>{trildren[0]}</span>
             <div
-                className="transition_inner"
                 style={{
                     top: 0,
                     left: 0,
@@ -81,8 +53,9 @@ export default function TextTransition({
                     overflow: noOverflow ? 'hidden' : 'visible'
                 }}
             >
-                {transitions((style, { key, data }) =>
+                {transitions((style, data, key) =>
                     <animated.div key={key} style={{
+                        opacity: 0,
                         position: 'absolute',
                         ...style
                     }}>
