@@ -8,7 +8,7 @@ import { getName, getVersion, getTauriVersion } from '@tauri-apps/api/app';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
-import Toggle from './Toggle';
+import Switch from '/voxeliface/components/Switch';
 import Button from '/voxeliface/components/Button';
 import Header from '/voxeliface/components/Typography/Header';
 import TextInput from '/voxeliface/components/Input/Text';
@@ -155,11 +155,10 @@ export default Patcher.register(function Settings() {
                         <Header spacious>{t('app.mdpkm.settings.instances')}</Header>
                         <Grid spacing={8} padding="0 1rem" direction="vertical">
                             <Setting name="instances.pageBanner" direction="horizontal">
-                                <Toggle
-                                    size="small"
+                                <Switch
                                     value={showInstanceBanner}
-                                    onChange={() =>
-                                        setSetting('instances.showBanner', !showInstanceBanner)
+                                    onChange={v =>
+                                        setSetting('instances.showBanner', v)
                                     }
                                 />
                                 <Typography size=".8rem" color="$secondaryColor">
@@ -197,11 +196,10 @@ export default Patcher.register(function Settings() {
                                 </Grid>
                             </Setting>
                             <Setting name="instances.modSearchPopout" direction="horizontal">
-                                <Toggle
-                                    size="small"
+                                <Switch
                                     value={modSearchPopout}
-                                    onChange={() =>
-                                        setSetting('instances.modSearchPopout', !modSearchPopout)
+                                    onChange={v =>
+                                        setSetting('instances.modSearchPopout', v)
                                     }
                                 />
                                 <Typography size=".8rem" color="$secondaryColor">
@@ -209,11 +207,10 @@ export default Patcher.register(function Settings() {
                                 </Typography>
                             </Setting>
                             <Setting name="instances.modSearchSummaries" direction="horizontal">
-                                <Toggle
-                                    size="small"
+                                <Switch
                                     value={modSearchSummaries}
-                                    onChange={() =>
-                                        setSetting('instances.modSearchSummaries', !modSearchSummaries)
+                                    onChange={v =>
+                                        setSetting('instances.modSearchSummaries', v)
                                     }
                                 />
                                 <Typography size=".8rem" color="$secondaryColor">

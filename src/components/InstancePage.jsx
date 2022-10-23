@@ -11,7 +11,7 @@ import Tabs from '/voxeliface/components/Tabs';
 import Grid from '/voxeliface/components/Grid';
 import Modal from './Modal';
 import Image from '/voxeliface/components/Image';
-import Toggle from './Toggle';
+import Switch from '/voxeliface/components/Switch';
 import Button from '/voxeliface/components/Button';
 import Slider from '/voxeliface/components/Input/Slider';
 import * as Select from '/voxeliface/components/Input/Select';
@@ -500,7 +500,7 @@ export default Patcher.register(function InstancePage({ id }) {
                                     </Select.Group>
                                 </Select.Root>
 
-                                {Instances.getInstance(id)?.isModded() && <React.Fragment>
+                                {instance?.isModded && <React.Fragment>
                                     <InputLabel spacious>Loader Version</InputLabel>
                                     <Select.Root
                                         value={loaderVersion}
@@ -518,15 +518,20 @@ export default Patcher.register(function InstancePage({ id }) {
                                 </React.Fragment>}
 
                                 <InputLabel spacious>Download after saving</InputLabel>
-                                <Toggle size="small" value={downloadLoaderChanges} onChange={setDownloadLoaderChanges}/>
+                                <Grid spacing={8}>
+                                    <Switch value={downloadLoaderChanges} onChange={setDownloadLoaderChanges}/>
+                                    <Typography size=".8rem" color="$secondaryColor">
+                                        {t(`app.mdpkm.common:labels.toggle_${downloadLoaderChanges}`)}
+                                    </Typography>
+                                </Grid>
 
                                 <Grid margin="2rem 0 0" spacing={8}>
                                     <Button theme="accent" onClick={saveGameLoaderChanges}>
-                                        <PlusLg size={14}/>
+                                        <IconBiPencilFill fontSize={11}/>
                                         {t('app.mdpkm.common:actions.save_changes')}
                                     </Button>
                                     <Button theme="secondary" onClick={() => setEditingLoader(false)}>
-                                        <XLg/>
+                                        <IconBiXLg/>
                                         {t('app.mdpkm.common:actions.cancel')}
                                     </Button>
                                 </Grid>

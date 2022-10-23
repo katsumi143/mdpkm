@@ -10,7 +10,7 @@ import FiletypeJson from '~icons/bi/filetype-json';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
-import Toggle from './Toggle';
+import Switch from '/voxeliface/components/Switch';
 import Button from '/voxeliface/components/Button';
 import Divider from '/voxeliface/components/Divider';
 import Typography from '/voxeliface/components/Typography';
@@ -120,12 +120,12 @@ export default Patcher.register(function InstanceExport({ instanceId }) {
                 }).find(([reg]) => new RegExp(reg).test(name))?.[1] ?? (isDir ? FolderFill : IconBiFileText);
                 return <React.Fragment key={index}>
                     <Grid spacing={8} padding="4px 8px" alignItems="center">
-                        <Toggle size="small" value={selected} disabled={banned} onChange={event => {
-                            items.find(f => f.name === name).selected = event.target.value;
+                        <Switch value={selected} disabled={banned} onChange={value => {
+                            items.find(f => f.name === name).selected = value;
                             if(isDir)
                                 for (const file of items)
                                     if(!file.banned && file.path.replace(/\/+|\\+/g, '/').replace(instance.path.replace(/\/+|\\+/g, '/'), '').startsWith(`/${name}/`))
-                                        file.selected = event.target.value;
+                                        file.selected = value;
                             setItems(items);
                         }}/>
                         <Icon color={banned ? 'var(--colors-secondaryColor)' : 'var(--colors-primaryColor)'} style={{fontSize: 14}}/>
