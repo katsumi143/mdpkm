@@ -76,23 +76,26 @@ export default Patcher.register(function InstancePage({ id }) {
     const saveSettings = async() => {
         setSaving(true);
 
-        const Instance = Instances.getInstance(id);
         if (instanceName !== instance.name) {
             const originalPath = path.toString();
             const splitPath = path.split(/\/+|\\+/g);
             splitPath.reverse()[0] = instanceName;
 
-            Instance.name = instanceName;
-            Instance.path = splitPath.reverse().join('/');
-            await Util.moveFolder(originalPath, Instance.path);
+            instance.name = instanceName;
+            instance.path = splitPath.reverse().join('/');
+            await Util.moveFolder(originalPath, instance.path);
         }
 
-        await Instance.saveConfig({
+        /*await Instance.saveConfig({
             ...await Instance.getConfig(),
             ram: instanceRam[0],
             resolution: instanceResolution
         });
-        Instance.updateStore();
+        Instance.updateStore();*/
+        instance.config.ram = instanceRam[0];
+        instance.config.resolution = instanceResolution;
+        await instance.saveConfig();
+
         setSaving(false);
     };
     const viewModpackSite = () => open(modpack.websiteUrl);
