@@ -200,10 +200,10 @@ export default Patcher.register(function InstancePage({ id }) {
                     }
                 }}/>
                 <Grid margin={uiStyle === 'compact' ? '0 0 0 1rem' : '0 0 0 1.2rem'} spacing={uiStyle === 'compact' ? 4 : 6} direction="vertical" justifyContent="center">
-                    <Typography size={uiStyle === 'compact' ? '1.2rem' : '1.3rem'} weight={600} lineheight={1}>
+                    <Typography size={uiStyle === 'compact' ? 20 : '1.3rem'} weight={600} lineheight={1}>
                         <TextTransition inline>{name}</TextTransition>
                     </Typography>
-                    <Typography size={uiStyle === 'compact' ? '.9rem' : '1rem'} color="$secondaryColor" weight={400} spacing={6} horizontal lineheight={1}>
+                    <Typography size={uiStyle === 'compact' ? 14 : 16} color="$secondaryColor" weight={400} spacing={6} horizontal lineheight={1}>
                         <StateIcon fontSize={12}/>
                         <TextTransition inline noOverflow>
                             {t(`app.mdpkm.instances:state.${instance.state}`)}

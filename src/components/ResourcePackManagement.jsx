@@ -1,5 +1,6 @@
 import toast from 'react-hot-toast';
 import { open } from '@tauri-apps/api/dialog';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 
@@ -16,6 +17,7 @@ import { useInstance } from '../common/voxura';
 export default Patcher.register(function ResourcePackManagement({ instanceId }) {
     const { t } = useTranslation();
     const instance = useInstance(instanceId);
+    const isCompact = useSelector(state => state.settings.uiStyle) === 'compact';
     const [items, setItems] = useState();
     const [filter, setFilter] = useState('');
     const addResourcePack = async() => {
@@ -100,30 +102,20 @@ export default Patcher.register(function ResourcePackManagement({ instanceId }) 
         {Array.isArray(items) && items?.filter(({ name }) =>
             name.toLowerCase().includes(filter)
         ).map((item, index) =>
-            <Grid key={index} padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{
+            <Grid key={index} padding={8} spacing={isCompact ? 10 : 12} alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{
                 position: 'relative'
             }}>
                 <Image
                     src={item.icon ? `data:image/png;base64,${item.icon}` : 'img/icons/minecraft/unknown_pack.png'}
-                    size={46}
+                    size={isCompact ? 38 : 46}
                     background="$secondaryBackground"
                     borderRadius={4}
-                    css={{
-                        minWidth: 46,
-                        minHeight: 46,
-                        transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-
-                        '&:hover': {
-                            minWidth: 64,
-                            minHeight: 64
-                        }
-                    }}
                 />
-                <Grid spacing={4} direction="vertical">
-                    <Typography size=".9rem" lineheight={1}>
+                <Grid spacing={2} direction="vertical">
+                    <Typography size={isCompact ? 14 : 16} lineheight={1}>
                         {item.name}
                     </Typography>
-                    <Typography size=".8rem" color="$secondaryColor" weight={400} lineheight={1}>
+                    <Typography size={isCompact ? 10 : 12} color="$secondaryColor" lineheight={1}>
                         {item.metadata.pack?.description}
                     </Typography>
                 </Grid>

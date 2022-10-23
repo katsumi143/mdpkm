@@ -16,7 +16,7 @@ export default Patcher.register(function Server({ name, icon, motd, type, player
     return <Grid height="fit-content" padding={8} spacing={12} background="$secondaryBackground2" borderRadius={8} justifyContent="space-between" css={{
         minWidth: '24rem'
     }}>
-        <Grid spacing={12}>
+        <Grid spacing={isCompact ? 10 : 12}>
             <Image
                 src={icon ? icon.startsWith('data:') ? icon : `data:image/png;base64,${icon}` : 'img/icons/minecraft/unknown_server.png'}
                 size={iconSize}
@@ -33,8 +33,8 @@ export default Patcher.register(function Server({ name, icon, motd, type, player
                     }
                 }}
             />
-            <Grid height="100%" spacing={isCompact ? 2 : 4} direction="vertical">
-                <Typography size={isCompact ? 14 : '.9rem'} margin="6px 0 0" horizontal lineheight={1} whitespace="nowrap">
+            <Grid height="100%" spacing={2} direction="vertical" justifyContent="center">
+                <Typography size={isCompact ? 14 : 16} horizontal lineheight={1} whitespace="nowrap">
                     {name || t('app.mdpkm.server.default_name')}
                     {acceptTextures === 1 &&
                         <Typography size={isCompact ? 10 : '.7rem'} color="$secondaryColor" weight={300} margin="4px 0 0 8px" lineheight={1}>
@@ -49,7 +49,7 @@ export default Patcher.register(function Server({ name, icon, motd, type, player
                         fontFamily: 'Nunito'
                     }}/>
                 :
-                    <Typography size={isCompact ? 12 : '.8rem'} color="$secondaryColor" weight={400} lineheight={1}>
+                    <Typography size={isCompact ? 10 : 12} color="$secondaryColor" lineheight={1}>
                         {address || t('app.mdpkm.server.no_address')}
                     </Typography>
                 }

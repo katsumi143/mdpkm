@@ -70,7 +70,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                     boxShadow: '$buttonShadow'
                 }}/>
                 {previewIcon && <ImagePreview src={mod.webIcon} size={192} onClose={() => setPreviewIcon(false)}/>}
-                <Grid margin="4px 0 0 12px" padding="2px 0" spacing="2px" direction="vertical">
+                <Grid margin={isCompact ? '4px 0 0 10px' : '4px 0 0 12px'} padding="2px 0" spacing="2px" direction="vertical">
                     <Typography size={isCompact ? 14 : '1.1rem'} spacing={4} horizontal lineheight={1} css={{
                         width: 'fit-content'
                     }}>

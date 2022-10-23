@@ -38,30 +38,35 @@ export default Patcher.register(function Instance({ css, onView, instance }) {
                 border: '$secondaryBorder solid 1px',
                 position: 'relative'
             }}>
-                <Grid width="calc(100% - 80px)" spacing={isCompact ? '.6rem' : '1rem'} alignItems="center">
+                <Grid width="calc(100% - 80px)" spacing={isCompact ? 10 : 12} alignItems="center">
                     <InstanceIcon size={isCompact ? 36 : 46} instance={instance} hideLoader={isCompact}/>
                     <Grid width="-webkit-fill-available" spacing={isCompact ? 2 : 4} direction="vertical" alignItems="start" css={{ overflow: 'hidden' }}>
                         <Typography
-                            size={isCompact ? 13 : '1rem'}
+                            size={isCompact ? 12 : 16}
                             width="100%"
                             weight={isCompact ? 400 : 500}
                             textalign="start"
                             lineheight={1}
                             whitespace="nowrap"
+                            css={{
+                                display: 'block',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis'
+                            }}
                         >
                             {instance.name}
                         </Typography>
                         <Typography
-                            size={isCompact ? 11 : '.8rem'}
+                            size={isCompact ? 11 : 12}
                             color="$secondaryColor"
-                            weight={isCompact ? 300 : 400}
+                            weight={400}
                             spacing={5}
                             textalign="start"
                             lineheight={1}
                             horizontal
                             whitespace="nowrap"
                         >
-                            <StateIcon fontSize={10}/>
+                            <StateIcon fontSize={isCompact ? 8 : 10}/>
                             {t(`app.mdpkm.instances:state.${instance.state}`)}
                         </Typography>
                     </Grid>
