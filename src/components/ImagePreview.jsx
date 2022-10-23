@@ -35,7 +35,7 @@ const openAnimation3 = keyframes({
         opacity: 1
     }
 });
-export default function ImagePreview({ src, size, onClose }) {
+export default function ImagePreview({ src, size, onClose, pixelated }) {
     return <Portal>
         <Grid width="100vw" height="100vh" spacing={8} onClick={onClose} direction="vertical" alignItems="center" background="#000000bf" justifyContent="center" css={{
             top: 0,
@@ -46,7 +46,8 @@ export default function ImagePreview({ src, size, onClose }) {
             animation: `${openAnimation2} 1s`
         }}>
             <Image src={src} size={size} borderRadius={8} css={{
-                animation: `${openAnimation} .5s cubic-bezier(0, 0, 0, 1.0)`
+                animation: `${openAnimation} .5s cubic-bezier(0, 0, 0, 1.0)`,
+                imageRendering: pixelated && 'pixelated'
             }}/>
             <Typography size=".8rem" color="$secondaryColor" css={{
                 animation: `${openAnimation3} .75s`

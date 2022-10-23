@@ -1,38 +1,37 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import React, { useState } from 'react';
 
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
 import Typography from '/voxeliface/components/Typography';
+import ImagePreview from './ImagePreview';
 
 import Patcher from '/src/common/plugins/patcher';
 export default Patcher.register(function Server({ name, icon, motd, type, players, address, instanceId, acceptTextures }) {
     const { t } = useTranslation();
     const isCompact = useSelector(state => state.settings.uiStyle) === 'compact';
+    const [previewIcon, setPreviewIcon] = useState(false);
     
     const iconSize = isCompact ? 38 : 46;
+    const serverIcon = icon ? icon.startsWith('data:') ? icon : `data:image/png;base64,${icon}` : 'img/icons/minecraft/unknown_server.png';
     return <Grid height="fit-content" padding={8} spacing={12} background="$secondaryBackground2" borderRadius={8} justifyContent="space-between" css={{
         minWidth: '24rem'
     }}>
         <Grid spacing={isCompact ? 10 : 12}>
             <Image
-                src={icon ? icon.startsWith('data:') ? icon : `data:image/png;base64,${icon}` : 'img/icons/minecraft/unknown_server.png'}
+                src={serverIcon}
                 size={iconSize}
+                onClick={() => setPreviewIcon(true)}
                 background="$secondaryBackground"
                 borderRadius={4}
                 css={{
-                    minWidth: iconSize,
-                    minHeight: iconSize,
-                    transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-
-                    '&:hover': {
-                        minWidth: iconSize * 2,
-                        minHeight: iconSize * 2
-                    }
+                    cursor: 'zoom-in',
+                    boxShadow: '$buttonShadow'
                 }}
             />
+            {previewIcon && <ImagePreview src={serverIcon} size={192} onClose={() => setPreviewIcon(false)} pixelated/>}
             <Grid height="100%" spacing={2} direction="vertical" justifyContent="center">
                 <Typography size={isCompact ? 14 : 16} horizontal lineheight={1} whitespace="nowrap">
                     {name || t('app.mdpkm.server.default_name')}

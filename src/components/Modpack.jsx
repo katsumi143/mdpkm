@@ -6,6 +6,7 @@ import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
 import Spinner from '/voxeliface/components/Spinner';
 import Typography from '/voxeliface/components/Typography';
+import ImagePreview from './ImagePreview';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
@@ -13,6 +14,7 @@ import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
 export default Patcher.register(function Modpack({ id, api, data, loading, featured, setLoading, recommended, importModpack }) {
     const [modpack, setModpack] = useState(data);
+    const [previewIcon, setPreviewIcon] = useState(false);
     const installModpack = async() => {
         setLoading(true);
         const path = await API.get(api).downloadModpack(id ?? data.id);
@@ -36,18 +38,11 @@ export default Patcher.register(function Modpack({ id, api, data, loading, featu
     return (
         <Grid padding={8} background="$secondaryBackground2" borderRadius={8} css={{ position: 'relative' }}>
             {modpack ? <React.Fragment>
-                <Image src={modpack.icon} size={48} borderRadius={4} css={{
-                    zIndex: 2,
-                    minWidth: 48,
-                    transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-
-                    '&:hover': {
-                        zIndex: 3,
-                        transform: 'scale(2)',
-                        transformOrigin: 'top left',
-                        backgroundColor: '$primaryBackground'
-                    }
+                <Image src={modpack.icon} size={48} onClick={() => setPreviewIcon(true)} borderRadius={4} css={{
+                    cursor: 'zoom-in',
+                    boxShadow: '$buttonShadow'
                 }}/>
+                {previewIcon && <ImagePreview src={modpack.icon} size={192} onClose={() => setPreviewIcon(false)}/>}
                 <Grid margin="4px 0 0 12px" padding="2px 0" spacing={2} direction="vertical">
                     <Typography size="1.1rem" horizontal lineheight={1} css={{
                         width: 'fit-content'

@@ -8,6 +8,7 @@ import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
 import Typography from '/voxeliface/components/Typography';
+import ImagePreview from './ImagePreview';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import TextTransition from './Transition/Text';
 
@@ -17,7 +18,6 @@ import { useInstance } from '../common/voxura';
 export default Patcher.register(function ResourcePackManagement({ instanceId }) {
     const { t } = useTranslation();
     const instance = useInstance(instanceId);
-    const isCompact = useSelector(state => state.settings.uiStyle) === 'compact';
     const [items, setItems] = useState();
     const [filter, setFilter] = useState('');
     const addResourcePack = async() => {
@@ -101,34 +101,47 @@ export default Patcher.register(function ResourcePackManagement({ instanceId }) 
         </Grid>
         {Array.isArray(items) && items?.filter(({ name }) =>
             name.toLowerCase().includes(filter)
-        ).map((item, index) =>
-            <Grid key={index} padding={8} spacing={isCompact ? 10 : 12} alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{
-                position: 'relative'
-            }}>
-                <Image
-                    src={item.icon ? `data:image/png;base64,${item.icon}` : 'img/icons/minecraft/unknown_pack.png'}
-                    size={isCompact ? 38 : 46}
-                    background="$secondaryBackground"
-                    borderRadius={4}
-                />
-                <Grid spacing={2} direction="vertical">
-                    <Typography size={isCompact ? 14 : 16} lineheight={1}>
-                        {item.name}
-                    </Typography>
-                    <Typography size={isCompact ? 10 : 12} color="$secondaryColor" lineheight={1}>
-                        {item.metadata.pack?.description}
-                    </Typography>
-                </Grid>
-                <Grid spacing={8} css={{
-                    right: 16,
-                    position: 'absolute'
-                }}>
-                    <Button theme="secondary" disabled>
-                        <IconBiTrash3Fill style={{fontSize: 11}}/>
-                        {t('app.mdpkm.common:actions.delete')}
-                    </Button>
-                </Grid>
-            </Grid>
-        )}
+        ).map((item, key) => <ResourcePack key={key} item={item}/>)}
     </React.Fragment>;
 });
+
+function ResourcePack({ item }) {
+    const { t } = useTranslation();
+    const isCompact = useSelector(state => state.settings.uiStyle) === 'compact';
+    const [previewIcon, setPreviewIcon] = useState(false);
+
+    const packIcon = item.icon ? `data:image/png;base64,${item.icon}` : 'img/icons/minecraft/unknown_pack.png';
+    return <Grid padding={8} spacing={isCompact ? 10 : 12} alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{
+        position: 'relative'
+    }}>
+        <Image
+            src={packIcon}
+            size={isCompact ? 38 : 46}
+            onClick={() => setPreviewIcon(true)}
+            background="$secondaryBackground"
+            borderRadius={4}
+            css={{
+                cursor: 'zoom-in',
+                boxShadow: '$buttonShadow'
+            }}
+        />
+        {previewIcon && <ImagePreview src={packIcon} size={192} onClose={() => setPreviewIcon(false)} pixelated/>}
+        <Grid spacing={2} direction="vertical">
+            <Typography size={isCompact ? 14 : 16} lineheight={1}>
+                {item.name}
+            </Typography>
+            <Typography size={isCompact ? 10 : 12} color="$secondaryColor" lineheight={1}>
+                {item.metadata.pack?.description}
+            </Typography>
+        </Grid>
+        <Grid spacing={8} css={{
+            right: 16,
+            position: 'absolute'
+        }}>
+            <Button theme="secondary" disabled>
+                <IconBiTrash3Fill fontSize={11}/>
+                {t('app.mdpkm.common:actions.delete')}
+            </Button>
+        </Grid>
+    </Grid>;
+};
