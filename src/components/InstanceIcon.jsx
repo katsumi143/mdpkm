@@ -7,6 +7,10 @@ import Patcher from '/src/common/plugins/patcher';
 export default Patcher.register(function InstanceIcon({ instance, size, props }) {
     const [preview, setPreview] = useState(false);
     size = `${size ?? 48}px`;
+
+    // DEFAULT ICON IDEA!!!!
+    // simple svg with a random background, similar to default discord avatars,
+    // with a rounded square in the center, similar to prism lancher's icon :D
     return <React.Fragment>
         <ImageTransition src={instance.webIcon} onClick={() => setPreview(true)} background="$secondaryBackground" borderRadius="8.33333333%" {...props} css={{
             width: 'fit-content',
