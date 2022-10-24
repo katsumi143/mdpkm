@@ -18,7 +18,7 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
-import { useInstance } from '../common/voxura';
+import { useInstance } from '../voxura';
 
 const banned = [
     'icon\\.(png|jpg|svg)',

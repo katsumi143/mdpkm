@@ -35,7 +35,7 @@ import API from '../common/api';
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
 import { toast } from '../util';
-import { useInstance, useCurrentAccount } from '../common/voxura';
+import { useInstance, useCurrentAccount } from '../voxura';
 import { INSTANCE_STATE_ICONS } from '../util/constants';
 import { LoaderStates, DisabledLoaders } from '../common/constants';
 

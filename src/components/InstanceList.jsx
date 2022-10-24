@@ -9,7 +9,7 @@ import Typography from '/voxeliface/components/Typography';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import Patcher from '/src/common/plugins/patcher';
-import { useInstances } from '../common/voxura';
+import { useInstances } from '../voxura';
 export default Patcher.register(function InstanceList({ id, onSelect }) {
     const { t } = useTranslation();
     const instances = useInstances();

@@ -15,7 +15,7 @@ import ImagePreview from './ImagePreview';
 import API from '../common/api';
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
-import { useInstance } from '../common/voxura';
+import { useInstance } from '../voxura';
 export default Patcher.register(function InstanceMod({ mod, updates, embedded, instanceId }) {
     const { t } = useTranslation();
     const update = updates?.[mod?.config?.[1]];

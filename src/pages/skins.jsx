@@ -22,7 +22,7 @@ import * as Select from '/voxeliface/components/Input/Select';
 import API from '../common/api';
 import Util from '../common/util';
 import { IMAGE_CACHE } from '../common/constants';
-import { useCurrentAccount } from '../common/voxura';
+import { useCurrentAccount } from '../voxura';
 import { addSkin, saveSkins, writeSkin } from '../common/slices/skins';
 
 const SKIN_MODEL = { CLASSIC: 'default', SLIM: 'slim' };

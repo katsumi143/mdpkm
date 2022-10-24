@@ -18,7 +18,7 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import TextTransition from './Transition/Text';
 
 import Patcher from '/src/common/plugins/patcher';
-import { useInstance } from '../common/voxura';
+import { useInstance } from '../voxura';
 export default Patcher.register(function ModManagement({ instanceId }) {
     const { t } = useTranslation();
     const instance = useInstance(instanceId);

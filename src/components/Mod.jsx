@@ -13,7 +13,7 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
 import Patcher from '/src/common/plugins/patcher';
-import { useInstance } from '../common/voxura';
+import { useInstance } from '../voxura';
 export default Patcher.register(function Mod({ id, api, data, featured, instanceId, recommended }) {
     const { t } = useTranslation();
     const instance = useInstance(instanceId);

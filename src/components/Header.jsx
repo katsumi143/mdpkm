@@ -6,7 +6,7 @@ import Typography from '/voxeliface/components/Typography';
 import DefaultHeader from '/voxeliface/components/Header/Tauri';
 import ImageTransition from './Transition/Image';
 
-import { AvatarType, useCurrentAccount } from '../common/voxura';
+import { AvatarType, useCurrentAccount } from '../voxura';
 export default function Header(props) {
     const account = useCurrentAccount();
     return (

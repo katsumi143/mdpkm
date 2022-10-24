@@ -27,7 +27,7 @@ export default function Navigation() {
         }}>
             <SideNavigation value={page} onChange={setPage}>
                 <NavigationItem name={t('app.mdpkm.home.navigation.home')} icon={<IconBiHouse size={16}/>} value={0} direction="horizontal">
-                    <Home/>
+                    <Home setPage={setPage}/>
                 </NavigationItem>
                 <NavigationItem name={t('app.mdpkm.home.navigation.instances')} icon={<IconBiListUl size={16}/>} value={1} direction="horizontal">
                     <Instances/>

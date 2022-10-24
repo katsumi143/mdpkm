@@ -13,7 +13,7 @@ import ImportInstance from '../components/ImportInstance';
 import SelectInstanceType from '../components/SelectInstanceType';
 
 import API from '/src/common/api';
-import voxura from '../common/voxura';
+import voxura from '../voxura';
 export default function Home() {
     const { t } = useTranslation();
     const [page, setPage] = useState(0);

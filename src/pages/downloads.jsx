@@ -6,7 +6,7 @@ import Image from '/voxeliface/components/Image';
 import Typography from '/voxeliface/components/Typography';
 import TextHeader from '/voxeliface/components/Typography/Header';
 
-import { useDownloads } from '../common/voxura';
+import { useDownloads } from '../voxura';
 import { DownloadType, DownloadState } from '../../voxura/src/downloader';
 export default function Downloads() {
     const { t } = useTranslation();

@@ -9,7 +9,7 @@ import API from '../api';
 import Util from '../util';
 import Plugin from './plugin';
 import Patcher from './patcher';
-import * as voxura from '../voxura';
+import * as voxura from '../../voxura';
 import PluginSystem from './system';
 import * as PluginUtil from './util';
 import * as Voxeliface from '../../../voxeliface';

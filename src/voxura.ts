@@ -2,11 +2,11 @@ import CheckCircle from '~icons/bi/check-circle';
 import DownloadIcon from '~icons/bi/download';
 import { useMemo, useState, useEffect, useSyncExternalStore } from 'react';
 
-import { toast } from '../util';
-import { Voxura } from '../../voxura';
-import { APP_PATH } from './constants';
-import type Account from '../../voxura/src/auth/account';
-import type { Download } from '../../voxura/src/downloader';
+import { toast } from './util';
+import { Voxura } from '../voxura';
+import { APP_PATH } from './common/constants';
+import type Account from '../voxura/src/auth/account';
+import type { Download } from '../voxura/src/downloader';
 
 const voxura = new Voxura(APP_PATH);
 await voxura.startInstances();
@@ -53,6 +53,13 @@ export function useInstances() {
     const subscription = useMemo(() => ({
         subscribe: (callback: any) => voxura.instances.listenForEvent('listChanged', callback),
         getCurrentValue: () => voxura.instances.getAll()
+    }), []);
+    return useSubscription(subscription);
+};
+export function useRecentInstances() {
+    const subscription = useMemo(() => ({
+        subscribe: (callback: any) => voxura.instances.listenForEvent('changed', callback),
+        getCurrentValue: () => voxura.instances.getRecent()
     }), []);
     return useSubscription(subscription);
 };
@@ -112,7 +119,7 @@ function useSubscription<T>({ subscribe, getCurrentValue }: {
     return valueToReturn;
 }
 
-export { AvatarType } from '../../voxura/src/auth/account';
+export { AvatarType } from '../voxura/src/auth/account';
 
 console.log('started voxura', voxura);
 (globalThis as any).voxura = voxura;

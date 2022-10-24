@@ -17,7 +17,7 @@ import * as DropdownMenu from '/voxeliface/components/DropdownMenu';
 
 import API from '../common/api';
 import { toast } from '../util';
-import voxura, { AvatarType, useAccounts, useCurrentAccount } from '../common/voxura';
+import voxura, { AvatarType, useAccounts, useCurrentAccount } from '../voxura';
 export default function Accounts() {
     const { t } = useTranslation();
     const current = useCurrentAccount();

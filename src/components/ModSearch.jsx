@@ -14,9 +14,9 @@ import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import API from '../common/api';
 import Util from '../common/util';
-import voxura from '../common/voxura';
+import voxura from '../voxura';
 import Patcher from '/src/common/plugins/patcher';
-import { useInstance } from '../common/voxura';
+import { useInstance } from '../voxura';
 export default Patcher.register(function ModSearch({ instanceId }) {
     const { t } = useTranslation();
     const instance = useInstance(instanceId);

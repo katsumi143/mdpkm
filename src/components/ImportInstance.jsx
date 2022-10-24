@@ -16,7 +16,7 @@ import InstanceIcon from './InstanceIcon';
 import API from '../common/api';
 import Util from '../common/util';
 import Patcher from '/src/common/plugins/patcher';
-import { useInstances } from '../common/voxura';
+import { useInstances } from '../voxura';
 export default Patcher.register(function ImportInstance({ path: epath, back }) {
     const { t } = useTranslation();
     const instances = useInstances();

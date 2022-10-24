@@ -71,7 +71,7 @@ const init = async() => {
     await import('./localization');
 
     setLoadingState?.(loadingState = 'Starting voxura...');
-    await import('./common/voxura');
+    await import('./voxura');
 
     setLoadingState?.(loadingState = 'Starting plugin system...');
     const { default: Plugins } = await import('./common/plugins');
