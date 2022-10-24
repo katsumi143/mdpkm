@@ -13,7 +13,7 @@ import Button from '/voxeliface/components/Button';
 import Header from '/voxeliface/components/Typography/Header';
 import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
-import BrowserLink from './BrowserLink';
+import BrowserLink from '../components/BrowserLink';
 import * as Select from '/voxeliface/components/Input/Select';
 import ThemeContext from '/voxeliface/contexts/theme';
 import * as Tooltip from '/voxeliface/components/Tooltip';

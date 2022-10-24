@@ -24,7 +24,7 @@ const useLoadingState = () => {
     return state;
 };
 
-let Pages;
+let Navigation;
 const AppContainer = () => {
     const state = useLoadingState();
     return <Provider store={store}>
@@ -47,9 +47,7 @@ const AppContainer = () => {
             </Main>
         </App> : <BrowserRouter>
             <Routes>
-                <Route exact path="/" element={<Pages.Home/>}/>
-                <Route exact path="/instance-splash" element={<Pages.InstanceSplash/>}/>
-                <Route path="/*" element={<Pages.NotFound/>}/>
+                <Route exact path="/" element={<Navigation/>}/>
             </Routes>
         </BrowserRouter>}
     </Provider>;
@@ -63,6 +61,11 @@ root.render(
 );
 console.log('react started');
 
+if (import.meta.hot)
+    import.meta.hot.accept('./pages/navigation', nav => {
+        Navigation = nav?.default;
+    });
+
 const init = async() => {
     setLoadingState?.(loadingState = 'Loading localization files...');
     await import('./localization');
@@ -75,7 +78,7 @@ const init = async() => {
     await Plugins.init().catch(console.warn);
 
     setLoadingState?.(loadingState = 'Loading user interface...');
-    Pages = await import('./pages');
+    Navigation = await import('./pages/navigation').then(p => p.default);
 
     setLoadingState?.();
 };

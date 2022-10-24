@@ -1,4 +1,3 @@
-import toast from 'react-hot-toast';
 import { open } from '@tauri-apps/api/dialog';
 import { Buffer } from 'buffer/';
 import { useTranslation } from 'react-i18next';
@@ -7,13 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 
 import Grid from '/voxeliface/components/Grid';
-import Modal from './Modal';
+import Modal from '../components/Modal';
 import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
 import Divider from '/voxeliface/components/Divider';
 import Spinner from '/voxeliface/components/Spinner';
 import Markdown from '/voxeliface/components/Markdown';
-import SkinFrame from './SkinFrame';
+import SkinFrame from '../components/SkinFrame';
 import TextInput from '/voxeliface/components/Input/Text';
 import Typography from '/voxeliface/components/Typography';
 import InputLabel from '/voxeliface/components/Input/Label';
@@ -22,13 +21,12 @@ import * as Select from '/voxeliface/components/Input/Select';
 
 import API from '../common/api';
 import Util from '../common/util';
-import Patcher from '../common/plugins/patcher';
 import { IMAGE_CACHE } from '../common/constants';
 import { useCurrentAccount } from '../common/voxura';
 import { addSkin, saveSkins, writeSkin } from '../common/slices/skins';
 
 const SKIN_MODEL = { CLASSIC: 'default', SLIM: 'slim' };
-export default Patcher.register(function SkinManagement() {
+export default function Skins() {
     const { t } = useTranslation();
     const skins = useSelector(state => state.skins.data);
     const account = useCurrentAccount();
@@ -360,7 +358,7 @@ export default Patcher.register(function SkinManagement() {
             </Grid>
         </Modal>}
     </Grid>;
-});
+};
 
 function Skin({ data, capes, index, useSkin, editSkin, loading, current }) {
     const { t } = useTranslation();

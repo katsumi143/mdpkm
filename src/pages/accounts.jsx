@@ -4,22 +4,21 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
 
-import Tag from './Tag';
+import Tag from '../components/Tag';
 import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Button from '/voxeliface/components/Button';
 import Portal from '/voxeliface/components/Portal';
 import Header from '/voxeliface/components/Typography/Header';
 import Typography from '/voxeliface/components/Typography';
-import ImagePreview from './ImagePreview';
+import ImagePreview from '../components/ImagePreview';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import * as DropdownMenu from '/voxeliface/components/DropdownMenu';
 
 import API from '../common/api';
-import Patcher from '/src/common/plugins/patcher';
 import { toast } from '../util';
 import voxura, { AvatarType, useAccounts, useCurrentAccount } from '../common/voxura';
-export default Patcher.register(function Settings() {
+export default function Accounts() {
     const { t } = useTranslation();
     const current = useCurrentAccount();
     const accounts = useAccounts();
@@ -95,7 +94,7 @@ export default Patcher.register(function Settings() {
             </Portal>}
         </Grid>
     );
-});
+};
 
 function Account({ account, current, changeAccount, deleteAccount }) {
     const { t } = useTranslation();
