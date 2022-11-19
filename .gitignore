@@ -4,3 +4,5 @@ src-tauri/WixTools/
 build
 .tauri/
 yarn-error.*
+auto-imports.*
+.env.*

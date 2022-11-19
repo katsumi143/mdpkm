@@ -6,6 +6,7 @@
 #[path = "../../voxura/src/lib.rs"] mod voxura;
 fn main() {
     tauri::Builder::default()
+        .plugin(voxura::init())
         .on_page_load(| window: tauri::window::Window, _ | {
             let _window = window.clone();
             let __window = window.clone();
@@ -31,25 +32,14 @@ fn main() {
             fs_remove_dir,
             fs_remove_file,
             fs_file_exists,
-            launch_package,
             fs_write_binary,
             get_total_memory,
             fs_read_text_file,
             fs_create_dir_all,
-            reregister_package,
-            unregister_package,
             fs_write_binary_zip,
             fs_read_file_in_zip,
-            get_microsoft_account,
             fs_read_dir_recursive,
-            fs_read_binary_in_zip,
-            send_window_event,
-            voxura::voxura_launch,
-            voxura::voxura_read_mods,
-            voxura::voxura_files_exist,
-            voxura::voxura_download_file,
-            voxura::voxura_extract_archive,
-            voxura::voxura_extract_archive_contains
+            fs_read_binary_in_zip
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -421,89 +411,6 @@ async fn download_file(url: String, path: String) {
     let mut file = std::fs::File::create(path).expect("failed to create file");
     let mut content = std::io::Cursor::new(response.bytes().await.unwrap());
     std::io::copy(&mut content, &mut file).unwrap();
-}
-
-use windows::core::HSTRING;
-use windows::Security::Authentication::Web::Core::{
-    WebTokenRequest,
-    WebAuthenticationCoreManager
-};
-
-#[tauri::command]
-async fn get_microsoft_account() -> String {
-    let account_provider = WebAuthenticationCoreManager::FindAccountProviderAsync(
-        HSTRING::from("https://login.microsoft.com")
-    ).unwrap().await.unwrap();
-    let request = WebTokenRequest::Create(
-        account_provider,
-        HSTRING::from("service::dcat.update.microsoft.com::MBI_SSL"),
-        HSTRING::from("be7dfb6a-789c-4622-8c97-dcd963ae0f89")
-    ).unwrap();
-    let result = WebAuthenticationCoreManager::GetTokenSilentlyAsync(request).unwrap().await.unwrap();
-
-    let token = result.ResponseData().unwrap().GetAt(0).unwrap().Token().unwrap();
-    return token.to_string();
-}
-
-use windows::System::{ AppDiagnosticInfo };
-use windows::Foundation::{ Uri };
-use windows::Management::Deployment::{ PackageManager, RegisterPackageOptions };
-
-#[tauri::command]
-async fn launch_package(family: String, game_dir: String) {
-    let game_path = std::path::Path::new(&game_dir);
-    let pkg = AppDiagnosticInfo::RequestInfoForPackageAsync(
-        HSTRING::from(family)
-    ).unwrap().await.unwrap();
-    if pkg.Size().unwrap() > 0 {
-        for pk in pkg {
-            if std::path::Path::new(&pk.AppInfo().unwrap().Package().unwrap().InstalledLocation().unwrap().Path().unwrap().to_string()).eq(game_path) {
-                pk.LaunchAsync().unwrap();
-                break;
-            }
-        }
-    }
-}
-
-#[tauri::command]
-async fn unregister_package(family: String, game_dir: String) {
-    let game_path = std::path::Path::new(&game_dir);
-    let pkg = AppDiagnosticInfo::RequestInfoForPackageAsync(
-        HSTRING::from(family)
-    ).unwrap().await.unwrap();
-    if pkg.Size().unwrap() > 0 {
-        for pk in pkg {
-            /*if std::path::Path::new(&pk.AppInfo().unwrap().Package().unwrap().InstalledLocation().unwrap().Path().unwrap().to_string()).eq(game_path) {
-                continue;
-            }*/
-            PackageManager::new().unwrap().RemovePackageAsync(pk.AppInfo().unwrap().Package().unwrap().Id().unwrap().FullName().unwrap()).unwrap();
-        }
-    }
-}
-
-#[tauri::command]
-async fn reregister_package(game_dir: String) {
-    let game_path = std::path::Path::new(&game_dir);
-    let manifest_path = game_path.join("AppxManifest.xml");
-    let options = RegisterPackageOptions::new().unwrap();
-    options.SetDeveloperMode(true).unwrap();
-    let res = PackageManager::new().unwrap().RegisterPackageByUriAsync(
-        Uri::CreateUri(HSTRING::from(manifest_path.to_str().unwrap())).unwrap(),
-        options
-    ).unwrap().await.unwrap();
-    println!("{}", res.ErrorText().unwrap());
-    println!("registered package");
-}
-
-use tauri::Manager;
-
-#[tauri::command]
-fn send_window_event(window: tauri::window::Window, label: String, event: String, payload: String) {
-    let window2 = window.get_window(&label);
-    match window2 {
-        Some(x) => x.emit(&event, payload).unwrap(),
-        None => println!("{} is closed, tried to send {}", label, event)
-    }
 }
 
 use sysinfo::{ System, SystemExt };

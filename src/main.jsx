@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import store from './common/store';
+import store from './store';
 
-import App from './components/App';
+import App from './interface/components/App';
 import Main from '../voxeliface/components/Main';
 import Image from '../voxeliface/components/Image';
 import Spinner from '../voxeliface/components/Spinner';
@@ -54,11 +54,7 @@ const AppContainer = () => {
 };
 
 const root = createRoot(document.getElementById('root'));
-root.render(
-    <React.StrictMode>
-        <AppContainer/>
-    </React.StrictMode>
-);
+root.render(<AppContainer/>);
 console.log('react started');
 
 if (import.meta.hot)
@@ -70,15 +66,15 @@ const init = async() => {
     setLoadingState?.(loadingState = 'Loading localization files...');
     await import('./localization');
 
+    setLoadingState?.(loadingState = 'Starting plugin system...');
+    const { default: PluginSystem } = await import('./plugins');
+    await PluginSystem.init().catch(console.warn);
+
     setLoadingState?.(loadingState = 'Starting voxura...');
     await import('./voxura');
 
-    setLoadingState?.(loadingState = 'Starting plugin system...');
-    const { default: Plugins } = await import('./common/plugins');
-    await Plugins.init().catch(console.warn);
-
     setLoadingState?.(loadingState = 'Loading user interface...');
-    Navigation = await import('./pages/navigation').then(p => p.default);
+    Navigation = await import('./interface/pages/navigation').then(p => p.default);
 
     setLoadingState?.();
 };

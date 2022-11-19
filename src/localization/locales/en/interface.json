@@ -1,0 +1,20 @@
+{
+    "common.action.view": "View",
+    "common.action.view_all": "View all",
+
+    "common.input_label.instance_name": "Instance Name",
+    "common.input_label.minecraft_version": "Minecraft Version",
+    "common.input_label.val_version": "{{val}} Version",
+
+    "common.select_group.minecraft_versions": "Minecraft Versions",
+    "common.select_group.component_versions": "Component Versions",
+
+    "common.input_placeholder.required": "This field is required",
+
+    "home.greeting.0": "Good morning,",
+    "home.greeting.1": "Good afternoon,",
+    "home.greeting.2": "Good evening,",
+
+    "home.news.title": "What's new",
+    "home.recent_instances.title": "Recent instances"
+}

@@ -1,12 +1,14 @@
 import CheckCircle from '~icons/bi/check-circle';
 import DownloadIcon from '~icons/bi/download';
-import { useMemo, useState, useEffect, useSyncExternalStore } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import { toast } from './util';
 import { Voxura } from '../voxura';
 import { APP_PATH } from './common/constants';
 import type Account from '../voxura/src/auth/account';
 import type { Download } from '../voxura/src/downloader';
+import VersionedComponent from '../voxura/src/instances/component/versioned-component';
+import type { ComponentVersions } from '../voxura/src/types';
 
 const voxura = new Voxura(APP_PATH);
 await voxura.startInstances();
@@ -72,6 +74,15 @@ export function useDownloads() {
     return useSubscription(subscription);
 };
 
+export function useComponentVersions(component: VersionedComponent | typeof VersionedComponent) {
+    const [value, setValue] = useState<ComponentVersions | null>(null);
+    useEffect(() => {
+        setValue(null);
+        component.getVersions().then(setValue);
+    }, []);
+    return value;
+};
+
 function useSubscription<T>({ subscribe, getCurrentValue }: {
     subscribe: (callback: Function) => () => void,
     getCurrentValue: () => T
@@ -119,6 +130,7 @@ function useSubscription<T>({ subscribe, getCurrentValue }: {
     return valueToReturn;
 }
 
+export * from '../voxura';
 export { AvatarType } from '../voxura/src/auth/account';
 
 console.log('started voxura', voxura);

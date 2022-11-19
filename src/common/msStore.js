@@ -484,7 +484,7 @@ export default class MicrosoftStore {
         return links.find(link => link.url.startsWith('http://tlu.dl.delivery.mp.microsoft.com/'))?.url;
     }
 };
-await MicrosoftStore.setUserToken();
+//await MicrosoftStore.setUserToken();
 
 class UpdateInfo {
     serverId;

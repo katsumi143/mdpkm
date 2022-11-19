@@ -1,0 +1,35 @@
+{
+    "loader.minecraft-java-vanilla": "Minecraft: Java Edition",
+    "loader.minecraft-java-vanilla.summary": "Simply Vanilla Minecraft, no mods or anything special.",
+    "loader.minecraft-java-vanilla.versions": "Minecraft Versions",
+    "loader.minecraft-java-vanilla.release_category.0": "Releases",
+    "loader.minecraft-java-vanilla.release_category.0.singular": "Release",
+    "loader.minecraft-java-vanilla.release_category.1": "Snapshots",
+    "loader.minecraft-java-vanilla.release_category.1.singular": "Snapshot",
+    "loader.minecraft-java-vanilla.release_category.2": "Old Betas",
+    "loader.minecraft-java-vanilla.release_category.2.singular": "Old Beta",
+    "loader.minecraft-java-vanilla.release_category.3": "Old Alphas",
+    "loader.minecraft-java-vanilla.release_category.3.singular": "Old Alpha",
+
+    "loader.minecraft-bedrock-vanilla": "Minecraft Bedrock Edition",
+    "loader.minecraft-bedrock-vanilla.summary": "Simply Bedrock Edition with downloadable content.\nWindows 10+ only, requires a Microsoft Store account.",
+    "loader.minecraft-bedrock-vanilla.release_category.0": "Versions",
+    "loader.minecraft-bedrock-vanilla.release_category.0.singular": "Version",
+
+    
+    "loader.forge": "Forge Loader",
+    "loader.forge.summary": "Forge is a free, open-source modding API.",
+    "loader.forge.release_category.0": "Versions",
+    "loader.forge.release_category.0.singular": "Version",
+    
+    "loader.fabric": "Fabric Loader",
+    "loader.fabric.summary": "Fabric is a lightweight, experimental modding toolchain.",
+    "loader.fabric.versions": "Fabric Versions",
+    "loader.fabric.release_category.0": "Versions",
+    "loader.fabric.release_category.0.singular": "Version",
+    
+    "loader.quilt": "Quilt Loader",
+    "loader.quilt.summary": "Quilt is an open-source, community-driven modding toolchain.",
+    "loader.quilt.release_category.0": "Versions",
+    "loader.quilt.release_category.0.singular": "Version"
+}

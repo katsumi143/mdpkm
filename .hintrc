@@ -10,6 +10,14 @@
           "user-select"
         ]
       }
+    ],
+    "compat-api/html": [
+      "default",
+      {
+        "ignore": [
+          "meta[name=theme-color]"
+        ]
+      }
     ]
   }
 }

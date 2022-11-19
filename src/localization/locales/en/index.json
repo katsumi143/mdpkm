@@ -6,8 +6,6 @@
     "app.mdpkm.home.navigation.accounts": "Accounts",
     "app.mdpkm.home.navigation.settings": "Settings",
 
-    "app.mdpkm.buttons.add_instance": "Add New Instance",
-
     "app.mdpkm.headers.instances": "Your Instances",
 
     "app.mdpkm.settings.header.title": "Settings",
@@ -27,10 +25,12 @@
     "app.mdpkm.settings.general.theme.items.default": "Default",
     "app.mdpkm.settings.general.theme.items.light": "Light",
     "app.mdpkm.settings.general.theme.items.dark": "Dark",
-    "app.mdpkm.settings.general.theme.items.purple": "Purple",
-    "app.mdpkm.settings.general.theme.items.blue": "Blueberry",
-    "app.mdpkm.settings.general.theme.items.green": "Green",
+    "app.mdpkm.settings.general.theme.items.red": "Red",
+    "app.mdpkm.settings.general.theme.items.orange": "Orange",
     "app.mdpkm.settings.general.theme.items.yellow": "Yellow",
+    "app.mdpkm.settings.general.theme.items.green": "Green",
+    "app.mdpkm.settings.general.theme.items.blue": "Blueberry",
+    "app.mdpkm.settings.general.theme.items.purple": "Purple",
 
     "app.mdpkm.settings.general.uiStyle": "Display Style",
     "app.mdpkm.settings.general.uiStyle.summary": "Choose a style that suits you best!",
@@ -72,19 +72,25 @@
     "app.mdpkm.accounts.account.actions.manage_profile": "Manage Minecraft profile",
     "app.mdpkm.accounts.account.actions.view_namemc": "View NameMC profile",
     "app.mdpkm.accounts.account.actions.remove": "Remove account",
+    "app.mdpkm.accounts.account.actions.copy_uuid": "Copy Minecraft UUID",
     "app.mdpkm.accounts.account.active": "Active",
     "app.mdpkm.accounts.add": "Add Microsoft Account",
 
     "app.mdpkm.settings.placeholder": "Unknown setting",
     "app.mdpkm.settings.placeholder.summary": "Placeholder",
 
-    "app.mdpkm.instance_page.tabs.mods": "Modifications",
+    "app.mdpkm.instance_page.tabs.home": "Home",
+    "app.mdpkm.instance_page.tabs.content": "Content",
     "app.mdpkm.instance_page.tabs.servers": "Servers",
-    "app.mdpkm.instance_page.tabs.resource_packs": "Resource Packs",
     "app.mdpkm.instance_page.tabs.essential": "Essential",
     "app.mdpkm.instance_page.tabs.loader": "Loader",
     "app.mdpkm.instance_page.tabs.settings": "Settings",
     "app.mdpkm.instance_page.tabs.export": "Export",
+
+    "app.mdpkm.instance_page.tabs.home.tabs.info": "Information",
+
+    "app.mdpkm.instance_page.tabs.content.tabs.mods": "Modifications",
+    "app.mdpkm.instance_page.tabs.content.tabs.resource_packs": "Resource Packs",
 
     "app.mdpkm.instance_page.tabs.loader.title": "Instance Loader",
 
@@ -130,7 +136,7 @@
     "app.mdpkm.mod.platform": "{{id}} on {{name}}.",
     "app.mdpkm.mod.featured": "Featured",
     "app.mdpkm.mod.recommended": "Recommended",
-    "app.mdpkm.mod.downloads": "Downloads",
+    "app.mdpkm.mod.downloads": "{{val}} Downloads",
     "app.mdpkm.mod.sides.0": "Client mod",
     "app.mdpkm.mod.sides.1": "Server mod",
     "app.mdpkm.mod.sides.2": "Universal mod",

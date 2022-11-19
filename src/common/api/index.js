@@ -569,12 +569,10 @@ class API {
     }
 };
 
-import { Quilt, Forge, Fabric, GitHub, Modrinth, CurseForge, FeedTheBeast } from './custom';
+import { Quilt, Forge, GitHub, CurseForge, FeedTheBeast } from './custom';
 await API.add('Quilt', Quilt);
 await API.add('Forge', Forge);
-await API.add('Fabric', Fabric);
 await API.add('GitHub', GitHub);
-await API.add('Modrinth', Modrinth);
 await API.add('CurseForge', CurseForge);
 await API.add('FeedTheBeast', FeedTheBeast);
 
