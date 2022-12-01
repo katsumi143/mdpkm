@@ -1,13 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Grid from '/voxeliface/components/Grid';
-import Image from '/voxeliface/components/Image';
-import Typography from '/voxeliface/components/Typography';
-import TextHeader from '/voxeliface/components/Typography/Header';
+import { Grid, Image, Typography, TextHeader } from '../../../voxeliface';
 
 import { useDownloads } from '../../voxura';
-import { DownloadType, DownloadState } from '../../../voxura/src/downloader';
+import { Download, DownloadType, DownloadState } from '../../../voxura/src/downloader';
 export default function Downloads() {
     const { t } = useTranslation();
     const downloads = useDownloads();
@@ -21,7 +18,7 @@ export default function Downloads() {
             There's nothing downloading right now.
         </Typography>}
         <Grid spacing={8} direction="vertical">
-            {downloading.map(Download)}
+            {downloading.map(DownloadComponent)}
         </Grid>
 
         {completed.length > 0 && <React.Fragment>
@@ -31,20 +28,21 @@ export default function Downloads() {
                 <Grid width="100%" height={1} margin="0 0 0 4px" background="$secondaryBorder2"/>
             </Grid>
             <Grid spacing={8} direction="vertical">
-                {completed.map(Download)}
+                {completed.map(DownloadComponent)}
             </Grid>
         </React.Fragment>}
     </Grid>;
 };
 
 const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-function formatBytes(bytes) {
+function formatBytes(bytes: number) {
     if (bytes === 0)
         return '0 B';
     const k = 1024, dm = 2, i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + (sizes[i] ?? '?');
 };
-function Download(download, key) {
+
+function DownloadComponent(download: Download, key: number) {
     const progress = download.totalProgress;
     return <Grid key={key} padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" borderRadius={8}>
         <Image src={download.icon} size={48} borderRadius={4}/>

@@ -17,8 +17,8 @@ export const INSTANCE_STATE_ICONS = [
 export const IMAGES = {
     'placeholder': 'img/icons/instances/default8.svg',
 
-    'loader.minecraft-java-vanilla': 'img/icons/minecraft/java.png',
-    'loader.minecraft-bedrock-vanilla': 'img/icons/minecraft/bedrock.png',
-    'loader.fabric': 'img/icons/loaders/fabric.png',
-    'loader.quilt': 'img/icons/loaders/quilt.svg'
+    'component.minecraft-java-vanilla': 'img/icons/minecraft/java.png',
+    'component.minecraft-bedrock-vanilla': 'img/icons/minecraft/bedrock.png',
+    'component.fabric': 'img/icons/loaders/fabric.png',
+    'component.quilt': 'img/icons/loaders/quilt.svg'
 };

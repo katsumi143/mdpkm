@@ -1,20 +1,51 @@
 {
     "common.action.view": "View",
+    "common.action.select": "Select",
     "common.action.view_all": "View all",
+    "common.action.add_component": "Add Component",
+    "common.action.create_instance": "Create Instance",
+    "common.action.return_to_instances": "Return to your instances",
 
-    "common.input_label.instance_name": "Instance Name",
-    "common.input_label.minecraft_version": "Minecraft Version",
-    "common.input_label.val_version": "{{val}} Version",
+    "common.header.instance_list": "Your Instances",
+
+    "common.label.instance_name": "Instance Name",
+    "common.label.minecraft_version": "Minecraft Version",
+    "common.label.val_version": "{{val}} Version",
+
+    "common.label.instance_created": "Instance created",
+    "common.label.last_launched": "Last launched",
+    "common.label.content_installed": "Content installed",
+
+    "common.label.game_component": "Game Component",
+    "common.label.other_components": "Additional Components",
+    "common.label.instance_component_count": "{{0}} Instance Components",
+
+    "common.label.item_count": "{{0}} Items",
 
     "common.select_group.minecraft_versions": "Minecraft Versions",
     "common.select_group.component_versions": "Component Versions",
 
     "common.input_placeholder.required": "This field is required",
 
+    "common.date.today": "Today",
+    "common.date.yesterday": "Yesterday",
+    "common.date.never": "Never",
+    "common.date.days_ago": "{{0}} ago",
+
+    "common.date.released_today": "Released today",
+    "common.date.released_yesterday": "Released yesterday",
+    "common.date.released_days": "Released {{0}} days ago",
+    "common.date.released_months": "Released {{0}} months ago",
+    "common.date.released_years": "Released {{0}} years ago",
+
     "home.greeting.0": "Good morning,",
     "home.greeting.1": "Good afternoon,",
     "home.greeting.2": "Good evening,",
 
     "home.news.title": "What's new",
-    "home.recent_instances.title": "Recent instances"
+    "home.recent_instances.title": "Recent instances",
+
+    "account.tag.active": "Active",
+
+    "component.version": "Version {{0}}"
 }

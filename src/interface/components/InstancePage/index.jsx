@@ -11,84 +11,35 @@ import Grid from '/voxeliface/components/Grid';
 import Image from '/voxeliface/components/Image';
 import Loader from './loader';
 import Button from '/voxeliface/components/Button';
-import Slider from '/voxeliface/components/Input/Slider';
 import Content from './content';
 import Spinner from '/voxeliface/components/Spinner';
 import TabItem from '/voxeliface/components/Tabs/Item';
-import TextInput from '/voxeliface/components/Input/Text';
-import JsonEditor from '../JsonEditor';
+import Settings from './settings';
 import Typography from '/voxeliface/components/Typography';
-import InputLabel from '/voxeliface/components/Input/Label';
-import * as Dialog from '/voxeliface/components/Dialog';
 import InstanceIcon from '../InstanceIcon';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 import InstanceExport from '../InstanceExport';
 import ServerManagement from '../ServerManagement';
 
 import Util from '../../../common/util';
-import mdpkm from '../../../mdpkm';
 import Patcher from '../../../plugins/patcher';
 import { toast } from '../../../util';
 import { INSTANCE_STATE_ICONS } from '../../../util/constants';
 import { useInstance, useCurrentAccount } from '../../../voxura';
 
-const totalMemory = await Util.getTotalMemory();
-console.log(totalMemory);
 export default Patcher.register(function InstancePage({ id }) {
     const { t } = useTranslation();
     const account = useCurrentAccount();
     const uiStyle = useSelector(state => state.settings.uiStyle);
     const instance = useInstance(id);
     const StateIcon = INSTANCE_STATE_ICONS[instance?.state];
-    const defaultResolution = useSelector(state => state.settings['instances.defaultResolution'])
 
     const { name, path, config, modpack } = instance ?? {};
-    const loaderId = config?.loader?.type;
-    const loaderEntry = mdpkm.getLoaderEntry(loaderId);
 
-    const initialState = {
-        instanceRam: instance?.config?.ram ?? 2,
-        instanceName: name,
-        instanceResolution: instance?.config?.resolution ?? defaultResolution
-    };
     const logErrors = instance?.launchLogs?.filter(({ type }) => type === 'ERROR');
-    const [saving, setSaving] = useState(false);
     const [tabPage, setTabPage] = useState(0);
-    const [advancedSettings, setAdvancedSettings] = useState(false);
     const [consoleOpen, setConsoleOpen] = useState(false);
-    const [gameVersion, setGameVersion] = useState(config?.loader?.game);
-    const [instanceRam, setInstanceRam] = useState(initialState.instanceRam);
-    const [gameVersions, setGameVersions] = useState();
-    const [instanceName, setInstanceName] = useState(initialState.instanceName ?? '');
-    const [editingLoader, setEditingLoader] = useState(false);
-    const [loaderVersion, setLoaderVersion] = useState(config?.loader?.version);
-    const [loaderVersions, setLoaderVersions] = useState();
-    const [instanceResolution, setInstanceResolution] = useState(initialState.instanceResolution);
-    const [downloadLoaderChanges, setDownloadLoaderChanges] = useState(true);
-    const saveSettings = async() => {
-        setSaving(true);
-
-        if (instanceName !== instance.name) {
-            const originalPath = path.toString();
-            const splitPath = path.split(/\/+|\\+/g);
-            splitPath.reverse()[0] = instanceName;
-
-            instance.name = instanceName;
-            instance.path = splitPath.reverse().join('/');
-            await Util.moveFolder(originalPath, instance.path);
-        }
-
-        instance.config.ram = instanceRam[0];
-        instance.config.resolution = instanceResolution;
-        await instance.saveConfig();
-
-        setSaving(false);
-    };
     const viewModpackSite = () => open(modpack.websiteUrl);
-    const deleteInstance = () => {
-        setInstanceName();
-        instance.delete();
-    };
     const launchInstance = () => {
         instance.launch().then(() => {
             toast('Client has launched', instance.name);
@@ -97,70 +48,10 @@ export default Patcher.register(function InstancePage({ id }) {
             toast('Unexpected error', 'Failed to launch client.');
         });
     };
-    const saveGameLoaderChanges = async() => {
-        setEditingLoader('saving');
-        const config = await instance.getConfig();
-        await Instance.saveConfig({
-            ...config,
-            loader: { ...config.loader, game: gameVersion, version: loaderVersion }
-        });
-        Instance.updateStore();
-        setEditingLoader(false);
-
-        if(downloadLoaderChanges && config.loader.game !== gameVersion) {
-            const toastHead = 'Installing Minecraft';
-            const toastId = toast.loading(`${toastHead}\n${t('app.mdpkm.instances:states.preparing')}`, {
-                className: 'gotham',
-                position: 'bottom-right',
-                duration: 10000,
-                style: { whiteSpace: 'pre-wrap' }
-            });
-            await Instances.installMinecraft(gameVersion, Instance, text => {
-                Instance.setState(text);
-                toast.loading(`${toastHead}\n${text}`, {
-                    id: toastId
-                });
-            });
-            toast.success(`Minecraft ${gameVersion} has been installed!`, {
-                id: toastId,
-                duration: 3000
-            });
-        }
-        if(downloadLoaderChanges && config.loader.version !== loaderVersion) {
-            const toastHead = `Installing ${t(`app.mdpkm.common:loaders.${config.loader.type}`)}`;
-            const toastId = toast.loading(`${toastHead}\n${t('app.mdpkm.instances:states.preparing')}`, {
-                className: 'gotham',
-                position: 'bottom-right',
-                duration: 10000,
-                style: { whiteSpace: 'pre-wrap' }
-            });
-            await Instances.installLoader(Instance, toastId, toastHead, true);
-            toast.success(`${t(`app.mdpkm.common:loaders.${config.loader.type}`)} ${loaderVersion} has been installed!`, {
-                id: toastId,
-                duration: 3000
-            });
-        }
-        toast.success('Changes were applied successfully!', { duration: 5000 });
-    };
     const openFolder = () => open(path);
     useEffect(() => {
         setConsoleOpen(false);
-        setGameVersion(config?.loader?.game);
-        setInstanceRam(initialState.instanceRam);
-        setInstanceName(initialState.instanceName);
-        setLoaderVersion(config?.loader?.version);
-        setInstanceResolution(initialState.instanceResolution);
     }, [id]);
-    useEffect(() => {
-        if(editingLoader && !gameVersions) {
-            setGameVersions('loading');
-            setLoaderVersions('loading');
-            loaderEntry.source.getVersions?.().then(versions => {
-                setGameVersions(Object.keys(versions));
-                setLoaderVersions(versions);
-            });
-        }
-    }, [editingLoader]);
 
     if(!instance)
         return;
@@ -321,109 +212,7 @@ export default Patcher.register(function InstancePage({ id }) {
                     <Loader instance={instance}/>
                 </TabItem>
                 <TabItem name={t('app.mdpkm.instance_page.tabs.settings')} icon={<IconBiGear size={14}/>} value={4}>
-                    {advancedSettings ?
-                        <JsonEditor value={instance.store.data}/>
-                    : <React.Fragment>
-                        <Grid spacing={8} padding="4px 0" justifyContent="space-between">
-                            <Grid direction="vertical">
-                                <Typography size=".9rem" lineheight={1}>
-                                    {t('app.mdpkm.instance_page.tabs.settings.title')}
-                                </Typography>
-                                <Typography size=".7rem" color="$secondaryColor" weight={400}>
-                                    {name}
-                                </Typography>
-                            </Grid>
-                            <Grid spacing={8}>
-                                <Button theme="accent" onClick={saveSettings} disabled={saving}>
-                                    {saving ? <BasicSpinner size={16}/> : <IconBiPencilFill style={{fontSize: 11}}/>}
-                                    {t('app.mdpkm.common:actions.save_changes')}
-                                </Button>
-                            </Grid>
-                        </Grid>
-                        <Grid direction="vertical">
-                            <InputLabel>
-                                {t('app.mdpkm.instance_page.tabs.settings.instance_name')}
-                            </InputLabel>
-                            <TextInput value={instanceName} onChange={setInstanceName}/>
-
-                            <InputLabel spaciouser>
-                                {t('app.mdpkm.instance_page.tabs.settings.memory_alloc', {
-                                    val: instanceRam.toLocaleString('en', { minimumFractionDigits: 1 })
-                                })}
-                            </InputLabel>
-                            <Slider
-                                min={.5}
-                                max={Math.floor((totalMemory / 1000000000) / 1.4)}
-                                step={.5}
-                                value={[instanceRam]}
-                                onChange={setInstanceRam}
-                            />
-
-                            <InputLabel spaciouser>
-                                {t('app.mdpkm.instance_page.tabs.settings.resolution')}
-                            </InputLabel>
-                            <Grid spacing={8}>
-                                <Grid direction="vertical">
-                                    <Typography size=".8rem" color="$secondaryColor">
-                                        {t('app.mdpkm.instance_page.tabs.settings.resolution.width')}
-                                    </Typography>
-                                    <TextInput
-                                        width={80}
-                                        value={Math.max(0, instanceResolution[0] || 0)}
-                                        onChange={value => {
-                                            const number = parseInt(value);
-                                            setInstanceResolution(val => [number, val[1]]);
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid direction="vertical">
-                                    <Typography size=".8rem" color="$secondaryColor">
-                                        {t('app.mdpkm.instance_page.tabs.settings.resolution.height')}
-                                    </Typography>
-                                    <TextInput
-                                        width={80}
-                                        value={Math.max(0, instanceResolution[1] || 0)}
-                                        onChange={value => {
-                                            const number = parseInt(value);
-                                            setInstanceResolution(val => [val[0], number]);
-                                        }}
-                                    />
-                                </Grid>
-                            </Grid>
-                            
-                            <InputLabel spaciouser>
-                                {t('app.mdpkm.instance_page.tabs.settings.delete')}
-                            </InputLabel>
-                            <Dialog.Root>
-                                <Dialog.Trigger asChild>
-                                    <Button theme="secondary" disabled={saving}>
-                                        <IconBiTrash3Fill style={{fontSize: 11}}/>
-                                        {t('app.mdpkm.common:actions.delete')}
-                                    </Button>
-                                </Dialog.Trigger>
-                                <Dialog.Content>
-                                    <Dialog.Title>Are you absolutely sure?</Dialog.Title>
-                                    <Dialog.Description>
-                                        This action cannot be undone.<br/>
-                                        '{instance.name}' will be lost forever! (A long time!)
-                                    </Dialog.Description>
-                                    <Grid margin="25 0 0" justifyContent="end">
-                                        <Dialog.Close asChild>
-                                            <Button theme="accent" onClick={deleteInstance}>
-                                                Yes, delete Instance
-                                            </Button>
-                                        </Dialog.Close>
-                                    </Grid>
-                                </Dialog.Content>
-                            </Dialog.Root>
-
-                            <Typography size={14} color="$linkColor" margin="32px 0 0" onClick={() => setAdvancedSettings(true)} css={{
-                                cursor: 'pointer'
-                            }}>
-                                Advanced Settings...
-                            </Typography>
-                        </Grid>
-                    </React.Fragment>}
+                    <Settings instance={instance}/>
                 </TabItem>
                 <TabItem name={t('app.mdpkm.instance_page.tabs.export')} icon={<IconBiFileEarmarkZip size={14}/>} value={5}>
                     <InstanceExport instanceId={id}/>

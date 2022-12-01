@@ -24,16 +24,13 @@ export default function InstanceList({ id }: InstanceListProps) {
     };
     return <React.Fragment>
         <Grid width="100%" padding="12px 16px" alignItems="center" background="$secondaryBackground" justifyContent="space-between">
-            <Grid spacing={12} alignItems="center">
-                <IconBiListUl/>
-                <Grid spacing={2} direction="vertical">
-                    <Typography size=".9rem" lineheight={1}>
-                        {t('app.mdpkm.headers.instances')}
-                    </Typography>
-                    <Typography size=".7rem" color="$secondaryColor" weight={400} lineheight={1}>
-                        {!instances ? 'Loading' : instances.length + ' Installed'}
-                    </Typography>
-                </Grid>
+            <Grid spacing={1} vertical>
+                <Typography size={14} lineheight={1}>
+                    {t('interface:common.header.instance_list')}
+                </Typography>
+                <Typography size={12} color="$secondaryColor" weight={400} lineheight={1}>
+                    {!instances ? 'Loading' : instances.length + ' Installed'}
+                </Typography>
             </Grid>
             <Button theme="secondary" onClick={refresh} disabled={loading || !instances}>
                 {loading ? <BasicSpinner size={16}/> : <IconBiArrowClockwise/>}

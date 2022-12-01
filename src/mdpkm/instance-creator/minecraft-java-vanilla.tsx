@@ -40,24 +40,14 @@ function Component({ setData, setSatisfied }: ComponentProps) {
     }, [name, version, versions]);
     return <Grid width="100%" height="100%" spacing={16}>
         <Grid vertical>
-            <InputLabel>{t('interface:common.input_label.instance_name')}</InputLabel>
+            <InputLabel>{t('interface:common.label.instance_name')}</InputLabel>
             <TextInput value={name} onChange={setName} placeholder={t('interface:common.input_placeholder.required')}/>
 
-            <InputLabel spacious>{t('interface:common.input_label.minecraft_version')}</InputLabel>
+            <InputLabel spacious>{t('interface:common.label.minecraft_version')}</InputLabel>
             <Typography size={14}>
-                {version ? `${t(`voxura:loader.${MinecraftComponent.id}.release_category.${version.category}.singular`)} ${version.id}` : t('interface:common.input_placeholder.required')}
+                {version ? `${t(`voxura:component.${MinecraftComponent.id}.release_category.${version.category}.singular`)} ${version.id}` : t('interface:common.input_placeholder.required')}
             </Typography>
         </Grid>
         {versions && <VersionPicker id={MinecraftComponent.id} value={version} versions={versions} onChange={setVersion}/>}
     </Grid>
 };
-/*
-<InputLabel spacious>{t('interface:common.input_label.minecraft_version')}</InputLabel>
-<Select.Root value={version} loading={!versions} onChange={setVersion}>
-    <Select.Group name={t('interface:common.select_group.minecraft_versions')}>
-        {versions?.map((version, key) => <Select.Item key={key} value={key}>
-            {version}
-        </Select.Item>)}
-    </Select.Group>
-</Select.Root>
-*/

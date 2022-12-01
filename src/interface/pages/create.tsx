@@ -26,7 +26,7 @@ export default function Create() {
             }
         }}>
             <IconBiArrowLeft/>
-            Return to your instances
+            {t('interface:common.action.return_to_instances')}
         </Typography>
         <AnimateSharedLayout>
             <Grid height="100%" margin="16px 0 0" vertical spacing={8} css={{ position: 'relative' }}>
@@ -48,10 +48,10 @@ function Component({ id, selected, setSelected }: ComponentProps) {
     return <>
         <ComponentContainer layoutId={`component-${id}`}>
             <Grid height="fit-content" padding={8} spacing={12}>
-                <ImageWrapper src={getImage(`loader.${id}`)} size={40} shadow canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
+                <ImageWrapper src={getImage(`component.${id}`)} size={40} shadow canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
                 <Grid spacing={4} direction="vertical" justifyContent="center">
                     <Typography layoutId={`component-title-${id}`} horizontal lineheight={1}>
-                        {t(`voxura:loader.${id}`)}
+                        {t(`voxura:component.${id}`)}
                     </Typography>
                 </Grid>
             </Grid>
@@ -85,7 +85,6 @@ function Setup({ id, cancel }: SetupProps) {
     const createInstance = async() => {
         setCreating(true);
         const instance = await creator!.create(data);
-        console.log(instance);
 
         cancel();
         dispatch(setPage('instances'));
@@ -100,10 +99,10 @@ function Setup({ id, cancel }: SetupProps) {
             borderBottom: '1px solid $secondaryBorder2'
         }}>
             <Grid padding={8} spacing={12}>
-                <ImageWrapper src={getImage(`loader.${id}`)} size={40} shadow canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
+                <ImageWrapper src={getImage(`component.${id}`)} size={40} shadow canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
                 <Grid spacing={4} direction="vertical" justifyContent="center">
                     <Typography layoutId={`component-title-${id}`} horizontal lineheight={1}>
-                        {t(`voxura:loader.${id}`)}
+                        {t(`voxura:component.${id}`)}
                     </Typography>
                 </Grid>
             </Grid>
@@ -128,7 +127,7 @@ function Setup({ id, cancel }: SetupProps) {
             }}>
                 <Button theme="accent" onClick={createInstance} disabled={!satisfied || creating}>
                     <IconBiPlusLg/>
-                    Create Instance
+                    {t('interface:common.action.create_instance')}
                 </Button>
             </Grid>
         </Grid>

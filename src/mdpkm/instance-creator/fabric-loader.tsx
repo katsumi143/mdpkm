@@ -50,16 +50,16 @@ function Component({ setData, setSatisfied }: ComponentProps) {
     }, [name, version, versions, versions2]);
     return <Grid width="100%" height="100%" spacing={16}>
         <Grid vertical>
-            <InputLabel>{t('interface:common.input_label.instance_name')}</InputLabel>
+            <InputLabel>{t('interface:common.label.instance_name')}</InputLabel>
             <TextInput value={name} onChange={setName} placeholder={t('interface:common.input_placeholder.required')}/>
 
-            <InputLabel spacious>{t('interface:common.input_label.minecraft_version')}</InputLabel>
+            <InputLabel spacious>{t('interface:common.label.minecraft_version')}</InputLabel>
             <Typography size={14}>
-                {version ? `${t(`voxura:loader.${MinecraftComponent.id}.release_category.${version.category}.singular`)} ${version.id}` : t('interface:common.input_placeholder.required')}
+                {version ? `${t(`voxura:component.${MinecraftComponent.id}.release_category.${version.category}.singular`)} ${version.id}` : t('interface:common.input_placeholder.required')}
             </Typography>
 
-            <InputLabel spacious>{t('interface:common.input_label.val_version', {
-                val: t(`voxura:loader.${FabricLoader.id}`)
+            <InputLabel spacious>{t('interface:common.label.val_version', {
+                val: t(`voxura:component.${FabricLoader.id}`)
             })}</InputLabel>
             <Select.Root value={version2} loading={!versions2} onChange={setVersion2}>
                 <Select.Group name={t('interface:common.select_group.component_versions')}>

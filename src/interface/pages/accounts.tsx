@@ -113,7 +113,7 @@ function UserAccount({ account, current, changeAccount, deleteAccount }: UserAcc
             return toast(t('app.mdpkm.common:toast.common_error_1'), t('app.mdpkm.common:toast.account_uuid_missing.body'));
         writeText(account.uuid).then(() => toast(t('app.mdpkm.common:toast.copied'), t('app.mdpkm.common:toast.copied_account_uuid.body')));
     };
-    return <Grid width="40%" border={`1px solid $secondaryBorder${isCurrent ? 2 : ''}`} padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" borderRadius={16} css={{
+    return <Grid width="50%" border={`1px solid $secondaryBorder${isCurrent ? 2 : ''}`} padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" borderRadius={16} css={{
         position: 'relative'
     }}>
         <Image src={avatarUrl} size={40} onClick={() => setPreviewAvatar(true)} borderRadius={24} css={{
@@ -132,10 +132,10 @@ function UserAccount({ account, current, changeAccount, deleteAccount }: UserAcc
         }}>
             {isCurrent ? <Tag>
                 <Typography size=".7rem" color="$tagColor">
-                    {t('app.mdpkm.accounts.account.active')}
+                    {t('interface:account.tag.active')}
                 </Typography>
             </Tag> : <Button theme="accent" onClick={() => changeAccount(account)}>
-                {t('app.mdpkm.common:actions.select')}
+                {t('interface:common.action.select')}
             </Button>}
             <DropdownMenu.Root>
                 <DropdownMenu.Trigger asChild>

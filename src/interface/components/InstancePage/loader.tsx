@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import Modal from '../Modal';
 import ImageWrapper from '../ImageWrapper';
@@ -39,12 +39,12 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
         </Link>
 
         <Typography size={12} color="$secondaryColor" margin="8px 0 0">
-            Game Component
+            {t('interface:common.label.game_component')}
         </Typography>
         <Component component={component}/>
         
         <Typography size={12} color="$secondaryColor" margin="16px 0 0">
-            Additional Game Components
+            {t('interface:common.label.other_components')}
         </Typography>
         <Grid spacing={8} vertical>
             {store.components.filter(c => c.type === ComponentType.Loader).map((component, key) =>
@@ -53,12 +53,8 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
         </Grid>
         <Button theme="accent" onClick={() => setAdding(true)}>
             <IconBiPlusLg/>
-            Add Component
+            {t('interface:common.action.add_component')}
         </Button>
-
-        <Typography size={12} color="$secondaryColor" margin="16px 0 0">
-            Component Problems
-        </Typography>
 
         {adding && <ComponentAdder onClose={() => setAdding(false)} instance={instance}/>}
     </React.Fragment>
@@ -103,16 +99,14 @@ function Component({ component }: ComponentProps) {
         position: 'relative',
         background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
     }}>
-        <ImageWrapper src={getImage(`loader.${component.id}`)} size={40} shadow canPreview background="$secondaryBackground" borderRadius={8}/>
-        <Grid spacing={4} direction="vertical" justifyContent="center">
+        <ImageWrapper src={getImage(`component.${component.id}`)} size={40} shadow canPreview background="$secondaryBackground" borderRadius={8}/>
+        <Grid spacing={4} vertical justifyContent="center">
             <Typography horizontal lineheight={1}>
-                {t(`voxura:loader.${component.id}`)}
+                {t(`voxura:component.${component.id}`)}
             </Typography>
-            {isVersioned &&
-                <Typography size={12} color="$secondaryColor" lineheight={1}>
-                    Version {component.version}
-                </Typography>
-            }
+            {isVersioned && <Typography size={12} color="$secondaryColor" lineheight={1}>
+                {t('interface:component.version', [component.version])}
+            </Typography>}
         </Grid>
         <Grid height="100%" css={{
             right: 0,
@@ -168,14 +162,14 @@ function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
         <Select.Root value={component} onChange={setComponent} disabled={!versions || saving}>
             <Select.Group name="Available Instance Components">
                 {components.map((component, key) => <Select.Item key={key} value={key}>
-                    {t(`voxura:loader.${component.id}`)}
+                    {t(`voxura:component.${component.id}`)}
                 </Select.Item>)}
             </Select.Group>
         </Select.Root>
 
         <InputLabel spacious>Component Version</InputLabel>
         <Typography size={14}>
-            {version ? `${t(`voxura:loader.${components[component].id}.release_category.${version.category}.singular`)} ${version.id}` : t('interface:common.input_placeholder.required')}
+            {version ? `${t(`voxura:component.${components[component].id}.release_category.${version.category}.singular`)} ${version.id}` : t('interface:common.input_placeholder.required')}
         </Typography>
 
         <Grid height={256} margin="16px 0 0">
@@ -217,10 +211,10 @@ function ComponentEditor({ onClose, component }: ComponentEditorProps) {
         });
     };
     return <Modal width="60%">
-        <TextHeader>Component Editor ({t(`voxura:loader.${component.id}`)})</TextHeader>
+        <TextHeader>Component Editor ({t(`voxura:component.${component.id}`)})</TextHeader>
         <InputLabel>Component Version</InputLabel>
         <Typography size={14}>
-            {version ? `${t(`voxura:loader.${component.id}.release_category.${version.category}.singular`)} ${version.id}` : t('interface:common.input_placeholder.required')}
+            {version ? `${t(`voxura:component.${component.id}.release_category.${version.category}.singular`)} ${version.id}` : t('interface:common.input_placeholder.required')}
         </Typography>
 
         <Grid height={256} margin="16px 0 0">

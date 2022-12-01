@@ -17,7 +17,6 @@ export default function InstanceHome({ setTab, instance }: InstanceHomeProps) {
     const loaderId = store.gameComponent.id;
     const gameVersion = store.gameComponent.version;
     const loaderEntry = mdpkm.getLoaderEntry(loaderId);
-    const loaderIssues = [];//mdpkm.getLoaderIssues(loaderId);
     const versionBanner = null;//(loaderEntry?.versionBanners ?? API.getLoader('java')?.versionBanners)?.find(v => v?.[0].test(gameVersion));
     const refreshContent = () => instance.readMods();
     return <React.Fragment>
@@ -56,20 +55,17 @@ export default function InstanceHome({ setTab, instance }: InstanceHomeProps) {
                     css={{ backgroundPosition: 'right' }}
                 />
             </Grid>}
-            <Information fill icon={
-                loaderIssues.length > 0 ? <IconBiExclamationTriangleFill color="#ed856d"/> :
-                <Image src={getImage('loader.' + loaderId)} size={32}/>
-            } text={t('voxura:loader.' + loaderId)} buttons={
+            <Information fill icon={<Image src={getImage('component.' + loaderId)} size={32}/>} text={t('voxura:component.' + loaderId)} buttons={
                 <Button theme="accent" onClick={() => setTab(3)}>
                     {t('app.mdpkm.common:actions.view')}
                     <IconBiCaretRightFill fontSize={11}/>
                 </Button>
             }>
-                {loaderIssues.length > 0 ? `${loaderIssues.length} issue(s) require your attention` : `${instance.store.components.length} Instance Components`}
+                {t('interface:common.label.instance_component_count', [instance.store.components.length])}
             </Information>
-            <DateThing icon={<IconBiCalendarPlus/>} title="Instance created" value={instance.store.dateCreated}/>
-            <DateThing icon={<IconBiCalendarHeart/>} title="Last launched" value={instance.store.dateLaunched}/>
-            <Information icon={<IconBiBox2/>} text="Content installed" buttons={
+            <DateThing icon={<IconBiCalendarPlus/>} title={t('interface:common.label.instance_created')} value={instance.store.dateCreated}/>
+            <DateThing icon={<IconBiCalendarHeart/>} title={t('interface:common.label.last_launched')} value={instance.store.dateLaunched}/>
+            <Information icon={<IconBiBox2/>} text={t('interface:common.label.content_installed')} buttons={
                 <Button theme="accent" onClick={refreshContent} disabled={instance.readingMods}>
                     {instance.readingMods ? <BasicSpinner size={16}/> : <IconBiArrowClockwise/>}
                     {t('app.mdpkm.common:actions.refresh')}
@@ -81,17 +77,18 @@ export default function InstanceHome({ setTab, instance }: InstanceHomeProps) {
     </React.Fragment>
 };
 
-function getDayString(date?: number) {
+function useDayString(date?: number) {
+    const { t } = useTranslation();
     if (typeof(date) !== 'number')
-        return 'Never';
+        return t('interface:common.date.never');
     
     const difference = Date.now() - date;
     const days = Math.floor(difference / (1000 * 3600 * 24));
     if (days === 0)
-        return 'Today';
+        return t('interface:common.date.today');
     if (days === 1)
-        return 'Yesterday';
-    return `${days} days ago`;
+        return t('interface:common.date.yesterday');
+    return t('interface:common.date.days_ago', [days]);
 };
 export type InformationProps = {
     text?: string,
@@ -132,6 +129,6 @@ export type DateThingProps = {
 };
 function DateThing({ icon, title, value }: DateThingProps) {
     return <Information icon={icon} text={title}>
-        {getDayString(value)}
+        {useDayString(value)}
     </Information>;
 };

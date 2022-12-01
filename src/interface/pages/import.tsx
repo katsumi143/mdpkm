@@ -33,7 +33,7 @@ export default function Import() {
             }
         }}>
             <IconBiArrowLeft/>
-            Return to your instances
+            {t('interface:common.action.return_to_instances')}
         </Typography>
         <Grid width="100%" height="100%" margin="16px 0 0" spacing={16}>
             <Grid width={data ? '50%' : '100%'} padding="12px 16px" vertical background="$secondaryBackground2" borderRadius={8}>
