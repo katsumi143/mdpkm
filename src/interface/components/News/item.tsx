@@ -1,4 +1,5 @@
 import React from 'react';
+import { open } from '@tauri-apps/api/shell';
 
 import ImageWrapper from '../ImageWrapper';
 import type NewsItem from '../../../mdpkm/news/item';
@@ -7,10 +8,12 @@ export type NewsItemProps = {
     item: NewsItem<unknown>
 };
 export default function NewsItemComponent({ item }: NewsItemProps) {
+	const view = () => open(item.url);
     return <Tooltip.Root delayDuration={50}>
         <Tooltip.Trigger asChild>
-            <Grid width={96} vertical background="$secondaryBackground2" borderRadius={8} css={{
-                minWidth: 96,
+            <Grid width={96} onClick={view} vertical background="$secondaryBackground2" borderRadius={8} css={{
+                cursor: 'pointer',
+				minWidth: 96,
                 overflow: 'hidden'
             }}>
                 <ImageWrapper src={item.image} size={96} canPreview background="$secondaryBackground"/>

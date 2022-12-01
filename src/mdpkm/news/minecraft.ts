@@ -29,6 +29,7 @@ type NewsTile = {
     }
 };
 type MinecraftNewsData = {
+	article_url: string,
     default_tile: NewsTile,
     preferred_tile?: NewsTile
 };
@@ -40,6 +41,10 @@ class MinecraftNewsItem extends NewsItem<MinecraftNewsData> {
     public get image() {
         return 'https://minecraft.net' + this.tile.image.imageURL;
     }
+
+	public get url() {
+		return 'https://minecraft.net' + this.data.article_url;
+	}
 
     private get tile() {
         return this.data.preferred_tile ?? this.data.default_tile;
