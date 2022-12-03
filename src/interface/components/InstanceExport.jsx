@@ -71,7 +71,7 @@ export default Patcher.register(function InstanceExport({ instanceId }) {
     }, [items]);
     useEffect(() => setItems(), [instanceId]);
     return <React.Fragment>
-        <Grid width="fit-content" spacing={4} direction="vertical">
+        <Grid width="fit-content" spacing={4} vertical>
             <Typography size=".9rem" color="$secondaryColor">
                 {t('app.mdpkm.export_instance.title')}
             </Typography>
@@ -100,7 +100,7 @@ export default Patcher.register(function InstanceExport({ instanceId }) {
                 {t('app.mdpkm.common:actions.refresh')}
             </Button>
         </Grid>
-        <Grid direction="vertical" borderRadius={8} css={{
+        <Grid vertical borderRadius={8} css={{
             border: '1px solid $secondaryBorder2',
             overflow: 'hidden auto'
         }}>

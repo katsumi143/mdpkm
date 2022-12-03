@@ -11,6 +11,7 @@ import VersionedComponent from '../voxura/src/instances/component/versioned-comp
 import type { ComponentVersions } from '../voxura/src/types';
 
 const voxura = new Voxura(APP_PATH);
+await voxura.init();
 await voxura.startInstances();
 await voxura.auth.loadFromFile();
 await voxura.auth.refreshAccounts();

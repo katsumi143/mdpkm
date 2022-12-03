@@ -81,7 +81,7 @@ export default Patcher.register(function ServerManagement({ instanceId }: Server
     useEffect(() => setItems(null), [instanceId]);
     return <React.Fragment>
         <Grid spacing={8} padding="4px 0" justifyContent="space-between">
-            <Grid direction="vertical">
+            <Grid vertical>
                 <Typography size={14} lineheight={1}>
                     {t('app.mdpkm.server_management.title')}
                 </Typography>
@@ -111,7 +111,7 @@ export default Patcher.register(function ServerManagement({ instanceId }: Server
                 </Button>
             </Grid>
         </Grid>
-        <Grid spacing={8} direction="vertical">
+        <Grid spacing={8} vertical>
             {Array.isArray(items) && items?.filter(({ ip, name }) =>
                 ip?.value.toLowerCase().includes(filter) ||
                 name?.value.toLowerCase().includes(filter)
@@ -133,8 +133,8 @@ export default Patcher.register(function ServerManagement({ instanceId }: Server
                     {t('app.mdpkm.server_management.adding.header_note')}
                 </Typography>
             </TextHeader>
-            <Grid spacing="2rem" justifyContent="space-between">
-                <Grid direction="vertical">
+            <Grid spacing={32} justifyContent="space-between">
+                <Grid vertical>
                     <InputLabel>{t('app.mdpkm.server_management.server_name.label')}</InputLabel>
                     <TextInput
                         value={addingName}
@@ -160,7 +160,7 @@ export default Patcher.register(function ServerManagement({ instanceId }: Server
                         </Button>
                     </Grid>
                 </Grid>
-                <Grid height="fit-content" spacing="1rem" alignItems="center">
+                <Grid height="fit-content" spacing={16} alignItems="center">
                     {addingInfo === 'loading' && <Spinner/>}
                     <Server
                         name={addingName}

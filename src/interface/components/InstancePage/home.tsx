@@ -20,7 +20,7 @@ export default function InstanceHome({ setTab, instance }: InstanceHomeProps) {
     const versionBanner = null;//(loaderEntry?.versionBanners ?? API.getLoader('java')?.versionBanners)?.find(v => v?.[0].test(gameVersion));
     const refreshContent = () => instance.readMods();
     return <React.Fragment>
-        <Grid spacing={16} css={{
+        <Grid spacing={8} css={{
             flexWrap: 'wrap'
         }}>
             {versionBanner && <Grid width="100%" padding={16} spacing={16} background="$secondaryBackground2" borderRadius={16} justifyContent="space-between" css={{
@@ -37,7 +37,7 @@ export default function InstanceHome({ setTab, instance }: InstanceHomeProps) {
                             backgroundPosition: 'left'
                         }}
                     />
-                    <Grid spacing={4} direction="vertical" justifyContent="center">
+                    <Grid spacing={4} vertical justifyContent="center">
                         <Typography size={14} lineheight={1}>
                             {versionBanner[2]}
                         </Typography>
@@ -71,7 +71,7 @@ export default function InstanceHome({ setTab, instance }: InstanceHomeProps) {
                     {t('app.mdpkm.common:actions.refresh')}
                 </Button>
             }>
-                {instance.hasReadMods && !instance.readingMods ? `${instance.modifications.length} mods` : '(Not available)'}
+                {instance.hasReadMods && !instance.readingMods ? `${instance.modifications.length} Modifications` : '(Not available)'}
             </Information>
         </Grid>
     </React.Fragment>
@@ -98,19 +98,17 @@ export type InformationProps = {
     children?: ReactNode
 };
 function Information({ fill, icon, text, buttons, children }: InformationProps) {
-    return <Grid width="100%" padding="12px 16px" spacing={16} alignItems="center" borderRadius={16} css={{
-        border: 'transparent solid 1px',
+    return <Grid width="100%" padding="12px 16px" spacing={16} alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{
         flexGrow: 1,
         position: 'relative',
-        flexBasis: fill ? null : 'calc(50% - .5rem)',
-        background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
+        flexBasis: fill ? null : 'calc(50% - .5rem)'
     }}>
         <Typography lineheight={1}>{icon}</Typography>
         <Grid spacing={2} vertical>
             <Typography size={14} lineheight={1}>
                 {text}
             </Typography>
-            <Typography size={12} color="$secondaryColor" lineheight={1}>
+            <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
                 {children}
             </Typography>
         </Grid>

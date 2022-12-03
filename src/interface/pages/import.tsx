@@ -2,7 +2,7 @@ import { open } from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
 
-import { Grid, Alert, Button, TextInput, Typography, TextHeader, InputLabel } from '../../../voxeliface/src';
+import { Link, Grid, Alert, Button, TextInput, Typography, TextHeader, InputLabel } from '../../../voxeliface/src';
 
 import { setPage } from '../../store/slices/interface';
 import { useAppDispatch } from '../../store/hooks';
@@ -22,19 +22,14 @@ export default function Import() {
     const readFile = () => {
         setReading(true);
     };
-    return <Grid width="100%" height="inherit" padding=".75rem 1rem" direction="vertical">
+    return <Grid width="100%" height="inherit" padding=".75rem 1rem" vertical>
         <Typography size={20}>
             Import Instance
         </Typography>
-        <Typography size={12} color="$secondaryColor" spacing={6} onClick={() => changePage('instances')} horizontal css={{
-            cursor: 'pointer',
-            '&:hover': {
-                color: '$primaryColor'
-            }
-        }}>
+        <Link size={12} onClick={() => changePage('instances')}>
             <IconBiArrowLeft/>
             {t('interface:common.action.return_to_instances')}
-        </Typography>
+        </Link>
         <Grid width="100%" height="100%" margin="16px 0 0" spacing={16}>
             <Grid width={data ? '50%' : '100%'} padding="12px 16px" vertical background="$secondaryBackground2" borderRadius={8}>
                 <TextHeader spacing={12}>

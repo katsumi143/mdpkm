@@ -37,24 +37,24 @@ export default function InstanceList({ id }: InstanceListProps) {
                 {t('app.mdpkm.common:actions.refresh')}
             </Button>
         </Grid>
-        <Grid height="100%" spacing={8} padding="8px 0" direction="vertical" alignItems="center" css={{
-            overflowY: "auto"
+        <Grid height="100%" spacing={8} padding="8px 0" vertical alignItems="center" css={{
+            overflowY: 'auto'
         }}>
             {instances ?
                 instances.length > 0 ? instances.map((instance, index) => {
                     return <Instance key={index} instance={instance} selected={id === instance.id} css={{
                         animationDelay: `${100 * index}ms`
                     }}/>;
-                }) : <Grid margin="1rem 0" direction="vertical" alignItems="center">
-                    <Typography size="1.2rem" family="$primaryFontSans">
+                }) : <Grid margin="1rem 0" vertical alignItems="center">
+                    <Typography size={18} family="$primarySans">
                         There's nothing here!
                     </Typography>
-                    <Typography size=".9rem" color="$secondaryColor" weight={400} lineheight={1.3}>
+                    <Typography color="$secondaryColor" weight={400} lineheight={1.3}>
                         You must be new to mdpkm, get started<br/>
                         by clicking "Add New Instance"
                     </Typography>
                 </Grid>
-            : <Spinner margin="1rem"/>}
+            : <Spinner margin={16}/>}
         </Grid>
     </React.Fragment>;
 };

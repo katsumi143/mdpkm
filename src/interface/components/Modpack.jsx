@@ -44,7 +44,7 @@ export default Patcher.register(function Modpack({ id, api, data, loading, featu
                     boxShadow: '$buttonShadow'
                 }}/>
                 {previewIcon && <ImagePreview src={modpack.icon} size={192} onClose={() => setPreviewIcon(false)}/>}
-                <Grid margin="4px 0 0 12px" padding="2px 0" spacing={2} direction="vertical">
+                <Grid margin="4px 0 0 12px" padding="2px 0" spacing={2} vertical>
                     <Typography size="1.1rem" horizontal lineheight={1} css={{
                         width: 'fit-content'
                     }}>

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
 
 import Mod from './Mod';
-import { Grid, Image, Select, Button, TextInput, Typography, BasicSpinner } from '../../../voxeliface';
+import { Grid, Image, Select, Button, TextInput, Typography, InputLabel, BasicSpinner } from '../../../voxeliface';
 
 import Patcher from '../../plugins/patcher';
 import { toast } from '../../util';
@@ -78,12 +78,10 @@ export default Patcher.register(function ModSearch({ instance }: ModSearchProps)
         search(api);
     }, [api, page, category, instance.id]);
     return (
-        <Grid width="100%" height="100%" spacing={8} direction="vertical" css={{ overflow: 'hidden' }}>
+        <Grid width="100%" height="100%" spacing={8} vertical css={{ overflow: 'hidden' }}>
             <Grid width="100%" spacing={8} justifyContent="space-between">
-                <Grid width="100%" spacing={4} direction="vertical">
-                    <Typography size=".9rem" color="$secondaryColor">
-                        {t('app.mdpkm.common:labels.search_query')}
-                    </Typography>
+                <Grid width="100%" vertical>
+                    <InputLabel>{t('app.mdpkm.common:labels.search_query')}</InputLabel>
                     <TextInput width="100%" value={query} onChange={setQuery}>
                         <Button theme="secondary" onClick={() => search(api)} disabled={searching}>
                             {searching ? <BasicSpinner size={16}/> : <IconBiSearch/>}
@@ -92,10 +90,8 @@ export default Patcher.register(function ModSearch({ instance }: ModSearchProps)
                     </TextInput>
                 </Grid>
                 <Grid spacing={8}>
-                    <Grid spacing={4} direction="vertical">
-                        <Typography size=".9rem" color="$secondaryColor">
-                            {t('app.mdpkm.common:labels.category')}
-                        </Typography>
+                    <Grid vertical>
+                        <InputLabel>{t('app.mdpkm.common:labels.category')}</InputLabel>
                         <Select.Root value={category} onChange={setCategory} disabled={searching}>
                             <Select.Group name="Categories">
                                 <Select.Item value="none">
@@ -114,10 +110,8 @@ export default Patcher.register(function ModSearch({ instance }: ModSearchProps)
                             </Select.Group>
                         </Select.Root>
                     </Grid>
-                    <Grid spacing={4} direction="vertical">
-                        <Typography size=".9rem" color="$secondaryColor">
-                            {t('app.mdpkm.common:labels.platform')}
-                        </Typography>
+                    <Grid vertical>
+                        <InputLabel>{t('app.mdpkm.common:labels.platform')}</InputLabel>
                         <Select.Root value={api} onChange={setApi} disabled={searching}>
                             <Select.Group name="Mod Platforms">
                                 {Object.values(voxura.platforms).map((platform, key) =>
@@ -131,22 +125,22 @@ export default Patcher.register(function ModSearch({ instance }: ModSearchProps)
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid height="100%" spacing={8} direction="vertical" borderRadius={16} css={{ overflow: 'hidden auto' }}>
+            <Grid height="100%" spacing={8} vertical borderRadius={16} css={{ overflow: 'hidden auto' }}>
                 {mods.map((mod, index) => <Mod key={index} data={mod} instanceId={instance.id}/>)}
-                {mods.length === 0 && <Grid direction="vertical">
-                    <Typography size="1.2rem" family="$primaryFontSans">
+                {mods.length === 0 && <Grid vertical>
+                    <Typography size={18}>
                         {t('app.mdpkm.common:headers.empty_list')}
                     </Typography>
-                    <Typography size=".9rem" color="$secondaryColor" weight={400} lineheight={1}>
+                    <Typography size={14} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
                         {t('app.mdpkm.common:headers.search_retry')}
                     </Typography>
                 </Grid>}
             </Grid>
             <Grid width="100%" padding="0 8px" justifyContent="space-between">
                 <Pagination page={page} pages={pages} setPage={setPage}/>
-                <Typography size=".8rem" color="$secondaryColor" weight={400}>
+                <InputLabel>
                     {t('app.mdpkm.mod_search.results', { val: hits })}
-                </Typography>
+                </InputLabel>
             </Grid>
         </Grid>
     );

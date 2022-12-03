@@ -25,8 +25,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
     const showSummary = useAppSelector(state => state.settings['instances.modSearchSummaries']);
     const [mod, setMod] = useState(data);
     const [loading, setLoading] = useState(!data);
-    const { store } = instance ?? {};
-    const installed = store?.modifications?.some(m => m[3] === mod?.slug);
+    const installed = false;//store?.modifications?.some(m => m[3] === mod?.slug);
     const installing = false;//downloading?.some(d => d.id === (mod?.id ?? mod?.project_id));
     const installMod = () => instance?.installMod(mod!);
     /*useEffect(() => {
@@ -52,12 +51,12 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
     }}>
         {loading || !mod ? <Grid spacing={12} padding={4}>
             <Spinner/>
-            <Grid spacing={2} direction="vertical" justifyContent="center">
-                <Typography size=".9rem" lineheight={1}>
+            <Grid spacing={2} vertical justifyContent="center">
+                <Typography size={14} lineheight={1}>
                     {t('app.mdpkm.common:states.loading')}
                 </Typography>
                 {id && api &&
-                    <Typography size=".7rem" color="$secondaryColor" weight={400} lineheight={1}>
+                    <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
                         {t('app.mdpkm.mod.platform', {
                             id,
                             name: t(`app.mdpkm.common:platforms.${api}`)
@@ -70,34 +69,34 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                 filter: mod.isNsfw && 'blur(2px)',
                 minWidth: iconSize
             }}/>
-            <Grid margin={isCompact ? '4px 0 0 10px' : '4px 0 0 12px'} padding="2px 0" spacing="2px" direction="vertical">
-                <Typography size={isCompact ? 14 : '1.1rem'} spacing={4} horizontal lineheight={1}>
+            <Grid margin={isCompact ? '4px 0 0 10px' : '4px 0 0 12px'} padding="2px 0" spacing={2} vertical>
+                <Typography size={isCompact ? 14 : '1.1rem'} spacing={4} lineheight={1}>
                     {mod.displayName}
                     {mod.author && 
-                        <Typography size={isCompact ? 10 : '.7rem'} color="$secondaryColor" lineheight={1}>
+                        <Typography size={isCompact ? 10 : 12} color="$secondaryColor" family="$secondary" lineheight={1}>
                             {t('app.mdpkm.mod.author', { val: mod.author })}
                         </Typography>
                     }
                     {featured &&
-                        <Typography size=".8rem" color="#cbc365" lineheight={1}>
+                        <Typography size={14} color="#cbc365" lineheight={1}>
                             {t('app.mdpkm.mod.featured')}
                         </Typography>
                     }
                     {recommended &&
-                        <Typography size=".8rem" color="$secondaryColor" lineheight={1}>
+                        <Typography size={14} color="$secondaryColor" lineheight={1}>
                             {t('app.mdpkm.mod.recommended')}
                         </Typography>
                     }
                     {mod.isNsfw &&
-                        <Typography size=".8rem" color="#e18e8e" lineheight={1}>
+                        <Typography size={14} color="#e18e8e" lineheight={1}>
                             NSFW
                         </Typography>
                     }
                 </Typography>
-                {!isCompact && <Typography size=".8rem" color="$secondaryColor" weight={400} lineheight={1}>
+                {!isCompact && <Typography size={12} color="$secondaryColor" weight={400} lineheight={1}>
                     {t(`app.mdpkm.mod.sides.${mod.getSide()}`)}
                 </Typography>}
-                {showSummary && <Typography size={isCompact ? 12 : '.9rem'} color="$secondaryColor" textalign="left" whitespace="pre-wrap">
+                {showSummary && <Typography size={isCompact ? 12 : 14} color="$secondaryColor" weight={400} family="$secondary" textalign="left" whitespace="pre-wrap">
                     {mod.summary}
                 </Typography>}
             </Grid>
@@ -106,7 +105,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                 position: 'absolute'
             }}>
                 {typeof mod.downloads === 'number' &&
-                    <Typography size={isCompact ? 11 : 12} color="$secondaryColor" margin="0 8px 0 0" spacing={6} horizontal>
+                    <Typography size={isCompact ? 11 : 12} color="$secondaryColor" margin="0 8px 0 0" spacing={6}>
                         <IconBiDownload/>
                         {t('app.mdpkm.mod.downloads', {
                             val: Intl.NumberFormat('en-us', {}).format(mod.downloads)

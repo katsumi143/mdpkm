@@ -30,8 +30,8 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
         throw new Error('could not find instance');
 
     const iconSize = embedded ? isCompact ? 24 : 32 : isCompact ? 32 : 40;
-    return <Grid direction="vertical">
-        <Grid spacing={8} direction="vertical" background="$secondaryBackground2" borderRadius={16} css={{
+    return <Grid vertical>
+        <Grid spacing={8} vertical background="$secondaryBackground2" borderRadius={16} css={{
             border: 'transparent solid 1px',
             position: 'relative',
             background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box',
@@ -51,10 +51,10 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                     imageRendering: 'pixelated'
                 }}/>
                 <Grid margin="0 0 0 4px" spacing={2} vertical>
-                    <Typography size={embedded ? '.9rem' : isCompact ? 14 : 16} weight={400} lineheight={1}>
+                    <Typography size={embedded ? '.9rem' : isCompact ? 14 : 16} weight={400} family="$secondary" lineheight={1}>
                         {mod?.name ?? mod?.id}
                     </Typography>
-                    <Typography size={embedded ? '.6rem' : isCompact ? 10 : 12} color="$secondaryColor" weight={300} lineheight={1}>
+                    <Typography size={embedded ? '.6rem' : isCompact ? 10 : 12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
                         {t('app.mdpkm.mod.version', {
                             val: mod?.version
                         })}
@@ -67,13 +67,13 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                 }}>
                     <Grid vertical alignItems="end">
                         <Breakpoint customQuery="(min-width: 820px)">
-                            <Typography size={12} color="$secondaryColor" spacing={6} horizontal>
+                            <Typography size={12} color="$secondaryColor" spacing={6}>
                                 <IconBiCloudFill/>
                                 {t('app.mdpkm.common:platforms.local')}
                             </Typography>
                         </Breakpoint>
                         <Breakpoint customQuery="(min-width: 690px)">
-                            {!update && <Typography size={12} color="$secondaryColor" spacing={6} horizontal>
+                            {!update && <Typography size={12} color="$secondaryColor" spacing={6}>
                                 <IconBiBoxFill fontSize={10}/>
                                 {t(`app.mdpkm.common:loader.${mod?.loader}`)}
                             </Typography>}
@@ -107,7 +107,7 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
             */}
         </Grid>
         {showEmbedded &&
-            <Grid padding={8} spacing={8} direction="vertical" background="#0000004d" borderRadius="0 0 4px 4px">
+            <Grid padding={8} spacing={8} vertical background="#0000004d" borderRadius="0 0 4px 4px">
                 {/*mod.embedded?.map((mod: any, index: number) =>
                     <InstanceMod key={index} mod={mod} instanceId={instanceId} embedded/>
                 )*/}
@@ -123,8 +123,8 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                         imageRendering: 'pixelated'
                     }}/>
                     {previewIcon && <ImagePreview src={mod?.webIcon} size={192} onClose={() => setPreviewIcon(false)}/>}
-                    <Grid spacing={2} direction="vertical">
-                        <Typography size="1.1rem" lineheight={1}>
+                    <Grid spacing={2} vertical>
+                        <Typography lineheight={1}>
                             {mod?.name}
                         </Typography>
                         <Typography size={12} color="$secondaryColor" lineheight={1}>
@@ -132,7 +132,7 @@ export default Patcher.register(function InstanceMod({ mod, updates, embedded, i
                         </Typography>
                     </Grid>
                 </Grid>
-                <Grid margin="8px 0 0" padding={8} direction="vertical" background="$secondaryBackground2" borderRadius={8}>
+                <Grid margin="8px 0 0" padding={8} vertical background="$secondaryBackground2" borderRadius={8}>
                     <Typography>
                         Summary
                     </Typography>

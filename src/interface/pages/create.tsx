@@ -15,19 +15,14 @@ export default function Create() {
     const dispatch = useAppDispatch();
     const [selected, setSelected] = useState<string | null>(null);
     const changePage = (page: string) => dispatch(setPage(page));
-    return <Grid width="100%" height="inherit" padding=".75rem 1rem" direction="vertical">
+    return <Grid width="100%" height="inherit" padding=".75rem 1rem" vertical>
         <Typography size={20}>
             Create Instance
         </Typography>
-        <Typography size={12} color="$secondaryColor" spacing={6} onClick={() => changePage('instances')} horizontal css={{
-            cursor: 'pointer',
-            '&:hover': {
-                color: '$primaryColor'
-            }
-        }}>
+        <Link size={12} onClick={() => changePage('instances')}>
             <IconBiArrowLeft/>
             {t('interface:common.action.return_to_instances')}
-        </Typography>
+        </Link>
         <AnimateSharedLayout>
             <Grid height="100%" margin="16px 0 0" vertical spacing={8} css={{ position: 'relative' }}>
                 {INSTANCE_CREATORS.map((component, key) =>
@@ -49,7 +44,7 @@ function Component({ id, selected, setSelected }: ComponentProps) {
         <ComponentContainer layoutId={`component-${id}`}>
             <Grid height="fit-content" padding={8} spacing={12}>
                 <ImageWrapper src={getImage(`component.${id}`)} size={40} shadow canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
-                <Grid spacing={4} direction="vertical" justifyContent="center">
+                <Grid spacing={4} vertical justifyContent="center">
                     <Typography layoutId={`component-title-${id}`} horizontal lineheight={1}>
                         {t(`voxura:component.${id}`)}
                     </Typography>
@@ -100,7 +95,7 @@ function Setup({ id, cancel }: SetupProps) {
         }}>
             <Grid padding={8} spacing={12}>
                 <ImageWrapper src={getImage(`component.${id}`)} size={40} shadow canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
-                <Grid spacing={4} direction="vertical" justifyContent="center">
+                <Grid spacing={4} vertical justifyContent="center">
                     <Typography layoutId={`component-title-${id}`} horizontal lineheight={1}>
                         {t(`voxura:component.${id}`)}
                     </Typography>

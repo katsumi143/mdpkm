@@ -43,7 +43,7 @@ export type ImagePreviewProps = {
 };
 export default function ImagePreview({ src, size, onClose, pixelated }: ImagePreviewProps) {
     return <Portal>
-        <Grid width="100vw" height="100vh" spacing={8} onClick={onClose} direction="vertical" alignItems="center" background="#000000bf" justifyContent="center" css={{
+        <Grid width="100vw" height="100vh" spacing={8} onClick={onClose} vertical alignItems="center" background="#000000bf" justifyContent="center" css={{
             top: 0,
             left: 0,
             zIndex: 100000,
@@ -55,7 +55,7 @@ export default function ImagePreview({ src, size, onClose, pixelated }: ImagePre
                 animation: `${openAnimation} .5s cubic-bezier(0, 0, 0, 1.0)`,
                 imageRendering: pixelated && 'pixelated'
             }}/>
-            <Typography size=".8rem" color="$secondaryColor" css={{
+            <Typography size={14} color="$secondaryColor" family="$secondary" css={{
                 animation: `${openAnimation3} .75s`
             }}>
                 Click anywhere to close

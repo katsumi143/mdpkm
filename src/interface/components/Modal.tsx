@@ -29,14 +29,14 @@ export type ModalProps = {
 };
 export default Patcher.register(function Modal({ width, height, children }: ModalProps) {
     return <Portal>
-        <Grid width="100vw" height="100vh" direction="vertical" alignItems="center" background="#00000099" justifyContent="center" css={{
+        <Grid width="100vw" height="100vh" vertical alignItems="center" background="#00000099" justifyContent="center" css={{
             top: 0,
             left: 0,
             zIndex: 100000,
             position: 'absolute',
             animation: `${openAnimation2} .5s`
         }}>
-            <Grid width={width} height={height} padding={12} direction="vertical" background="$secondaryBackground" borderRadius={8} css={{
+            <Grid width={width} height={height} padding={12} vertical background="$secondaryBackground" borderRadius={8} css={{
                 border: '1px solid $secondaryBorder2',
                 position: 'relative',
                 animation: `${openAnimation} .5s cubic-bezier(0, 0, 0, 1.0)`

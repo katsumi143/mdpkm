@@ -40,7 +40,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
         return <JsonEditor value={instance.store.data}/>;
     return <React.Fragment>
         <Grid spacing={8} padding="4px 0" justifyContent="space-between">
-            <Grid direction="vertical">
+            <Grid vertical>
                 <Typography size={14} lineheight={1}>
                     {t('app.mdpkm.instance_page.tabs.settings.title')}
                 </Typography>
@@ -55,7 +55,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
                 </Button>
             </Grid>
         </Grid>
-        <Grid direction="vertical">
+        <Grid vertical>
             <InputLabel>
                 {t('app.mdpkm.instance_page.tabs.settings.instance_name')}
             </InputLabel>
@@ -78,7 +78,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
                 {t('app.mdpkm.instance_page.tabs.settings.resolution')}
             </InputLabel>
             <Grid spacing={8}>
-                <Grid direction="vertical">
+                <Grid vertical>
                     <Typography size=".8rem" color="$secondaryColor">
                         {t('app.mdpkm.instance_page.tabs.settings.resolution.width')}
                     </Typography>
@@ -91,7 +91,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
                         }}
                     />
                 </Grid>
-                <Grid direction="vertical">
+                <Grid vertical>
                     <Typography size=".8rem" color="$secondaryColor">
                         {t('app.mdpkm.instance_page.tabs.settings.resolution.height')}
                     </Typography>

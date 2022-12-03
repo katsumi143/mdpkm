@@ -49,10 +49,10 @@ export default Patcher.register(function ModpackSearch({ css, loading, setLoadin
             search(api);
     }, [modpacks]);
     return (
-        <Grid spacing="1rem" direction="vertical" css={css}>
+        <Grid spacing={16} vertical css={css}>
             <Grid justifyContent="space-between">
                 <Grid>
-                    <Grid spacing={4} direction="vertical">
+                    <Grid spacing={4} vertical>
                         <Typography size=".9rem" color="$secondaryColor">
                             {t('app.mdpkm.common:labels.search_query')}
                         </Typography>
@@ -65,7 +65,7 @@ export default Patcher.register(function ModpackSearch({ css, loading, setLoadin
                     </Grid>
                 </Grid>
                 <Grid>
-                    <Grid spacing={4} direction="vertical">
+                    <Grid spacing={4} vertical>
                         <Typography size=".9rem" color="$secondaryColor">
                             {t('app.mdpkm.common:labels.platform')}
                         </Typography>
@@ -85,7 +85,7 @@ export default Patcher.register(function ModpackSearch({ css, loading, setLoadin
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid spacing={8} direction="vertical">
+            <Grid spacing={8} vertical>
                 {modpacks && modpacks.map((modpack, index) =>
                     <Modpack
                         api={api}
@@ -96,8 +96,8 @@ export default Patcher.register(function ModpackSearch({ css, loading, setLoadin
                         importModpack={importModpack}
                     />
                 )}
-                <Grid direction="vertical">
-                    <Typography size="1.2rem" family="$primaryFontSans">
+                <Grid vertical>
+                    <Typography size="1.2rem" family="$primarySans">
                         {t('app.mdpkm.common:headers.empty_list')}
                     </Typography>
                     <Typography size=".9rem" color="$secondaryColor" weight={400} lineheight={1}>

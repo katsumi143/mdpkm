@@ -30,7 +30,7 @@
     "common.date.today": "Today",
     "common.date.yesterday": "Yesterday",
     "common.date.never": "Never",
-    "common.date.days_ago": "{{0}} ago",
+    "common.date.days_ago": "{{0}} days ago",
 
     "common.date.released_today": "Released today",
     "common.date.released_yesterday": "Released yesterday",

@@ -99,8 +99,8 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
             readFile();
     }, [path]);
     return (
-        <Grid width="100%" direction="vertical" alignItems="center">
-            <Grid width="100%" padding="1rem 0" spacing={8} direction="vertical" alignItems="center" css={{
+        <Grid width="100%" vertical alignItems="center">
+            <Grid width="100%" padding="1rem 0" spacing={8} vertical alignItems="center" css={{
                 borderBottom: '1px solid $tagBorder'
             }}>
                 <Typography size="1.2rem" family="Raleway" lineheight={1}>
@@ -110,10 +110,10 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
                     {t('app.mdpkm.import_instance.title')}
                 </Typography>
             </Grid>
-            <Grid width="fit-content" height="-webkit-fill-available" spacing="1rem" padding="2rem 0" direction="vertical" alignItems="center" css={{
+            <Grid width="fit-content" height="-webkit-fill-available" spacing={16} padding="2rem 0" vertical alignItems="center" css={{
                 overflow: 'auto'
             }}>
-                <Grid margin="0 0 8px" spacing={12} direction="vertical" alignItems="center">
+                <Grid margin="0 0 8px" spacing={12} vertical alignItems="center">
                     {data && <Grid spacing={16} alignItems="center" justifyContent="center">
                         <Image src={`data:image/${data.iconType};base64,${data.icon}`} size={48} background="$secondaryBackground" borderRadius={4} css={{
                             minWidth: 64,
@@ -125,7 +125,7 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
                                 minHeight: 86
                             }
                         }}/>
-                        <Grid spacing={4} direction="vertical" justifyContent="center">
+                        <Grid spacing={4} vertical justifyContent="center">
                             <Typography size="1.1rem" lineheight={1}>
                                 {data.name}
                             </Typography>
@@ -136,7 +136,7 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
                     </Grid>}
                     {sourceImg && <Image src={sourceImg} size="3rem" width="10rem"/>}
                 </Grid>
-                {!epath && <Grid spacing={4} direction="vertical">
+                {!epath && <Grid spacing={4} vertical>
                     <Typography size=".9rem" color="$secondaryColor">
                         {t('app.mdpkm.import_instance.select_file')}
                     </Typography>
@@ -154,7 +154,7 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
                     </TextInput>
                 </Grid>}
                 {data && <React.Fragment>
-                    <Grid spacing={4} direction="vertical">
+                    <Grid spacing={4} vertical>
                         <Typography size=".9rem" color="$secondaryColor">
                             {t('app.mdpkm.import_instance.name_instance')}
                         </Typography>
@@ -165,7 +165,7 @@ export default Patcher.register(function ImportInstance({ path: epath, back }) {
                             disabled={!!importState}
                         />
                     </Grid>
-                    <Grid spacing={4} direction="vertical" css={{ width: 320 }}>
+                    <Grid spacing={4} vertical css={{ width: 320 }}>
                         <Typography size=".9rem" color="$secondaryColor">
                             {t('app.mdpkm.import_instance.inherit_config')}
                         </Typography>

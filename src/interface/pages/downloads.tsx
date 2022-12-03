@@ -10,14 +10,14 @@ export default function Downloads() {
     const downloads = useDownloads();
     const completed = downloads.filter(d => d.state === DownloadState.Completed);
     const downloading = downloads.filter(d => d.state === DownloadState.Downloading);
-    return <Grid padding=".75rem 1rem" direction="vertical">
+    return <Grid padding=".75rem 1rem" vertical>
         <TextHeader>
             {t('app.mdpkm.home.navigation.downloads')}
         </TextHeader>
         {downloading.length === 0 && <Typography>
             There's nothing downloading right now.
         </Typography>}
-        <Grid spacing={8} direction="vertical">
+        <Grid spacing={8} vertical>
             {downloading.map(DownloadComponent)}
         </Grid>
 
@@ -27,7 +27,7 @@ export default function Downloads() {
                 <Typography size=".8rem" color="$secondaryColor">({completed.length})</Typography>
                 <Grid width="100%" height={1} margin="0 0 0 4px" background="$secondaryBorder2"/>
             </Grid>
-            <Grid spacing={8} direction="vertical">
+            <Grid spacing={8} vertical>
                 {completed.map(DownloadComponent)}
             </Grid>
         </React.Fragment>}
@@ -46,7 +46,7 @@ function DownloadComponent(download: Download, key: number) {
     const progress = download.totalProgress;
     return <Grid key={key} padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" borderRadius={8}>
         <Image src={download.icon} size={48} borderRadius={4}/>
-        <Grid direction="vertical">
+        <Grid vertical>
             <Typography spacing={6} horizontal>
                 {download.name}
                 {download.subDownloads.length > 0 && <Typography size=".8rem" color="$secondaryColor" weight={400}>
@@ -66,7 +66,7 @@ function DownloadComponent(download: Download, key: number) {
                 </React.Fragment>}
             </Grid>
         </Grid>
-        <Grid width="40%" margin="0 8px 0 auto" spacing={2} direction="vertical" alignItems="end">
+        <Grid width="40%" margin="0 8px 0 auto" spacing={2} vertical alignItems="end">
             {download.state === DownloadState.Downloading && <React.Fragment>
                 <Grid width="100%" justifyContent="space-between">
                     <Typography size=".8rem" color="$secondaryColor" weight={400}>

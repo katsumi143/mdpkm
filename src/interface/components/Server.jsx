@@ -32,7 +32,7 @@ export default Patcher.register(function Server({ name, icon, motd, type, player
                 }}
             />
             {previewIcon && <ImagePreview src={serverIcon} size={192} onClose={() => setPreviewIcon(false)} pixelated/>}
-            <Grid height="100%" spacing={2} direction="vertical" justifyContent="center">
+            <Grid height="100%" spacing={2} vertical justifyContent="center">
                 <Typography size={isCompact ? 14 : 16} horizontal lineheight={1} whitespace="nowrap">
                     {name || t('app.mdpkm.server.default_name')}
                     {acceptTextures === 1 &&
@@ -55,7 +55,7 @@ export default Patcher.register(function Server({ name, icon, motd, type, player
             </Grid>
         </Grid>
         <Grid spacing={8} alignItems="center">
-            <Grid height="100%" spacing={4} padding={4} direction="vertical" alignItems="end">
+            <Grid height="100%" spacing={4} padding={4} vertical alignItems="end">
                 {players && <Typography size=".8rem" color="$secondaryColor" spacing={4} lineheight={1}>
                     {t('app.mdpkm.server.players', {
                         val: players.online,

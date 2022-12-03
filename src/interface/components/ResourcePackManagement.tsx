@@ -74,7 +74,7 @@ export default Patcher.register(function ResourcePackManagement({ instanceId }: 
     useEffect(() => setItems(null), [instanceId]);
     return <React.Fragment>
         <Grid margin="4px 0" spacing={8} justifyContent="space-between">
-            <Grid direction="vertical">
+            <Grid vertical>
                 <Typography size={14} lineheight={1}>
                     {t('app.mdpkm.resourcepack_management.title')}
                 </Typography>
@@ -130,7 +130,7 @@ function ResourcePack({ item }: ResourcePackProps) {
             }}
         />
         {previewIcon && <ImagePreview src={packIcon} size={192} onClose={() => setPreviewIcon(false)} pixelated/>}
-        <Grid spacing={2} direction="vertical">
+        <Grid spacing={2} vertical>
             <Typography size={isCompact ? 14 : 16} lineheight={1}>
                 {item.name}
             </Typography>

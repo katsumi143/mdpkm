@@ -46,16 +46,16 @@ export default function Accounts() {
         }
     };
     return (
-        <Grid height="-webkit-fill-available" padding=".75rem 1rem" direction="vertical" css={{
+        <Grid height="-webkit-fill-available" padding=".75rem 1rem" vertical css={{
             overflow: 'auto'
         }}>
             <TextHeader>{t('app.mdpkm.accounts.header')}</TextHeader>
-            <Grid spacing={8} padding="0 1rem" direction="vertical">
+            <Grid spacing={8} padding="0 1rem" vertical>
                 <Image src="img/banners/microsoft.svg" width={112} height={24} margin="0 0 8px"/>
                 {!current && <Typography size=".8rem" color="$secondaryColor" whitespace="pre">
                     {t('app.mdpkm.accounts.select_account')}
                 </Typography>}
-                <Grid spacing={8} direction="vertical">
+                <Grid spacing={8} vertical>
                     {accounts.map((account, key) =>
                         <UserAccount key={key} account={account} current={current} changeAccount={changeAccount} deleteAccount={deleteAccount}/>
                     )}
@@ -67,7 +67,7 @@ export default function Accounts() {
             </Grid>
             {error && <Portal>
                 <Grid width="100vw" height="100vh" background="#00000099" alignItems="center" justifyContent="center">
-                    <Grid width="45%" padding={12} direction="vertical" background="$secondaryBackground" borderRadius={8} css={{
+                    <Grid width="45%" padding={12} vertical background="$secondaryBackground" borderRadius={8} css={{
                         border: '1px solid $secondaryBorder2',
                         position: 'relative'
                     }}>
@@ -120,12 +120,14 @@ function UserAccount({ account, current, changeAccount, deleteAccount }: UserAcc
             cursor: 'zoom-in'
         }}/>
         {previewAvatar && <ImagePreview src={avatarUrl} size={192} onClose={() => setPreviewAvatar(false)}/>}
-        <Typography>
-            {account.xboxName}
-            <Typography size={12} color="$secondaryColor" family="$primaryFontSans" lineheight={1}>
+        <Grid spacing={2} vertical>
+			<Typography lineheight={1}>
+				{account.xboxName}
+			</Typography>
+			<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
                 {account.name}
             </Typography>
-        </Typography>
+		</Grid>
         <Grid spacing={8} alignItems="center" css={{
             right: 16,
             position: 'absolute'

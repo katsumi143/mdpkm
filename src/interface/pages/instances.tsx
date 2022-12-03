@@ -12,11 +12,8 @@ export default function Instances() {
     const dispatch = useAppDispatch();
     const instance = useAppSelector(state => state.interface.currentInstance);
     const changePage = (page: string) => dispatch(setPage(page));
-    return <React.Fragment>
-        <Grid width="35%" height="100%" direction="vertical" background="$blackA2" justifyContent="space-between" css={{
-            maxWidth: '35%',
-            borderRight: '1px solid $secondaryBorder'
-        }}>
+    return <Grid width="100%" height="100%">
+        <Grid width="35%" vertical>
             <InstanceList id={instance}/>
             <Grid width="100%" padding={16} background="$secondaryBackground" alignItems="center" justifyContent="space-between">
                 <Button theme="accent" onClick={() => changePage('create')}>
@@ -30,5 +27,5 @@ export default function Instances() {
             </Grid>
         </Grid>
         <InstancePage id={instance}/>
-    </React.Fragment>;
+    </Grid>;
 };

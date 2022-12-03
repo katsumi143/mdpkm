@@ -147,13 +147,13 @@ export default function Skins() {
             });
         }
     }, [profile, account]);
-    return <Grid height="100%" spacing={8} padding=".75rem 1rem" direction="vertical">
+    return <Grid height="100%" spacing={8} padding=".75rem 1rem" vertical>
         <TextHeader>
             {t('app.mdpkm.home.navigation.skins')}
         </TextHeader>
         <Grid height="100%">
-            <Grid padding="0 0 2rem" direction="vertical" alignItems="center" justifyContent="space-between">
-                <Grid spacing="1rem" direction="vertical" alignItems="center">
+            <Grid padding="0 0 2rem" vertical alignItems="center" justifyContent="space-between">
+                <Grid spacing={16} vertical alignItems="center">
                     <Typography>
                         {t('app.mdpkm.skin_management.current.header')}
                     </Typography>
@@ -177,7 +177,7 @@ export default function Skins() {
                 </Button>
             </Grid>
             <Divider width={1} height="100%"/>
-            <Grid width="100%" height="100%" direction="vertical" alignItems="center">
+            <Grid width="100%" height="100%" vertical alignItems="center">
                 <Typography margin="0 0 1rem">
                     {t('app.mdpkm.skin_management.library.header')}
                 </Typography>
@@ -190,7 +190,7 @@ export default function Skins() {
                         <Skin key={key} data={skin} capes={capes} index={key} useSkin={useSkin} editSkin={editSkin} loading={loading || setting} current={current}/>
                     )}
                 </Grid> : <React.Fragment>
-                    <Typography size="1.2rem" family="$primaryFontSans">
+                    <Typography size="1.2rem" family="$primarySans">
                         {t('app.mdpkm.common:headers.empty_list')}
                     </Typography>
                     <Markdown text={t('app.mdpkm.skin_management.library.empty')} css={{
@@ -201,7 +201,7 @@ export default function Skins() {
         </Grid>
         {adding && <Modal>
             <TextHeader>{t('app.mdpkm.skin_management.adding.header')}</TextHeader>
-            <Grid spacing="2rem" justifyContent="space-between">
+            <Grid spacing={32} justifyContent="space-between">
                 <SkinFrame
                     walk
                     skin={addingPath ? convertFileSrc(addingPath) : `img/skins/${addingModel}.png`}
@@ -212,7 +212,7 @@ export default function Skins() {
                     control
                     background="none"
                 />
-                <Grid direction="vertical">
+                <Grid vertical>
                     <InputLabel>{t('app.mdpkm.skin_management.skin_name.label')}</InputLabel>
                     <TextInput
                         width="100%"
@@ -248,19 +248,19 @@ export default function Skins() {
                     </TextInput>
 
                     <InputLabel spacious>{t('app.mdpkm.skin_management.cape.label')}</InputLabel>
-                    <Select.Root value={addingCape} onChange={setAddingCape} defaultValue="none">
+                    <Select.Root value={addingCape} onChange={setAddingCape}>
                         <Select.Group name={t('app.mdpkm.skin_management.cape.category')}>
                             {capes.map((cape, key) => <Select.Item key={key} value={cape.id}>
                                 <Image src={cape.url} size={24} height={32} css={{
+									background: '#fff',
                                     backgroundSize: '128px 66px',
                                     imageRendering: 'pixelated',
-                                    backgroundColor: '#fff',
                                     backgroundPosition: '0 7%'
                                 }}/>
                                 {cape.alias}
                             </Select.Item>)}
                         </Select.Group>
-                        <Select.Item value="none">
+                        <Select.Item value={null}>
                             {t('app.mdpkm.skin_management.cape.items.none')}
                         </Select.Item>
                     </Select.Root>
@@ -280,7 +280,7 @@ export default function Skins() {
         </Modal>}
         {typeof editingSkin === 'number' && <Modal>
             <TextHeader>{t('app.mdpkm.skin_management.editing.header', { val: skins[editingSkin]?.name })}</TextHeader>
-            <Grid spacing="2rem" justifyContent="space-between">
+            <Grid spacing={32} justifyContent="space-between">
                 <SkinFrame
                     walk
                     skin={addingPath.startsWith('data:') ? addingPath : convertFileSrc(addingPath)}
@@ -291,7 +291,7 @@ export default function Skins() {
                     control
                     background="none"
                 />
-                <Grid direction="vertical">
+                <Grid vertical>
                     <InputLabel>{t('app.mdpkm.skin_management.skin_name.label')}</InputLabel>
                     <TextInput
                         width="100%"
@@ -327,19 +327,19 @@ export default function Skins() {
                     </TextInput>
 
                     <InputLabel spacious>{t('app.mdpkm.skin_management.cape.label')}</InputLabel>
-                    <Select.Root value={addingCape} onChange={setAddingCape} defaultValue="none">
+                    <Select.Root value={addingCape} onChange={setAddingCape}>
                         <Select.Group name={t('app.mdpkm.skin_management.cape.category')}>
                             {capes.map((cape, key) => <Select.Item key={key} value={cape.id}>
                                 <Image src={cape.url} size={24} height={32} css={{
+									background: '#fff',
                                     backgroundSize: '128px 66px',
                                     imageRendering: 'pixelated',
-                                    backgroundColor: '#fff',
                                     backgroundPosition: '0 7%'
                                 }}/>
                                 {cape.alias}
                             </Select.Item>)}
                         </Select.Group>
-                        <Select.Item value="none">
+                        <Select.Item value={null}>
                             {t('app.mdpkm.skin_management.cape.items.none')}
                         </Select.Item>
                     </Select.Root>
@@ -371,7 +371,7 @@ export type SkinProps = {
 };
 function Skin({ data, capes, index, current, loading, useSkin, editSkin }: SkinProps) {
     const { t } = useTranslation();
-    return <Grid padding={8} spacing={4} direction="vertical" alignItems="center" background="$primaryBackground" borderRadius="8px" justifyContent="space-between" css={{
+    return <Grid padding={8} spacing={4} vertical alignItems="center" background="$primaryBackground" borderRadius="8px" justifyContent="space-between" css={{
         border: '$secondaryBorder solid 1px'
     }}>
         <Typography>
