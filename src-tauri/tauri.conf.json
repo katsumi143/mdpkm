@@ -98,8 +98,8 @@
         "windows": [
             {
                 "title": "mdpkm",
-                "width": 1000,
-                "height": 600,
+                "width": 1200,
+                "height": 650,
                 "center": true,
                 "focus": true,
                 "resizable": true,
