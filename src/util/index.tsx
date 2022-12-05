@@ -14,3 +14,15 @@ export function getImage(name?: string) {
         return IMAGES.placeholder;
     return IMAGES[name as keyof typeof IMAGES] ?? IMAGES.placeholder;
 };
+
+export function getDefaultInstanceBanner(name?: string) {
+	if (!name)
+		return IMAGES.placeholder;
+
+	let hash = 0;
+	for (let i = 0; i < name.length; i++)
+		hash = name.charCodeAt(i) + ((hash << 5) - hash);
+	hash = Math.abs(hash);
+
+	return getImage('instance_banner.' + (hash % 3 + 1));
+};

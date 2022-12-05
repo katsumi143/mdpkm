@@ -38,6 +38,9 @@
     "common.date.released_months": "Released {{0}} months ago",
     "common.date.released_years": "Released {{0}} years ago",
 
+	"common.pages.servers": "Servers",
+	"common.pages.resource_packs": "Resource Packs",
+
     "home.greeting.0": "Good morning,",
     "home.greeting.1": "Good afternoon,",
     "home.greeting.2": "Good evening,",

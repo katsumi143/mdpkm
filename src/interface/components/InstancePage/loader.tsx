@@ -22,27 +22,25 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 	const { store } = instance;
 	const component = instance.gameComponent;
 	const [adding, setAdding] = useState(false);
+
+	const { components } = store;
+	const otherComponents = components.filter(c => c.type === ComponentType.Loader);
 	return <React.Fragment>
-		<Grid padding="4px 8px" vertical spacing={2} justifyContent="space-between">
-			<Typography>
-				{t('app.mdpkm.instance_page.tabs.loader.title')}
-			</Typography>
-			<Link size={12}>
-				<IconBiQuestionLg />
-				You may find this page confusing at first, click here for more information!
-			</Link>
-		</Grid>
+		<Link size={12} padding="4px 8px">
+			<IconBiQuestionLg/>
+			You may find this page confusing at first, click here for more information!
+		</Link>
 
 		<Typography size={12} color="$secondaryColor" margin="8px 0 0">
 			{t('interface:common.label.game_component')}
 		</Typography>
-		<Component component={component} />
+		<Component component={component}/>
 
-		<Typography size={12} color="$secondaryColor" margin="16px 0 0">
+		{!!otherComponents.length && <Typography size={12} color="$secondaryColor" margin="16px 0 0">
 			{t('interface:common.label.other_components')}
-		</Typography>
+		</Typography>}
 		<Grid spacing={8} vertical>
-			{store.components.filter(c => c.type === ComponentType.Loader).map((component, key) =>
+			{otherComponents.map((component, key) =>
 				<Component key={key} component={component} />
 			)}
 		</Grid>
@@ -68,7 +66,7 @@ function Issue({ issue }: IssueProps) {
 	return <Grid padding="12px 16px" spacing={16} background="$secondaryBackground2" borderRadius={16}>
 		<Typography><Icon /></Typography>
 		<Grid spacing={2} vertical>
-			<Typography size={14} spacing={6} horizontal lineheight={1}>
+			<Typography size={14} spacing={6} lineheight={1}>
 				{t(`app.mdpkm.common:loader_issue.${issue.id}`, issue.extra)}
 				<Typography size={10} color="$secondaryColor" weight={400} margin="2px 0 0" lineheight={1}>
 					({t(`app.mdpkm.common:loader_issue.type.${issue.type}`)})
@@ -95,7 +93,7 @@ function Component({ component }: ComponentProps) {
 	}}>
 		<ImageWrapper src={getImage(`component.${component.id}`)} size={40} shadow canPreview background="$secondaryBackground" borderRadius={8} />
 		<Grid spacing={4} vertical justifyContent="center">
-			<Typography horizontal lineheight={1}>
+			<Typography lineheight={1}>
 				{t(`voxura:component.${component.id}`)}
 			</Typography>
 			{isVersioned && <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>

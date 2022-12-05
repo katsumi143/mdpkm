@@ -81,7 +81,7 @@
 
     "app.mdpkm.instance_page.tabs.home": "Home",
     "app.mdpkm.instance_page.tabs.content": "Content",
-    "app.mdpkm.instance_page.tabs.servers": "Servers",
+    "app.mdpkm.instance_page.tabs.game": "Game Management",
     "app.mdpkm.instance_page.tabs.essential": "Essential",
     "app.mdpkm.instance_page.tabs.loader": "Loader",
     "app.mdpkm.instance_page.tabs.settings": "Settings",

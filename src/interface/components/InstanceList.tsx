@@ -8,7 +8,7 @@ import Instance from './Instance';
 import Typography from '../../../voxeliface/components/Typography';
 import BasicSpinner from '../../../voxeliface/components/BasicSpinner';
 
-import Voxura, { useInstances } from '../../voxura';
+import Voxura, { Instance as VoxuraInstance, useInstances } from '../../voxura';
 
 type InstanceListProps = {
     id: string
@@ -37,14 +37,28 @@ export default function InstanceList({ id }: InstanceListProps) {
                 {t('app.mdpkm.common:actions.refresh')}
             </Button>
         </Grid>
-        <Grid height="100%" spacing={8} padding="8px 0" vertical alignItems="center" css={{
-            overflowY: 'auto'
+        <Grid height="100%" spacing={8} padding="8px 0" vertical css={{
+            overflow: 'hidden auto'
         }}>
             {instances ?
-                instances.length > 0 ? instances.map((instance, index) => {
-                    return <Instance key={index} instance={instance} selected={id === instance.id} css={{
-                        animationDelay: `${100 * index}ms`
-                    }}/>;
+                instances.length > 0 ? Object.entries(instances.reduce((acc: Record<string, VoxuraInstance[]>, val) => {
+					const { category } = val.store;
+					if (!acc[category])
+						acc[category] = [];
+
+					acc[category].push(val);
+					return acc;
+				}, {})).sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0).map(([category, instances], key) => {
+                    return <React.Fragment key={key}>
+						<Typography size={14} color="$secondaryColor" weight={400} margin="4px 16px" family="$secondary" lineheight={1}>
+							{category}
+						</Typography>
+						{instances.map((instance, key) =>
+							<Instance key={key} instance={instance} selected={id === instance.id} css={{
+								animationDelay: `${100 * key}ms`
+							}}/>
+						)}
+					</React.Fragment>;
                 }) : <Grid margin="1rem 0" vertical alignItems="center">
                     <Typography size={18} family="$primarySans">
                         There's nothing here!

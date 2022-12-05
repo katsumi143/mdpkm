@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 
 import Mod from './Mod';
-import Tabs from '/voxeliface/components/Tabs';
+import Tabs from './Tabs';
 import Grid from '/voxeliface/components/Grid';
 import Modal from './Modal';
 import Button from '/voxeliface/components/Button';

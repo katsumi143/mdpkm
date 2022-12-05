@@ -24,7 +24,9 @@ const Animation = keyframes({
 });
 const viewAnimation = keyframes({
 	'100%': {
+		right: 0,
 		opacity: 0,
+		position: 'absolute',
 		transform: 'translateX(100%)'
 	}
 });
@@ -42,9 +44,8 @@ export default Patcher.register(function Instance({ css, selected, instance }: I
 	if (!instance)
 		return;
 
-	const copyId = () => {
-		writeText(instance.id).then(() => toast(t('app.mdpkm.common:toast.copied'), t('app.mdpkm.common:toast.copied_instance_id.body')));
-	};
+	const favorite = () => instance.setCategory(t('mdpkm:instance_category.favorites'));
+	const copyId = () => writeText(instance.id).then(() => toast(t('app.mdpkm.common:toast.copied'), t('app.mdpkm.common:toast.copied_instance_id.body')));
 	const view = () => {
 		dispatch(setCurrentInstance(instance.id));
 		dispatch(setPage('instances'));
@@ -64,7 +65,8 @@ export default Patcher.register(function Instance({ css, selected, instance }: I
 					background: selected ? '$gradientBackground2 padding-box, $gradientBorder2 border-box' : '$primaryBackground'
 				}}>
 					<Grid padding={isCompact ? 6 : 8} spacing={isCompact ? 10 : 12} alignItems="center" css={{
-						overflow: 'hidden'
+						overflow: 'hidden',
+						position: 'relative'
 					}}>
 						<InstanceIcon size={isCompact ? 36 : 48} instance={instance} hideLoader={isCompact} borderRadius={isCompact ? 4 : 8} />
 						<Grid spacing={isCompact ? 2 : 4} vertical alignItems="start" css={{ overflow: 'hidden' }}>
@@ -77,6 +79,7 @@ export default Patcher.register(function Instance({ css, selected, instance }: I
 								whitespace="nowrap"
 								css={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
 							>
+								{instance.isFavourite && <IconBiStarFill fontSize={12} style={{ marginRight: 4 }}/>}
 								{instance.name}
 							</Typography>
 							<Typography
@@ -107,17 +110,25 @@ export default Patcher.register(function Instance({ css, selected, instance }: I
 				Instance Options ({instance.name})
 			</ContextMenu.MenuLabel>
 			<ContextMenu.MenuItem>
+				<IconBiPlay/>
 				{t('app.mdpkm.common:actions.launch')}
 			</ContextMenu.MenuItem>
 			<ContextMenu.MenuItem onClick={view}>
+				<IconBiZoomIn/>
 				{t('app.mdpkm.common:actions.view')}
 			</ContextMenu.MenuItem>
-			<ContextMenu.MenuSeparator />
+			<ContextMenu.MenuSeparator/>
+			<ContextMenu.MenuItem onClick={favorite}>
+				<IconBiStar/>
+				Add to Favourites
+			</ContextMenu.MenuItem>
 			<ContextMenu.MenuItem>
+				<IconBiGear/>
 				Instance Settings
 			</ContextMenu.MenuItem>
 			<ContextMenu.MenuSeparator />
 			<ContextMenu.MenuItem onClick={copyId}>
+				<IconBiClipboardPlus/>
 				Copy ID
 			</ContextMenu.MenuItem>
 		</ContextMenu.Content>

@@ -20,5 +20,9 @@ export const IMAGES = {
     'component.minecraft-java-vanilla': 'img/icons/minecraft/java.png',
     'component.minecraft-bedrock-vanilla': 'img/icons/minecraft/bedrock.png',
     'component.fabric': 'img/icons/loaders/fabric.png',
-    'component.quilt': 'img/icons/loaders/quilt.svg'
+    'component.quilt': 'img/icons/loaders/quilt.svg',
+
+	'instance_banner.1': 'img/banners/instances/banner1_1.png',
+	'instance_banner.2': 'img/banners/instances/banner2.png',
+	'instance_banner.3': 'img/banners/instances/banner3.png'
 };

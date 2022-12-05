@@ -13,7 +13,7 @@ export default function Instances() {
     const instance = useAppSelector(state => state.interface.currentInstance);
     const changePage = (page: string) => dispatch(setPage(page));
     return <Grid width="100%" height="100%">
-        <Grid width="35%" vertical>
+        <Grid width="30%" vertical>
             <InstanceList id={instance}/>
             <Grid width="100%" padding={16} background="$secondaryBackground" alignItems="center" justifyContent="space-between">
                 <Button theme="accent" onClick={() => changePage('create')}>

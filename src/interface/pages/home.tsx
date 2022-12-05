@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import React, { useState, useEffect, MouseEventHandler } from 'react';
+import React, { useMemo, useState, useEffect, MouseEventHandler } from 'react';
 
 import Instance from '../components/Instance';
 import NewsItem from '../components/News/item';
@@ -16,19 +16,39 @@ export default function Home() {
 	const recent = useRecentInstances();
 	const account = useCurrentAccount();
 	const dispatch = useAppDispatch();
+	const greeting = useMemo(() => getGreeting(), []);
 	const [news, setNews] = useState<any[] | null>(null);
 	useEffect(() => {
 		mdpkm.getNewsSource('minecraft')?.getNews().then(setNews);
 	}, []);
 
-	return <Grid width="100%" height="inherit" padding=".75rem 1rem" vertical css={{ overflow: 'hidden' }}>
+	return <Grid width="100%" height="inherit" vertical css={{ overflow: 'hidden' }}>
 		<Grid height="100%" spacing={16} justifyContent="space-between" css={{ overflow: 'hidden' }}>
-			<Grid width="65%" vertical justifyContent="space-between">
+			<Grid width="100%" height="60%" background={`url(img/banners/instances/banner1_${greeting + 1}.png)`} css={{
+				zIndex: -1,
+				opacity: 0.5,
+				position: 'absolute',
+				backgroundSize: 'cover',
+				backgroundPosition: 'center'
+			}}>
+				<Grid width="100%" height="100%" background="linear-gradient(transparent, $primaryBackground)"/>
+			</Grid>
+			<Grid width="65%" padding="12px 0 12px 1rem" vertical justifyContent="space-between">
 				<Grid height="fit-content" margin="24px 0 0" spacing={24} alignItems="center">
-					<ImageWrapper src={account?.getAvatarUrl(AvatarType.Minecraft, AvatarStyle.Bust, 128)} size={128} border="2px solid $secondaryBorder" pixelated canPreview borderRadius={64} />
+					<ImageWrapper src={account?.getAvatarUrl(AvatarType.Minecraft, AvatarStyle.Bust, 128)} size={128} border="2px solid $secondaryBorder" pixelated canPreview borderRadius={64} css={{
+						'&:before': {
+							width: '100%',
+							height: '100%',
+							zIndex: -1,
+							content: '',
+							opacity: 0.5,
+							background: '$primaryBackground',
+							borderRadius: '50%'
+						}
+					}}/>
 					<Grid vertical>
 						<Typography size={20}>
-							{t(`interface:home.greeting.${getGreeting()}`)}
+							{t(`interface:home.greeting.${greeting}`)}
 						</Typography>
 						<Typography size={18} color="$secondaryColor">{account?.name}!</Typography>
 					</Grid>
@@ -46,7 +66,7 @@ export default function Home() {
 					</Grid>
 				</Grid>
 			</Grid>
-			<Grid width="35%" height="100%" spacing={16} vertical>
+			<Grid width="35%" height="100%" spacing={16} padding="12px 1rem 12px 0" vertical>
 				<Grid justifyContent="space-between" css={{
 					borderBottom: '1px solid $secondaryBorder2',
 					paddingBottom: 6
@@ -79,11 +99,9 @@ export type ViewAllProps = {
 };
 function ViewAll({ onClick }: ViewAllProps) {
 	const { t } = useTranslation();
-	return <Typography size={12} color="$linkColor" onClick={onClick} spacing={8} horizontal css={{
+	return <Typography size={12} color="$linkColor" onClick={onClick} css={{
 		cursor: 'pointer',
-		'&:hover': {
-			color: '$primaryColor'
-		}
+		'&:hover': { color: '$primaryColor' }
 	}}>
 		{t('interface:common.action.view_all')}
 		<IconBiArrowRight/>

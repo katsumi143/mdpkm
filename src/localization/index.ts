@@ -11,7 +11,8 @@ await i18n
             'app.mdpkm.common': (await import('./locales/en/common.json')).default,
             translation: (await import('./locales/en/index.json')).default,
             interface: (await import('./locales/en/interface.json')).default,
-            voxura: (await import('./locales/en/voxura.json')).default
+            voxura: (await import('./locales/en/voxura.json')).default,
+			mdpkm: (await import('./locales/en/mdpkm.json')).default
         },
         lv: {
             'app.mdpkm.instances': (await import('./locales/lv/instances.json')).default,

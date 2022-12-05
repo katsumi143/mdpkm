@@ -6,18 +6,19 @@ import { Grid, Button, TextInput, Typography, TextHeader, InputLabel } from '../
 
 import voxura from '../../voxura';
 import Patcher from '../../plugins/patcher';
-import { toast } from '../../util';
 import PluginSystem from '../../plugins';
 import { COMPONENT_MAP } from '../../voxura';
 import { getDefaultIcon } from '../../../voxura/src/util';
 import { useCurrentAccount } from '../../voxura';
 import mdpkm, { INSTANCE_CREATORS } from '../../mdpkm';
 import { APP_DIR, APP_NAME, APP_VERSION } from '../../util/constants';
+import { toast, getDefaultInstanceBanner } from '../../util';
 export default function Developer() {
 	const { t } = useTranslation();
 	const account = useCurrentAccount();
 	const [crash, setCrash] = useState<any>(null);
 	const [iconTest, setIconTest] = useState('28839');
+	const [bannerTest, setBannerTest] = useState('billy is awesome');
 	return <Grid width="100%" height="inherit" padding=".75rem 1rem" vertical>
 		<TextHeader>Developer Stuff</TextHeader>
 		<Grid spacing={8}>
@@ -54,10 +55,19 @@ export default function Developer() {
 
 		<InputLabel spaciouser>Default Instance Icon Tester</InputLabel>
 		<Grid spacing={8}>
-			<ImageWrapper src={getDefaultIcon(iconTest)} size={32} shadow canPreview />
+			<ImageWrapper src={getDefaultIcon(iconTest)} size={32} canPreview/>
 			<TextInput
 				value={iconTest}
 				onChange={setIconTest}
+			/>
+		</Grid>
+
+		<InputLabel spaciouser>Default Instance Banner Tester</InputLabel>
+		<Grid spacing={8}>
+			<ImageWrapper src={getDefaultInstanceBanner(bannerTest)} size={64} width={124} canPreview/>
+			<TextInput
+				value={bannerTest}
+				onChange={setBannerTest}
 			/>
 		</Grid>
 
