@@ -1,6 +1,7 @@
 import svgr from 'vite-plugin-svgr';
 import Icons from 'unplugin-icons/vite';
 import react from '@vitejs/plugin-react';
+import { tauri } from 'vite-plugin-tauri';
 import AutoImport from 'unplugin-auto-import/vite';
 import IconsResolver from 'unplugin-icons/resolver';
 import i18nHotReload from 'vite-plugin-i18n-hot-reload';
@@ -36,7 +37,8 @@ export default defineConfig({
         }),
         i18nHotReload({
 			folder: 'src/localization/locales'
-		})
+		}),
+        tauri()
     ],
     esbuild: {
         keepNames: true

@@ -8,11 +8,10 @@
     "author": "Blookerss (https://github.com/Blookerss)",
     "license": "MIT",
     "scripts": {
-        "dev": "vite dev",
-        "start": "vite",
-        "build": "env-cmd vite build",
+        "dev": "vite dev --config vite.config.tauri.ts",
+		"dev:tauri": "tauri dev",
+        "build": "env-cmd vite build --config vite.config.tauri.ts",
         "build:tauri": "env-cmd tauri build",
-        "serve": "vite preview",
         "tauricon": "tauricon --target ./src-tauri/icons ./app-icon.png"
     },
     "devDependencies": {
