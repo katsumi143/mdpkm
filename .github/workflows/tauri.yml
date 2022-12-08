@@ -34,7 +34,23 @@ jobs:
       - name: install app dependencies and build it
         run: yarn && yarn vite build
       - uses: tauri-apps/tauri-action@v0
+        with:
+          includeDebug: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v2
+        if: matrix.platform == 'ubuntu-20.04'
+        with:
+            name: padloc-linux-${{ github.sha }}-unsigned.deb
+            path: src-tauri/target/debug/bundle/deb/*.deb
+            if-no-files-found: error
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v2
+        if: matrix.platform == 'windows-latest'
+        with:
+            name: padloc-windows-${{ github.sha }}-unsigned.msi
+            path: src-tauri/target/debug/bundle/msi/*.msi
+            if-no-files-found: error
