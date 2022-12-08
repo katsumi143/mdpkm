@@ -45,56 +45,54 @@ export default function Accounts() {
                 setError('NETWORK_ERR');
         }
     };
-    return (
-        <Grid height="-webkit-fill-available" padding=".75rem 1rem" vertical css={{
-            overflow: 'auto'
-        }}>
-            <TextHeader>{t('app.mdpkm.accounts.header')}</TextHeader>
-            <Grid spacing={8} padding="0 1rem" vertical>
-                <Image src="img/banners/microsoft.svg" width={112} height={24} margin="0 0 8px"/>
-                {!current && <Typography size=".8rem" color="$secondaryColor" whitespace="pre">
-                    {t('app.mdpkm.accounts.select_account')}
-                </Typography>}
-                <Grid spacing={8} vertical>
-                    {accounts.map((account, key) =>
-                        <UserAccount key={key} account={account} current={current} changeAccount={changeAccount} deleteAccount={deleteAccount}/>
-                    )}
-                </Grid>
-                <Button theme="accent" onClick={addNewAccount} disabled={addingAccount}>
-                    {addingAccount ? <BasicSpinner size={16}/> : <IconBiPlusLg/>}
-                    {t('app.mdpkm.accounts.add')}
-                </Button>
+    return <Grid height="100%" padding=".75rem 1rem" vertical css={{
+        overflow: 'auto'
+    }}>
+        <TextHeader>{t('app.mdpkm.accounts.header')}</TextHeader>
+        <Grid spacing={8} padding="0 1rem" vertical>
+            <Image src="img/banners/microsoft.svg" width={112} height={24} margin="0 0 8px"/>
+            {!current && <Typography size=".8rem" color="$secondaryColor" whitespace="pre">
+                {t('app.mdpkm.accounts.select_account')}
+            </Typography>}
+            <Grid spacing={8} vertical>
+                {accounts.map((account, key) =>
+                    <UserAccount key={key} account={account} current={current} changeAccount={changeAccount} deleteAccount={deleteAccount}/>
+                )}
             </Grid>
-            {error && <Portal>
-                <Grid width="100vw" height="100vh" background="#00000099" alignItems="center" justifyContent="center">
-                    <Grid width="45%" padding={12} vertical background="$secondaryBackground" borderRadius={8} css={{
-                        border: '1px solid $secondaryBorder2',
-                        position: 'relative'
-                    }}>
-                        <TextHeader>Account Error</TextHeader>
-                        {error == 'NOT_OWNED' && <Typography>
-                            You do not own Minecraft: Java Edition.<br/>
-                            <Typography size=".9rem" color="$secondaryColor">
-                                Xbox Game Pass is unsupported.
-                            </Typography>
-                        </Typography>}
-                        {error == 'NETWORK_ERR' && <Typography>
-                            A network error occured.<br/>
-                            <Typography size=".9rem" color="$secondaryColor">
-                                Check your internet connection, you might be offline.
-                            </Typography>
-                        </Typography>}
-                        <Grid margin="2rem 0 0" spacing={8}>
-                            <Button theme="secondary" onClick={() => setError(null)} >
-                                <IconBiXLg/>
-                                Close
-                            </Button>
-                        </Grid>
+            <Button theme="accent" onClick={addNewAccount} disabled={addingAccount}>
+                {addingAccount ? <BasicSpinner size={16}/> : <IconBiPlusLg/>}
+                {t('app.mdpkm.accounts.add')}
+            </Button>
+        </Grid>
+        {error && <Portal>
+            <Grid width="100vw" height="100vh" background="#00000099" alignItems="center" justifyContent="center">
+                <Grid width="45%" padding={12} vertical background="$secondaryBackground" borderRadius={8} css={{
+                    border: '1px solid $secondaryBorder2',
+                    position: 'relative'
+                }}>
+                    <TextHeader>Account Error</TextHeader>
+                    {error == 'NOT_OWNED' && <Typography>
+                        You do not own Minecraft: Java Edition.<br/>
+                        <Typography size=".9rem" color="$secondaryColor">
+                            Xbox Game Pass is unsupported.
+                        </Typography>
+                    </Typography>}
+                    {error == 'NETWORK_ERR' && <Typography>
+                        A network error occured.<br/>
+                        <Typography size=".9rem" color="$secondaryColor">
+                            Check your internet connection, you might be offline.
+                        </Typography>
+                    </Typography>}
+                    <Grid margin="2rem 0 0" spacing={8}>
+                        <Button theme="secondary" onClick={() => setError(null)} >
+                            <IconBiXLg/>
+                            Close
+                        </Button>
                     </Grid>
                 </Grid>
-            </Portal>}
-        </Grid>
-    );
+            </Grid>
+        </Portal>}
+    </Grid>;
 };
 
 export type UserAccountProps = {

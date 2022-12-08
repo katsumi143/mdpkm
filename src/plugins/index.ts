@@ -4,7 +4,6 @@ import i18next from 'i18next';
 import * as xml from 'xmlbuilder2';
 import * as http from '@tauri-apps/api/http';
 import { encode } from 'js-base64';
-import { fileExists } from 'voxelified-commons/tauri';
 import * as reacti18n from 'react-i18next';
 import { readDir, createDir, readTextFile } from '@tauri-apps/api/fs';
 
@@ -35,8 +34,7 @@ export default class PluginSystem {
     }
 
     static async loadPlugins() {
-        if (!await fileExists(this.path))
-            await createDir(this.path);
+        await createDir(this.path, { recursive: true });
         await this.loadDirectory(this.path);
     }
 

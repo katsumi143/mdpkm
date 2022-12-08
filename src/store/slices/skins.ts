@@ -1,9 +1,10 @@
-import { Buffer } from 'buffer/';
-import { appDir } from '@tauri-apps/api/path';
+import { Buffer } from 'buffer';
 import { createSlice } from '@reduxjs/toolkit';
 import { readJsonFile, writeJsonFile } from 'voxelified-commons/tauri';
 
-const skinsPath = `${await appDir()}/skins.json`;
+import { APP_DIR } from '../../util/constants';
+
+const skinsPath = `${APP_DIR}/skins.json`;
 const skins = await readJsonFile<any>(skinsPath).catch(console.warn);
 export const skinsSlice = createSlice({
     name: 'skins',

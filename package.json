@@ -9,13 +9,13 @@
     "license": "MIT",
     "scripts": {
         "dev": "vite dev --config vite.config.tauri.ts",
-		"dev:tauri": "tauri dev",
+        "dev:tauri": "tauri dev",
         "build": "env-cmd vite build --config vite.config.tauri.ts",
         "build:tauri": "env-cmd tauri build",
         "tauricon": "tauricon --target ./src-tauri/icons ./app-icon.png"
     },
     "devDependencies": {
-        "@tauri-apps/cli": "1.2.0",
+        "@tauri-apps/cli": "1.2.1",
         "@tauri-apps/tauricon": "1.0.3",
         "@vitejs/plugin-react": "^2.2.0",
         "env-cmd": "^10.1.0",

@@ -1,10 +1,10 @@
 import Hourglass from '~icons/bi/hourglass';
-import { appDir } from '@tauri-apps/api/path';
 import CheckSquare from '~icons/bi/check-square';
+import { appDataDir } from '@tauri-apps/api/path';
 import CaretRightSquare from '~icons/bi/caret-right-square';
 import { getName, getVersion } from '@tauri-apps/api/app';
 
-export const APP_DIR = await appDir();
+export const APP_DIR = await appDataDir();
 export const APP_NAME = await getName();
 export const APP_VERSION = await getVersion();
 

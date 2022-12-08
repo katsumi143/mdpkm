@@ -1,7 +1,7 @@
-import { appDir } from '@tauri-apps/api/path';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { readJsonFile, writeJsonFile } from 'voxelified-commons/tauri';
 
+import { APP_DIR } from '../../util/constants';
 type Settings = {
     theme: string,
     uiStyle: string,
@@ -12,7 +12,7 @@ type Settings = {
     'instances.defaultResolution': number[],
     'instances.modSearchSummaries': boolean
 };
-const settingsPath = `${await appDir()}/settings.json`;
+const settingsPath = `${APP_DIR}/settings.json`;
 const settings = await readJsonFile<Settings>(settingsPath).catch(console.warn);
 export const settingsSlice = createSlice({
     name: 'settings',

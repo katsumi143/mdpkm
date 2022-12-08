@@ -4,13 +4,13 @@ import { useMemo, useState, useEffect } from 'react';
 
 import { toast } from './util';
 import { Voxura } from '../voxura';
-import { APP_PATH } from './common/constants';
+import { APP_DIR } from './util/constants';
 import type Account from '../voxura/src/auth/account';
 import type { Download } from '../voxura/src/downloader';
 import VersionedComponent from '../voxura/src/instances/component/versioned-component';
 import type { ComponentVersions } from '../voxura/src/types';
 
-const voxura = new Voxura(APP_PATH);
+const voxura = new Voxura(APP_DIR);
 await voxura.init();
 await voxura.startInstances();
 await voxura.auth.loadFromFile();

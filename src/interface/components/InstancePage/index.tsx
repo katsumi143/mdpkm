@@ -39,8 +39,8 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 		instance?.launch().then(() => {
 			toast('Client has launched', instance.name);
 		}).catch(err => {
-			console.error(err);
 			toast('Unexpected error', 'Failed to launch client.');
+			throw err;
 		});
 	};
 	const openFolder = () => open(instance?.path!);
