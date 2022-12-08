@@ -44,13 +44,13 @@ jobs:
         uses: actions/upload-artifact@v2
         if: matrix.platform == 'ubuntu-20.04'
         with:
-            name: padloc-linux-${{ github.sha }}-unsigned.deb
+            name: mdpkm-linux-debug.deb
             path: src-tauri/target/debug/bundle/deb/*.deb
             if-no-files-found: error
       - name: Upload Windows Artifact
         uses: actions/upload-artifact@v2
         if: matrix.platform == 'windows-latest'
         with:
-            name: padloc-windows-${{ github.sha }}-unsigned.msi
+            name: mdpkm-windows-debug.msi
             path: src-tauri/target/debug/bundle/msi/*.msi
             if-no-files-found: error
