@@ -94,9 +94,9 @@
                     "cmd": "sh",
                     "args": ["-c", { "validator": "\\S+" }]
                 }, {
-                    "name": "cmd",
-                    "cmd": "cmd",
-                    "args": ["/C", { "validator": "\\S+" }]
+                    "name": "powershell",
+                    "cmd": "powershell",
+                    "args": [{ "validator": "\\S+" }]
                 }],
                 "execute": true
             },
