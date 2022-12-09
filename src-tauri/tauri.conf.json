@@ -52,10 +52,6 @@
             ]
         },
         "allowlist": {
-            "protocol": {
-                "asset": true,
-                "assetScope": ["*"]
-            },
             "clipboard": {
                 "writeText": true
             },
