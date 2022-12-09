@@ -15,7 +15,6 @@ import ImagePreview from '../components/ImagePreview';
 import BasicSpinner from '../../../voxeliface/components/BasicSpinner';
 import * as DropdownMenu from '../../../voxeliface/components/DropdownMenu';
 
-import API from '../../common/api';
 import { toast } from '../../util';
 import type { Account } from '../../../voxura';
 import voxura, { AvatarType, useAccounts, useCurrentAccount } from '../../voxura';
@@ -30,20 +29,17 @@ export default function Accounts() {
         await account.remove();
         toast(`Account removed`, `${account.name} has been removed.`);
     }
-    const addNewAccount = async() => {
-        try {
-            toast('Check your browser', 'A new tab has opened in your default browser.');
-            const accessCode = await API.Microsoft.getAccessCode(true);
-            appWindow.setFocus();
-            toast('Adding account', 'Make sure to close the browser tab!');
-
-            const account = await voxura.auth.login(accessCode);
-            toast('Account added', `${account.name} has been added.`);
-        } catch(err: any) {
-            console.error(err);
-            if (err.includes('Network Error'))
-                setError('NETWORK_ERR');
-        }
+    const addNewAccount = () => {
+		toast('Check your browser', 'A new tab has opened in your default browser.');
+		voxura.auth.requestMicrosoftAccessCode(true).then(code => {
+			appWindow.setFocus();
+			return voxura.auth.login(code).then(account =>
+				toast('Account added', `${account.name} has been added.`)
+			);
+		}).catch(err => {
+			toast('Unexpected error', 'An unknown error occurred.');
+			throw err;
+		})
     };
     return <Grid height="100%" padding=".75rem 1rem" vertical css={{
         overflow: 'auto'

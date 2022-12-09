@@ -3,21 +3,10 @@
     windows_subsystem = "windows"
 )]
 
-#[path = "../../voxura/src/lib.rs"] mod voxura;
+#[path = "../../voxura/rust/mod.rs"] mod voxura;
 fn main() {
     tauri::Builder::default()
         .plugin(voxura::init())
-        .on_page_load(| window: tauri::window::Window, _ | {
-            let _window = window.clone();
-            let __window = window.clone();
-            window.listen("msAuth", move |_| {
-                let url = redirect_uri().unwrap();
-                _window.emit("msCode", url).unwrap();
-            });
-            window.listen("text", move | event | {
-                __window.emit("text", event.payload().unwrap()).unwrap();
-            });
-        })
         .invoke_handler(tauri::generate_handler![
             move_dir,
             fs_copy,
@@ -43,73 +32,6 @@ fn main() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-}
-
-use std::net::{ TcpListener, TcpStream };
-fn redirect_uri() -> Result<String, ()> {
-    let listener = TcpListener::bind(format!("127.0.0.1:3432"));
-
-    match listener {
-        Ok(listener) => {
-            for stream in listener.incoming() {
-                match stream {
-                    Ok(stream) => {
-                        if let Some(url) = handle_connection(stream) {
-                            return Ok(url);
-                        }
-                    }
-                    Err(e) => {
-                        println!("Error: {}", e);
-                    }
-                };
-            }
-        }
-        Err(e) => {
-            println!("Error: {}", e);
-        }
-    }
-
-    Err(())
-}
-
-fn handle_connection(mut stream: TcpStream) -> Option<String> {
-    let mut buffer = [0; 1000];
-    let _ = stream.read(&mut buffer).unwrap();
-
-    match String::from_utf8(buffer.to_vec()) {
-        Ok(request) => {
-            let split: Vec<&str> = request.split_whitespace().collect();
-            if split.len() > 1 {
-                respond_with_success(stream);
-                return Some(split[1].to_string());
-            }
-
-            respond_with_error("Malformed request".to_string(), stream);
-        }
-        Err(e) => {
-            respond_with_error(format!("Invalid UTF-8 sequence: {}", e), stream);
-        }
-    };
-
-    None
-}
-
-fn respond_with_success(mut stream: TcpStream) {
-    let response = format!("HTTP/1.1 200 OK\r\n\r\n{}", include_str!("redirect.html"));
-
-    stream.write_all(response.as_bytes()).unwrap();
-    stream.flush().unwrap();
-}
-
-fn respond_with_error(error_message: String, mut stream: TcpStream) {
-    println!("Error: {}", error_message);
-    let response = format!(
-        "HTTP/1.1 400 Bad Request\r\n\r\n400 - Bad Request - {}",
-        error_message
-    );
-
-    stream.write_all(response.as_bytes()).unwrap();
-    stream.flush().unwrap();
 }
 
 #[tauri::command]
