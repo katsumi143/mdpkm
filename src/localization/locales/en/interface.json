@@ -1,7 +1,9 @@
 {
     "common.action.view": "View",
     "common.action.select": "Select",
+	"common.action.launch": "Launch",
     "common.action.view_all": "View all",
+	"common.action.kill_process": "Close Client {{0}}",
     "common.action.add_component": "Add Component",
     "common.action.create_instance": "Create Instance",
     "common.action.return_to_instances": "Return to your instances",
@@ -20,6 +22,8 @@
     "common.label.other_components": "Additional Components",
     "common.label.instance_component_count": "{{0}} Instance Components",
 
+	"common.label.actions": "Actions",
+	"common.label.processes": "Processes",
     "common.label.item_count": "{{0}} Items",
 
     "common.select_group.minecraft_versions": "Minecraft Versions",
@@ -50,5 +54,7 @@
 
     "account.tag.active": "Active",
 
-    "component.version": "Version {{0}}"
+    "component.version": "Version {{0}}",
+
+	"instance.action.view_options": "Client Options"
 }

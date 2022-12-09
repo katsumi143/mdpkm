@@ -11,7 +11,7 @@ import Content from './content';
 import Settings from './settings';
 import InstanceIcon from '../InstanceIcon';
 import InstanceExport from '../InstanceExport';
-import { Grid, Link, Image, TabItem, Typography, BasicSpinner } from '../../../../voxeliface/src';
+import { Grid, Link, Image, TabItem, Typography, BasicSpinner, DropdownMenu } from '../../../../voxeliface/src';
 
 import Patcher from '../../../plugins/patcher';
 import { useAppSelector } from '../../../store/hooks';
@@ -76,10 +76,38 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 					<IconBiFolder2Open/>
 					{t('app.mdpkm.common:actions.open_folder')}
 				</Link>
-				<Link size={12} onClick={launchInstance} padding="16px 24px 16px 16px" disabled={instance.isLaunching || instance.isRunning || !account}>
-					{instance.isLaunching ? <BasicSpinner size={16}/> : !instance.isRunning && <IconBiPlayFill/>}
-					{t(instance.isRunning ? `app.mdpkm.instances:state.${instance.state}` : 'app.mdpkm.common:actions.launch')}
-				</Link>
+				{instance.processes.length ? <DropdownMenu.Root>
+					<DropdownMenu.Trigger asChild>
+						<Link size={12} padding="16px 24px 16px 16px">
+							{t('interface:instance.action.view_options')}
+							<IconBiChevronDown/>
+						</Link>
+					</DropdownMenu.Trigger>
+					<DropdownMenu.Portal>
+						<DropdownMenu.Content>
+							<DropdownMenu.Label>{t('interface:common.label.actions')}</DropdownMenu.Label>
+							<DropdownMenu.Item onClick={launchInstance}>
+								<IconBiPlayFill/>
+								{t('interface:common.action.launch')}
+							</DropdownMenu.Item>
+							<DropdownMenu.Seperator/>
+							
+							<DropdownMenu.Label>{t('interface:common.label.processes')}</DropdownMenu.Label>
+							{instance.processes.map((child, key) =>
+								<DropdownMenu.Item key={key} onClick={() => instance.killProcess(child)}>
+									<IconBiXLg/>
+									{t('interface:common.action.kill_process', [key + 1])}
+								</DropdownMenu.Item>
+							)}
+							<DropdownMenu.Arrow/>
+						</DropdownMenu.Content>
+					</DropdownMenu.Portal>
+				</DropdownMenu.Root> :
+					<Link size={12} onClick={launchInstance} padding="16px 24px 16px 16px" disabled={instance.isLaunching || instance.isRunning || !account}>
+						{instance.isLaunching ? <BasicSpinner size={16}/> : <IconBiPlayFill/>}
+						{t('interface:common.action.launch')}
+					</Link>
+				}
 			</Grid>
 		</Grid>
 		<Tabs
