@@ -1,3 +1,4 @@
+import { invoke } from '@tauri-apps/api';
 import Hourglass from '~icons/bi/hourglass';
 import CheckSquare from '~icons/bi/check-square';
 import { appDataDir } from '@tauri-apps/api/path';
@@ -7,6 +8,8 @@ import { getName, getVersion } from '@tauri-apps/api/app';
 export const APP_DIR = await appDataDir();
 export const APP_NAME = await getName();
 export const APP_VERSION = await getVersion();
+
+export const TOTAL_SYSTEM_MEMORY = await invoke<number>('get_total_memory');
 
 export const PLACEHOLDER_ICON = 'img/icons/instances/default8.svg';
 export const INSTANCE_STATE_ICONS = [

@@ -623,10 +623,6 @@ export default class Util {
         const uuid = useSelector(state => state.accounts.selected);
         return useSelector(state => state.accounts.data).find(({ profile }) => (profile.id ?? profile.uuid) === uuid)
     }
-
-    static getTotalMemory() {
-        return invoke('get_total_memory');
-    }
 };
 
 Util.platform = await os.platform();

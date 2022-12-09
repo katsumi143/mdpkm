@@ -7,11 +7,11 @@ import { Grid, Slider, Dialog, Button, TabItem, TextInput, Typography, InputLabe
 
 import { toast } from '../../../util';
 import type { Instance } from '../../../voxura';
+import { TOTAL_SYSTEM_MEMORY } from '../../../util/constants';
 export type InstanceSettingsProps = {
     instance: Instance
 };
 
-const totalMemory = 8000000000;
 export default function InstanceSettings({ instance }: InstanceSettingsProps) {
     const { t } = useTranslation();
 	const [tab, setTab] = useState(0);
@@ -55,7 +55,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 				</InputLabel>
 				<Slider
 					min={.5}
-					max={Math.floor((totalMemory / 1000000000) / 1.4)}
+					max={Math.floor((TOTAL_SYSTEM_MEMORY / 1000000000) / 1.4)}
 					step={.5}
 					value={memory}
 					onChange={setMemory}
