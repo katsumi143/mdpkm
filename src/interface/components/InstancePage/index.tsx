@@ -1,16 +1,19 @@
 import { open } from '@tauri-apps/api/shell';
 import { Buffer } from 'buffer';
+import * as dialog from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
 import { CSS, keyframes } from '@stitches/react';
-import React, { useMemo, useState, ReactNode } from 'react';
+import { copyFile, removeFile } from '@tauri-apps/api/fs';
+import React, { useMemo, useState, ReactNode, MouseEvent } from 'react';
 
 import Home from './home';
 import Game from './game';
 import Tabs from '../Tabs';
 import Content from './content';
 import Settings from './settings';
-import InstanceIcon from '../InstanceIcon';
+import ImageWrapper from '../ImageWrapper';
 import InstanceExport from '../InstanceExport';
+import type { GridProps } from '../../../../voxeliface/components/Grid';
 import { Grid, Link, Image, TabItem, Typography, BasicSpinner, DropdownMenu } from '../../../../voxeliface/src';
 
 import Patcher from '../../../plugins/patcher';
@@ -32,20 +35,41 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 	const banner = useMemo(() => {
 		const { banner } = instance ?? {};
 		return banner ? 'data:image/png;base64,' + Buffer.from(banner).toString('base64') : getDefaultInstanceBanner(instance?.name);
-	}, [id]);
+	}, [id, instance?.banner]);
 
 	const [tabPage, setTabPage] = useState(0);
-	const launchInstance = () => {
-		instance?.launch().then(() => {
-			toast('Client has launched', instance.name);
-		}).catch(err => {
-			toast('Unexpected error', 'Failed to launch client.');
-			throw err;
-		});
-	};
-	const openFolder = () => open(instance?.path!);
 	if (!instance)
 		return;
+
+	const launchInstance = () => instance.launch().then(() => {
+		toast('Client has launched', instance.name);
+	}).catch(err => {
+		toast('Unexpected error', 'Failed to launch client.');
+		throw err;
+	});
+	const openFolder = () => open(instance.path);
+	const changeImage = (name: string, event: MouseEvent) => {
+		event.stopPropagation();
+		dialog.open({
+			filters: [{
+				name: 'Image',
+				extensions: ['png']
+			}]
+		}).then(path => {
+			if (typeof path !== 'string')
+				return;
+			copyFile(path, `${instance.path}/${name}.png`).then(() =>
+				instance[name === 'icon' ? 'readIcon' : 'readBanner']().then(() => instance.emitEvent('changed'))
+			);
+		});
+	};
+	const removeImage = (name: string, event: MouseEvent) => {
+		event.stopPropagation();
+		removeFile(`${instance.path}/${name}.png`).then(() => {
+			(instance as any)[name] = null;
+			instance.emitEvent('changed');
+		});
+	};
 	return <Grid height="100%" vertical background="$primaryBackground" css={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
 		<Image src={banner} width="100%" height={isCompact ? 128 : 144} css={{
 			opacity: 0.5,
@@ -55,11 +79,20 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 		}}>
 			<Grid width="100%" height="100%" background="linear-gradient(transparent -20%, $primaryBackground 90%)"/>
 		</Image>
-		<Grid alignItems="end" justifyContent="space-between" css={{ zIndex: 1, minHeight: isCompact ? 128 : 144 }}>
+		<Grid alignItems="end" justifyContent="space-between" css={{
+			zIndex: 1,
+			position: 'relative',
+			minHeight: isCompact ? 128 : 144
+		}}>
 			<Grid padding={16} spacing={24}>
-				<InstanceIcon size={isCompact ? 64 : 80} instance={instance} hideLoader css={{
-					boxShadow: '0 8px 16px 2px #00000040'
-				}}/>
+				<ImageWrapper src={instance.webIcon} size={isCompact ? 64 : 80} canPreview background="$secondaryBackground2" borderRadius={8} css={{
+					boxShadow: '0 8px 16px 2px #00000040',
+					alignItems: 'end',
+					justifyContent: 'end',
+					'&:hover': { '& > div': { opacity: 1 } }
+				}}>
+					<ImageOptions onEdit={e => changeImage('icon', e)} onRemove={e => removeImage('icon', e)}/>
+				</ImageWrapper>
 				<Grid spacing={isCompact ? 4 : 4} vertical justifyContent="center">
 					<Typography size={isCompact ? 20 : 22} family="$tertiary" lineheight={1} css={{ alignItems: 'start' }}>
 						{instance.isFavourite && <IconBiStarFill fontSize={16}/>}
@@ -70,8 +103,17 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 						{t(`app.mdpkm.instances:state.${instance.state}`)}
 					</Typography>
 				</Grid>
+				<Grid width="100%" height="100%" padding={8} justifyContent="end" css={{
+					top: 0,
+					left: 0,
+					zIndex: -1,
+					position: 'absolute',
+					'&:hover': { '& > div': { opacity: 1 } }
+				}}>
+					<ImageOptions onEdit={e => changeImage('banner', e)} onRemove={e => removeImage('banner', e)}/>
+				</Grid>
 			</Grid>
-			<Grid height="100%" alignItems="end">
+			<Grid>
 				<Link size={12} onClick={openFolder} padding={16}>
 					<IconBiFolder2Open/>
 					{t('app.mdpkm.common:actions.open_folder')}
@@ -218,5 +260,31 @@ function InstanceInfo({ css, animate, children }: InstanceInfoProps) {
 		...css
 	}}>
 		{children}
+	</Grid>;
+};
+
+export type ImageOptionsProps = {
+	onEdit: GridProps["onClick"],
+	onRemove: GridProps["onClick"]
+};
+function ImageOptions({ onEdit, onRemove }: ImageOptionsProps) {
+	return <Grid height="fit-content" css={{
+		opacity: 0,
+		transition: 'opacity .5s'
+	}}>
+		<ImageOption icon={<IconBiXLg fontSize={10}/>} onClick={onRemove}/>
+		<ImageOption icon={<IconBiPencilFill fontSize={10}/>} onClick={onEdit}/>
+	</Grid>;
+};
+
+export type ImageOptionProps = {
+	icon: ReactNode,
+	onClick: GridProps["onClick"]
+};
+function ImageOption({ icon, onClick }: ImageOptionProps) {
+	return <Grid margin={4} padding={4} onClick={onClick} background="$buttonBackground" borderRadius="50%" css={{
+		cursor: 'pointer'
+	}}>
+		<Typography>{icon}</Typography>
 	</Grid>;
 };
