@@ -143,24 +143,26 @@ function UserAccount({ account, current, changeAccount, deleteAccount }: UserAcc
                         <IconBiThreeDots/>
                     </Button>
                 </DropdownMenu.Trigger>
-                <DropdownMenu.Content sideOffset={8}>
-                    <DropdownMenu.Label>{t('app.mdpkm.accounts.account.actions.label')}</DropdownMenu.Label>
-                    <DropdownMenu.Item onClick={() => open('https://minecraft.net/profile')}>
-                        {t('app.mdpkm.accounts.account.actions.manage_profile')}
-                        <IconBiBoxArrowUpRight/>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item onClick={() => open(`https://namemc.com/profile/${account.uuid}`)}>
-                        {t('app.mdpkm.accounts.account.actions.view_namemc')}
-                        <IconBiBoxArrowUpRight/>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item onClick={() => deleteAccount(account)}>
-                        {t('app.mdpkm.accounts.account.actions.remove')}
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item onClick={copyUUID}>
-                        {t('app.mdpkm.accounts.account.actions.copy_uuid')}
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Arrow/>
-                </DropdownMenu.Content>
+				<DropdownMenu.Portal>
+					<DropdownMenu.Content sideOffset={8}>
+						<DropdownMenu.Label>{t('app.mdpkm.accounts.account.actions.label')}</DropdownMenu.Label>
+						<DropdownMenu.Item onClick={() => open('https://minecraft.net/profile')}>
+							{t('app.mdpkm.accounts.account.actions.manage_profile')}
+							<IconBiBoxArrowUpRight/>
+						</DropdownMenu.Item>
+						<DropdownMenu.Item onClick={() => open(`https://namemc.com/profile/${account.uuid}`)}>
+							{t('app.mdpkm.accounts.account.actions.view_namemc')}
+							<IconBiBoxArrowUpRight/>
+						</DropdownMenu.Item>
+						<DropdownMenu.Item onClick={() => deleteAccount(account)}>
+							{t('app.mdpkm.accounts.account.actions.remove')}
+						</DropdownMenu.Item>
+						<DropdownMenu.Item onClick={copyUUID}>
+							{t('app.mdpkm.accounts.account.actions.copy_uuid')}
+						</DropdownMenu.Item>
+						<DropdownMenu.Arrow/>
+					</DropdownMenu.Content>
+				</DropdownMenu.Portal>
             </DropdownMenu.Root>
         </Grid>
     </Grid>;
