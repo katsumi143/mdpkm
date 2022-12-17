@@ -13,11 +13,10 @@ import type { ComponentVersions } from '../voxura/src/types';
 
 const voxura = new Voxura(APP_DIR);
 voxura.addPlatform(new mdpkmPlatform());
-
-await voxura.init();
-await voxura.startInstances();
-await voxura.auth.loadFromFile();
-await voxura.auth.refreshAccounts();
+voxura.init().then(() => {
+	voxura.startInstances();
+	voxura.auth.loadFromFile().then(() => voxura.auth.refreshAccounts());
+});
 
 voxura.downloader.listenForEvent('downloadStarted', (download: Download) => {
     if (download.visible)
