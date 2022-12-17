@@ -101,19 +101,6 @@
                 "scope": ["$APPDATA", "$APPDATA/*"]
             }
         },
-        "windows": [
-            {
-                "title": "mdpkm",
-                "width": 1200,
-                "height": 650,
-                "center": true,
-                "focus": true,
-                "resizable": true,
-                "fullscreen": false,
-                "decorations": false,
-                "transparent": true
-            }
-        ],
         "security": {
             "csp": {
                 "img-src": "'self' data: https:",

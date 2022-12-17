@@ -3,6 +3,8 @@
     windows_subsystem = "windows"
 )]
 
+use tauri::{ window::WindowBuilder, WindowUrl };
+use sysinfo::{ System, SystemExt };
 fn main() {
     tauri::Builder::default()
         .plugin(voxura::init())
@@ -14,6 +16,22 @@ fn main() {
             fs_read_file_in_zip,
             fs_read_dir_recursive
         ])
+		.setup(|app| {
+			let mut sys = System::new_all();
+    		sys.refresh_all();
+
+			WindowBuilder::new(app, "main".to_string(), WindowUrl::default())
+				.title("mdpkm")
+				.center()
+				.focused(true)
+				.resizable(true)
+				.fullscreen(sys.long_os_version().unwrap().to_lowercase().contains("steam"))
+				.inner_size(1200.0, 650.0)
+				.transparent(true)
+				.decorations(false)
+				.build()?;
+			Ok(())
+		})
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
@@ -77,7 +95,6 @@ fn fs_read_dir_recursive(path: String) -> Result<Vec<Vec<String>>, String> {
     }).collect::<Vec<Vec<String>>>());
 }
 
-use sysinfo::{ System, SystemExt };
 #[tauri::command]
 fn get_total_memory() -> u64 {
     let mut sys = System::new_all();
