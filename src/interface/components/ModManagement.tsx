@@ -1,38 +1,37 @@
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
+import { Grid, Button, Spinner, TabItem, TextInput, Typography, TextHeader, BasicSpinner } from 'voxeliface';
 
-import Mod from './Mod';
 import Tabs from './Tabs';
-import Grid from '/voxeliface/components/Grid';
 import Modal from './Modal';
-import Button from '/voxeliface/components/Button';
-import Spinner from '/voxeliface/components/Spinner';
-import TabItem from '/voxeliface/components/Tabs/Item';
+import ModItem from './Mod';
 import ModSearch from './ModSearch';
-import TextInput from '/voxeliface/components/Input/Text';
-import Typography from '/voxeliface/components/Typography';
-import TextHeader from '/voxeliface/components/Typography/Header';
 import InstanceMod from './InstanceMod';
-import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
-import Patcher from '../../plugins/patcher';
-import { useInstance } from '../../voxura';
-export default Patcher.register(function ModManagement({ instanceId }) {
-    const { t } = useTranslation();
+import type Mod from '../../../voxura/src/util/mod';
+import { useAppSelector } from '../../store/hooks';
+import voxura, { useInstance } from '../../voxura';
+export type ModManagementProps = {
+	instanceId: string
+};
+export default function ModManagement({ instanceId }: ModManagementProps) {
+    const { t } = useTranslation('interface');
     const instance = useInstance(instanceId);
-    const canPopout = useSelector(state => state.settings['instances.modSearchPopout']);
+    const canPopout = useAppSelector(state => state.settings['instances.modSearchPopout']);
     const [tab, setTab] = useState();
-    const [items, setItems] = useState('loading');
+    const [items, setItems] = useState<Mod[] | string>('loading');
     const [filter, setFilter] = useState('');
     const [updates, setUpdates] = useState();
     const [updateChecking, setUpdateChecking] = useState(false);
+	if (!instance)
+		throw new Error();
+
     const checkForUpdates = () => {
-        setUpdateChecking(true);
+        /*setUpdateChecking(true);
         instance.checkForUpdates().then(updates => {
             setUpdates(updates);
             setUpdateChecking(false);
-        });
+        });*/
     };
     const refreshList = () => {
         setItems('loading');
@@ -40,7 +39,6 @@ export default Patcher.register(function ModManagement({ instanceId }) {
     };
     useEffect(() => {
         setItems('loading');
-        console.log('reading mods lol');
         if (instance.modifications.length > 0)
             setItems(instance.modifications);
         else
@@ -57,16 +55,16 @@ export default Patcher.register(function ModManagement({ instanceId }) {
                 willChange: 'contents'
             }}
         >
-            <TabItem name={t('app.mdpkm.instance_page.tabs.mods.tabs.manage')} icon={<IconBiList size={14}/>} value={0}>
+            <TabItem name={t('mod_management.tab.0')} icon={<IconBiList size={14}/>} value={0}>
                 <Grid margin="4px 0" spacing={8} justifyContent="space-between">
                     <Grid vertical>
                         <Typography size={14} lineheight={1}>
-                            {t('app.mdpkm.mod_management.title')}
+                            {t('mod_management')}
                         </Typography>
                         <Typography size={12} color="$secondaryColor" weight={400}>
                             {items === 'loading' || !items ?
                                 t('app.mdpkm.common:states.loading') :
-                                t('app.mdpkm.mod_management.count', { val: items.length })
+                                t('mod_management.count', [items.length])
                             }
                         </Typography>
                     </Grid>
@@ -75,15 +73,15 @@ export default Patcher.register(function ModManagement({ instanceId }) {
                             width={144}
                             value={filter}
                             onChange={setFilter}
-                            placeholder={t('app.mdpkm.mod_management.search')}
+                            placeholder={t('mod_management.search')}
                         />
                         <Button theme="secondary" onClick={refreshList} disabled={items === 'loading'}>
                             {items === 'loading' ? <BasicSpinner size={16}/> : <IconBiArrowClockwise size={14}/>}
-                            {t('app.mdpkm.common:actions.refresh')}
+                            {t('common.action.refresh')}
                         </Button>
                         <Button theme="accent" onClick={checkForUpdates} disabled={updateChecking}>
                             {updateChecking ? <BasicSpinner size={16}/> : <IconBiCloudArrowDown size={14}/>}
-                            {t('app.mdpkm.mod_management.get_updates')}
+                            {t('mod_management.update')}
                         </Button>
                     </Grid>
                 </Grid>
@@ -103,10 +101,10 @@ export default Patcher.register(function ModManagement({ instanceId }) {
                     <InstanceMod key={index} mod={mod} updates={updates} instanceId={instanceId}/>
                 ) : <Spinner/>}
             </TabItem>
-            <TabItem name={t('app.mdpkm.instance_page.tabs.mods.tabs.search')} icon={<IconBiSearch style={{fontSize: 10}}/>} value={1}>
+            <TabItem name={t('mod_management.tab.1')} icon={<IconBiSearch style={{fontSize: 10}}/>} value={1}>
                 {!canPopout && <ModSearch instance={instance}/>}
             </TabItem>
-            <TabItem name={t('app.mdpkm.instance_page.tabs.essential')} icon={<IconBiDiamond size={14}/>} value={2} spacing={4} disabled={!instance.isModded}>
+            <TabItem name={t('mod_management.tab.2')} icon={<IconBiDiamond size={14}/>} value={2} spacing={4} disabled={!instance.isModded}>
                 <svg width="1266" height="183" viewBox="0 0 1266 183" xmlns="http://www.w3.org/2000/svg" style={{
                     width: 'fit-content',
                     height: '2rem',
@@ -118,21 +116,21 @@ export default Patcher.register(function ModManagement({ instanceId }) {
                 <Typography size={12} color="$secondaryColor" margin="0 0 8px" weight={400} family="$secondary" textalign="start">
                     Essential is a quality of life mod that boosts Minecraft Java to the next level.
                 </Typography>
-                <Mod id="essential-container" api="internal" featured instanceId={instanceId}/>
+                <ModItem id="essential-container" featured platform={voxura.getPlatform('mdpkm')} instanceId={instanceId}/>
             </TabItem>
         </Tabs>
         {canPopout && tab === 1 && <Modal width="80%" height="69%">
             <Grid spacing={16}>
                 <TextHeader>
-                    <Search/>
+                    <IconBiSearch/>
                     Modification Search
                 </TextHeader>
                 <Button theme="accent" onClick={() => setTab(0)}>
-                    <IconBiArrowLeft size={14}/>
-                    {t('app.mdpkm.common:actions.back')}
+                    <IconBiArrowLeft/>
+                    {t('common.action.back')}
                 </Button>
             </Grid>
             <ModSearch instance={instance}/>
         </Modal>}
     </React.Fragment>;
-});
+};

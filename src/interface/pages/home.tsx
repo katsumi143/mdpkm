@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
+import { Grid, Typography } from 'voxeliface';
 import React, { useMemo, useState, useEffect, MouseEventHandler } from 'react';
 
 import Instance from '../components/Instance';
 import NewsItem from '../components/News/item';
 import ImageWrapper from '../components/ImageWrapper';
-import { Grid, Typography } from '../../../voxeliface/src';
 
 import mdpkm from '../../mdpkm';
 import { setPage } from '../../store/slices/interface';
@@ -12,7 +12,7 @@ import { useAppDispatch } from '../../store/hooks';
 import { AvatarType, AvatarStyle } from '../../../voxura';
 import { useCurrentAccount, useRecentInstances } from '../../voxura';
 export default function Home() {
-	const { t } = useTranslation();
+	const { t } = useTranslation('interface');
 	const recent = useRecentInstances();
 	const account = useCurrentAccount();
 	const dispatch = useAppDispatch();
@@ -48,7 +48,7 @@ export default function Home() {
 					}}/>
 					<Grid vertical>
 						<Typography size={20}>
-							{t(`interface:home.greeting.${greeting}`)}
+							{t(`home.greeting.${greeting}`)}
 						</Typography>
 						<Typography size={18} color="$secondaryColor">{account?.name}!</Typography>
 					</Grid>
@@ -58,7 +58,7 @@ export default function Home() {
 						borderBottom: '1px solid $secondaryBorder2',
 						paddingBottom: 6
 					}}>
-						<Typography>{t('interface:home.news.title')}</Typography>
+						<Typography>{t('home.news.title')}</Typography>
 						<ViewAll/>
 					</Grid>
 					<Grid width="100%" spacing={8} borderRadius={8} css={{ overflowX: 'auto' }}>
@@ -71,7 +71,7 @@ export default function Home() {
 					borderBottom: '1px solid $secondaryBorder2',
 					paddingBottom: 6
 				}}>
-					<Typography>{t('interface:home.recent_instances.title')}</Typography>
+					<Typography>{t('home.recent_instances.title')}</Typography>
 					<ViewAll onClick={() => dispatch(setPage('instances'))}/>
 				</Grid>
 				<Grid height="100%" spacing={8} vertical css={{ overflowY: 'auto' }}>
@@ -98,12 +98,12 @@ export type ViewAllProps = {
 	onClick?: MouseEventHandler<HTMLSpanElement>
 };
 function ViewAll({ onClick }: ViewAllProps) {
-	const { t } = useTranslation();
+	const { t } = useTranslation('interface');
 	return <Typography size={12} color="$linkColor" onClick={onClick} css={{
 		cursor: 'pointer',
 		'&:hover': { color: '$primaryColor' }
 	}}>
-		{t('interface:common.action.view_all')}
+		{t('common.action.view_all')}
 		<IconBiArrowRight/>
 	</Typography>
 };

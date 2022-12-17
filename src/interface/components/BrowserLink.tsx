@@ -2,7 +2,7 @@ import { open } from '@tauri-apps/api/shell';
 import { styled } from '@stitches/react';
 import React, { ReactNode } from 'react';
 
-import { Link, Tooltip } from '../../../voxeliface';
+import { Link, Tooltip } from 'voxeliface';
 
 const StyledTrigger = styled(Tooltip.Trigger, {
     border: 'none',

@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
 
 import Modal from '../components/Modal';
 import SkinFrame from '../components/SkinFrame';
-import { Grid, Image, Select, Button, Divider, Spinner, Markdown, TextInput, Typography, InputLabel, TextHeader } from '../../../voxeliface';
+import { Grid, Image, Select, Button, Divider, Spinner, Markdown, TextInput, Typography, InputLabel, TextHeader } from 'voxeliface';
 
 import { toast } from '../../util';
 import { IMAGE_CACHE } from '../../common/constants';
@@ -16,9 +16,9 @@ import { useCurrentAccount } from '../../voxura';
 import { addSkin, saveSkins, writeSkin } from '../../store/slices/skins';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 
-const SKIN_MODEL = { CLASSIC: 'default', SLIM: 'slim' };
+const SKIN_MODEL = { CLASSIC: 'default', SLIM: 'slim' } as const;
 export default function Skins() {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     const skins = useAppSelector(state => state.skins.data);
     const account = useCurrentAccount();
     const dispatch = useAppDispatch();
@@ -149,13 +149,13 @@ export default function Skins() {
     }, [profile, account]);
     return <Grid height="100%" spacing={8} padding=".75rem 1rem" vertical>
         <TextHeader>
-            {t('app.mdpkm.home.navigation.skins')}
+            {t('skin_management')}
         </TextHeader>
         <Grid height="100%">
-            <Grid padding="0 0 2rem" vertical alignItems="center" justifyContent="space-between">
+            <Grid padding="0 32px 2rem" vertical alignItems="center" justifyContent="space-between">
                 <Grid spacing={16} vertical alignItems="center">
-                    <Typography>
-                        {t('app.mdpkm.skin_management.current.header')}
+                    <Typography size={18}>
+                        {t('skin_management.current')}
                     </Typography>
                     {!loading && current ? <SkinFrame
                         walk
@@ -164,27 +164,31 @@ export default function Skins() {
                         cape={capes.find(c => c.state === 'ACTIVE')?.url}
                         width={200}
                         model={skinModel}
-                        height={256}
+                        height={300}
                         control
                         background="none"
-                    /> : <Grid width={200} height={256} alignItems="center" justifyContent="center">
+						css={{
+							overflow: 'hidden',
+							borderRadius: 16
+						}}
+                    /> : <Grid width={200} height={300} alignItems="center" justifyContent="center">
                         <Spinner/>
                     </Grid>}
                 </Grid>
                 <Button theme="accent" onClick={startAdding} disabled={loading}>
                     <IconBiPlusLg/>
-                    {t('app.mdpkm.skin_management.buttons.add_skin')}
+                    {t('skin_management.add')}
                 </Button>
             </Grid>
             <Divider width={1} height="100%"/>
             <Grid width="100%" height="100%" vertical alignItems="center">
-                <Typography margin="0 0 1rem">
-                    {t('app.mdpkm.skin_management.library.header')}
+                <Typography size={18} margin="0 0 1rem">
+                    {t('skin_management.library')}
                 </Typography>
                 {skins.length > 0 ? <Grid spacing={8} css={{
                     display: 'grid',
                     overflow: 'hidden auto',
-                    gridTemplateColumns: 'repeat(5, 1fr)'
+                    gridTemplateColumns: 'repeat(6, auto)'
                 }}>
                     {skins.map((skin: any, key: number) =>
                         <Skin key={key} data={skin} capes={capes} index={key} useSkin={useSkin} editSkin={editSkin} loading={loading || setting} current={current}/>
@@ -200,7 +204,7 @@ export default function Skins() {
             </Grid>
         </Grid>
         {adding && <Modal>
-            <TextHeader>{t('app.mdpkm.skin_management.adding.header')}</TextHeader>
+            <TextHeader>{t('skin_management.add')}</TextHeader>
             <Grid spacing={32} justifyContent="space-between">
                 <SkinFrame
                     walk
@@ -213,27 +217,27 @@ export default function Skins() {
                     background="none"
                 />
                 <Grid vertical>
-                    <InputLabel>{t('app.mdpkm.skin_management.skin_name.label')}</InputLabel>
+                    <InputLabel>{t('skin_management.add_modal.name')}</InputLabel>
                     <TextInput
                         width="100%"
                         value={addingName}
                         onChange={setAddingName}
-                        placeholder={t('app.mdpkm.skin_management.skin_name.placeholder')}
+                        placeholder={t('skin_management.add_modal.name.placeholder')}
                     />
 
-                    <InputLabel spacious>{t('app.mdpkm.skin_management.skin_model.label')}</InputLabel>
-                    <Select.Root value={addingModel} onChange={setAddingModel}>
-                        <Select.Group name={t('app.mdpkm.skin_management.skin_model.category')}>
+                    <InputLabel spacious>{t('skin_management.add_modal.model')}</InputLabel>
+                    <Select.Minimal value={addingModel} onChange={setAddingModel}>
+                        <Select.Group name={t('skin_management.add_modal.model.category')}>
                             <Select.Item value="CLASSIC">
-                                {t('app.mdpkm.skin_management.skin_model.items.classic')}
+                                {t('skin_management.add_modal.model.item.classic')}
                             </Select.Item>
                             <Select.Item value="SLIM">
-                                {t('app.mdpkm.skin_management.skin_model.items.slim')}
+                                {t('skin_management.add_modal.model.item.slim')}
                             </Select.Item>
                         </Select.Group>
-                    </Select.Root>
+                    </Select.Minimal>
 
-                    <InputLabel spacious>{t('app.mdpkm.skin_management.skin_file.label')}</InputLabel>
+                    <InputLabel spacious>{t('skin_management.add_modal.file')}</InputLabel>
                     <TextInput
                         width="100%"
                         value={addingPath && `.../${addingPath.split('\\').slice(-2).join('/')}`}
@@ -243,13 +247,13 @@ export default function Skins() {
                     >
                         <Button onClick={selectFile}>
                             <IconBiFolder2Open/>
-                            {t('app.mdpkm.common:actions.select_file')}
+                            {t('common.action.select_file')}
                         </Button>
                     </TextInput>
 
-                    <InputLabel spacious>{t('app.mdpkm.skin_management.cape.label')}</InputLabel>
-                    <Select.Root value={addingCape} onChange={setAddingCape}>
-                        <Select.Group name={t('app.mdpkm.skin_management.cape.category')}>
+                    <InputLabel spacious>{t('skin_management.add_modal.cape')}</InputLabel>
+                    <Select.Minimal value={addingCape} onChange={setAddingCape}>
+                        <Select.Group name={t('skin_management.add_modal.cape.category')}>
                             {capes.map((cape, key) => <Select.Item key={key} value={cape.id}>
                                 <Image src={cape.url} size={24} height={32} css={{
 									background: '#fff',
@@ -261,18 +265,18 @@ export default function Skins() {
                             </Select.Item>)}
                         </Select.Group>
                         <Select.Item value={null}>
-                            {t('app.mdpkm.skin_management.cape.items.none')}
+                            {t('skin_management.add_modal.cape.item.none')}
                         </Select.Item>
-                    </Select.Root>
+                    </Select.Minimal>
 
-                    <Grid margin="2rem 0 0" spacing={8}>
+                    <Grid margin="2rem 0 0 auto" spacing={8}>
                         <Button theme="accent" onClick={addNewSkin} disabled={!addingName}>
                             <IconBiPlusLg/>
-                            {t('app.mdpkm.skin_management.adding.submit')}
+                            {t('skin_management.add_modal.submit')}
                         </Button>
                         <Button theme="secondary" onClick={() => setAdding(false)}>
                             <IconBiXLg/>
-                            {t('app.mdpkm.skin_management.adding.cancel')}
+                            {t('common.action.cancel')}
                         </Button>
                     </Grid>
                 </Grid>
@@ -301,7 +305,7 @@ export default function Skins() {
                     />
 
                     <InputLabel spacious>{t('app.mdpkm.skin_management.skin_model.label')}</InputLabel>
-                    <Select.Root value={addingModel} onChange={setAddingModel}>
+                    <Select.Minimal value={addingModel} onChange={setAddingModel}>
                         <Select.Group name={t('app.mdpkm.skin_management.skin_model.category')}>
                             <Select.Item value="CLASSIC">
                                 {t('app.mdpkm.skin_management.skin_model.items.classic')}
@@ -310,7 +314,7 @@ export default function Skins() {
                                 {t('app.mdpkm.skin_management.skin_model.items.slim')}
                             </Select.Item>
                         </Select.Group>
-                    </Select.Root>
+                    </Select.Minimal>
 
                     <InputLabel spacious>{t('app.mdpkm.skin_management.skin_file.label')}</InputLabel>
                     <TextInput
@@ -327,7 +331,7 @@ export default function Skins() {
                     </TextInput>
 
                     <InputLabel spacious>{t('app.mdpkm.skin_management.cape.label')}</InputLabel>
-                    <Select.Root value={addingCape} onChange={setAddingCape}>
+                    <Select.Minimal value={addingCape} onChange={setAddingCape}>
                         <Select.Group name={t('app.mdpkm.skin_management.cape.category')}>
                             {capes.map((cape, key) => <Select.Item key={key} value={cape.id}>
                                 <Image src={cape.url} size={24} height={32} css={{
@@ -342,7 +346,7 @@ export default function Skins() {
                         <Select.Item value={null}>
                             {t('app.mdpkm.skin_management.cape.items.none')}
                         </Select.Item>
-                    </Select.Root>
+                    </Select.Minimal>
 
                     <Grid margin="2rem 0 0" spacing={8}>
                         <Button theme="accent" onClick={saveSkin} disabled={!addingName}>
@@ -351,7 +355,7 @@ export default function Skins() {
                         </Button>
                         <Button theme="secondary" onClick={() => setEditingSkin(false)}>
                             <IconBiXLg/>
-                            {t('app.mdpkm.common:actions.cancel')}
+                            {t('common.action.cancel')}
                         </Button>
                     </Grid>
                 </Grid>
@@ -370,7 +374,7 @@ export type SkinProps = {
     editSkin: (value: number) => void
 };
 function Skin({ data, capes, index, current, loading, useSkin, editSkin }: SkinProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     return <Grid padding={8} spacing={4} vertical alignItems="center" background="$primaryBackground" borderRadius="8px" justifyContent="space-between" css={{
         border: '$secondaryBorder solid 1px'
     }}>
@@ -391,11 +395,11 @@ function Skin({ data, capes, index, current, loading, useSkin, editSkin }: SkinP
         />}
         <Grid spacing={8}>
             <Button size="smaller" theme="accent" onClick={() => useSkin(index)} disabled={loading || current === data.image}>
-                {t('app.mdpkm.common:actions.use')}
+                {t('common.action.use')}
             </Button>
             <Button size="smaller" theme="secondary" onClick={() => editSkin(index)} disabled={loading}>
                 <IconBiPencilFill/>
-                {t('app.mdpkm.common:actions.edit')}
+                {t('common.action.edit')}
             </Button>
         </Grid>
     </Grid>;

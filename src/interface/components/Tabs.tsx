@@ -1,7 +1,5 @@
 import React from 'react';
-import { styled } from '@stitches/react';
-
-import Tabs, { TabsProps } from '../../../voxeliface/components/Tabs';
+import { Tabs, TabsProps } from 'voxeliface';
 export default function StyledTabs(props: TabsProps) {
 	return <Tabs {...props} css={{
 		gap: 8,

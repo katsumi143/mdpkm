@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
 
-import { Grid, Typography } from '../../../voxeliface';
+import { Grid, Typography } from 'voxeliface';
 
 import type { ComponentVersion, ComponentVersions } from '../../../voxura/src/types';
 export type VersionPickerProps = {
@@ -11,7 +11,7 @@ export type VersionPickerProps = {
     onChange: (value: ComponentVersion) => void
 };
 export default function VersionPicker({ id, value, versions, onChange }: VersionPickerProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     const [category, setCategory] = useState(0);
     useEffect(() => {
         if (!value)
@@ -37,7 +37,7 @@ export default function VersionPicker({ id, value, versions, onChange }: Version
                         {t(`voxura:component.${id}.release_category.${key}`)}
                     </Typography>
                     <Typography size={12} color={category === key ? undefined : '$secondaryColor'} family="$secondary">
-                        {t('interface:common.label.item_count', [items.length])}
+                        {t('common.label.item_count', [items.length])}
                     </Typography>
                 </Grid>
             )}
@@ -61,7 +61,7 @@ export default function VersionPicker({ id, value, versions, onChange }: Version
                             {t(`voxura:component.${id}.release_category.${category}.singular`)} {item.id}
                         </Typography>
                         <Typography size={12} color={value === item ? undefined : '$secondaryColor'} family="$secondary">
-                            {t(`interface:common.date.${day}`, data)}
+                            {t(`common.date.${day}`, data)}
                         </Typography>
                     </Grid>
 				})}

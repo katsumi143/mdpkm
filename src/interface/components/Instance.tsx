@@ -4,7 +4,7 @@ import { writeText } from '@tauri-apps/api/clipboard';
 import { useTranslation } from 'react-i18next';
 
 import InstanceIcon from './InstanceIcon';
-import { Link, Grid, Typography, ContextMenu } from '../../../voxeliface';
+import { Link, Grid, Typography, ContextMenu } from 'voxeliface';
 
 import Patcher from '../../plugins/patcher';
 import { toast } from '../../util';
@@ -37,7 +37,7 @@ type InstanceProps = {
 	selected?: boolean
 };
 export default Patcher.register(function Instance({ css, selected, instance }: InstanceProps) {
-	const { t } = useTranslation();
+	const { t } = useTranslation('interface');
 	const dispatch = useAppDispatch();
 	const StateIcon = INSTANCE_STATE_ICONS[instance.state];
 	const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
@@ -91,7 +91,7 @@ export default Patcher.register(function Instance({ css, selected, instance }: I
 								lineheight={1}
 							>
 								<StateIcon fontSize={isCompact ? 8 : 10} />
-								{t(`app.mdpkm.instances:state.${instance.state}`)}
+								{t(`instance.state.${instance.state}`)}
 							</Typography>
 						</Grid>
 					</Grid>
@@ -99,7 +99,7 @@ export default Patcher.register(function Instance({ css, selected, instance }: I
 						animation: selected ? `${viewAnimation} .25s ease-in` : undefined,
 						animationFillMode: 'forwards'
 					}}>
-						{t('interface:common.action.view')}
+						{t('common.action.view')}
 						<IconBiArrowRight />
 					</Link>
 				</Grid>
@@ -111,11 +111,11 @@ export default Patcher.register(function Instance({ css, selected, instance }: I
 			</ContextMenu.MenuLabel>
 			<ContextMenu.MenuItem>
 				<IconBiPlay/>
-				{t('app.mdpkm.common:actions.launch')}
+				{t('common.action.launch')}
 			</ContextMenu.MenuItem>
 			<ContextMenu.MenuItem onClick={view}>
 				<IconBiZoomIn/>
-				{t('app.mdpkm.common:actions.view')}
+				{t('common.action.view')}
 			</ContextMenu.MenuItem>
 			<ContextMenu.MenuSeparator/>
 			<ContextMenu.MenuItem onClick={favorite}>

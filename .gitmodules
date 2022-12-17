@@ -1,6 +1,3 @@
-[submodule "voxeliface"]
-	path = voxeliface
-	url = https://github.com/Excalware/react-voxeliface
 [submodule "voxura"]
 	path = voxura
 	url = https://github.com/Excalware/voxura

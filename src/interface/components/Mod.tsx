@@ -3,23 +3,23 @@ import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 
 import ImageWrapper from './ImageWrapper';
-import { Grid, Button, Spinner, Typography, BasicSpinner } from '../../../voxeliface';
+import { Grid, Button, Spinner, Typography, BasicSpinner } from 'voxeliface';
 
 import Patcher from '../../plugins/patcher';
 import { ModSide } from '../../../voxura/src/platforms/mod';
-import type { Mod } from '../../../voxura';
 import { useInstance } from '../../voxura';
 import { useAppSelector } from '../../store/hooks';
+import type { Mod, Platform } from '../../../voxura';
 export type ModProps = {
     id?: string,
-    api?: string,
     data?: Mod,
     featured?: boolean,
+	platform?: Platform,
     instanceId?: string,
     recommended?: boolean
 };
-export default Patcher.register(function Mod({ id, api, data, featured, instanceId, recommended }: ModProps) {
-    const { t } = useTranslation();
+export default Patcher.register(function Mod({ id, data, featured, platform, instanceId, recommended }: ModProps) {
+    const { t } = useTranslation('interface');
     const instance = useInstance(instanceId!);
     const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
     const showSummary = useAppSelector(state => state.settings['instances.modSearchSummaries']);
@@ -28,20 +28,23 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
     const installed = false;//store?.modifications?.some(m => m[3] === mod?.slug);
     const installing = false;//downloading?.some(d => d.id === (mod?.id ?? mod?.project_id));
     const installMod = () => instance?.installMod(mod!);
-    /*useEffect(() => {
-        if(id && typeof api === 'string' && !mod)
-            API.get(api).Mods.get(id).then(setMod).catch(err => {
+    useEffect(() => {
+        if(id && platform && !mod)
+			platform.getMod(id).then(mod => {
+				setMod(mod);
+				setLoading(false);
+			}).catch(err => {
                 console.warn(err);
                 let message = 'An unknown error occured.';
                 if (err.message.includes(503))
                     message = 'The service is unavailable.';
-                setMod(`error:${message}`);
             });
-    }, [id, api, mod]);*/
+    }, [id, mod, platform]);
     useEffect(() => {
         if(data && data !== mod)
             setMod(data);
     }, [data]);
+	console.log(mod);
 
     const iconSize = isCompact ? 32 : 44;
     return <Grid padding={8} background="$secondaryBackground2" borderRadius={16} css={{
@@ -55,11 +58,11 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                 <Typography size={14} lineheight={1}>
                     {t('app.mdpkm.common:states.loading')}
                 </Typography>
-                {id && api &&
+                {id && platform &&
                     <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
                         {t('app.mdpkm.mod.platform', {
                             id,
-                            name: t(`app.mdpkm.common:platforms.${api}`)
+                            name: t(`app.mdpkm.common:platforms.${platform.id}`)
                         })}
                     </Typography>
                 }
@@ -74,27 +77,27 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                     {mod.displayName}
                     {mod.author && 
                         <Typography size={isCompact ? 10 : 12} color="$secondaryColor" family="$secondary" lineheight={1}>
-                            {t('app.mdpkm.mod.author', { val: mod.author })}
+                            {t('mod.author', [mod.author])}
                         </Typography>
                     }
                     {featured &&
                         <Typography size={14} color="#cbc365" lineheight={1}>
-                            {t('app.mdpkm.mod.featured')}
+                            {t('mod.featured')}
                         </Typography>
                     }
                     {recommended &&
                         <Typography size={14} color="$secondaryColor" lineheight={1}>
-                            {t('app.mdpkm.mod.recommended')}
+                            {t('mod.recommended')}
                         </Typography>
                     }
                     {mod.isNsfw &&
                         <Typography size={14} color="#e18e8e" lineheight={1}>
-                            NSFW
+                            {t('mod.explict')}
                         </Typography>
                     }
                 </Typography>
                 {!isCompact && <Typography size={12} color="$secondaryColor" weight={400} lineheight={1}>
-                    {t(`app.mdpkm.mod.sides.${mod.getSide()}`)}
+                    {t(`mod.side.${mod.getSide()}`)}
                 </Typography>}
                 {showSummary && <Typography size={isCompact ? 12 : 14} color="$secondaryColor" weight={400} family="$secondary" textalign="left" whitespace="pre-wrap">
                     {mod.summary}
@@ -107,15 +110,13 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                 {typeof mod.downloads === 'number' &&
                     <Typography size={isCompact ? 11 : 12} color="$secondaryColor" margin="0 8px 0 0" spacing={6}>
                         <IconBiDownload/>
-                        {t('app.mdpkm.mod.downloads', {
-                            val: Intl.NumberFormat('en-us', {}).format(mod.downloads)
-                        })}
+                        {t('mod.downloads', [mod.downloads])}
                     </Typography>
                 }
                 {mod.website &&
                     <Button size={isCompact ? 'smaller' : 'small'} theme="secondary" onClick={() => open(mod.website)}>
                         <IconBiBoxArrowUpRight/>
-                        {t('app.mdpkm.common:actions.visit_website')}
+                        {t('common.action.visit_website')}
                     </Button>
                 }
                 <Button size={isCompact ? 'smaller' : 'small'} theme="accent" onClick={installMod} disabled={mod.getSide() === ModSide.Unknown || installing || installed}>
@@ -123,7 +124,7 @@ export default Patcher.register(function Mod({ id, api, data, featured, instance
                         <BasicSpinner size={16}/> : <IconBiDownload/>
                     }
                     {installed ? t('app.mdpkm.common:states.installed') : mod.getSide() === ModSide.Unknown ? t('app.mdpkm.common:states.unavailable') :
-                        installing ? t('app.mdpkm.common:states.installing') : t('app.mdpkm.common:actions.install')
+                        installing ? t('app.mdpkm.common:states.installing') : t('common.action.install')
                     }
                 </Button>
             </Grid>

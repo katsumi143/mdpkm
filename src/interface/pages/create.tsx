@@ -1,17 +1,17 @@
 import { styled } from '@stitches/react';
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
+import { Link, Grid, Button, Typography } from 'voxeliface';
 import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
 
 import ImageWrapper from '../components/ImageWrapper';
-import { Link, Grid, Button, Typography } from '../../../voxeliface/src';
 
 import { getImage } from '../../util';
 import { useAppDispatch } from '../../store/hooks';
 import { INSTANCE_CREATORS } from '../../mdpkm';
 import { setPage, setCurrentInstance } from '../../store/slices/interface';
 export default function Create() {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     const dispatch = useAppDispatch();
     const [selected, setSelected] = useState<string | null>(null);
     const changePage = (page: string) => dispatch(setPage(page));
@@ -21,7 +21,7 @@ export default function Create() {
         </Typography>
         <Link size={12} onClick={() => changePage('instances')}>
             <IconBiArrowLeft/>
-            {t('interface:common.action.return_to_instances')}
+            {t('common.action.return_to_instances')}
         </Link>
         <AnimateSharedLayout>
             <Grid height="100%" margin="16px 0 0" vertical spacing={8} css={{ position: 'relative' }}>
@@ -39,13 +39,13 @@ export type ComponentProps = {
     setSelected: (value: string | null) => void
 };
 function Component({ id, selected, setSelected }: ComponentProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     return <>
         <ComponentContainer layoutId={`component-${id}`}>
             <Grid height="fit-content" padding={8} spacing={12}>
                 <ImageWrapper src={getImage(`component.${id}`)} size={40} shadow canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
                 <Grid spacing={4} vertical justifyContent="center">
-                    <Typography layoutId={`component-title-${id}`} horizontal lineheight={1}>
+                    <Typography layoutId={`component-title-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}`)}
                     </Typography>
                 </Grid>
@@ -55,7 +55,7 @@ function Component({ id, selected, setSelected }: ComponentProps) {
                 position: 'absolute'
             }}>
                 <Link size={12} padding="0 16px" onClick={() => setSelected(id)}>
-                    {t('app.mdpkm.common:actions.continue')}
+                    {t('common.action.continue')}
                     <IconBiArrowRight/>
                 </Link>
             </Grid>
@@ -71,7 +71,7 @@ export type SetupProps = {
     cancel: () => void
 };
 function Setup({ id, cancel }: SetupProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     const creator = INSTANCE_CREATORS.find(c => c.id === id);
     const dispatch = useAppDispatch();
     const [data, setData] = useState<any[]>([]);
@@ -96,7 +96,7 @@ function Setup({ id, cancel }: SetupProps) {
             <Grid padding={8} spacing={12}>
                 <ImageWrapper src={getImage(`component.${id}`)} size={40} shadow canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
                 <Grid spacing={4} vertical justifyContent="center">
-                    <Typography layoutId={`component-title-${id}`} horizontal lineheight={1}>
+                    <Typography layoutId={`component-title-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}`)}
                     </Typography>
                 </Grid>
@@ -107,7 +107,7 @@ function Setup({ id, cancel }: SetupProps) {
             }}>
                 <Link size={12} padding="0 16px" onClick={cancel} disabled={creating}>
                     <IconBiArrowLeft/>
-                    {t('app.mdpkm.common:actions.back')}
+                    {t('common.action.back')}
                 </Link>
             </Grid>
         </Grid>
@@ -122,7 +122,7 @@ function Setup({ id, cancel }: SetupProps) {
             }}>
                 <Button theme="accent" onClick={createInstance} disabled={!satisfied || creating}>
                     <IconBiPlusLg/>
-                    {t('interface:common.action.create_instance')}
+                    {t('common.action.create_instance')}
                 </Button>
             </Grid>
         </Grid>

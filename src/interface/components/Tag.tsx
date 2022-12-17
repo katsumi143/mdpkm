@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 
-import { Grid } from '../../../voxeliface';
+import { Grid } from 'voxeliface';
 export type TagProps = {
     css?: Record<string, any>,
     margin?: string | number,

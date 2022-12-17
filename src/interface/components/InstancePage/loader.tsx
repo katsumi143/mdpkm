@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Modal from '../Modal';
 import ImageWrapper from '../ImageWrapper';
 import VersionPicker from '../VersionPicker';
-import { Link, Grid, Select, Button, Typography, TextHeader, InputLabel, BasicSpinner } from '../../../../voxeliface';
+import { Link, Grid, Select, Button, Typography, TextHeader, InputLabel, BasicSpinner } from 'voxeliface';
 
 import GameComponent from '../../../../voxura/src/instances/component/game-component';
 import { LoaderIssue } from '../../../mdpkm';
@@ -18,7 +18,7 @@ export type InstanceLoaderProps = {
 	instance: Instance
 };
 export default function InstanceLoader({ instance }: InstanceLoaderProps) {
-	const { t } = useTranslation();
+	const { t } = useTranslation('interface');
 	const { store } = instance;
 	const component = instance.gameComponent;
 	const [adding, setAdding] = useState(false);
@@ -32,12 +32,12 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 		</Link>
 
 		<Typography size={12} color="$secondaryColor" margin="8px 0 0">
-			{t('interface:common.label.game_component')}
+			{t('common.label.game_component')}
 		</Typography>
 		<Component component={component}/>
 
 		{!!otherComponents.length && <Typography size={12} color="$secondaryColor" margin="16px 0 0">
-			{t('interface:common.label.other_components')}
+			{t('common.label.other_components')}
 		</Typography>}
 		<Grid spacing={8} vertical>
 			{otherComponents.map((component, key) =>
@@ -46,7 +46,7 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 		</Grid>
 		<Button theme="accent" onClick={() => setAdding(true)}>
 			<IconBiPlusLg />
-			{t('interface:common.action.add_component')}
+			{t('common.action.add_component')}
 		</Button>
 
 		{adding && <ComponentAdder onClose={() => setAdding(false)} instance={instance} />}
@@ -83,7 +83,7 @@ export type ComponentProps = {
 	component: InstanceComponent
 };
 function Component({ component }: ComponentProps) {
-	const { t } = useTranslation();
+	const { t } = useTranslation('interface');
 	const [editing, setEditing] = useState(false);
 	const isGame = component instanceof GameComponent;
 	const isVersioned = component instanceof VersionedComponent;
@@ -97,17 +97,17 @@ function Component({ component }: ComponentProps) {
 				{t(`voxura:component.${component.id}`)}
 			</Typography>
 			{isVersioned && <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
-				{t('interface:component.version', [component.version])}
+				{t('component.version', [component.version])}
 			</Typography>}
 		</Grid>
 		<Grid height="100%" css={{ marginLeft: 'auto' }}>
 			{isVersioned && <Link size={12} padding="0 16px" onClick={() => setEditing(true)}>
-				<IconBiPencilFill />
-				{t('app.mdpkm.common:actions.edit')}
+				<IconBiPencilFill/>
+				{t('common.action.edit')}
 			</Link>}
 			{!isGame && <Link size={12} padding="0 16px">
-				<IconBiTrash3Fill />
-				{t('app.mdpkm.common:actions.remove')}
+				<IconBiTrash3Fill/>
+				{t('common.action.remove')}
 			</Link>}
 		</Grid>
 		{editing && isVersioned && <ComponentEditor onClose={() => setEditing(false)} component={component} />}
@@ -148,17 +148,17 @@ function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 	return <Modal width="60%">
 		<TextHeader>Component Adder</TextHeader>
 		<InputLabel>Component</InputLabel>
-		<Select.Root value={component} onChange={setComponent} disabled={!versions || saving}>
+		<Select.Minimal value={component} onChange={setComponent} disabled={!versions || saving}>
 			<Select.Group name="Available Instance Components">
 				{components.map((component, key) => <Select.Item key={key} value={key}>
 					{t(`voxura:component.${component.id}`)}
 				</Select.Item>)}
 			</Select.Group>
-		</Select.Root>
+		</Select.Minimal>
 
 		<InputLabel spacious>Component Version</InputLabel>
 		<Typography size={14}>
-			{version ? `${t(`voxura:component.${components[component].id}.release_category.${version.category}.singular`)} ${version.id}` : t('interface:common.input_placeholder.required')}
+			{version ? `${t(`voxura:component.${components[component].id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
 		</Typography>
 
 		<Grid height={256} margin="16px 0 0">
@@ -203,7 +203,7 @@ function ComponentEditor({ onClose, component }: ComponentEditorProps) {
 		<TextHeader>Component Editor ({t(`voxura:component.${component.id}`)})</TextHeader>
 		<InputLabel>Component Version</InputLabel>
 		<Typography size={14}>
-			{version ? `${t(`voxura:component.${component.id}.release_category.${version.category}.singular`)} ${version.id}` : t('interface:common.input_placeholder.required')}
+			{version ? `${t(`voxura:component.${component.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
 		</Typography>
 
 		<Grid height={256} margin="16px 0 0">

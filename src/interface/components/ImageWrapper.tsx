@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import { Image } from '../../../voxeliface';
+import { Image } from 'voxeliface';
 import ImagePreview from './ImagePreview';
-import { ImageProps } from '../../../voxeliface/components/Image';
+import { ImageProps } from 'voxeliface/components/Image';
 export type ImageWrapperProps = ImageProps & {
     shadow?: boolean,
     canPreview?: boolean

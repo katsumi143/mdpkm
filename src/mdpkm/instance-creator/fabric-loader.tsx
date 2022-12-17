@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
-import { Grid, Select, TextInput, InputLabel, Typography } from '../../../voxeliface';
+import { Grid, Select, TextInput, InputLabel, Typography } from 'voxeliface';
 
 import VersionPicker from '../../interface/components/VersionPicker';
 
@@ -38,7 +38,7 @@ export type ComponentProps = {
     setSatisfied: (value: boolean) => void
 };
 function Component({ setData, setSatisfied }: ComponentProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     const [name, setName] = useState('');
     const [version, setVersion] = useState<ComponentVersion | null>(null);
     const [version2, setVersion2] = useState<ComponentVersion | null>(null);
@@ -50,24 +50,24 @@ function Component({ setData, setSatisfied }: ComponentProps) {
     }, [name, version, versions, versions2]);
     return <Grid width="100%" height="100%" spacing={16}>
         <Grid vertical>
-            <InputLabel>{t('interface:common.label.instance_name')}</InputLabel>
-            <TextInput value={name} onChange={setName} placeholder={t('interface:common.input_placeholder.required')}/>
+            <InputLabel>{t('common.label.instance_name')}</InputLabel>
+            <TextInput value={name} onChange={setName} placeholder={t('common.input_placeholder.required')}/>
 
-            <InputLabel spacious>{t('interface:common.label.minecraft_version')}</InputLabel>
+            <InputLabel spacious>{t('common.label.minecraft_version')}</InputLabel>
             <Typography size={14}>
-                {version ? `${t(`voxura:component.${MinecraftComponent.id}.release_category.${version.category}.singular`)} ${version.id}` : t('interface:common.input_placeholder.required')}
+                {version ? `${t(`voxura:component.${MinecraftComponent.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
             </Typography>
 
-            <InputLabel spacious>{t('interface:common.label.val_version', {
+            <InputLabel spacious>{t('common.label.val_version', {
                 val: t(`voxura:component.${FabricLoader.id}`)
             })}</InputLabel>
-            <Select.Root value={version2} loading={!versions2} onChange={setVersion2}>
-                <Select.Group name={t('interface:common.select_group.component_versions')}>
+            <Select.Minimal value={version2} loading={!versions2} onChange={setVersion2}>
+                <Select.Group name={t('common.select_group.component_versions')}>
                     {versions2?.map((version, key) => <Select.Item key={key} value={version}>
                         {version.id}
                     </Select.Item>)}
                 </Select.Group>
-            </Select.Root>
+            </Select.Minimal>
         </Grid>
         {versions && <VersionPicker id={MinecraftComponent.id} value={version} versions={versions} onChange={setVersion}/>}
     </Grid>;

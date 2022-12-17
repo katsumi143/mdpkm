@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
+import { Grid, Button, TextInput, Typography, TextHeader, InputLabel } from 'voxeliface';
 
 import ImageWrapper from '../components/ImageWrapper';
-import { Grid, Button, TextInput, Typography, TextHeader, InputLabel } from '../../../voxeliface/src';
 
 import voxura from '../../voxura';
 import Patcher from '../../plugins/patcher';

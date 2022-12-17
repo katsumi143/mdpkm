@@ -1,6 +1,5 @@
 import { keyframes } from '@stitches/react';
-
-import { Grid, Portal } from '../../../voxeliface';
+import { Grid, Portal } from 'voxeliface';
 import React, { ReactNode } from 'react';
 
 import Patcher from '../../plugins/patcher';
@@ -32,7 +31,7 @@ export default Patcher.register(function Modal({ width, height, children }: Moda
         <Grid width="100vw" height="100vh" vertical alignItems="center" background="#00000099" justifyContent="center" css={{
             top: 0,
             left: 0,
-            zIndex: 100000,
+			zIndex: 10,
             position: 'absolute',
             animation: `${openAnimation2} .5s`
         }}>

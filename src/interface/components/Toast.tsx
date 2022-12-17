@@ -2,7 +2,7 @@ import { styled, keyframes } from '@stitches/react';
 import type { Toast as HotToast } from 'react-hot-toast';
 import React, { FunctionComponent } from 'react';
 
-import { Grid, Typography } from '../../../voxeliface';
+import { Grid, Typography } from 'voxeliface';
 const animation = keyframes({
     from: {
         transform: 'translateX(120%)'

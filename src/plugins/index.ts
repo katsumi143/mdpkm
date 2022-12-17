@@ -1,5 +1,4 @@
 import React from 'react';
-import toast from 'react-hot-toast';
 import i18next from 'i18next';
 import * as xml from 'xmlbuilder2';
 import * as http from '@tauri-apps/api/http';
@@ -13,7 +12,7 @@ import * as Util from '../util';
 import * as mdpkm from '../mdpkm';
 import { APP_DIR } from '../util/constants';
 import * as Voxura from '../voxura';
-import * as Voxeliface from '../../voxeliface';
+import * as Voxeliface from 'voxeliface';
 
 // For plugin developers:
 // https://docs.mdpkm.voxelified.com/docs/category/plugin-api
@@ -46,12 +45,12 @@ export default class PluginSystem {
         console.log(plugin);
         await plugin.init();
 
-        toast.success(`'${name}' has loaded.`);
+        Util.toast('Plugin loaded', `${name} loaded succesfully.`);
     }
 
     static async loadPluginFile(name: string, path: string) {
         const code = await readTextFile(path);
-        const module = await import(/* @vite-ignore */`data:text/javascript;base64,${encode(code)}`);
+        const module = await import(/* @vite-ignore */ `data:text/javascript;base64,${encode(code)}`);
         const { manifest } = module;
         console.log(module);
         if (manifest && (manifest.id ?? manifest.name)) {
@@ -76,7 +75,6 @@ export default class PluginSystem {
     Util,
     http,
     mdpkm,
-    toast,
     React,
     Plugin,
     Voxura,

@@ -3,7 +3,6 @@
     windows_subsystem = "windows"
 )]
 
-#[path = "../../voxura/rust/mod.rs"] mod voxura;
 fn main() {
     tauri::Builder::default()
         .plugin(voxura::init())

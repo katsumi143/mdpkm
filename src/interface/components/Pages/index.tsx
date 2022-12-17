@@ -1,7 +1,7 @@
 import React, { Children, ReactNode, cloneElement, ReactElement } from 'react';
 import { animated, useTransition } from 'react-spring';
 
-import { Grid } from '../../../../voxeliface';
+import { Grid } from 'voxeliface';
 type PagesProps = {
     css?: Record<string, any>,
     value: any,

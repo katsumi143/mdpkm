@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
 
 import Mod from './Mod';
-import { Grid, Image, Select, Button, TextInput, Typography, InputLabel, BasicSpinner } from '../../../voxeliface';
+import { Grid, Image, Select, Button, TextInput, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
 import Patcher from '../../plugins/patcher';
 import { toast } from '../../util';
@@ -12,7 +12,7 @@ export type ModSearchProps = {
     instance: Instance
 };
 export default Patcher.register(function ModSearch({ instance }: ModSearchProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
 
     const { store } = instance;
     const { gameComponent } = store;
@@ -85,14 +85,14 @@ export default Patcher.register(function ModSearch({ instance }: ModSearchProps)
                     <TextInput width="100%" value={query} onChange={setQuery}>
                         <Button theme="secondary" onClick={() => search(api)} disabled={searching}>
                             {searching ? <BasicSpinner size={16}/> : <IconBiSearch/>}
-                            {t('app.mdpkm.common:actions.search')}
+                            {t('common.action.search')}
                         </Button>
                     </TextInput>
                 </Grid>
                 <Grid spacing={8}>
                     <Grid vertical>
                         <InputLabel>{t('app.mdpkm.common:labels.category')}</InputLabel>
-                        <Select.Root value={category} onChange={setCategory} disabled={searching}>
+                        <Select.Minimal value={category} onChange={setCategory} disabled={searching}>
                             <Select.Group name="Categories">
                                 <Select.Item value="none">
                                     {t('app.mdpkm.mod_search.categories.none')}
@@ -108,11 +108,11 @@ export default Patcher.register(function ModSearch({ instance }: ModSearchProps)
                                     </Select.Item>
                                 )*/}
                             </Select.Group>
-                        </Select.Root>
+                        </Select.Minimal>
                     </Grid>
                     <Grid vertical>
                         <InputLabel>{t('app.mdpkm.common:labels.platform')}</InputLabel>
-                        <Select.Root value={api} onChange={setApi} disabled={searching}>
+                        <Select.Minimal value={api} onChange={setApi} disabled={searching}>
                             <Select.Group name="Mod Platforms">
                                 {Object.values(voxura.platforms).map((platform, key) =>
                                     <Select.Item key={key} value={platform.id}>
@@ -121,7 +121,7 @@ export default Patcher.register(function ModSearch({ instance }: ModSearchProps)
                                     </Select.Item>
                                 )}
                             </Select.Group>
-                        </Select.Root>
+                        </Select.Minimal>
                     </Grid>
                 </Grid>
             </Grid>

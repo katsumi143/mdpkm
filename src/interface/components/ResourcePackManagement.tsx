@@ -5,7 +5,7 @@ import { exists, readTextFile } from '@tauri-apps/api/fs';
 import React, { useState, useEffect } from 'react';
 
 import ImagePreview from './ImagePreview';
-import { Link, Grid, Image, Button, Typography, BasicSpinner } from '../../../voxeliface';
+import { Link, Grid, Image, Button, Typography, BasicSpinner } from 'voxeliface';
 
 import Util from '../../common/util';
 import Patcher from '../../plugins/patcher';
@@ -15,7 +15,7 @@ export type ResourcePackManagementProps = {
     instanceId: string
 };
 export default Patcher.register(function ResourcePackManagement({ instanceId }: ResourcePackManagementProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     const instance = useInstance(instanceId);
     const [items, setItems] = useState<any[] | string | null>(null);
     const [filter, setFilter] = useState('');
@@ -90,7 +90,7 @@ export default Patcher.register(function ResourcePackManagement({ instanceId }: 
             <Grid spacing={8}>
                 <Button theme="secondary" onClick={() => setItems(null)} disabled={items === 'loading'}>
                     {items === 'loading' ? <BasicSpinner size={16}/> : <IconBiArrowClockwise/>}
-                    {t('app.mdpkm.common:actions.refresh')}
+                    {t('common.action.refresh')}
                 </Button>
                 <Button theme="accent" onClick={addResourcePack} disabled={instance?.store.gameComponent.id === 'bedrock'}>
                     <IconBiPlusLg/>
@@ -108,7 +108,7 @@ export type ResourcePackProps = {
     item: any
 };
 function ResourcePack({ item }: ResourcePackProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
     const [previewIcon, setPreviewIcon] = useState(false);
 
@@ -120,7 +120,7 @@ function ResourcePack({ item }: ResourcePackProps) {
     }}>
         <Image
             src={packIcon}
-            size={isCompact ? 38 : 46}
+            size={isCompact ? 38 : 48}
             onClick={() => setPreviewIcon(true)}
             background="$secondaryBackground"
             borderRadius={8}
@@ -144,7 +144,7 @@ function ResourcePack({ item }: ResourcePackProps) {
         }}>
             <Link size={12} padding="0 16px">
                 <IconBiTrash3Fill/>
-                {t('app.mdpkm.common:actions.delete')}
+                {t('common.action.delete')}
             </Link>
         </Grid>
     </Grid>;

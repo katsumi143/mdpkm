@@ -7,8 +7,8 @@ import React, { useState, ReactNode } from 'react';
 import { getName, getVersion, getTauriVersion } from '@tauri-apps/api/app';
 
 import BrowserLink from '../components/BrowserLink';
-import { GridDirection } from '../../../voxeliface/components/Grid';
-import { Grid, Image, Select, Switch, Button, Tooltip, TextInput, TextHeader, Typography, InputLabel, BasicSpinner } from '../../../voxeliface';
+import { GridDirection } from 'voxeliface/components/Grid';
+import { Grid, Image, Select, Switch, Button, Tooltip, TextInput, TextHeader, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
 import Util from '../../common/util';
 import Patcher from '../../plugins/patcher';
@@ -24,7 +24,7 @@ const appName = await getName();
 const appVersion = await getVersion();
 const tauriVersion = await getTauriVersion();
 export default Patcher.register(function Settings() {
-	const { t, i18n } = useTranslation();
+	const { t, i18n } = useTranslation('interface');
 	const theme = useAppSelector(state => state.settings.theme);
 	const uiStyle = useAppSelector(state => state.settings.uiStyle);
 	const dispatch = useAppDispatch();
@@ -82,43 +82,43 @@ export default Patcher.register(function Settings() {
 	return <Grid width="100%" height="100%" padding=".75rem 1rem" vertical css={{
 		overflow: 'auto'
 	}}>
-		<TextHeader>{t('app.mdpkm.settings.general')}</TextHeader>
+		<TextHeader>{t('settings.general')}</TextHeader>
 		<Grid width="30%" spacing={8} padding="0 1rem" vertical>
 			<Setting name="general.theme">
-				<Select.Root value={theme} onChange={changeTheme}>
+				<Select.Minimal value={theme} onChange={changeTheme}>
 					<Select.Group name={t('app.mdpkm.settings.general.theme.category')}>
 						<Select.Item value="default">
-							{t('app.mdpkm.settings.general.theme.items.default')}
+							{t('common.theme.default')}
 						</Select.Item>
 						<Select.Item value="light">
-							{t('app.mdpkm.settings.general.theme.items.light')}
+							{t('common.theme.light')}
 						</Select.Item>
 						<Select.Item value="dark">
-							{t('app.mdpkm.settings.general.theme.items.dark')}
+							{t('common.theme.dark')}
 						</Select.Item>
 						<Select.Item value="red">
-							{t('app.mdpkm.settings.general.theme.items.red')}
+							{t('common.theme.red')}
 						</Select.Item>
 						<Select.Item value="orange">
-							{t('app.mdpkm.settings.general.theme.items.orange')}
+							{t('common.theme.orange')}
 						</Select.Item>
 						<Select.Item value="yellow">
-							{t('app.mdpkm.settings.general.theme.items.yellow')}
+							{t('common.theme.yellow')}
 						</Select.Item>
 						<Select.Item value="green">
-							{t('app.mdpkm.settings.general.theme.items.green')}
+							{t('common.theme.green')}
 						</Select.Item>
 						<Select.Item value="blue">
-							{t('app.mdpkm.settings.general.theme.items.blue')}
+							{t('common.theme.blue')}
 						</Select.Item>
 						<Select.Item value="purple">
-							{t('app.mdpkm.settings.general.theme.items.purple')}
+							{t('common.theme.purple')}
 						</Select.Item>
 					</Select.Group>
-				</Select.Root>
+				</Select.Minimal>
 			</Setting>
 			<Setting name="general.uiStyle">
-				<Select.Root value={uiStyle} onChange={v => setSetting('uiStyle', v)}>
+				<Select.Minimal value={uiStyle} onChange={v => setSetting('uiStyle', v)}>
 					<Select.Group name={t('app.mdpkm.settings.general.uiStyle.category')}>
 						<Select.Item value="default">
 							{t('app.mdpkm.settings.general.uiStyle.items.default')}
@@ -127,26 +127,26 @@ export default Patcher.register(function Settings() {
 							{t('app.mdpkm.settings.general.uiStyle.items.compact')}
 						</Select.Item>
 					</Select.Group>
-				</Select.Root>
+				</Select.Minimal>
 			</Setting>
 			<Setting name="general.language" noSummary>
-				<Select.Root value={language} onChange={changeLanguage}>
+				<Select.Minimal value={language} onChange={changeLanguage}>
 					<Select.Group name={t('app.mdpkm.settings.general.language.category')}>
 						<Select.Item value="en">
-							{t('app.mdpkm.common:locales:en')}
+							{t('common.locale.en')}
 						</Select.Item>
 						<Select.Item value="lv">
-							{t('app.mdpkm.common:locales:lv')}
+							{t('common.locale.lv')}
 						</Select.Item>
 						<Select.Item value="ru">
-							{t('app.mdpkm.common:locales:ru')}
+							{t('common.locale.ru')}
 						</Select.Item>
 					</Select.Group>
-				</Select.Root>
+				</Select.Minimal>
 			</Setting>
 		</Grid>
 
-		<TextHeader spacious>{t('app.mdpkm.settings.instances')}</TextHeader>
+		<TextHeader spacious>{t('settings.instances')}</TextHeader>
 		<Grid spacing={8} padding="0 1rem" vertical>
 			<Setting name="instances.pageBanner" direction="horizontal">
 				<Switch
@@ -162,7 +162,7 @@ export default Patcher.register(function Settings() {
 			<Setting name="instances.defaultResolution" direction="horizontal">
 				<Grid vertical>
 					<InputLabel>
-						{t('app.mdpkm.instance_page.tabs.settings.resolution.width')}
+						{t('common.label.resolution_width')}
 					</InputLabel>
 					<TextInput
 						width={80}
@@ -176,7 +176,7 @@ export default Patcher.register(function Settings() {
 				</Grid>
 				<Grid vertical>
 					<InputLabel>
-						{t('app.mdpkm.instance_page.tabs.settings.resolution.height')}
+						{t('common.label.resolution_height')}
 					</InputLabel>
 					<TextInput
 						width={80}
@@ -213,7 +213,7 @@ export default Patcher.register(function Settings() {
 			</Setting>
 		</Grid>
 
-		<TextHeader spacious>{t('app.mdpkm.settings.plugins', {
+		<TextHeader spacious>{t('settings.plugins', {
 			val: Object.keys(PluginSystem.loaded).length
 		})}</TextHeader>
 		<Grid spacing={8} padding="0 1rem" vertical>
@@ -224,12 +224,12 @@ export default Patcher.register(function Settings() {
 			</span></Typography>
 			<Grid spacing={8}>
 				<Button theme="accent" onClick={addPlugin}>
-					<IconBiPlusLg />
-					{t('app.mdpkm.settings.plugins.add')}
+					<IconBiPlusLg/>
+					{t('settings.plugins.add')}
 				</Button>
 				<Button theme="secondary" onClick={() => open(PluginSystem.path)}>
-					<IconBiFolder2Open />
-					{t('app.mdpkm.common:actions.open_folder')}
+					<IconBiFolder2Open/>
+					{t('common.action.open_folder')}
 				</Button>
 			</Grid>
 			{Object.entries(PluginSystem.loaded).map(([id, plugin]) => {
@@ -244,7 +244,7 @@ export default Patcher.register(function Settings() {
 						<Typography lineheight={1}>
 							{t(`app.mdpkm.plugin.${plugin.id}:name`)}
 						</Typography>
-						<Typography size=".8rem" color="$secondaryColor" lineheight={1}>
+						<Typography size={14} color="$secondaryColor" lineheight={1}>
 							{plugin.id} {plugin.version}
 						</Typography>
 					</Grid>
@@ -263,7 +263,7 @@ export default Patcher.register(function Settings() {
 							<Tooltip.Trigger asChild>
 								<Button theme="secondary" disabled>
 									<IconBiTrash3Fill />
-									{t('app.mdpkm.common:actions.remove')}
+									{t('common.action.remove')}
 								</Button>
 							</Tooltip.Trigger>
 							<Tooltip.Content side="top" sideOffset={4}>
@@ -276,33 +276,31 @@ export default Patcher.register(function Settings() {
 			})}
 		</Grid>
 
-		<TextHeader spacious>{t('app.mdpkm.settings.about')}</TextHeader>
+		<TextHeader spacious>{t('settings.about')}</TextHeader>
 		<Grid spacing={8} padding="0 1rem" vertical>
 			<Grid spacing={8} alignItems="center">
 				<Image src="img/icons/brand_default.svg" size={48} onClick={yippee} />
 				<Grid spacing={2} vertical>
 					<Typography lineheight={1}>
-						{appName} v{appVersion}
+						{t('settings.about.version', [appName, appVersion])}
 					</Typography>
 					<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
-						{t('app.mdpkm.settings.about.tauri', {
-							val: tauriVersion
-						})} & voxura {VOXURA_VERSION}
+						{t('settings.about.version2', [tauriVersion, VOXURA_VERSION])}
 					</Typography>
 				</Grid>
 			</Grid>
 			<Grid spacing={8}>
 				<Button theme="accent" onClick={updateCheck} disabled={updating}>
 					{updating ? <BasicSpinner size={16} /> : <IconBiCloudArrowDown />}
-					{t('app.mdpkm.settings.about.check_for_updates')}
+					{t('settings.about.update')}
 				</Button>
 				<Button theme="accent" onClick={reportIssue}>
 					<IconBiEnvelopeOpen />
-					{t('app.mdpkm.settings.about.report_bug')}
+					{t('settings.about.report_bug')}
 				</Button>
 				<Button theme="secondary" onClick={openGithub}>
 					<IconBiGithub />
-					{t('app.mdpkm.settings.about.github')}
+					{t('settings.about.github')}
 				</Button>
 			</Grid>
 		</Grid>
@@ -316,8 +314,8 @@ type SettingProps = {
 	direction?: GridDirection
 };
 function Setting({ name, children, direction, noSummary }: SettingProps) {
-	const { t } = useTranslation();
-	const stringBase = `app.mdpkm.settings.${name ?? 'placeholder'}`;
+	const { t } = useTranslation('interface');
+	const stringBase = `settings.${name ?? 'placeholder'}`;
 	return <Grid width="100%" css={{ marginBottom: 16 }}>
 		<Grid width="100%" spacing={4} padding={4} vertical>
 			<Typography lineheight={1}>

@@ -3,17 +3,17 @@ import React, { useState, useEffect } from 'react';
 
 import Tabs from '../Tabs';
 import JsonEditor from '../JsonEditor';
-import { Grid, Slider, Dialog, Button, TabItem, TextInput, Typography, InputLabel, BasicSpinner } from '../../../../voxeliface';
+import { Grid, Slider, Dialog, Button, TabItem, TextInput, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
 import { toast } from '../../../util';
 import type { Instance } from '../../../voxura';
 import { TOTAL_SYSTEM_MEMORY } from '../../../util/constants';
+
 export type InstanceSettingsProps = {
     instance: Instance
 };
-
 export default function InstanceSettings({ instance }: InstanceSettingsProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
 	const [tab, setTab] = useState(0);
     const [name, setName] = useState(instance.name);
     const [saving, setSaving] = useState(false);
@@ -66,9 +66,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 				</InputLabel>
 				<Grid spacing={8}>
 					<Grid vertical>
-						<Typography size=".8rem" color="$secondaryColor">
-							{t('app.mdpkm.instance_page.tabs.settings.resolution.width')}
-						</Typography>
+						<InputLabel>{t('common.label.resolution_width')}</InputLabel>
 						<TextInput
 							width={80}
 							value={Math.max(0, resolution[0] || 0).toString()}
@@ -79,9 +77,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 						/>
 					</Grid>
 					<Grid vertical>
-						<Typography size=".8rem" color="$secondaryColor">
-							{t('app.mdpkm.instance_page.tabs.settings.resolution.height')}
-						</Typography>
+						<InputLabel>{t('common.label.resolution_height')}</InputLabel>
 						<TextInput
 							width={80}
 							value={Math.max(0, resolution[1] || 0).toString()}
@@ -99,8 +95,8 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 				<Dialog.Root>
 					<Dialog.Trigger asChild>
 						<Button theme="secondary" disabled={saving}>
-							<IconBiTrash3Fill style={{fontSize: 11}}/>
-							{t('app.mdpkm.common:actions.delete')}
+							<IconBiTrash3Fill fontSize={12}/>
+							{t('common.action.delete')}
 						</Button>
 					</Dialog.Trigger>
 					<Dialog.Content>
@@ -129,7 +125,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
         </Tabs>
 		<Button theme="accent" onClick={saveSettings} disabled={saving}>
 			{saving ? <BasicSpinner size={16}/> : <IconBiPencilFill fontSize={11}/>}
-			{t('app.mdpkm.common:actions.save_changes')}
+			{t('common.action.save_changes')}
 		</Button>
     </React.Fragment>;
 };

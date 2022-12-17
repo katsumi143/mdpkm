@@ -3,7 +3,7 @@ import { open } from '@tauri-apps/api/shell';
 
 import ImageWrapper from '../ImageWrapper';
 import type NewsItem from '../../../mdpkm/news/item';
-import { Grid, Tooltip, Typography } from '../../../../voxeliface';
+import { Grid, Tooltip, Typography } from 'voxeliface';
 export type NewsItemProps = {
     item: NewsItem<unknown>
 };

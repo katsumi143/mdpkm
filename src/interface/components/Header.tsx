@@ -1,13 +1,13 @@
 import React from 'react';
-
-import { TauriHeaderProps } from '../../../voxeliface/components/Header/Tauri';
-import { Grid, Image, Typography, TauriHeader } from '../../../voxeliface';
+import { Grid, Image, Typography } from 'voxeliface';
+import { TauriHeader, TauriHeaderProps } from 'voxeliface-tauri';
 
 import { setPage } from '../../store/slices/interface';
 import { useAppDispatch } from '../../store/hooks';
 import { AvatarType, useCurrentAccount } from '../../voxura';
+
 export type HeaderProps = TauriHeaderProps;
-export default function Header(props: TauriHeaderProps) {
+export default function DefaultHeader(props: HeaderProps) {
     const account = useCurrentAccount();
     const dispatch = useAppDispatch();
     const viewAccounts = () => dispatch(setPage('accounts'));

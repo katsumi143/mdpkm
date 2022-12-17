@@ -3,23 +3,15 @@ import { appWindow } from '@tauri-apps/api/window';
 import { writeText } from '@tauri-apps/api/clipboard';
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
+import { Grid, Image, Button, Portal, Typography, TextHeader, BasicSpinner, DropdownMenu } from 'voxeliface';
 
-import Tag from '../components/Tag';
-import Grid from '../../../voxeliface/components/Grid';
-import Image from '../../../voxeliface/components/Image';
-import Button from '../../../voxeliface/components/Button';
-import Portal from '../../../voxeliface/components/Portal';
-import Typography from '../../../voxeliface/components/Typography';
-import TextHeader from '../../../voxeliface/components/Typography/Header';
 import ImagePreview from '../components/ImagePreview';
-import BasicSpinner from '../../../voxeliface/components/BasicSpinner';
-import * as DropdownMenu from '../../../voxeliface/components/DropdownMenu';
 
 import { toast } from '../../util';
 import type { Account } from '../../../voxura';
 import voxura, { AvatarType, useAccounts, useCurrentAccount } from '../../voxura';
 export default function Accounts() {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     const current = useCurrentAccount();
     const accounts = useAccounts();
     const addingAccount = false;
@@ -44,11 +36,11 @@ export default function Accounts() {
     return <Grid height="100%" padding=".75rem 1rem" vertical css={{
         overflow: 'auto'
     }}>
-        <TextHeader>{t('app.mdpkm.accounts.header')}</TextHeader>
+        <TextHeader>{t('accounts.header')}</TextHeader>
         <Grid spacing={8} padding="0 1rem" vertical>
             <Image src="img/banners/microsoft.svg" width={112} height={24} margin="0 0 8px"/>
-            {!current && <Typography size=".8rem" color="$secondaryColor" whitespace="pre">
-                {t('app.mdpkm.accounts.select_account')}
+            {!current && <Typography size={14} color="$secondaryColor" whitespace="pre">
+                {t('accounts.select_account')}
             </Typography>}
             <Grid spacing={8} vertical>
                 {accounts.map((account, key) =>
@@ -57,7 +49,7 @@ export default function Accounts() {
             </Grid>
             <Button theme="accent" onClick={addNewAccount} disabled={addingAccount}>
                 {addingAccount ? <BasicSpinner size={16}/> : <IconBiPlusLg/>}
-                {t('app.mdpkm.accounts.add')}
+                {t('accounts.action.add')}
             </Button>
         </Grid>
         {error && <Portal>
@@ -98,7 +90,7 @@ export type UserAccountProps = {
     deleteAccount: (account: Account) => void
 };
 function UserAccount({ account, current, changeAccount, deleteAccount }: UserAccountProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     const isCurrent = account === current;
     const avatarUrl = account.getAvatarUrl(AvatarType.Xbox);
     const [previewAvatar, setPreviewAvatar] = useState(false);
@@ -126,12 +118,10 @@ function UserAccount({ account, current, changeAccount, deleteAccount }: UserAcc
             right: 16,
             position: 'absolute'
         }}>
-            {isCurrent ? <Tag>
-                <Typography size=".7rem" color="$tagColor">
-                    {t('interface:account.tag.active')}
-                </Typography>
-            </Tag> : <Button theme="accent" onClick={() => changeAccount(account)}>
-                {t('interface:common.action.select')}
+            {isCurrent ? <Typography size={14} color="$secondaryColor" weight={400} margin="0 8px" family="$secondary">
+				{t('user_account.selected')}
+			</Typography> : <Button theme="accent" onClick={() => changeAccount(account)}>
+                {t('common.action.select')}
             </Button>}
             <DropdownMenu.Root>
                 <DropdownMenu.Trigger asChild>
@@ -141,13 +131,9 @@ function UserAccount({ account, current, changeAccount, deleteAccount }: UserAcc
                 </DropdownMenu.Trigger>
 				<DropdownMenu.Portal>
 					<DropdownMenu.Content sideOffset={8}>
-						<DropdownMenu.Label>{t('app.mdpkm.accounts.account.actions.label')}</DropdownMenu.Label>
-						<DropdownMenu.Item onClick={() => open('https://minecraft.net/profile')}>
-							{t('app.mdpkm.accounts.account.actions.manage_profile')}
-							<IconBiBoxArrowUpRight/>
-						</DropdownMenu.Item>
+						<DropdownMenu.Label>{t('user_account.options.label')}</DropdownMenu.Label>
 						<DropdownMenu.Item onClick={() => open(`https://namemc.com/profile/${account.uuid}`)}>
-							{t('app.mdpkm.accounts.account.actions.view_namemc')}
+							{t('user_account.options.view_namemc')}
 							<IconBiBoxArrowUpRight/>
 						</DropdownMenu.Item>
 						<DropdownMenu.Item onClick={() => deleteAccount(account)}>

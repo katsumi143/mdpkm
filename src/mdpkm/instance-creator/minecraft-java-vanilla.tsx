@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
-import { Grid, TextInput, InputLabel, Typography } from '../../../voxeliface';
+import { Grid, TextInput, InputLabel, Typography } from 'voxeliface';
 
 import VersionPicker from '../../interface/components/VersionPicker';
 
@@ -30,7 +30,7 @@ export type ComponentProps = {
     setSatisfied: (value: boolean) => void
 };
 function Component({ setData, setSatisfied }: ComponentProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     const [name, setName] = useState('');
     const [version, setVersion] = useState<ComponentVersion | null>(null);
     const versions = useComponentVersions(MinecraftComponent);
@@ -40,12 +40,12 @@ function Component({ setData, setSatisfied }: ComponentProps) {
     }, [name, version, versions]);
     return <Grid width="100%" height="100%" spacing={16}>
         <Grid vertical>
-            <InputLabel>{t('interface:common.label.instance_name')}</InputLabel>
-            <TextInput value={name} onChange={setName} placeholder={t('interface:common.input_placeholder.required')}/>
+            <InputLabel>{t('common.label.instance_name')}</InputLabel>
+            <TextInput value={name} onChange={setName} placeholder={t('common.input_placeholder.required')}/>
 
-            <InputLabel spacious>{t('interface:common.label.minecraft_version')}</InputLabel>
+            <InputLabel spacious>{t('common.label.minecraft_version')}</InputLabel>
             <Typography size={14}>
-                {version ? `${t(`voxura:component.${MinecraftComponent.id}.release_category.${version.category}.singular`)} ${version.id}` : t('interface:common.input_placeholder.required')}
+                {version ? `${t(`voxura:component.${MinecraftComponent.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
             </Typography>
         </Grid>
         {versions && <VersionPicker id={MinecraftComponent.id} value={version} versions={versions} onChange={setVersion}/>}

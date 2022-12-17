@@ -6,11 +6,14 @@ import { toast } from './util';
 import { Voxura } from '../voxura';
 import { APP_DIR } from './util/constants';
 import type Account from '../voxura/src/auth/account';
+import mdpkmPlatform from './mdpkm/platform';
 import type { Download } from '../voxura/src/downloader';
 import VersionedComponent from '../voxura/src/instances/component/versioned-component';
 import type { ComponentVersions } from '../voxura/src/types';
 
 const voxura = new Voxura(APP_DIR);
+voxura.addPlatform(new mdpkmPlatform());
+
 await voxura.init();
 await voxura.startInstances();
 await voxura.auth.loadFromFile();

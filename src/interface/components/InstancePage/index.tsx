@@ -12,9 +12,8 @@ import Tabs from '../Tabs';
 import Content from './content';
 import Settings from './settings';
 import ImageWrapper from '../ImageWrapper';
-import InstanceExport from '../InstanceExport';
-import type { GridProps } from '../../../../voxeliface/components/Grid';
-import { Grid, Link, Image, TabItem, Typography, BasicSpinner, DropdownMenu } from '../../../../voxeliface/src';
+import type { GridProps } from 'voxeliface';
+import { Grid, Link, Image, TabItem, Typography, BasicSpinner, DropdownMenu } from 'voxeliface';
 
 import Patcher from '../../../plugins/patcher';
 import { useAppSelector } from '../../../store/hooks';
@@ -26,7 +25,7 @@ export type InstancePageProps = {
 	id: string
 };
 export default Patcher.register(function InstancePage({ id }: InstancePageProps) {
-	const { t } = useTranslation();
+	const { t } = useTranslation('interface');
 	const account = useCurrentAccount();
 	const uiStyle = useAppSelector(state => state.settings.uiStyle);
 	const instance = useInstance(id);
@@ -91,7 +90,7 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 					justifyContent: 'end',
 					'&:hover': { '& > div': { opacity: 1 } }
 				}}>
-					<ImageOptions onEdit={e => changeImage('icon', e)} onRemove={e => removeImage('icon', e)}/>
+					<ImageOptions img={instance.icon} onEdit={e => changeImage('icon', e)} onRemove={e => removeImage('icon', e)}/>
 				</ImageWrapper>
 				<Grid spacing={isCompact ? 4 : 4} vertical justifyContent="center">
 					<Typography size={isCompact ? 20 : 22} family="$tertiary" lineheight={1} css={{ alignItems: 'start' }}>
@@ -100,7 +99,7 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 					</Typography>
 					<Typography size={isCompact ? 14 : 16} color="$secondaryColor" weight={400} family="$secondary" spacing={6} lineheight={1}>
 						<StateIcon fontSize={12}/>
-						{t(`app.mdpkm.instances:state.${instance.state}`)}
+						{t(`instance.state.${instance.state}`)}
 					</Typography>
 				</Grid>
 				<Grid width="100%" height="100%" padding={8} justifyContent="end" css={{
@@ -110,35 +109,35 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 					position: 'absolute',
 					'&:hover': { '& > div': { opacity: 1 } }
 				}}>
-					<ImageOptions onEdit={e => changeImage('banner', e)} onRemove={e => removeImage('banner', e)}/>
+					<ImageOptions img={instance.banner} onEdit={e => changeImage('banner', e)} onRemove={e => removeImage('banner', e)}/>
 				</Grid>
 			</Grid>
 			<Grid>
 				<Link size={12} onClick={openFolder} padding={16}>
 					<IconBiFolder2Open/>
-					{t('app.mdpkm.common:actions.open_folder')}
+					{t('common.action.open_folder')}
 				</Link>
 				{instance.processes.length ? <DropdownMenu.Root>
 					<DropdownMenu.Trigger asChild>
 						<Link size={12} padding="16px 24px 16px 16px">
-							{t('interface:instance.action.view_options')}
+							{t('instance.action.view_options')}
 							<IconBiChevronDown/>
 						</Link>
 					</DropdownMenu.Trigger>
 					<DropdownMenu.Portal>
 						<DropdownMenu.Content>
-							<DropdownMenu.Label>{t('interface:common.label.actions')}</DropdownMenu.Label>
+							<DropdownMenu.Label>{t('common.label.actions')}</DropdownMenu.Label>
 							<DropdownMenu.Item onClick={launchInstance}>
 								<IconBiPlayFill/>
-								{t('interface:common.action.launch')}
+								{t('common.action.launch')}
 							</DropdownMenu.Item>
 							<DropdownMenu.Seperator/>
 							
-							<DropdownMenu.Label>{t('interface:common.label.processes')}</DropdownMenu.Label>
+							<DropdownMenu.Label>{t('common.label.processes')}</DropdownMenu.Label>
 							{instance.processes.map((child, key) =>
 								<DropdownMenu.Item key={key} onClick={() => instance.killProcess(child)}>
 									<IconBiXLg/>
-									{t('interface:common.action.kill_process', [key + 1])}
+									{t('common.action.kill_process', [key + 1])}
 								</DropdownMenu.Item>
 							)}
 							<DropdownMenu.Arrow/>
@@ -147,7 +146,7 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 				</DropdownMenu.Root> :
 					<Link size={12} onClick={launchInstance} padding="16px 24px 16px 16px" disabled={instance.isLaunching || instance.isRunning || !account}>
 						{instance.isLaunching ? <BasicSpinner size={16}/> : <IconBiPlayFill/>}
-						{t('interface:common.action.launch')}
+						{t('common.action.launch')}
 					</Link>
 				}
 			</Grid>
@@ -161,20 +160,17 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 				margin: '8px 16px 16px 16px'
 			}}
 		>
-			<TabItem name={t('app.mdpkm.instance_page.tabs.home')} icon={<IconBiHouse/>} value={0}>
+			<TabItem name={t('instance_page.tab.home')} icon={<IconBiInfoCircle/>} value={0}>
 				<Home setTab={setTabPage} instance={instance}/>
 			</TabItem>
-			<TabItem name={t('app.mdpkm.instance_page.tabs.content')} icon={<IconBiBox2/>} value={1}>
+			<TabItem name={t('instance_page.tab.content')} icon={<IconBiBox2/>} value={1}>
 				<Content instance={instance}/>
 			</TabItem>
-			<TabItem name={t('app.mdpkm.instance_page.tabs.game')} icon={<IconBiList/>} value={2}>
+			<TabItem name={t('instance_page.tab.game')} icon={<IconBiBox/>} value={2}>
 				<Game instance={instance}/>
 			</TabItem>
-			<TabItem name={t('app.mdpkm.instance_page.tabs.settings')} icon={<IconBiGear/>} value={3}>
+			<TabItem name={t('instance_page.tab.settings')} icon={<IconBiGear/>} value={3}>
 				<Settings instance={instance}/>
-			</TabItem>
-			<TabItem name={t('app.mdpkm.instance_page.tabs.export')} icon={<IconBiFileEarmarkZip/>} value={4}>
-				<InstanceExport instanceId={id}/>
 			</TabItem>
 		</Tabs>
 		{/*instance.launchLogs &&
@@ -264,16 +260,17 @@ function InstanceInfo({ css, animate, children }: InstanceInfoProps) {
 };
 
 export type ImageOptionsProps = {
+	img?: Uint8Array | void,
 	onEdit: GridProps["onClick"],
 	onRemove: GridProps["onClick"]
 };
-function ImageOptions({ onEdit, onRemove }: ImageOptionsProps) {
+function ImageOptions({ img, onEdit, onRemove }: ImageOptionsProps) {
 	return <Grid height="fit-content" css={{
 		opacity: 0,
 		transition: 'opacity .5s'
 	}}>
-		<ImageOption icon={<IconBiXLg fontSize={10}/>} onClick={onRemove}/>
-		<ImageOption icon={<IconBiPencilFill fontSize={10}/>} onClick={onEdit}/>
+		{(!!img && onRemove) && <ImageOption icon={<IconBiXLg fontSize={10}/>} onClick={onRemove}/>}
+		{onEdit && <ImageOption icon={<IconBiPencilFill fontSize={10}/>} onClick={onEdit}/>}
 	</Grid>;
 };
 
@@ -282,9 +279,9 @@ export type ImageOptionProps = {
 	onClick: GridProps["onClick"]
 };
 function ImageOption({ icon, onClick }: ImageOptionProps) {
-	return <Grid margin={4} padding={4} onClick={onClick} background="$buttonBackground" borderRadius="50%" css={{
+	return <Grid margin={4} padding={4} onClick={onClick} background="#00000080" borderRadius="50%" css={{
 		cursor: 'pointer'
 	}}>
-		<Typography>{icon}</Typography>
+		<Typography color="#fff">{icon}</Typography>
 	</Grid>;
 };

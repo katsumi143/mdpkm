@@ -1,10 +1,6 @@
 import { keyframes } from '@stitches/react';
 import React, { MouseEventHandler } from 'react';
-
-import Grid from '../../../voxeliface/components/Grid';
-import Image from '../../../voxeliface/components/Image';
-import Portal from '../../../voxeliface/components/Portal';
-import Typography from '../../../voxeliface/components/Typography';
+import { Grid, Image, Portal, Typography } from 'voxeliface';
 
 const openAnimation = keyframes({
     '0%': {

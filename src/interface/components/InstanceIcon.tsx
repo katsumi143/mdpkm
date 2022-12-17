@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import { Image } from '../../../voxeliface';
+import { Image } from 'voxeliface';
 import ImagePreview from './ImagePreview';
-import type { ImageProps } from '../../../voxeliface/components/Image';
+import type { ImageProps } from 'voxeliface/components/Image';
 
 import Patcher from '../../plugins/patcher';
 import type { Instance } from '../../../voxura';

@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 
 import App from '../components/App';
 import Home from './home';
-import Main from '../../../voxeliface/components/Main';
 import Skins from './skins';
 import Create from './create';
 import Import from './import';
@@ -14,13 +13,12 @@ import Accounts from './accounts';
 import Downloads from './downloads';
 import Instances from './instances';
 import Developer from './developer';
-import SideNavigation from '../../../voxeliface/components/SideNavigation';
-import NavigationItem from '../../../voxeliface/components/SideNavigation/Item';
+import { Main, SideNavigation, NavigationItem } from 'voxeliface';
 
 import { setPage } from '../../store/slices/interface';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 export default function Navigation() {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     const dispatch = useAppDispatch();
     const page = useAppSelector(state => state.interface.page);
 
@@ -37,31 +35,31 @@ export default function Navigation() {
                     display: SHOULD_HIDE_SIDE.some(p => p === page) ? 'none' : undefined
                 }
             }}>
-                <NavigationItem name={t('app.mdpkm.home.navigation.home')} icon={<IconBiHouse/>} value="home" direction="horizontal">
+                <NavigationItem name={t('navigation.home')} icon={<IconBiHouse/>} value="home" direction="horizontal">
                     <Home/>
                 </NavigationItem>
-                <NavigationItem name={t('app.mdpkm.home.navigation.instances')} icon={<IconBiListUl/>} value="instances" direction="horizontal">
+                <NavigationItem name={t('navigation.instances')} icon={<IconBiListUl/>} value="instances" direction="horizontal">
                     <Instances/>
                 </NavigationItem>
-                <NavigationItem name={t('app.mdpkm.home.navigation.skins')} icon={<IconBiPersonBadge/>} value="skins">
+                <NavigationItem name={t('navigation.skins')} icon={<IconBiPersonBadge/>} value="skins">
                     <Skins/>
                 </NavigationItem>
-                <NavigationItem name={t('app.mdpkm.home.navigation.import')} icon={null} value="import" hidden>
+                <NavigationItem name={t('navigation.import')} icon={null} value="import" hidden>
                     <Import/>
                 </NavigationItem>
-                <NavigationItem name={t('app.mdpkm.home.navigation.create')} icon={null} value="create" hidden>
+                <NavigationItem name={t('navigation.create')} icon={null} value="create" hidden>
                     <Create/>
                 </NavigationItem>
-                <NavigationItem name={t('app.mdpkm.home.navigation.developer')} icon={<IconBiWrenchAdjustableCircle/>} value="developer" hidden footer>
+                <NavigationItem name={t('navigation.developer')} icon={<IconBiWrenchAdjustableCircle/>} value="developer" hidden footer>
                     <Developer/>
                 </NavigationItem>
-                <NavigationItem name={t('app.mdpkm.home.navigation.downloads')} icon={<IconBiDownload/>} value="downloads" footer>
+                <NavigationItem name={t('navigation.downloads')} icon={<IconBiDownload/>} value="downloads" footer>
                     <Downloads/>
                 </NavigationItem>
-                <NavigationItem name={t('app.mdpkm.home.navigation.accounts')} icon={<IconBiPerson/>} value="accounts" footer>
+                <NavigationItem name={t('navigation.accounts')} icon={<IconBiPerson/>} value="accounts" footer>
                     <Accounts/>
                 </NavigationItem>
-                <NavigationItem name={t('app.mdpkm.home.navigation.settings')} icon={<IconBiGear/>} value="settings" footer>
+                <NavigationItem name={t('navigation.settings')} icon={<IconBiGear/>} value="settings" footer>
                     <Settings/>
                 </NavigationItem>
             </SideNavigation>

@@ -1,20 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
+import { Grid, Button, Spinner, Typography, BasicSpinner } from 'voxeliface';
 
-import Grid from '../../../voxeliface/components/Grid';
-import Button from '../../../voxeliface/components/Button';
-import Spinner from '../../../voxeliface/components/Spinner';
 import Instance from './Instance';
-import Typography from '../../../voxeliface/components/Typography';
-import BasicSpinner from '../../../voxeliface/components/BasicSpinner';
-
 import Voxura, { Instance as VoxuraInstance, useInstances } from '../../voxura';
 
-type InstanceListProps = {
+export type InstanceListProps = {
     id: string
 };
 export default function InstanceList({ id }: InstanceListProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     const instances = useInstances();
     const [loading, setLoading] = useState(false);
     const refresh = async() => {
@@ -26,7 +21,7 @@ export default function InstanceList({ id }: InstanceListProps) {
         <Grid width="100%" padding="12px 16px" alignItems="center" background="$secondaryBackground" justifyContent="space-between">
             <Grid spacing={1} vertical>
                 <Typography size={14} lineheight={1}>
-                    {t('interface:common.header.instance_list')}
+                    {t('common.header.instance_list')}
                 </Typography>
                 <Typography size={12} color="$secondaryColor" weight={400} lineheight={1}>
                     {!instances ? 'Loading' : instances.length + ' Installed'}
@@ -34,7 +29,7 @@ export default function InstanceList({ id }: InstanceListProps) {
             </Grid>
             <Button theme="secondary" onClick={refresh} disabled={loading || !instances}>
                 {loading ? <BasicSpinner size={16}/> : <IconBiArrowClockwise/>}
-                {t('app.mdpkm.common:actions.refresh')}
+                {t('common.action.refresh')}
             </Button>
         </Grid>
         <Grid height="100%" spacing={8} padding="8px 0" vertical css={{

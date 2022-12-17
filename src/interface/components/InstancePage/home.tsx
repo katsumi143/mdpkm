@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import React, { ReactNode } from 'react';
 
 import ImageWrapper from '../ImageWrapper';
-import { Grid, Image, Button, Typography, BasicSpinner } from '../../../../voxeliface';
+import { Grid, Image, Button, Typography, BasicSpinner } from 'voxeliface';
 
 import mdpkm from '../../../mdpkm';
 import type { Instance } from '../../../voxura';
@@ -12,10 +12,11 @@ export type InstanceHomeProps = {
     instance: Instance
 };
 export default function InstanceHome({ setTab, instance }: InstanceHomeProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     const { store } = instance;
-    const loaderId = store.gameComponent.id;
-    const gameVersion = store.gameComponent.version;
+	const { gameComponent } = store;
+    const loaderId = gameComponent.id;
+    const gameVersion = gameComponent.version;
     const loaderEntry = mdpkm.getLoaderEntry(loaderId);
     const versionBanner = null;//(loaderEntry?.versionBanners ?? API.getLoader('java')?.versionBanners)?.find(v => v?.[0].test(gameVersion));
     const refreshContent = () => instance.readMods();
@@ -56,19 +57,19 @@ export default function InstanceHome({ setTab, instance }: InstanceHomeProps) {
                 />
             </Grid>}
             <Information fill icon={<Image src={getImage('component.' + loaderId)} size={32}/>} text={t('voxura:component.' + loaderId)} buttons={
-                <Button theme="accent" onClick={() => setTab(3)}>
-                    {t('app.mdpkm.common:actions.view')}
+                <Button theme="accent" onClick={() => setTab(2)}>
+                    {t('common.action.view')}
                     <IconBiCaretRightFill fontSize={11}/>
                 </Button>
             }>
-                {t('interface:common.label.instance_component_count', [instance.store.components.length])}
+                {t('common.label.version', [gameComponent.version])}
             </Information>
-            <DateThing icon={<IconBiCalendarPlus/>} title={t('interface:common.label.instance_created')} value={instance.store.dateCreated}/>
-            <DateThing icon={<IconBiCalendarHeart/>} title={t('interface:common.label.last_launched')} value={instance.store.dateLaunched}/>
-            <Information icon={<IconBiBox2/>} text={t('interface:common.label.content_installed')} buttons={
+            <DateThing icon={<IconBiCalendarPlus/>} title={t('common.label.instance_created')} value={instance.store.dateCreated}/>
+            <DateThing icon={<IconBiCalendarHeart/>} title={t('common.label.last_launched')} value={instance.store.dateLaunched}/>
+            <Information icon={<IconBiBox2/>} text={t('common.label.content_installed')} buttons={
                 <Button theme="accent" onClick={refreshContent} disabled={instance.readingMods}>
                     {instance.readingMods ? <BasicSpinner size={16}/> : <IconBiArrowClockwise/>}
-                    {t('app.mdpkm.common:actions.refresh')}
+                    {t('common.action.refresh')}
                 </Button>
             }>
                 {instance.hasReadMods && !instance.readingMods ? `${instance.modifications.length} Modifications` : '(Not available)'}
@@ -78,21 +79,21 @@ export default function InstanceHome({ setTab, instance }: InstanceHomeProps) {
 };
 
 function useDayString(date?: number) {
-    const { t } = useTranslation();
+    const { t } = useTranslation('interface');
     if (typeof(date) !== 'number')
-        return t('interface:common.date.never');
+        return t('common.date.never');
     
     const difference = Date.now() - date;
     const days = Math.floor(difference / (1000 * 3600 * 24));
     if (days === 0)
-        return t('interface:common.date.today');
+        return t('common.date.today');
     if (days === 1)
-        return t('interface:common.date.yesterday');
-    return t('interface:common.date.days_ago', [days]);
+        return t('common.date.yesterday');
+    return t('common.date.days_ago', [days]);
 };
 export type InformationProps = {
-    text?: string,
     fill?: boolean,
+	text?: ReactNode,
     icon?: ReactNode,
     buttons?: ReactNode,
     children?: ReactNode
