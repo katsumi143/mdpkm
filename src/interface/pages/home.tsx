@@ -5,8 +5,10 @@ import React, { useMemo, useState, useEffect, MouseEventHandler } from 'react';
 import Instance from '../components/Instance';
 import NewsItem from '../components/News/item';
 import ImageWrapper from '../components/ImageWrapper';
+import LoadingInstances from '../components/LoadingInstances';
 
 import mdpkm from '../../mdpkm';
+import voxura from '../../voxura';
 import { setPage } from '../../store/slices/interface';
 import { useAppDispatch } from '../../store/hooks';
 import { AvatarType, AvatarStyle } from '../../../voxura';
@@ -22,6 +24,7 @@ export default function Home() {
 		mdpkm.getNewsSource('minecraft')?.getNews().then(setNews);
 	}, []);
 
+	const loadingInstances = voxura.instances.loading;
 	return <Grid width="100%" height="inherit" vertical css={{ overflow: 'hidden' }}>
 		<Grid height="100%" spacing={16} justifyContent="space-between" css={{ overflow: 'hidden' }}>
 			<Grid width="100%" height="60%" background={`url(img/banners/instances/banner1_${greeting + 1}.png)`} css={{
@@ -75,7 +78,7 @@ export default function Home() {
 					<ViewAll onClick={() => dispatch(setPage('instances'))}/>
 				</Grid>
 				<Grid height="100%" spacing={8} vertical css={{ overflowY: 'auto' }}>
-					{recent.map((instance, key) =>
+					{loadingInstances ? <LoadingInstances/> : recent.map((instance, key) =>
 						<Instance key={key} instance={instance} css={{ padding: 0 }} />
 					)}
 				</Grid>

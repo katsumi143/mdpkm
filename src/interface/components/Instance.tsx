@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import InstanceIcon from './InstanceIcon';
 import { Link, Grid, Typography, ContextMenu } from 'voxeliface';
 
+import voxura from '../../voxura';
 import Patcher from '../../plugins/patcher';
 import { toast } from '../../util';
 import type { Instance } from '../../../voxura';
@@ -44,6 +45,7 @@ export default Patcher.register(function Instance({ css, selected, instance }: I
 	if (!instance)
 		return;
 
+	const loading = voxura.instances.loading;
 	const favorite = () => instance.setCategory(t('mdpkm:instance_category.favorites'));
 	const copyId = () => writeText(instance.id).then(() => toast(t('app.mdpkm.common:toast.copied'), t('app.mdpkm.common:toast.copied_instance_id.body')));
 	const view = () => {
@@ -54,8 +56,8 @@ export default Patcher.register(function Instance({ css, selected, instance }: I
 		<ContextMenu.Trigger fullWidth>
 			<Grid width="100%" height="fit-content" padding={isCompact ? '0 8px' : '0 8px'} alignItems="start" css={{
 				cursor: 'default',
-				opacity: 0,
-				animation: `${Animation} 500ms cubic-bezier(0.4, 0, 0.2, 1)`,
+				opacity: loading ? 0.25 : 0,
+				animation: loading ? undefined : `${Animation} 500ms cubic-bezier(0.4, 0, 0.2, 1)`,
 				animationFillMode: 'forwards',
 				...css
 			}}>

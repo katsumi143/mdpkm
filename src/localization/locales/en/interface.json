@@ -192,6 +192,8 @@
 	"instance_page.settings.memory": "Memory Allocation ({{0}} GB)",
 	"instance_page.settings.resolution": "Game Window Resolution",
 
+	"loading_instances": "Loading Instances",
+
 	"accounts.header": "Account Management",
 	"accounts.select_account": "You don't have an account selected.\nYou must select or add an account to play Minecraft.",
 	"accounts.action.add": "Add Microsoft Account",
