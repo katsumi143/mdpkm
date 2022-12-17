@@ -169,7 +169,7 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 			<TabItem name={t('instance_page.tab.game')} icon={<IconBiBox/>} value={2}>
 				<Game instance={instance}/>
 			</TabItem>
-			<TabItem name={t('instance_page.tab.settings')} icon={<IconBiGear/>} value={3}>
+			<TabItem name={t('instance_page.settings')} icon={<IconBiGear/>} value={3}>
 				<Settings instance={instance}/>
 			</TabItem>
 		</Tabs>
@@ -221,7 +221,7 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 		*/}
 		{!account && <InstanceInfo animate>
 			<Typography>
-				<IconBiExclamationCircle />
+				<IconBiExclamationCircle/>
 			</Typography>
 			<Grid spacing={4} vertical>
 				<Typography size=".9rem" lineheight={1}>

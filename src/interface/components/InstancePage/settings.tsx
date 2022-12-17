@@ -44,14 +44,12 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
         <Tabs value={tab} onChange={setTab} css={{ height: '100%' }}>
 			<TabItem name="General" icon={<IconBiGear/>} value={0} spacing={0} padding="0 8px !important">
 				<InputLabel>
-					{t('app.mdpkm.instance_page.tabs.settings.instance_name')}
+					{t('instance_page.settings.name')}
 				</InputLabel>
 				<TextInput value={name} onChange={setName}/>
 
 				<InputLabel spaciouser>
-					{t('app.mdpkm.instance_page.tabs.settings.memory_alloc', {
-						val: memory[0].toLocaleString('en', { minimumFractionDigits: 1 })
-					})}
+					{t('instance_page.settings.memory', [memory[0].toLocaleString('en', { minimumFractionDigits: 1 })])}
 				</InputLabel>
 				<Slider
 					min={.5}
@@ -62,7 +60,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 				/>
 
 				<InputLabel spaciouser>
-					{t('app.mdpkm.instance_page.tabs.settings.resolution')}
+					{t('instance_page.settings.resolution')}
 				</InputLabel>
 				<Grid spacing={8}>
 					<Grid vertical>
@@ -90,7 +88,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 				</Grid>
 				
 				<InputLabel spaciouser>
-					{t('app.mdpkm.instance_page.tabs.settings.delete')}
+					{t('instance_page.settings.delete')}
 				</InputLabel>
 				<Dialog.Root>
 					<Dialog.Trigger asChild>

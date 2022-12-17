@@ -186,7 +186,11 @@
 	"instance_page.tab.game.tab.0": "Components",
 	"instance_page.tab.export": "Export",
 	"instance_page.tab.content": "Game Content",
-	"instance_page.tab.settings": "Settings",
+
+	"instance_page.settings": "Settings",
+	"instance_page.settings.name": "Display Name",
+	"instance_page.settings.memory": "Memory Allocation ({{0}} GB)",
+	"instance_page.settings.resolution": "Game Window Resolution",
 
 	"accounts.header": "Account Management",
 	"accounts.select_account": "You don't have an account selected.\nYou must select or add an account to play Minecraft.",
