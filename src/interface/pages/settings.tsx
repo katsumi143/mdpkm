@@ -29,6 +29,7 @@ export default Patcher.register(function Settings() {
 	const uiStyle = useAppSelector(state => state.settings.uiStyle);
 	const dispatch = useAppDispatch();
 	const language = useAppSelector(state => state.settings.language);
+	const useSymlinks = useAppSelector(state => state.settings['download.useLinks']);
 	const modSearchPopout = useAppSelector(state => state.settings['instances.modSearchPopout']);
 	const showInstanceBanner = useAppSelector(state => state.settings['instances.showBanner']);
 	const modSearchSummaries = useAppSelector(state => state.settings['instances.modSearchSummaries']);
@@ -156,7 +157,7 @@ export default Patcher.register(function Settings() {
 					}
 				/>
 				<Typography size={13} color="$secondaryColor">
-					{t(`app.mdpkm.common:labels.toggle_${showInstanceBanner}`)}
+					{t(`common.label.toggle_${showInstanceBanner}`)}
 				</Typography>
 			</Setting>
 			<Setting name="instances.defaultResolution" direction="horizontal">
@@ -197,7 +198,7 @@ export default Patcher.register(function Settings() {
 					}
 				/>
 				<Typography size={13} color="$secondaryColor">
-					{t(`app.mdpkm.common:labels.toggle_${modSearchPopout}`)}
+					{t(`common.label.toggle_${modSearchPopout}`)}
 				</Typography>
 			</Setting>
 			<Setting name="instances.modSearchSummaries" direction="horizontal">
@@ -208,7 +209,20 @@ export default Patcher.register(function Settings() {
 					}
 				/>
 				<Typography size={13} color="$secondaryColor">
-					{t(`app.mdpkm.common:labels.toggle_${modSearchSummaries}`)}
+					{t(`common.label.toggle_${modSearchSummaries}`)}
+				</Typography>
+			</Setting>
+		</Grid>
+
+		<TextHeader spacious>{t('settings.download')}</TextHeader>
+		<Grid spacing={8} padding="0 1rem" vertical>
+			<Setting name="download.useLinks" direction="horizontal">
+				<Switch
+					value={useSymlinks}
+					onChange={v => setSetting('download.useLinks', v)}
+				/>
+				<Typography size={13} color="$secondaryColor">
+					{t(`common.label.toggle_${useSymlinks}`)}
 				</Typography>
 			</Setting>
 		</Grid>

@@ -39,7 +39,11 @@
 	"common.label.actions": "Actions",
 	"common.label.version": "Version {{0}}",
 	"common.label.processes": "Processes",
+	"common.label.installed": "Installed",
+	"common.label.installing": "Installing",
     "common.label.item_count": "{{0}} Items",
+	"common.label.toggle_true": "On",
+	"common.label.toggle_false": "Off",
 	"common.label.resolution_width": "Width",
 	"common.label.resolution_height": "Height",
 
@@ -129,6 +133,10 @@
 	"settings.instances.modSearchPopout": "Mod Search Popout",
 	"settings.instances.modSearchSummaries": "Mod Search Summaries",
 
+	"settings.download": "Download Settings",
+	"settings.download.useLinks": "Use Symbolic Links",
+	"settings.download.useLinks.summary": "Saves storage space by creating links to a central file.",
+
 	"settings.plugins": "Plugin Settings",
 	"settings.plugins.add": "Add Plugin",
 
@@ -147,7 +155,7 @@
 	"mod_management.tab.1": "Mod Search",
 	"mod_management.tab.2": "Essential",
 
-	"mod.author": "by {{0}}",
+	"mod.author": "by {{mod.author}}",
 	"mod.featured": "Featured",
 	"mod.recommended": "Recommended",
 	"mod.explict": "NSFW",
@@ -155,7 +163,7 @@
 	"mod.side.1": "Server mod",
 	"mod.side.2": "Universal mod",
 	"mod.side.3": "Unknown mod",
-	"mod.downloads": "{{0, number}} Downloads",
+	"mod.downloads": "{{mod.downloads, number}} Downloads",
 
 	"server_management": "Server Management",
 	"server_management.count_one": "{{count}} Server",

@@ -9,7 +9,8 @@ import Patcher from '../../plugins/patcher';
 import { ModSide } from '../../../voxura/src/platforms/mod';
 import { useInstance } from '../../voxura';
 import { useAppSelector } from '../../store/hooks';
-import type { Mod, Platform } from '../../../voxura';
+import { useStoredValue } from '../../../voxura/src/storage';
+import type { Mod, Platform, VoxuraStore } from '../../../voxura';
 export type ModProps = {
     id?: string,
     data?: Mod,
@@ -21,13 +22,16 @@ export type ModProps = {
 export default Patcher.register(function Mod({ id, data, featured, platform, instanceId, recommended }: ModProps) {
     const { t } = useTranslation('interface');
     const instance = useInstance(instanceId!);
+	const projects = useStoredValue<VoxuraStore["projects"]>('projects', {});
     const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
+	const useSymlinks = useAppSelector(state => state.settings['download.useLinks']);
     const showSummary = useAppSelector(state => state.settings['instances.modSearchSummaries']);
     const [mod, setMod] = useState(data);
     const [loading, setLoading] = useState(!data);
-    const installed = false;//store?.modifications?.some(m => m[3] === mod?.slug);
+    const installed = Object.values(projects).some(p => p.id === (id ?? data?.id));//store?.modifications?.some(m => m[3] === mod?.slug);
     const installing = false;//downloading?.some(d => d.id === (mod?.id ?? mod?.project_id));
-    const installMod = () => instance?.installMod(mod!);
+    const installMod = () => instance?.installMod(mod!, useSymlinks);
+	console.log(projects, id ?? data?.id);
     useEffect(() => {
         if(id && platform && !mod)
 			platform.getMod(id).then(mod => {
@@ -77,7 +81,7 @@ export default Patcher.register(function Mod({ id, data, featured, platform, ins
                     {mod.displayName}
                     {mod.author && 
                         <Typography size={isCompact ? 10 : 12} color="$secondaryColor" family="$secondary" lineheight={1}>
-                            {t('mod.author', [mod.author])}
+                            {t('mod.author', {mod})}
                         </Typography>
                     }
                     {featured &&
@@ -110,7 +114,7 @@ export default Patcher.register(function Mod({ id, data, featured, platform, ins
                 {typeof mod.downloads === 'number' &&
                     <Typography size={isCompact ? 11 : 12} color="$secondaryColor" margin="0 8px 0 0" spacing={6}>
                         <IconBiDownload/>
-                        {t('mod.downloads', [mod.downloads])}
+                        {t('mod.downloads', {mod})}
                     </Typography>
                 }
                 {mod.website &&
@@ -123,8 +127,8 @@ export default Patcher.register(function Mod({ id, data, featured, platform, ins
                     {installing ?
                         <BasicSpinner size={16}/> : <IconBiDownload/>
                     }
-                    {installed ? t('app.mdpkm.common:states.installed') : mod.getSide() === ModSide.Unknown ? t('app.mdpkm.common:states.unavailable') :
-                        installing ? t('app.mdpkm.common:states.installing') : t('common.action.install')
+                    {installed ? t('common.label.installed') : mod.getSide() === ModSide.Unknown ? t('app.mdpkm.common:states.unavailable') :
+                        installing ? t('common.label.installing') : t('common.action.install')
                     }
                 </Button>
             </Grid>

@@ -11,7 +11,7 @@ import type Mod from '../../../voxura/src/util/mod';
 import { useInstance } from '../../voxura';
 import { useAppSelector } from '../../store/hooks';
 export type InstanceModProps = {
-    mod?: Mod,
+    mod: Mod,
     updates?: any[],
     embedded?: boolean,
     instanceId?: string
@@ -48,10 +48,10 @@ export default Patcher.register(function InstanceMod({ mod, embedded, instanceId
                 }}/>
                 <Grid margin="0 0 0 4px" spacing={2} vertical>
                     <Typography size={isCompact ? 14 : 16} weight={400} family="$secondary" lineheight={1}>
-                        {mod?.name ?? mod?.id}
+                        {mod.name ?? mod.id}
                     </Typography>
                     <Typography size={isCompact ? 10 : 12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
-                        {t('common.label.version', [mod?.version])}
+                        {t('common.label.version', [mod.version])}
                     </Typography>
                 </Grid>
                 <Grid spacing={8} alignItems="center" css={{
@@ -59,16 +59,16 @@ export default Patcher.register(function InstanceMod({ mod, embedded, instanceId
                     position: 'absolute'
                 }}>
                     <Grid vertical alignItems="end">
-                        <Breakpoint customQuery="(min-width: 820px)">
+                        {mod.source && <Breakpoint customQuery="(min-width: 820px)">
                             <Typography size={12} color="$secondaryColor" spacing={6}>
                                 <IconBiCloudFill/>
-                                {t('app.mdpkm.common:platforms.local')}
+                                {t(`voxura:platform.${mod.source.id}`)}
                             </Typography>
-                        </Breakpoint>
+                        </Breakpoint>}
                         <Breakpoint customQuery="(min-width: 690px)">
                             {!update && <Typography size={12} color="$secondaryColor" spacing={6}>
                                 <IconBiBoxFill fontSize={10}/>
-                                {t(`voxura:component.${mod?.loader}`)}
+                                {t(`voxura:component.${mod.loader}`)}
                             </Typography>}
                         </Breakpoint>
                     </Grid>
@@ -89,18 +89,18 @@ export default Patcher.register(function InstanceMod({ mod, embedded, instanceId
             <Modal width="60%" height="50%">
                 <TextHeader>Modification Information</TextHeader>
                 <Grid padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" borderRadius={8}>
-                    <Image src={mod?.webIcon} size={48} onClick={() => setPreviewIcon(true)} background="$secondaryBackground" borderRadius={4} css={{
+                    <Image src={mod.webIcon} size={48} onClick={() => setPreviewIcon(true)} background="$secondaryBackground" borderRadius={4} css={{
                         cursor: 'zoom-in',
                         boxShadow: '$buttonShadow',
                         imageRendering: 'pixelated'
                     }}/>
-                    {previewIcon && <ImagePreview src={mod?.webIcon} size={192} onClose={() => setPreviewIcon(false)}/>}
+                    {previewIcon && <ImagePreview src={mod.webIcon} size={192} onClose={() => setPreviewIcon(false)}/>}
                     <Grid spacing={2} vertical>
                         <Typography lineheight={1}>
-                            {mod?.name}
+                            {mod.name}
                         </Typography>
                         <Typography size={12} color="$secondaryColor" lineheight={1}>
-                            Version {mod?.version}
+                            Version {mod.version}
                         </Typography>
                     </Grid>
                 </Grid>
@@ -109,7 +109,7 @@ export default Patcher.register(function InstanceMod({ mod, embedded, instanceId
                         Summary
                     </Typography>
                     <Typography size={12} color="$secondaryColor">
-                        {mod?.description}
+                        {mod.description}
                     </Typography>
                 </Grid>
                 <Button onClick={() => setShowInfo(false)}>close</Button>

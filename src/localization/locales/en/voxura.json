@@ -31,5 +31,9 @@
     "component.quilt": "Quilt Loader",
     "component.quilt.summary": "Quilt is an open-source, community-driven modding toolchain.",
     "component.quilt.release_category.0": "Versions",
-    "component.quilt.release_category.0.singular": "Version"
+    "component.quilt.release_category.0.singular": "Version",
+
+	"platform.modrinth": "Modrinth",
+	"platform.curseforge": "CurseForge",
+	"platform.feedthebeast": "Feed the Beast"
 }
