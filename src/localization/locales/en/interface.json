@@ -13,13 +13,13 @@
 	"common.action.refresh": "Refresh",
     "common.action.view_all": "View all",
 	"common.action.continue": "Continue",
-	"common.action.select_file": "Select File",
 	"common.action.open_folder": "Open Folder",
 	"common.action.save_changes": "Save Changes",
 	"common.action.kill_process": "Close Client {{0}}",
     "common.action.add_component": "Add Component",
 	"common.action.select_folder": "Select Folder",
     "common.action.create_instance": "Create Instance",
+	"common.action.import_instance": "Import Instance",
     "common.action.return_to_instances": "Return to your instances",
 
     "common.header.instance_list": "Your Instances",
@@ -97,6 +97,7 @@
 	"skin_management": "Skin Management",
 	"skin_management.current": "Current Skin",
 	"skin_management.library": "Library",
+	"skin_management.ext_name": "PNG Image File",
 	"skin_management.add": "Add New Skin",
 	"skin_management.add_modal.name": "Display Name",
 	"skin_management.add_modal.name.placeholder": "Steve",
@@ -109,6 +110,10 @@
 	"skin_management.add_modal.cape.category": "Your Skins",
 	"skin_management.add_modal.cape.item.none": "None",
 	"skin_management.add_modal.submit": "Add Skin",
+
+	"import_file": "Import from File",
+	"import_file.select": "Select Instance Archive",
+	"import_file.ext_name": "mdpkm Instance Archive",
 
 	"downloads": "Downloads",
 	"downloads.none": "There's nothing downloading right now.",
@@ -208,5 +213,8 @@
 
 	"user_account.selected": "This account is active",
 	"user_account.options.label": "Account Options",
-	"user_account.options.view_namemc": "View NameMC Profile"
+	"user_account.options.view_namemc": "View NameMC Profile",
+
+	"select_file": "Select File",
+	"select_file.none": "No file selected"
 }

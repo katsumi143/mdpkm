@@ -108,22 +108,26 @@ export default function SkinFrame({ css, skin, cape, walk, zoom = false, image =
 };
 
 class WalkAnimation extends PlayerAnimation {
-    animate({ skin }: PlayerObject) {
+    animate({ skin, cape }: PlayerObject) {
         const time = this.progress * 4;
         skin.leftLeg.rotation.x = Math.sin(time) / 3;
         skin.rightLeg.rotation.x = Math.sin(time + Math.PI) / 3;
 
         skin.leftArm.rotation.x = Math.sin(time + Math.PI) / 3;
         skin.rightArm.rotation.x = Math.sin(time) / 3;
+
+		cape.rotation.x = Math.PI / 10 + Math.sin(time / 4) / 30;
     }
 };
 class WalkAnimationStill extends PlayerAnimation {
-    animate({ skin }: PlayerObject) {
+    animate({ skin, cape }: PlayerObject) {
         const time = 5;
         skin.leftLeg.rotation.x = Math.sin(time) / 3;
         skin.rightLeg.rotation.x = Math.sin(time + Math.PI) / 3;
 
         skin.leftArm.rotation.x = Math.sin(time + Math.PI) / 3;
         skin.rightArm.rotation.x = Math.sin(time) / 3;
+
+		cape.rotation.x = Math.PI / 10 + Math.sin(time / 4) / 30;
     }
 };

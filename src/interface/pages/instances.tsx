@@ -22,7 +22,7 @@ export default function Instances() {
                 </Button>
                 <Button theme="secondary" onClick={() => changePage('import')}>
                     <IconBiFolderPlus/>
-                    {t('common.action.import2')}
+                    {t('import_file')}
                 </Button>
             </Grid>
         </Grid>

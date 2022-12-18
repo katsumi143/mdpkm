@@ -64,6 +64,10 @@
                 "unmaximize": true,
                 "startDragging": true
             },
+			"protocol": {
+				"asset": true,
+				"assetScope": ["*"]
+			},
             "process": {
                 "exit": true
             },
@@ -103,10 +107,10 @@
         },
         "security": {
             "csp": {
-                "img-src": "'self' data: https:",
+                "img-src": "'self' data: https: asset: https://asset.localhost",
                 "style-src": "'unsafe-inline' 'self'",
                 "script-src": "'self' data:",
-                "default-src": "'self' data: asset:"
+                "default-src": "'self' data: asset: https://asset.localhost"
             }
         }
     }

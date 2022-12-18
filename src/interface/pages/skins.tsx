@@ -8,6 +8,7 @@ import React, { useState, useEffect } from 'react';
 
 import Modal from '../components/Modal';
 import SkinFrame from '../components/SkinFrame';
+import FileSelect from '../components/FileSelect';
 import { Grid, Image, Select, Button, Divider, Spinner, Markdown, TextInput, Typography, InputLabel, TextHeader } from 'voxeliface';
 
 import { toast } from '../../util';
@@ -34,9 +35,6 @@ export default function Skins() {
     const [addingCape, setAddingCape] = useState<string | null>(null);
     const [editingSkin, setEditingSkin] = useState<number | null>();
     const [addingModel, setAddingModel] = useState<'CLASSIC' | 'SLIM'>('CLASSIC');
-    const selectFile = () => open({
-        filters: [{ name: 'PNG Image', extensions: ['png'] }]
-    }).then(setAddingPath as any);
     const startAdding = () => {
         setAdding(true);
         setAddingName('');
@@ -148,13 +146,13 @@ export default function Skins() {
         }
     }, [profile, account]);
     return <Grid height="100%" spacing={8} padding=".75rem 1rem" vertical>
-        <TextHeader>
+        <TextHeader noSelect>
             {t('skin_management')}
         </TextHeader>
         <Grid height="100%">
             <Grid padding="0 32px 2rem" vertical alignItems="center" justifyContent="space-between">
                 <Grid spacing={16} vertical alignItems="center">
-                    <Typography size={18}>
+                    <Typography size={18} noSelect>
                         {t('skin_management.current')}
                     </Typography>
                     {!loading && current ? <SkinFrame
@@ -182,7 +180,7 @@ export default function Skins() {
             </Grid>
             <Divider width={1} height="100%"/>
             <Grid width="100%" height="100%" vertical alignItems="center">
-                <Typography size={18} margin="0 0 1rem">
+                <Typography size={18} margin="0 0 1rem" noSelect>
                     {t('skin_management.library')}
                 </Typography>
                 {skins.length > 0 ? <Grid spacing={8} css={{
@@ -238,18 +236,7 @@ export default function Skins() {
                     </Select.Minimal>
 
                     <InputLabel spacious>{t('skin_management.add_modal.file')}</InputLabel>
-                    <TextInput
-                        width="100%"
-                        value={addingPath && `.../${addingPath.split('\\').slice(-2).join('/')}`}
-                        readOnly
-                        onChange={() => null}
-                        placeholder={t('app.mdpkm.import_instance.select_file.placeholder')}
-                    >
-                        <Button onClick={selectFile}>
-                            <IconBiFolder2Open/>
-                            {t('common.action.select_file')}
-                        </Button>
-                    </TextInput>
+					<FileSelect name={t('skin_management.ext_name')} path={addingPath} setPath={setAddingPath} extensions={['png']}/>
 
                     <InputLabel spacious>{t('skin_management.add_modal.cape')}</InputLabel>
                     <Select.Minimal value={addingCape} onChange={setAddingCape}>
@@ -317,18 +304,7 @@ export default function Skins() {
                     </Select.Minimal>
 
                     <InputLabel spacious>{t('app.mdpkm.skin_management.skin_file.label')}</InputLabel>
-                    <TextInput
-                        width="100%"
-                        value={addingPath && `.../${addingPath.split('\\').slice(-2).join('/')}`}
-                        readOnly
-                        onChange={() => null}
-                        placeholder={t('app.mdpkm.import_instance.select_file.placeholder')}
-                    >
-                        <Button onClick={selectFile}>
-                            <IconBiFolder2Open/>
-                            {t('app.mdpkm.common:actions.select_file')}
-                        </Button>
-                    </TextInput>
+					<FileSelect name={t('skin_management.ext_name')} path={addingPath} setPath={setAddingPath} extensions={['png']}/>
 
                     <InputLabel spacious>{t('app.mdpkm.skin_management.cape.label')}</InputLabel>
                     <Select.Minimal value={addingCape} onChange={setAddingCape}>
@@ -378,7 +354,7 @@ function Skin({ data, capes, index, current, loading, useSkin, editSkin }: SkinP
     return <Grid padding={8} spacing={4} vertical alignItems="center" background="$primaryBackground" borderRadius="8px" justifyContent="space-between" css={{
         border: '$secondaryBorder solid 1px'
     }}>
-        <Typography>
+        <Typography noSelect>
             {data.name}
         </Typography>
         {loading ? <Grid width={100} height={128} alignItems="center" justifyContent="center">
