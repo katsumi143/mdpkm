@@ -21,7 +21,7 @@ export default function VersionPicker({ id, value, versions, onChange }: Version
         {versions.length > 1 && <Grid width="40%" spacing={4} padding={8} vertical css={{
             borderRight: '$secondaryBorder2 1px solid'
         }}>
-            <Typography size={20} height="fit-content" margin="4px 0 12px 4px">
+            <Typography size={20} height="fit-content" margin="4px 0 12px 4px" noSelect>
                 Version Categories
             </Typography>
             {versions.map((items, key) =>
@@ -33,17 +33,17 @@ export default function VersionPicker({ id, value, versions, onChange }: Version
                         background: '$buttonBackground'
                     }
                 }}>
-                    <Typography size={14}>
+                    <Typography size={14} noSelect>
                         {t(`voxura:component.${id}.release_category.${key}`)}
                     </Typography>
-                    <Typography size={12} color={category === key ? undefined : '$secondaryColor'} family="$secondary">
+                    <Typography size={12} color={category === key ? undefined : '$secondaryColor'} family="$secondary" noSelect>
                         {t('common.label.item_count', [items.length])}
                     </Typography>
                 </Grid>
             )}
         </Grid>}
         <Grid width={versions.length > 1 ? '60%' : '100%'} spacing={4} padding={8} vertical>
-            <Typography size={20} height="fit-content" margin="4px 0 12px 4px">
+            <Typography size={20} height="fit-content" margin="4px 0 12px 4px" noSelect>
                 {t(`voxura:component.${id}.versions`)}
             </Typography>
             <Grid spacing={4} vertical borderRadius={8} css={{ overflow: 'auto' }}>
@@ -57,10 +57,10 @@ export default function VersionPicker({ id, value, versions, onChange }: Version
                             background: '$buttonBackground'
                         }
                     }}>
-                        <Typography size={14}>
+                        <Typography size={14} noSelect>
                             {t(`voxura:component.${id}.release_category.${category}.singular`)} {item.id}
                         </Typography>
-                        <Typography size={12} color={value === item ? undefined : '$secondaryColor'} family="$secondary">
+                        <Typography size={12} color={value === item ? undefined : '$secondaryColor'} family="$secondary" noSelect>
                             {t(`common.date.${day}`, data)}
                         </Typography>
                     </Grid>

@@ -21,10 +21,10 @@ export default function InstanceList({ id }: InstanceListProps) {
     return <React.Fragment>
         <Grid width="100%" padding="12px 16px" alignItems="center" background="$secondaryBackground" justifyContent="space-between">
             <Grid spacing={1} vertical>
-                <Typography size={14} lineheight={1}>
+                <Typography size={14} noSelect lineheight={1}>
                     {t('common.header.instance_list')}
                 </Typography>
-                <Typography size={12} color="$secondaryColor" weight={400} lineheight={1}>
+                <Typography size={12} color="$secondaryColor" weight={400} noSelect lineheight={1}>
                     {!instances ? 'Loading' : instances.length + ' Installed'}
                 </Typography>
             </Grid>
@@ -46,7 +46,7 @@ export default function InstanceList({ id }: InstanceListProps) {
 				return acc;
 			}, {})).sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0).map(([category, instances], key) => {
 				return <React.Fragment key={key}>
-					<Typography size={14} color="$secondaryColor" weight={400} margin="4px 16px" family="$secondary" lineheight={1}>
+					<Typography size={14} color="$secondaryColor" weight={400} margin="4px 16px" family="$secondary" noSelect lineheight={1}>
 						{category}
 					</Typography>
 					{instances.map((instance, key) =>

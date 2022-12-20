@@ -16,7 +16,7 @@ export default function Create() {
     const [selected, setSelected] = useState<string | null>(null);
     const changePage = (page: string) => dispatch(setPage(page));
     return <Grid width="100%" height="inherit" padding=".75rem 1rem" vertical>
-        <Typography size={20}>
+        <Typography size={20} noSelect>
             Create Instance
         </Typography>
         <Link size={12} onClick={() => changePage('instances')}>
@@ -45,7 +45,7 @@ function Component({ id, selected, setSelected }: ComponentProps) {
             <Grid height="fit-content" padding={8} spacing={12}>
                 <ImageWrapper src={getImage(`component.${id}`)} size={40} shadow canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
                 <Grid spacing={4} vertical justifyContent="center">
-                    <Typography layoutId={`component-title-${id}`} lineheight={1}>
+                    <Typography noSelect layoutId={`component-title-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}`)}
                     </Typography>
                 </Grid>
@@ -96,7 +96,7 @@ function Setup({ id, cancel }: SetupProps) {
             <Grid padding={8} spacing={12}>
                 <ImageWrapper src={getImage(`component.${id}`)} size={40} shadow canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
                 <Grid spacing={4} vertical justifyContent="center">
-                    <Typography layoutId={`component-title-${id}`} lineheight={1}>
+                    <Typography noSelect layoutId={`component-title-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}`)}
                     </Typography>
                 </Grid>

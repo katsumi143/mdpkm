@@ -104,12 +104,12 @@ function Information({ fill, icon, text, buttons, children }: InformationProps) 
         position: 'relative',
         flexBasis: fill ? null : 'calc(50% - .5rem)'
     }}>
-        <Typography lineheight={1}>{icon}</Typography>
+        <Typography noSelect lineheight={1}>{icon}</Typography>
         <Grid spacing={2} vertical>
-            <Typography size={14} lineheight={1}>
+            <Typography size={14} noSelect lineheight={1}>
                 {text}
             </Typography>
-            <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
+            <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
                 {children}
             </Typography>
         </Grid>

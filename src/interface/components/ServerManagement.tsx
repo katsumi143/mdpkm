@@ -88,10 +88,10 @@ export default Patcher.register(function ServerManagement({ instanceId }: Server
     return <React.Fragment>
         <Grid spacing={8} padding="4px 0" justifyContent="space-between">
             <Grid vertical>
-                <Typography size={14} lineheight={1}>
+                <Typography size={14} noSelect lineheight={1}>
                     {t('server_management')}
                 </Typography>
-                <Typography size={12} color="$secondaryColor" weight={400}>
+                <Typography size={12} color="$secondaryColor" weight={400} noSelect>
                     {items === 'loading' || !items ?
                         t('app.mdpkm.common:states.loading') :
                         t('server_management.count', { count: items.length })
@@ -131,9 +131,9 @@ export default Patcher.register(function ServerManagement({ instanceId }: Server
             )}
         </Grid>
         {addingServer && <Modal>
-            <TextHeader>
+            <TextHeader noSelect>
                 {t('server_management.adding')}
-                <Typography size={12} color="$secondaryColor" weight={400}>
+                <Typography size={12} color="$secondaryColor" weight={400} noSelect>
                     {t('app.mdpkm.server_management.adding.header_note')}
                 </Typography>
             </TextHeader>

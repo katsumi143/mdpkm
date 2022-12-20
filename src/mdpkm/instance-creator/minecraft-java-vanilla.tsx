@@ -44,7 +44,7 @@ function Component({ setData, setSatisfied }: ComponentProps) {
             <TextInput value={name} onChange={setName} placeholder={t('common.input_placeholder.required')}/>
 
             <InputLabel spacious>{t('common.label.minecraft_version')}</InputLabel>
-            <Typography size={14}>
+            <Typography size={14} noSelect>
                 {version ? `${t(`voxura:component.${MinecraftComponent.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
             </Typography>
         </Grid>

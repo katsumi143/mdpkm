@@ -47,10 +47,10 @@ export default Patcher.register(function InstanceMod({ mod, embedded, instanceId
                     imageRendering: 'pixelated'
                 }}/>
                 <Grid margin="0 0 0 4px" spacing={2} vertical>
-                    <Typography size={isCompact ? 14 : 16} weight={400} family="$secondary" lineheight={1}>
+                    <Typography size={isCompact ? 14 : 16} weight={400} family="$secondary" noSelect lineheight={1}>
                         {mod.name ?? mod.id}
                     </Typography>
-                    <Typography size={isCompact ? 10 : 12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
+                    <Typography size={isCompact ? 10 : 12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
                         {t('common.label.version', [mod.version])}
                     </Typography>
                 </Grid>
@@ -60,13 +60,13 @@ export default Patcher.register(function InstanceMod({ mod, embedded, instanceId
                 }}>
                     <Grid vertical alignItems="end">
                         {mod.source && <Breakpoint customQuery="(min-width: 820px)">
-                            <Typography size={12} color="$secondaryColor" spacing={6}>
+                            <Typography size={12} color="$secondaryColor" spacing={6} noSelect>
                                 <IconBiCloudFill/>
                                 {t(`voxura:platform.${mod.source.id}`)}
                             </Typography>
                         </Breakpoint>}
                         <Breakpoint customQuery="(min-width: 690px)">
-                            {!update && <Typography size={12} color="$secondaryColor" spacing={6}>
+                            {!update && <Typography size={12} color="$secondaryColor" spacing={6} noSelect>
                                 <IconBiBoxFill fontSize={10}/>
                                 {t(`voxura:component.${mod.loader}`)}
                             </Typography>}

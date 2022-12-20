@@ -75,10 +75,10 @@ export default Patcher.register(function ResourcePackManagement({ instanceId }: 
     return <React.Fragment>
         <Grid margin="4px 0" spacing={8} justifyContent="space-between">
             <Grid vertical>
-                <Typography size={14} lineheight={1}>
+                <Typography size={14} noSelect lineheight={1}>
                     {t('app.mdpkm.resourcepack_management.title')}
                 </Typography>
-                <Typography size={12} color="$secondaryColor" weight={400}>
+                <Typography size={12} color="$secondaryColor" weight={400} noSelect>
                     {items === 'loading' || !items ?
                         t('app.mdpkm.common:states.loading') :
                         t(`app.mdpkm.resourcepack_management.count${items.length === 1 ? '1' : ''}`, {
@@ -131,10 +131,10 @@ function ResourcePack({ item }: ResourcePackProps) {
         />
         {previewIcon && <ImagePreview src={packIcon} size={192} onClose={() => setPreviewIcon(false)} pixelated/>}
         <Grid spacing={2} vertical>
-            <Typography size={isCompact ? 14 : 16} lineheight={1}>
+            <Typography size={isCompact ? 14 : 16} noSelect lineheight={1}>
                 {item.name}
             </Typography>
-            <Typography size={isCompact ? 10 : 12} color="$secondaryColor" lineheight={1}>
+            <Typography size={isCompact ? 10 : 12} color="$secondaryColor" noSelect lineheight={1}>
                 {item.metadata.pack?.description}
             </Typography>
         </Grid>

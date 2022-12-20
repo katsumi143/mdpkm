@@ -17,7 +17,7 @@ export default function Import() {
         setReading(true);
     };
     return <Grid width="100%" height="inherit" padding=".75rem 1rem" vertical>
-        <Typography size={20}>
+        <Typography size={20} noSelect>
             {t('import_file')}
         </Typography>
         <Link size={12} onClick={() => changePage('instances')}>
@@ -26,7 +26,7 @@ export default function Import() {
         </Link>
         <Grid width="100%" height="100%" margin="16px 0 0" spacing={16}>
             <Grid width={data ? '50%' : '100%'} padding="12px 16px" vertical background="$secondaryBackground2" borderRadius={8}>
-                <TextHeader spacing={12}>
+                <TextHeader spacing={12} noSelect>
                     <IconBiFolder2Open/>
                     {t('select_file')}
                 </TextHeader>
@@ -43,7 +43,7 @@ export default function Import() {
                 </Alert>}
             </Grid>
             {data && <Grid width="100%" padding="12px 16px" vertical background="$secondaryBackground2" borderRadius={8}>
-                <TextHeader spacing={12}>
+                <TextHeader spacing={12} noSelect>
                     <IconBiPlusLg/>
                     {t('common.action.import_instance')}
                 </TextHeader>

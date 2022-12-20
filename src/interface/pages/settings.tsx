@@ -83,7 +83,7 @@ export default Patcher.register(function Settings() {
 	return <Grid width="100%" height="100%" padding=".75rem 1rem" vertical css={{
 		overflow: 'auto'
 	}}>
-		<TextHeader>{t('settings.general')}</TextHeader>
+		<TextHeader noSelect>{t('settings.general')}</TextHeader>
 		<Grid width="30%" spacing={8} padding="0 1rem" vertical>
 			<Setting name="general.theme">
 				<Select.Minimal value={theme} onChange={changeTheme}>
@@ -147,7 +147,7 @@ export default Patcher.register(function Settings() {
 			</Setting>
 		</Grid>
 
-		<TextHeader spacious>{t('settings.instances')}</TextHeader>
+		<TextHeader spacious noSelect>{t('settings.instances')}</TextHeader>
 		<Grid spacing={8} padding="0 1rem" vertical>
 			<Setting name="instances.pageBanner" direction="horizontal">
 				<Switch
@@ -156,7 +156,7 @@ export default Patcher.register(function Settings() {
 						setSetting('instances.showBanner', v)
 					}
 				/>
-				<Typography size={13} color="$secondaryColor">
+				<Typography size={13} color="$secondaryColor" noSelect>
 					{t(`common.label.toggle_${showInstanceBanner}`)}
 				</Typography>
 			</Setting>
@@ -197,7 +197,7 @@ export default Patcher.register(function Settings() {
 						setSetting('instances.modSearchPopout', v)
 					}
 				/>
-				<Typography size={13} color="$secondaryColor">
+				<Typography size={13} color="$secondaryColor" noSelect>
 					{t(`common.label.toggle_${modSearchPopout}`)}
 				</Typography>
 			</Setting>
@@ -208,30 +208,30 @@ export default Patcher.register(function Settings() {
 						setSetting('instances.modSearchSummaries', v)
 					}
 				/>
-				<Typography size={13} color="$secondaryColor">
+				<Typography size={13} color="$secondaryColor" noSelect>
 					{t(`common.label.toggle_${modSearchSummaries}`)}
 				</Typography>
 			</Setting>
 		</Grid>
 
-		<TextHeader spacious>{t('settings.download')}</TextHeader>
+		<TextHeader spacious noSelect>{t('settings.download')}</TextHeader>
 		<Grid spacing={8} padding="0 1rem" vertical>
 			<Setting name="download.useLinks" direction="horizontal">
 				<Switch
 					value={useSymlinks}
 					onChange={v => setSetting('download.useLinks', v)}
 				/>
-				<Typography size={13} color="$secondaryColor">
+				<Typography size={13} color="$secondaryColor" noSelect>
 					{t(`common.label.toggle_${useSymlinks}`)}
 				</Typography>
 			</Setting>
 		</Grid>
 
-		<TextHeader spacious>{t('settings.plugins', {
+		<TextHeader spacious noSelect>{t('settings.plugins', {
 			val: Object.keys(PluginSystem.loaded).length
 		})}</TextHeader>
 		<Grid spacing={8} padding="0 1rem" vertical>
-			<Typography size={14} color="$secondaryColor" weight={400} family="$secondary"><span>
+			<Typography size={14} color="$secondaryColor" weight={400} family="$secondary" noSelect><span>
 				Not sure how to install a plugin? Check out the <BrowserLink href="https://docs.mdpkm.voxelified.com/docs/tutorials/install-plugin">
 					guide
 				</BrowserLink>!
@@ -255,16 +255,16 @@ export default Patcher.register(function Settings() {
 				}}>
 					<Image src={plugin.icon ?? PLACEHOLDER_ICON} size={48} borderRadius={8} />
 					<Grid spacing={2} vertical>
-						<Typography lineheight={1}>
+						<Typography noSelect lineheight={1}>
 							{t(`app.mdpkm.plugin.${plugin.id}:name`)}
 						</Typography>
-						<Typography size={14} color="$secondaryColor" lineheight={1}>
+						<Typography size={14} color="$secondaryColor" noSelect lineheight={1}>
 							{plugin.id} {plugin.version}
 						</Typography>
 					</Grid>
 					<Grid spacing={8} css={{ right: 16, position: 'absolute' }}>
 						{pluginLoaders.length > 0 &&
-							<Typography size={14} color="$secondaryColor" weight={400}>
+							<Typography size={14} color="$secondaryColor" weight={400} noSelect>
 								{pluginLoaders.map(({ icon }, key) =>
 									<Image key={key} src={icon} size={20} background="$primaryBackground" borderRadius={4} />
 								)}
@@ -290,15 +290,15 @@ export default Patcher.register(function Settings() {
 			})}
 		</Grid>
 
-		<TextHeader spacious>{t('settings.about')}</TextHeader>
+		<TextHeader spacious noSelect>{t('settings.about')}</TextHeader>
 		<Grid spacing={8} padding="0 1rem" vertical>
 			<Grid spacing={8} alignItems="center">
 				<Image src="img/icons/brand_default.svg" size={48} onClick={yippee} />
 				<Grid spacing={2} vertical>
-					<Typography lineheight={1}>
+					<Typography noSelect lineheight={1}>
 						{t('settings.about.version', [appName, appVersion])}
 					</Typography>
-					<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
+					<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
 						{t('settings.about.version2', [tauriVersion, VOXURA_VERSION])}
 					</Typography>
 				</Grid>
@@ -332,11 +332,11 @@ function Setting({ name, children, direction, noSummary }: SettingProps) {
 	const stringBase = `settings.${name ?? 'placeholder'}`;
 	return <Grid width="100%" css={{ marginBottom: 16 }}>
 		<Grid width="100%" spacing={4} padding={4} vertical>
-			<Typography lineheight={1}>
+			<Typography noSelect lineheight={1}>
 				{t(stringBase)}
 			</Typography>
 			{!noSummary &&
-				<Typography size={14} color="$secondaryColor" weight={400} lineheight={1.2} textalign="start">
+				<Typography size={14} color="$secondaryColor" weight={400} noSelect lineheight={1.2} textalign="start">
 					{t(`${stringBase}.summary`)}
 				</Typography>
 			}

@@ -77,7 +77,7 @@ export default Patcher.register(function Mod({ id, data, featured, platform, ins
                 minWidth: iconSize
             }}/>
             <Grid margin={isCompact ? '4px 0 0 10px' : '4px 0 0 12px'} padding="2px 0" spacing={2} vertical>
-                <Typography size={isCompact ? 14 : '1.1rem'} spacing={4} lineheight={1}>
+                <Typography size={isCompact ? 14 : '1.1rem'} spacing={4} noSelect lineheight={1}>
                     {mod.displayName}
                     {mod.author && 
                         <Typography size={isCompact ? 10 : 12} color="$secondaryColor" family="$secondary" lineheight={1}>
@@ -85,25 +85,25 @@ export default Patcher.register(function Mod({ id, data, featured, platform, ins
                         </Typography>
                     }
                     {featured &&
-                        <Typography size={14} color="#cbc365" lineheight={1}>
+                        <Typography size={14} color="#cbc365" noSelect lineheight={1}>
                             {t('mod.featured')}
                         </Typography>
                     }
                     {recommended &&
-                        <Typography size={14} color="$secondaryColor" lineheight={1}>
+                        <Typography size={14} color="$secondaryColor" noSelect lineheight={1}>
                             {t('mod.recommended')}
                         </Typography>
                     }
                     {mod.isNsfw &&
-                        <Typography size={14} color="#e18e8e" lineheight={1}>
+                        <Typography size={14} color="#e18e8e" noSelect lineheight={1}>
                             {t('mod.explict')}
                         </Typography>
                     }
                 </Typography>
-                {!isCompact && <Typography size={12} color="$secondaryColor" weight={400} lineheight={1}>
+                {!isCompact && <Typography size={12} color="$secondaryColor" weight={400} noSelect lineheight={1}>
                     {t(`mod.side.${mod.getSide()}`)}
                 </Typography>}
-                {showSummary && <Typography size={isCompact ? 12 : 14} color="$secondaryColor" weight={400} family="$secondary" textalign="left" whitespace="pre-wrap">
+                {showSummary && <Typography size={isCompact ? 12 : 14} color="$secondaryColor" weight={400} family="$secondary" noSelect textalign="left" whitespace="pre-wrap">
                     {mod.summary}
                 </Typography>}
             </Grid>
@@ -112,7 +112,7 @@ export default Patcher.register(function Mod({ id, data, featured, platform, ins
                 position: 'absolute'
             }}>
                 {typeof mod.downloads === 'number' &&
-                    <Typography size={isCompact ? 11 : 12} color="$secondaryColor" margin="0 8px 0 0" spacing={6}>
+                    <Typography size={isCompact ? 11 : 12} color="$secondaryColor" margin="0 8px 0 0" spacing={6} noSelect>
                         <IconBiDownload/>
                         {t('mod.downloads', {mod})}
                     </Typography>

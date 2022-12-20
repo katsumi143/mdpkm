@@ -175,13 +175,14 @@ export type PaginationProps = {
 function Pagination({ page, pages, setPage }: PaginationProps) {
     return <Grid spacing={4} alignItems="center">
         <StyledPage onClick={() => setPage(Math.max(page - 1, 1))}>
-            <IconBiChevronLeft style={{fontSize: 10}}/>
+            <IconBiChevronLeft fontSize={10}/>
         </StyledPage>
         {pages.map(page2 =>
             typeof page2 === 'string' ?
                 <Grid width={24} height={2} background="$tagBorder"/>
             : <StyledPage css={{
                 color: page === page2 ? '$buttonColor' : undefined,
+				userSelect: 'none',
                 background: page === page2 ? '$buttonBackground' : undefined,
                 pointerEvents: page === page2 ? 'none' : undefined
             }} onClick={() => setPage(page2)}>
@@ -189,7 +190,7 @@ function Pagination({ page, pages, setPage }: PaginationProps) {
             </StyledPage>
         )}
         <StyledPage onClick={() => setPage(Math.min(page + 1, pages[pages.length - 1] as number))}>
-            <IconBiChevronRight style={{fontSize: 10}}/>
+            <IconBiChevronRight fontSize={10}/>
         </StyledPage>
     </Grid>;
 };

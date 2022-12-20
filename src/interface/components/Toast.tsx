@@ -39,14 +39,14 @@ export type ToastProps = {
 };
 export default function Toast({ t, title = 'Toast title', body = 'Toast body', icon: Icon = IconBiInfoCircle }: ToastProps) {
     return <StyledToast visible={t.visible}>
-        <Typography>
+        <Typography noSelect>
             <Icon/>
         </Typography>
         <Grid spacing={4} vertical>
-            <Typography size={14} lineheight={1}>
+            <Typography size={14} noSelect lineheight={1}>
                 {title}
             </Typography>
-            <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
+            <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
                 {body}
             </Typography>
         </Grid>

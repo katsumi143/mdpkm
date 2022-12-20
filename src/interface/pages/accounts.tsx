@@ -36,10 +36,10 @@ export default function Accounts() {
     return <Grid height="100%" padding=".75rem 1rem" vertical css={{
         overflow: 'auto'
     }}>
-        <TextHeader>{t('accounts.header')}</TextHeader>
+        <TextHeader noSelect>{t('accounts.header')}</TextHeader>
         <Grid spacing={8} padding="0 1rem" vertical>
             <Image src="img/banners/microsoft.svg" width={112} height={24} margin="0 0 8px"/>
-            {!current && <Typography size={14} color="$secondaryColor" whitespace="pre">
+            {!current && <Typography size={14} color="$secondaryColor" noSelect whitespace="pre">
                 {t('accounts.select_account')}
             </Typography>}
             <Grid spacing={8} vertical>
@@ -107,10 +107,10 @@ function UserAccount({ account, current, changeAccount, deleteAccount }: UserAcc
         }}/>
         {previewAvatar && <ImagePreview src={avatarUrl} size={192} onClose={() => setPreviewAvatar(false)}/>}
         <Grid spacing={2} vertical>
-			<Typography lineheight={1}>
+			<Typography noSelect lineheight={1}>
 				{account.xboxName}
 			</Typography>
-			<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
+			<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
                 {account.name}
             </Typography>
 		</Grid>
@@ -118,7 +118,7 @@ function UserAccount({ account, current, changeAccount, deleteAccount }: UserAcc
             right: 16,
             position: 'absolute'
         }}>
-            {isCurrent ? <Typography size={14} color="$secondaryColor" weight={400} margin="0 8px" family="$secondary">
+            {isCurrent ? <Typography size={14} color="$secondaryColor" weight={400} margin="0 8px" family="$secondary" noSelect>
 				{t('user_account.selected')}
 			</Typography> : <Button theme="accent" onClick={() => changeAccount(account)}>
                 {t('common.action.select')}

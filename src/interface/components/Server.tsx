@@ -41,10 +41,10 @@ export default function Server({ name, icon, motd, type, players, address, insta
             />
             {previewIcon && <ImagePreview src={serverIcon} size={192} onClose={() => setPreviewIcon(false)} pixelated/>}
             <Grid height="100%" spacing={2} vertical justifyContent="center">
-                <Typography size={isCompact ? 14 : 16} lineheight={1} whitespace="nowrap">
+                <Typography size={isCompact ? 14 : 16} noSelect lineheight={1} whitespace="nowrap">
                     {name || t('server.no_name')}
                     {acceptTextures &&
-                        <Typography size={isCompact ? 10 : 12} color="$secondaryColor" weight={400} family="$secondary" margin="2px 0 0" lineheight={1}>
+                        <Typography size={isCompact ? 10 : 12} color="$secondaryColor" weight={400} family="$secondary" margin="2px 0 0" noSelect lineheight={1}>
                             {t('server.textures_accepted')}
                         </Typography>
                     }
@@ -56,7 +56,7 @@ export default function Server({ name, icon, motd, type, players, address, insta
                         fontFamily: 'Nunito'
                     }}/>
                 :
-                    <Typography size={isCompact ? 10 : 12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
+                    <Typography size={isCompact ? 10 : 12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
                         {address || t('server.no_address')}
                     </Typography>
                 }
@@ -67,10 +67,10 @@ export default function Server({ name, icon, motd, type, players, address, insta
 			position: 'absolute'
 		}}>
 			<Grid height="100%" spacing={4} padding={4} vertical alignItems="end">
-                {players && <Typography size={14} color="$secondaryColor" spacing={4} lineheight={1}>
+                {players && <Typography size={14} color="$secondaryColor" spacing={4} noSelect lineheight={1}>
                     {t('server.players', [players.online, players.max])}
                 </Typography>}
-                {type && <Typography size={14} color="$secondaryColor" spacing={4} lineheight={1}>
+                {type && <Typography size={14} color="$secondaryColor" spacing={4} noSelect lineheight={1}>
                     {type}
                 </Typography>}
             </Grid>

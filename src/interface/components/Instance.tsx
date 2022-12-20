@@ -77,6 +77,7 @@ export default Patcher.register(function Instance({ css, selected, instance }: I
 								width="100%"
 								noFlex
 								weight={isCompact ? 400 : 500}
+								noSelect
 								lineheight={1}
 								whitespace="nowrap"
 								css={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
@@ -90,6 +91,7 @@ export default Patcher.register(function Instance({ css, selected, instance }: I
 								weight={400}
 								family="$secondary"
 								spacing={6}
+								noSelect
 								lineheight={1}
 							>
 								<StateIcon fontSize={isCompact ? 8 : 10} />

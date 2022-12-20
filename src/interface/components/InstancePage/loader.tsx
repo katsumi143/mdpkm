@@ -31,12 +31,12 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 			You may find this page confusing at first, click here for more information!
 		</Link>
 
-		<Typography size={12} color="$secondaryColor" margin="8px 0 0">
+		<Typography size={12} color="$secondaryColor" margin="8px 0 0" noSelect>
 			{t('common.label.game_component')}
 		</Typography>
 		<Component component={component}/>
 
-		{!!otherComponents.length && <Typography size={12} color="$secondaryColor" margin="16px 0 0">
+		{!!otherComponents.length && <Typography size={12} color="$secondaryColor" margin="16px 0 0" noSelect>
 			{t('common.label.other_components')}
 		</Typography>}
 		<Grid spacing={8} vertical>
@@ -93,10 +93,10 @@ function Component({ component }: ComponentProps) {
 	}}>
 		<ImageWrapper src={getImage(`component.${component.id}`)} size={40} shadow canPreview background="$secondaryBackground" borderRadius={8} />
 		<Grid spacing={4} vertical justifyContent="center">
-			<Typography lineheight={1}>
+			<Typography noSelect lineheight={1}>
 				{t(`voxura:component.${component.id}`)}
 			</Typography>
-			{isVersioned && <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
+			{isVersioned && <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
 				{t('component.version', [component.version])}
 			</Typography>}
 		</Grid>
@@ -146,7 +146,7 @@ function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 		});
 	};
 	return <Modal width="60%">
-		<TextHeader>Component Adder</TextHeader>
+		<TextHeader noSelect>Component Adder</TextHeader>
 		<InputLabel>Component</InputLabel>
 		<Select.Minimal value={component} onChange={setComponent} disabled={!versions || saving}>
 			<Select.Group name="Available Instance Components">
@@ -157,7 +157,7 @@ function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 		</Select.Minimal>
 
 		<InputLabel spacious>Component Version</InputLabel>
-		<Typography size={14}>
+		<Typography size={14} noSelect>
 			{version ? `${t(`voxura:component.${components[component].id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
 		</Typography>
 
@@ -200,9 +200,9 @@ function ComponentEditor({ onClose, component }: ComponentEditorProps) {
 		});
 	};
 	return <Modal width="60%">
-		<TextHeader>Component Editor ({t(`voxura:component.${component.id}`)})</TextHeader>
+		<TextHeader noSelect>Component Editor ({t(`voxura:component.${component.id}`)})</TextHeader>
 		<InputLabel>Component Version</InputLabel>
-		<Typography size={14}>
+		<Typography size={14} noSelect>
 			{version ? `${t(`voxura:component.${component.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
 		</Typography>
 
