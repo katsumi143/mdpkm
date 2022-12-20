@@ -20,7 +20,6 @@ const StyledToast = styled(Grid, {
 	boxShadow: '0 0 16px -12px rgb(0 0 0 / 0.25)',
 	transition: 'transform 1.5s',
 	background: '$secondaryBackground',
-	borderRadius: 16,
 
 	variants: {
 		visible: {
@@ -38,7 +37,7 @@ export type ToastProps = {
     title?: string,
 };
 export default function Toast({ t, title = 'Toast title', body = 'Toast body', icon: Icon = IconBiInfoCircle }: ToastProps) {
-    return <StyledToast visible={t.visible}>
+    return <StyledToast visible={t.visible} smoothing={1} borderRadius={16}>
         <Typography noSelect>
             <Icon/>
         </Typography>

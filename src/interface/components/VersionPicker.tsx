@@ -25,7 +25,7 @@ export default function VersionPicker({ id, value, versions, onChange }: Version
                 Version Categories
             </Typography>
             {versions.map((items, key) =>
-                <Grid key={key} padding="4px 12px" onClick={() => setCategory(key)} borderRadius={8} justifyContent="space-between" css={{
+                <Grid key={key} padding="4px 12px" onClick={() => setCategory(key)} smoothing={1} borderRadius={8} justifyContent="space-between" css={{
                     cursor: 'pointer',
                     boxShadow: category === key ? '$buttonShadow' : undefined,
                     background: category === key ? '$buttonBackground' : '$secondaryBackground',
@@ -49,7 +49,7 @@ export default function VersionPicker({ id, value, versions, onChange }: Version
             <Grid spacing={4} vertical borderRadius={8} css={{ overflow: 'auto' }}>
                 {versions[category].map((item, key) => {
 					const [day, data] = getDayString(item.dateCreated);
-                    return <Grid key={key} padding="4px 12px" onClick={() => onChange(item)} borderRadius={8} justifyContent="space-between" css={{
+                    return <Grid key={key} padding="4px 12px" onClick={() => onChange(item)} smoothing={1} borderRadius={8} justifyContent="space-between" css={{
                         cursor: 'pointer',
                         boxShadow: value === item ? '$buttonShadow' : undefined,
                         background: value === item ? '$buttonBackground' : '$secondaryBackground',

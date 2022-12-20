@@ -49,7 +49,7 @@ export type DownloadComponentProps = {
 function DownloadComponent({ download }: DownloadComponentProps) {
 	const { t } = useTranslation('interface');
     const progress = download.totalProgress;
-    return <Grid padding={8} spacing={12} alignItems="center" borderRadius={16} css={{
+    return <Grid padding={8} spacing={12} smoothing={1} alignItems="center" borderRadius={16} css={{
 		border: 'transparent solid 1px',
         background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box',
 	}}>

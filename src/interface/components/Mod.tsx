@@ -51,7 +51,7 @@ export default Patcher.register(function Mod({ id, data, featured, platform, ins
 	console.log(mod);
 
     const iconSize = isCompact ? 32 : 44;
-    return <Grid padding={8} background="$secondaryBackground2" borderRadius={16} css={{
+    return <Grid padding={8} background="$secondaryBackground2" smoothing={1} borderRadius={16} css={{
         border: 'transparent solid 1px',
         position: 'relative',
         background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box',
@@ -72,7 +72,7 @@ export default Patcher.register(function Mod({ id, data, featured, platform, ins
                 }
             </Grid>
         </Grid> : <React.Fragment>
-            <ImageWrapper src={mod.webIcon} size={iconSize} shadow canPreview background="$secondaryBackground" borderRadius={8} css={{
+            <ImageWrapper src={mod.webIcon} size={iconSize} shadow smoothing={1} canPreview background="$secondaryBackground" borderRadius={8} css={{
                 filter: mod.isNsfw && 'blur(2px)',
                 minWidth: iconSize
             }}/>

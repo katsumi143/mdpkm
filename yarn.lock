@@ -6543,7 +6543,7 @@ void-elements@3.1.0:
 
 "voxeliface@https://github.com/Excalware/react-voxeliface":
   version "1.0.0"
-  resolved "https://github.com/Excalware/react-voxeliface#4aa9bde4c7f872fc3195ec5ad48534d424932233"
+  resolved "https://github.com/Excalware/react-voxeliface#dbbe60305112cc7aa2d0dcc56eb17e9e6903f354"
   dependencies:
     "@radix-ui/react-context-menu" "^2.0.1"
     "@radix-ui/react-dialog" "^1.0.2"
@@ -6560,10 +6560,6 @@ void-elements@3.1.0:
     react-markdown "^8.0.3"
     react-spring "^9.4.5"
     remark-gfm "^3.0.1"
-
-"voxeliface@link:../react-voxeliface":
-  version "0.0.0"
-  uid ""
 
 "voxelified-commons@https://github.com/Excalware/shared-commons":
   version "1.0.0"

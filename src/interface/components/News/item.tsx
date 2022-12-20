@@ -11,7 +11,7 @@ export default function NewsItemComponent({ item }: NewsItemProps) {
 	const view = () => open(item.url);
     return <Tooltip.Root delayDuration={50}>
         <Tooltip.Trigger asChild>
-            <Grid width={96} onClick={view} vertical background="$secondaryBackground2" borderRadius={8} css={{
+            <Grid width={96} onClick={view} vertical smoothing={1} background="$secondaryBackground2" borderRadius={8} css={{
                 cursor: 'pointer',
 				minWidth: 96,
                 overflow: 'hidden'

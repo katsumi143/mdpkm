@@ -43,7 +43,7 @@ function Component({ id, selected, setSelected }: ComponentProps) {
     return <>
         <ComponentContainer layoutId={`component-${id}`}>
             <Grid height="fit-content" padding={8} spacing={12}>
-                <ImageWrapper src={getImage(`component.${id}`)} size={40} shadow canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
+                <ImageWrapper src={getImage(`component.${id}`)} size={40} shadow smoothing={1} canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
                 <Grid spacing={4} vertical justifyContent="center">
                     <Typography noSelect layoutId={`component-title-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}`)}
@@ -94,7 +94,7 @@ function Setup({ id, cancel }: SetupProps) {
             borderBottom: '1px solid $secondaryBorder2'
         }}>
             <Grid padding={8} spacing={12}>
-                <ImageWrapper src={getImage(`component.${id}`)} size={40} shadow canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
+                <ImageWrapper src={getImage(`component.${id}`)} size={40} shadow smoothing={1} canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
                 <Grid spacing={4} vertical justifyContent="center">
                     <Typography noSelect layoutId={`component-title-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}`)}
@@ -134,8 +134,10 @@ const ComponentContainer = styled(motion.div, {
     display: 'flex',
     position: 'relative',
     background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box',
-    borderRadius: 16,
     flexDirection: 'column',
+	'--squircle-smooth': 1,
+	'--squircle-radius': 16,
+	'-webkit-mask-image': 'paint(squircle)',
 
     variants: {
         selected: {

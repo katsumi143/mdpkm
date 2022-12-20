@@ -99,7 +99,7 @@ export type InformationProps = {
     children?: ReactNode
 };
 function Information({ fill, icon, text, buttons, children }: InformationProps) {
-    return <Grid width="100%" padding="12px 16px" spacing={16} alignItems="center" background="$secondaryBackground2" borderRadius={8} css={{
+    return <Grid width="100%" padding="12px 16px" spacing={16} smoothing={1} alignItems="center" background="$secondaryBackground2" borderRadius={16} css={{
         flexGrow: 1,
         position: 'relative',
         flexBasis: fill ? null : 'calc(50% - .5rem)'

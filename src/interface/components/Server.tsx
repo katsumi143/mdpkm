@@ -22,7 +22,7 @@ export default function Server({ name, icon, motd, type, players, address, insta
     
     const iconSize = isCompact ? 32 : 48;
     const serverIcon = icon ? icon.startsWith('data:') ? icon : `data:image/png;base64,${icon}` : 'img/icons/minecraft/unknown_server.png';
-    return <Grid height="fit-content" spacing={12} borderRadius={16} css={{
+    return <Grid height="fit-content" spacing={12} smoothing={1} borderRadius={16} css={{
 		border: 'transparent solid 1px',
 		minWidth: '24rem',
 		position: 'relative',
@@ -34,6 +34,7 @@ export default function Server({ name, icon, motd, type, players, address, insta
                 size={iconSize}
 				margin="8px 0 8px 8px"
                 onClick={() => setPreviewIcon(true)}
+				smoothing={1}
 				borderRadius={8}
                 css={{
                     cursor: 'zoom-in'

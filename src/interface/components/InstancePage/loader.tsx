@@ -87,11 +87,11 @@ function Component({ component }: ComponentProps) {
 	const [editing, setEditing] = useState(false);
 	const isGame = component instanceof GameComponent;
 	const isVersioned = component instanceof VersionedComponent;
-	return <Grid spacing={12} padding="8px 0 8px 8px" alignItems="center" borderRadius={16} css={{
+	return <Grid spacing={12} padding="8px 0 8px 8px" smoothing={1} alignItems="center" borderRadius={16} css={{
 		border: 'transparent solid 1px',
 		background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
 	}}>
-		<ImageWrapper src={getImage(`component.${component.id}`)} size={40} shadow canPreview background="$secondaryBackground" borderRadius={8} />
+		<ImageWrapper src={getImage(`component.${component.id}`)} size={40} shadow smoothing={1} canPreview background="$secondaryBackground" borderRadius={8} />
 		<Grid spacing={4} vertical justifyContent="center">
 			<Typography noSelect lineheight={1}>
 				{t(`voxura:component.${component.id}`)}

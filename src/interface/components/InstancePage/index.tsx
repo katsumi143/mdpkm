@@ -84,14 +84,17 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 			minHeight: isCompact ? 128 : 144
 		}}>
 			<Grid padding={16} spacing={24}>
-				<ImageWrapper src={instance.webIcon} size={isCompact ? 64 : 80} canPreview background="$secondaryBackground2" borderRadius={8} css={{
-					boxShadow: '0 8px 16px 2px #00000040',
-					alignItems: 'end',
-					justifyContent: 'end',
-					'&:hover': { '& > div': { opacity: 1 } }
+				<Grid borderRadius={16} css={{
+					boxShadow: '0 8px 16px 2px #00000040'
 				}}>
-					<ImageOptions img={instance.icon} onEdit={e => changeImage('icon', e)} onRemove={e => removeImage('icon', e)}/>
-				</ImageWrapper>
+					<ImageWrapper src={instance.webIcon} size={isCompact ? 64 : 80} smoothing={1} canPreview background="$secondaryBackground2" borderRadius={16} css={{
+						alignItems: 'end',
+						justifyContent: 'end',
+						'&:hover': { '& > div': { opacity: 1 } }
+					}}>
+						<ImageOptions img={instance.icon} onEdit={e => changeImage('icon', e)} onRemove={e => removeImage('icon', e)}/>
+					</ImageWrapper>
+				</Grid>
 				<Grid spacing={isCompact ? 4 : 4} vertical justifyContent="center">
 					<Typography size={isCompact ? 20 : 22} family="$tertiary" lineheight={1} css={{ alignItems: 'start' }}>
 						{instance.isFavourite && <IconBiStarFill fontSize={16}/>}

@@ -248,7 +248,7 @@ export default Patcher.register(function Settings() {
 			</Grid>
 			{Object.entries(PluginSystem.loaded).map(([id, plugin]) => {
 				const pluginLoaders: any[] = [];//LOADER_MAP.filter(l => l.source?.id === id);
-				return <Grid key={id} padding={8} spacing={8} alignItems="center" borderRadius={16} css={{
+				return <Grid key={id} padding={8} spacing={8} smoothing={1} alignItems="center" borderRadius={16} css={{
 					border: 'transparent solid 1px',
 					position: 'relative',
 					background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'

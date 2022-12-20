@@ -29,7 +29,7 @@ export default Patcher.register(function InstanceMod({ mod, embedded, instanceId
 
     const iconSize = isCompact ? 32 : 40;
     return <Grid vertical>
-        <Grid spacing={8} vertical background="$secondaryBackground2" borderRadius={16} css={{
+        <Grid spacing={8} vertical smoothing={1} background="$secondaryBackground2" borderRadius={16} css={{
             border: 'transparent solid 1px',
             position: 'relative',
             background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
@@ -39,7 +39,7 @@ export default Patcher.register(function InstanceMod({ mod, embedded, instanceId
                     cursor: 'pointer'
                 }
             }}>
-                <Image src={mod?.webIcon} size={iconSize} margin="8px 0 8px 8px" background="$secondaryBackground" borderRadius={8} css={{
+                <Image src={mod?.webIcon} size={iconSize} margin="8px 0 8px 8px" smoothing={1} background="$secondaryBackground" borderRadius={8} css={{
                     minWidth: iconSize,
                     minHeight: iconSize,
                     boxShadow: '$buttonShadow',

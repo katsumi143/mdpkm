@@ -9,7 +9,9 @@ export default function StyledTabs(props: TabsProps) {
 			border: 'none',
 			padding: 0,
 			overflow: 'hidden',
-			borderRadius: 8,
+			'--squircle-smooth': 1,
+			'--squircle-radius': 16,
+			'-webkit-mask-image': 'paint(squircle)',
 			'& > button': {
 				padding: '12px 16px',
 				boxShadow: 'none',

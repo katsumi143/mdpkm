@@ -47,7 +47,7 @@ export default function ImagePreview({ src, size, onClose, pixelated }: ImagePre
             position: 'absolute',
             animation: `${openAnimation2} 1s`
         }}>
-            <Image src={src} size={size} borderRadius={8} css={{
+            <Image src={src} size={size} smoothing={1} borderRadius={8} css={{
                 animation: `${openAnimation} .5s cubic-bezier(0, 0, 0, 1.0)`,
                 imageRendering: pixelated && 'pixelated'
             }}/>
