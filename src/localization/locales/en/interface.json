@@ -125,7 +125,10 @@
 	"download.type.0": "Downloading...",
 	"download.type.1": "Extracting...",
 	"download.percentage": "{{0}}%",
-	"download.completed": "Completed",
+	"download.state.0": "Pending",
+	"download.state.1": "Completed",
+	"download.state.2": "Extracting",
+	"download.state.3": "Downloading",
 
 	"settings.general": "General Settings",
 	"settings.general.theme": "Theme",

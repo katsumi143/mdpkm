@@ -56,7 +56,7 @@
         "skinview3d": "^3.0.0-alpha.1",
         "three": "^0.146.0",
         "uuid": "^9.0.0",
-        "voxeliface": "https://github.com/Excalware/react-voxeliface",
+        "voxeliface": "link:../react-voxeliface",
         "voxeliface-tauri": "https://github.com/Excalware/voxeliface-tauri",
         "voxelified-commons": "https://github.com/Excalware/shared-commons",
         "xmlbuilder2": "^3.0.2"

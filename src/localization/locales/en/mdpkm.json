@@ -1,4 +1,11 @@
 {
 	"instance_category.default": "Your Instances",
-	"instance_category.favorites": "Your Favourites"
+	"instance_category.favorites": "Your Favourites",
+
+	"download.temurin": "Eclipse Temurin Java Development Kit {{0}}",
+	"download.minecraft_java": "Minecraft: Java Edition {{0}}",
+	"download.component_libraries": "{{0}} {{1}} Libraries",
+	"download.minecraft_java_assets": "Minecraft: Java Edition {{0}} Assets",
+	"download.minecraft_java_manifest": "Minecraft: Java Edition {{0}} Manifest",
+	"download.minecraft_java_asset_index": "Minecraft: Java Edition {{0}} Asset Index"
 }

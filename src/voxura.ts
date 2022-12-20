@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import CheckCircle from '~icons/bi/check-circle';
 import DownloadIcon from '~icons/bi/download';
 import { useMemo, useState, useEffect } from 'react';
@@ -7,9 +8,9 @@ import { Voxura } from '../voxura';
 import { APP_DIR } from './util/constants';
 import type Account from '../voxura/src/auth/account';
 import mdpkmPlatform from './mdpkm/platform';
-import type { Download } from '../voxura/src/downloader';
 import VersionedComponent from '../voxura/src/instances/component/versioned-component';
 import type { ComponentVersions } from '../voxura/src/types';
+import { Download } from '../voxura/src/downloader';
 
 const voxura = new Voxura(APP_DIR);
 voxura.addPlatform(new mdpkmPlatform());
@@ -18,13 +19,14 @@ voxura.init().then(() => {
 	voxura.auth.loadFromFile().then(() => voxura.auth.refreshAccounts());
 });
 
+const hiddenDownloads = ['component_library'];
 voxura.downloader.listenForEvent('downloadStarted', (download: Download) => {
-    if (download.visible)
-        toast('Download Started', download.displayName, DownloadIcon);
+	if (hiddenDownloads.indexOf(download.id) === -1)
+    	toast('Download Started', t(`download.${download.id}`, download.extraData) as any, DownloadIcon);
 });
 voxura.downloader.listenForEvent('downloadFinished', (download: Download) => {
-    if (download.visible)
-        toast('Download Finished', download.displayName, CheckCircle);
+    if (hiddenDownloads.indexOf(download.id) === -1)	
+		toast('Download Finished', t(`download.${download.id}`, download.extraData) as any, CheckCircle);
 })
 
 export function useAccounts(): Account[] {

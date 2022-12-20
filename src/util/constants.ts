@@ -27,5 +27,8 @@ export const IMAGES = {
 
 	'instance_banner.1': 'img/banners/instances/banner1_1.png',
 	'instance_banner.2': 'img/banners/instances/banner2.png',
-	'instance_banner.3': 'img/banners/instances/banner3.png'
+	'instance_banner.3': 'img/banners/instances/banner3.png',
+
+	'download.temurin': 'img/icons/temurin.png',
+	'download.minecraft_java': 'img/icons/minecraft/java.png'
 };
