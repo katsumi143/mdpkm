@@ -14,9 +14,6 @@ await i18n
 			mdpkm: enMdpkm,
 			voxura: enVoxura,
             interface: enInterface
-        },
-        lv: {
-            
         }
     },
     lng: settingsSlice.getInitialState().language,
