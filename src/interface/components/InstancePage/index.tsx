@@ -84,10 +84,10 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 			minHeight: isCompact ? 128 : 144
 		}}>
 			<Grid padding={16} spacing={24}>
-				<Grid borderRadius={16} css={{
+				<Grid borderRadius={8} css={{
 					boxShadow: '0 8px 16px 2px #00000040'
 				}}>
-					<ImageWrapper src={instance.webIcon} size={isCompact ? 64 : 80} smoothing={1} canPreview background="$secondaryBackground2" borderRadius={16} css={{
+					<ImageWrapper src={instance.webIcon} size={isCompact ? 64 : 80} smoothing={1} canPreview background="$secondaryBackground2" borderRadius={8} css={{
 						alignItems: 'end',
 						justifyContent: 'end',
 						'&:hover': { '& > div': { opacity: 1 } }
