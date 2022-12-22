@@ -1,9 +1,8 @@
-import { open } from '@tauri-apps/api/dialog';
 import { Buffer } from 'buffer';
 import { useTranslation } from 'react-i18next';
 import { readBinaryFile } from '@tauri-apps/api/fs';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
-import { fetch, ResponseType } from '@tauri-apps/api/http';
+import { fetch } from '@tauri-apps/api/http';
 import React, { useState, useEffect } from 'react';
 
 import Modal from '../components/Modal';
@@ -11,11 +10,11 @@ import SkinFrame from '../components/SkinFrame';
 import FileSelect from '../components/FileSelect';
 import { Grid, Image, Select, Button, Divider, Spinner, Markdown, TextInput, Typography, InputLabel, TextHeader } from 'voxeliface';
 
-import { toast } from '../../util';
-import { IMAGE_CACHE } from '../../common/constants';
 import { useCurrentAccount } from '../../voxura';
 import { addSkin, saveSkins, writeSkin } from '../../store/slices/skins';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { toast, getSkinData, getCapeData } from '../../util';
+import { ProfileType, MinecraftCape, MinecraftProfile } from '../../../voxura';
 
 const SKIN_MODEL = { CLASSIC: 'default', SLIM: 'slim' } as const;
 export default function Skins() {
@@ -25,7 +24,7 @@ export default function Skins() {
     const dispatch = useAppDispatch();
     const [capes, setCapes] = useState<any[]>([]);
     const [adding, setAdding] = useState(false);
-    const [profile, setProfile] = useState<any | null>(null);
+    const [profile, setProfile] = useState<MinecraftProfile | null>(null);
     const [current, setCurrent] = useState<any | null>(null);
     const [loading, setLoading] = useState(false);
     const [setting, setSetting] = useState(false);
@@ -95,9 +94,20 @@ export default function Skins() {
             setSetting(true);
             account!.changeSkin(new Uint8Array(Buffer.from(skin.image, 'base64').buffer), skin.variant).then(() =>
                 account!.changeCape(skin.cape)
-            ).then(() => {
+            ).then(async(profile) => {
                 toast('Skin saved', `Your skin uploaded successfully!`);
-                setProfile(null);
+				const skin = profile.skins.find(s => s.state === 'ACTIVE')!;
+				const capes: MinecraftCape[] = [];
+                for (const cape of profile.capes)
+                    capes.push({
+                        ...cape,
+                        url: await getCapeData(cape)
+                    });
+
+				setCapes(capes);
+                setProfile(profile);
+				getSkinData(skin).then(data => setCurrent(Buffer.from(data).toString('base64')));
+				setSkinModel(SKIN_MODEL[skin.variant]);
             }).catch(err => {
                 toast('Unexpected error', 'Check your internet connection.');
                 throw err;
@@ -108,33 +118,19 @@ export default function Skins() {
         if (account && !profile && !loading) {
             setLoading(true);
             account.refresh().then(async() => {
-                const profile = await account.requestProfile();
-                const skin = profile.skins.find(s => s.state === 'ACTIVE');
-                const { data } = await fetch<any[]>(skin?.url.replace(/^http/, 'https'), {
-                    method: 'GET',
-                    responseType: ResponseType.Binary
-                });
-                const capes: any[] = [];
-                for (const cape of profile.capes) {
-                    const url = cape.url.replace(/^http/, 'https');
-                    const data = IMAGE_CACHE[url] ?? `data:image/png;base64,${Buffer.from(await fetch<any>(
-                        url, {
-                            method: 'GET',
-                            responseType: ResponseType.Binary
-                        }
-                    ).then(r => r.data)).toString('base64')}`;
-
-                    IMAGE_CACHE[url] = data;
+                const profile: MinecraftProfile = await account.getProfile(ProfileType.Minecraft);
+                const skin = profile.skins.find(s => s.state === 'ACTIVE')!;
+                const capes: MinecraftCape[] = [];
+                for (const cape of profile.capes)
                     capes.push({
                         ...cape,
-                        url: data
+                        url: await getCapeData(cape)
                     });
-                }
 
                 setCapes(capes);
                 setProfile(profile);
-                setCurrent(Buffer.from(data).toString('base64'));
-                setSkinModel(SKIN_MODEL[skin?.variant]);
+                getSkinData(skin).then(data => setCurrent(Buffer.from(data).toString('base64')));
+                setSkinModel(SKIN_MODEL[skin.variant]);
                 setLoading(false);
             }).catch(err => {
                 console.error(err);
