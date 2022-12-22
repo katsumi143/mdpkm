@@ -30,14 +30,14 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 		<Typography size={12} color="$secondaryColor" margin="8px 0 0" noSelect>
 			{t('common.label.game_component')}
 		</Typography>
-		<ComponentUI component={component}/>
+		<ComponentUI instance={instance} component={component}/>
 
 		{!!otherComponents.length && <Typography size={12} color="$secondaryColor" margin="16px 0 0" noSelect>
 			{t('common.label.other_components')}
 		</Typography>}
 		<Grid spacing={8} vertical>
 			{otherComponents.map((component, key) =>
-				<ComponentUI key={key} component={component}/>
+				<ComponentUI key={key} instance={instance} component={component}/>
 			)}
 		</Grid>
 		<Button theme="accent" onClick={() => setAdding(true)}>
@@ -76,19 +76,25 @@ function Issue({ issue }: IssueProps) {
 };
 
 export type ComponentProps = {
+	instance: Instance,
 	component: Component
 };
-function ComponentUI({ component }: ComponentProps) {
+function ComponentUI({ instance, component }: ComponentProps) {
 	const { t } = useTranslation('interface');
 	const [editing, setEditing] = useState(false);
 	const isGame = component instanceof GameComponent;
 	const isVersioned = component instanceof VersionedComponent;
+	const remove = () => {
+		const { store } = instance;
+		store.components = store.components.filter(c => c !== component);
+		store.save().then(() => instance.emitEvent('changed'));
+	};
 	return <Grid spacing={12} padding="8px 0 8px 8px" smoothing={1} alignItems="center" borderRadius={16} css={{
 		border: 'transparent solid 1px',
 		background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
 	}}>
 		<ImageWrapper src={getImage(`component.${component.id}`)} size={40} shadow smoothing={1} canPreview background="$secondaryBackground" borderRadius={8} />
-		<Grid spacing={4} vertical justifyContent="center">
+		<Grid spacing={2} vertical justifyContent="center">
 			<Typography noSelect lineheight={1}>
 				{t(`voxura:component.${component.id}`)}
 			</Typography>
@@ -101,7 +107,7 @@ function ComponentUI({ component }: ComponentProps) {
 				<IconBiPencilFill/>
 				{t('common.action.edit')}
 			</Link>}
-			{!isGame && <Link size={12} padding="0 16px">
+			{!isGame && <Link size={12} padding="0 16px" onClick={remove}>
 				<IconBiTrash3Fill/>
 				{t('common.action.remove')}
 			</Link>}
