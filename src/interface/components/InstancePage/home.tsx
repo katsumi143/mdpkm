@@ -4,9 +4,8 @@ import React, { ReactNode } from 'react';
 import ImageWrapper from '../ImageWrapper';
 import { Grid, Image, Button, Typography, BasicSpinner } from 'voxeliface';
 
-import mdpkm from '../../../mdpkm';
-import type { Instance } from '../../../voxura';
 import { getImage } from '../../../util';
+import type { Instance } from '../../../voxura';
 export type InstanceHomeProps = {
     setTab: (tab: number) => void,
     instance: Instance
@@ -15,48 +14,13 @@ export default function InstanceHome({ setTab, instance }: InstanceHomeProps) {
     const { t } = useTranslation('interface');
     const { store } = instance;
 	const { gameComponent } = store;
-    const loaderId = gameComponent.id;
-    const gameVersion = gameComponent.version;
-    const loaderEntry = mdpkm.getLoaderEntry(loaderId);
-    const versionBanner = null;//(loaderEntry?.versionBanners ?? API.getLoader('java')?.versionBanners)?.find(v => v?.[0].test(gameVersion));
+    const componentId = gameComponent.id;
     const refreshContent = () => instance.readMods();
     return <React.Fragment>
         <Grid spacing={8} css={{
             flexWrap: 'wrap'
         }}>
-            {versionBanner && <Grid width="100%" padding={16} spacing={16} background="$secondaryBackground2" borderRadius={16} justifyContent="space-between" css={{
-                border: 'transparent solid 1px',
-                background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
-            }}>
-                <Grid spacing={16}>
-                    <ImageWrapper
-                        src={versionBanner[1]}
-                        size={40}
-                        width="8rem"
-                        canPreview
-                        css={{
-                            backgroundPosition: 'left'
-                        }}
-                    />
-                    <Grid spacing={4} vertical justifyContent="center">
-                        <Typography size={14} lineheight={1}>
-                            {versionBanner[2]}
-                        </Typography>
-                        <Typography size={12} color="$secondaryColor" lineheight={1}>
-                            {loaderEntry?.displayName} {gameVersion}
-                        </Typography>
-                    </Grid>
-                </Grid>
-                <ImageWrapper
-                    src={getImage()}
-                    size={40}
-                    width="8rem"
-                    canPreview
-                    borderRadius={4}
-                    css={{ backgroundPosition: 'right' }}
-                />
-            </Grid>}
-            <Information fill icon={<Image src={getImage('component.' + loaderId)} size={32}/>} text={t('voxura:component.' + loaderId)} buttons={
+            <Information fill icon={<Image src={getImage('component.' + componentId)} size={32}/>} text={t('voxura:component.' + componentId)} buttons={
                 <Button theme="accent" onClick={() => setTab(2)}>
                     {t('common.action.view')}
                     <IconBiCaretRightFill fontSize={11}/>
@@ -124,7 +88,7 @@ function Information({ fill, icon, text, buttons, children }: InformationProps) 
 export type DateThingProps = {
     icon?: ReactNode,
     title: string,
-    value: number
+    value?: number
 };
 function DateThing({ icon, title, value }: DateThingProps) {
     return <Information icon={icon} text={title}>

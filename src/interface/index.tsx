@@ -7,6 +7,7 @@ import Navigation from './pages/navigation';
 
 import store from '../store';
 
+import '../voxura';
 import '../localization';
 import 'voxeliface/style.css';
 function AppContainer() {

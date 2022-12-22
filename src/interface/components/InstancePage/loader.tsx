@@ -6,14 +6,10 @@ import ImageWrapper from '../ImageWrapper';
 import VersionPicker from '../VersionPicker';
 import { Link, Grid, Select, Button, Typography, TextHeader, InputLabel, BasicSpinner } from 'voxeliface';
 
-import GameComponent from '../../../../voxura/src/instances/component/game-component';
 import { LoaderIssue } from '../../../mdpkm';
-import VersionedComponent from '../../../../voxura/src/instances/component/versioned-component';
 import { toast, getImage } from '../../../util';
-import { ComponentVersion } from '../../../../voxura/src/types';
 import { useComponentVersions } from '../../../voxura';
-import { Instance, COMPONENT_MAP } from '../../../../voxura';
-import InstanceComponent, { ComponentType } from '../../../../voxura/src/instances/component';
+import { Instance, Component, COMPONENT_MAP, ComponentType, GameComponent, ComponentVersion, VersionedComponent } from '../../../../voxura';
 export type InstanceLoaderProps = {
 	instance: Instance
 };
@@ -34,14 +30,14 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 		<Typography size={12} color="$secondaryColor" margin="8px 0 0" noSelect>
 			{t('common.label.game_component')}
 		</Typography>
-		<Component component={component}/>
+		<ComponentUI component={component}/>
 
 		{!!otherComponents.length && <Typography size={12} color="$secondaryColor" margin="16px 0 0" noSelect>
 			{t('common.label.other_components')}
 		</Typography>}
 		<Grid spacing={8} vertical>
 			{otherComponents.map((component, key) =>
-				<Component key={key} component={component} />
+				<ComponentUI key={key} component={component}/>
 			)}
 		</Grid>
 		<Button theme="accent" onClick={() => setAdding(true)}>
@@ -80,9 +76,9 @@ function Issue({ issue }: IssueProps) {
 };
 
 export type ComponentProps = {
-	component: InstanceComponent
+	component: Component
 };
-function Component({ component }: ComponentProps) {
+function ComponentUI({ component }: ComponentProps) {
 	const { t } = useTranslation('interface');
 	const [editing, setEditing] = useState(false);
 	const isGame = component instanceof GameComponent;

@@ -6,7 +6,7 @@ import ImageWrapper from './ImageWrapper';
 import { Grid, Button, Spinner, Typography, BasicSpinner } from 'voxeliface';
 
 import Patcher from '../../plugins/patcher';
-import { ModSide } from '../../../voxura/src/platforms/mod';
+import { ModSide } from '../../../voxura/src/platform/mod';
 import { useInstance } from '../../voxura';
 import { useAppSelector } from '../../store/hooks';
 import { useStoredValue } from '../../../voxura/src/storage';

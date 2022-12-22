@@ -1,8 +1,8 @@
 import { t } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
-import Instance from '../../voxura/src/instances/instance';
 import NewsSource from './news/source';
+import { Instance } from '../../voxura';
 import { NEWS_SOURCES } from './news';
 export enum LoaderIssueId {
     MissingLoaderEntry,
@@ -68,75 +68,20 @@ export class LoaderEntry {
     }
 };
 
-const LOADER_OPTIONS: Record<string, LoaderEntryOptions> = {
-    'minecraft-java-vanilla': {
-        icon: 'img/icons/minecraft/java.png',
-        category: 'Mojang Studios'
-    },
-    'minecraft-bedrock-vanilla': {
-        icon: 'img/icons/minecraft/bedrock.png',
-        category: 'Mojang Studios'
-    },
-    fabric: {
-        icon: 'img/icons/loaders/fabric.png',
-        category: 'Third Party Loaders'
-    },
-    quilt: {
-        icon: 'img/icons/loaders/quilt.svg',
-        category: 'Third Party Loaders'
-    }
-};
 export default new class mdpkm {
     public readonly newsSources: NewsSource<unknown>[] = [];
-    public readonly loaderEntries: LoaderEntry[] = [];
     public constructor() {
-        /*for (const loader of LOADER_MAP)
-            this.addLoaderEntry(loader.id, LOADER_OPTIONS[loader.id]);*/
         for (const source of NEWS_SOURCES)
             this.newsSources.push(new source());
-    }
-
-    public addLoaderEntry(id: string, options?: LoaderEntryOptions): void {
-        this.loaderEntries.push(new LoaderEntry(id, options));
-    }
-
-    public getLoaderEntry(id: string): LoaderEntry | void {
-        return this.loaderEntries.find(entry => entry.id === id);
     }
 
     public getNewsSource(id: string) {
         return this.newsSources.find(source => source.id === id);
     }
-
-    public getLoaderIssues(id: string): LoaderIssue[] {
-        const issues: LoaderIssue[] = [];
-        const entry = this.getLoaderEntry(id);
-        if (!entry)
-            issues.push({
-                id: LoaderIssueId.MissingLoaderEntry,
-                type: LoaderIssueType.Error,
-                extra: [id]
-            });
-        /*const loader = getLoaderById(id);
-        if (loader === UnknownLoader)
-            issues.push({
-                id: LoaderIssueId.MissingLoader,
-                type: LoaderIssueType.Error,
-                extra: [id]
-            });*/
-
-        if (issues.find(i => i.id === LoaderIssueId.MissingLoaderEntry))
-            issues.push({
-                id: LoaderIssueId.LaunchUnavailable,
-                type: LoaderIssueType.Error
-            });
-
-        return issues;
-    }
 };
 
-import QuiltLoader from './instance-creator/quilt-loader';
-import FabricLoader from './instance-creator/fabric-loader';
+import QuiltLoader from './instance-creator/minecraft-quilt';
+import FabricLoader from './instance-creator/minecraft-fabric';
 import MinecraftJavaVanilla from './instance-creator/minecraft-java-vanilla';
 export const INSTANCE_CREATORS = [new MinecraftJavaVanilla(), new FabricLoader(), new QuiltLoader()];
 

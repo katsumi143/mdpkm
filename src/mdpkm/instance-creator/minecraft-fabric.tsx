@@ -5,16 +5,15 @@ import { Grid, Select, TextInput, InputLabel, Typography } from 'voxeliface';
 import VersionPicker from '../../interface/components/VersionPicker';
 
 import InstanceCreator from '.';
-import FabricComponent from '../../../voxura/src/instances/component/fabric-loader';
-import MinecraftComponent from '../../../voxura/src/instances/component/minecraft-java';
 import type { ComponentVersion } from '../../../voxura/src/types';
 import voxura, { useComponentVersions } from '../../voxura';
+import { MinecraftJava, MinecraftFabric } from '../../../voxura';
 export default class FabricLoader extends InstanceCreator {
     public static id = 'fabric';
     public async create(data: any[]) {
         const instance = await voxura.instances.createInstance(data[0]);
         instance.store.components.push(
-            new MinecraftComponent(instance, {
+            new MinecraftJava(instance, {
                 version: data[1]
             }),
             new this.component(instance, {
@@ -30,7 +29,7 @@ export default class FabricLoader extends InstanceCreator {
         return <Component setData={setData} setSatisfied={setSatisfied}/>;
     }
 
-    protected readonly component = FabricComponent;
+    protected readonly component = MinecraftFabric;
 };
 
 export type ComponentProps = {
@@ -42,12 +41,12 @@ function Component({ setData, setSatisfied }: ComponentProps) {
     const [name, setName] = useState('');
     const [version, setVersion] = useState<ComponentVersion | null>(null);
     const [version2, setVersion2] = useState<ComponentVersion | null>(null);
-    const versions = useComponentVersions(MinecraftComponent);
-    const versions2 = useComponentVersions(FabricComponent)?.[0];
+    const versions = useComponentVersions(MinecraftJava);
+    const versions2 = useComponentVersions(MinecraftFabric)?.[0];
     useEffect(() => {
         setData([name, version?.id, version2?.id]);
         setSatisfied(!!name && !!versions && !!versions2);
-    }, [name, version, versions, versions2]);
+    }, [name, version, version2, versions, versions2]);
     return <Grid width="100%" height="100%" spacing={16}>
         <Grid vertical>
             <InputLabel>{t('common.label.instance_name')}</InputLabel>
@@ -55,7 +54,7 @@ function Component({ setData, setSatisfied }: ComponentProps) {
 
             <InputLabel spacious>{t('common.label.minecraft_version')}</InputLabel>
             <Typography size={14} noSelect>
-                {version ? `${t(`voxura:component.${MinecraftComponent.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
+                {version ? `${t(`voxura:component.${MinecraftJava.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
             </Typography>
 
             <InputLabel spacious>{t('common.label.val_version', {
@@ -69,6 +68,6 @@ function Component({ setData, setSatisfied }: ComponentProps) {
                 </Select.Group>
             </Select.Minimal>
         </Grid>
-        {versions && <VersionPicker id={MinecraftComponent.id} value={version} versions={versions} onChange={setVersion}/>}
+        {versions && <VersionPicker id={MinecraftJava.id} value={version} versions={versions} onChange={setVersion}/>}
     </Grid>;
 };

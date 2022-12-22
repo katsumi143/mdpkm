@@ -5,14 +5,13 @@ import { Grid, TextInput, InputLabel, Typography } from 'voxeliface';
 import VersionPicker from '../../interface/components/VersionPicker';
 
 import InstanceCreator from '.';
-import MinecraftComponent from '../../../voxura/src/instances/component/minecraft-java';
-import type { ComponentVersion } from '../../../voxura/src/types';
 import voxura, { useComponentVersions } from '../../voxura';
+import { MinecraftJava, ComponentVersion } from '../../../voxura';
 export default class MinecraftJavaVanilla extends InstanceCreator {
     public static id = 'minecraft-java-vanilla';
     public async create(data: any[]) {
         const instance = await voxura.instances.createInstance(data[0]);
-        instance.store.components.push(new MinecraftComponent(instance, {
+        instance.store.components.push(new MinecraftJava(instance, {
             version: data[1]
         }));
         await instance.store.save();
@@ -33,7 +32,7 @@ function Component({ setData, setSatisfied }: ComponentProps) {
     const { t } = useTranslation('interface');
     const [name, setName] = useState('');
     const [version, setVersion] = useState<ComponentVersion | null>(null);
-    const versions = useComponentVersions(MinecraftComponent);
+    const versions = useComponentVersions(MinecraftJava);
     useEffect(() => {
         setData([name, version?.id]);
         setSatisfied(!!name && !!versions);
@@ -45,9 +44,9 @@ function Component({ setData, setSatisfied }: ComponentProps) {
 
             <InputLabel spacious>{t('common.label.minecraft_version')}</InputLabel>
             <Typography size={14} noSelect>
-                {version ? `${t(`voxura:component.${MinecraftComponent.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
+                {version ? `${t(`voxura:component.${MinecraftJava.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
             </Typography>
         </Grid>
-        {versions && <VersionPicker id={MinecraftComponent.id} value={version} versions={versions} onChange={setVersion}/>}
+        {versions && <VersionPicker id={MinecraftJava.id} value={version} versions={versions} onChange={setVersion}/>}
     </Grid>
 };
