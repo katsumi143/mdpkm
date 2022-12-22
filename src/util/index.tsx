@@ -15,6 +15,21 @@ export function getImage(name?: string) {
     return IMAGES[name as keyof typeof IMAGES] ?? IMAGES.placeholder;
 };
 
+const DEFAULT_ICON_PATH = 'img/icons/instances/default#.svg';
+export function getDefaultInstanceIcon(name?: string) {
+	if (!name)
+		return IMAGES.placeholder;
+
+	let hash = 0;
+    for (let i = 0; i < name.length; i++)
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    hash = Math.abs(hash);
+
+    if (hash % 69420 === 0)
+        return DEFAULT_ICON_PATH.replace('#', '8');
+	return DEFAULT_ICON_PATH.replace('#', (Math.floor(hash % 7) + 1).toString());
+}
+
 export function getDefaultInstanceBanner(name?: string) {
 	if (!name)
 		return IMAGES.placeholder;

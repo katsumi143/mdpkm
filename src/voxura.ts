@@ -3,14 +3,20 @@ import CheckCircle from '~icons/bi/check-circle';
 import DownloadIcon from '~icons/bi/download';
 import { useMemo, useState, useEffect } from 'react';
 
-import { toast } from './util';
-import { Voxura } from '../voxura';
+import { toast, getDefaultInstanceIcon } from './util';
+import { Voxura, Instance } from '../voxura';
 import { APP_DIR } from './util/constants';
+import { Download } from '../voxura/src/downloader';
 import type Account from '../voxura/src/auth/account';
 import mdpkmPlatform from './mdpkm/platform';
 import VersionedComponent from '../voxura/src/instances/component/versioned-component';
 import type { ComponentVersions } from '../voxura/src/types';
-import { Download } from '../voxura/src/downloader';
+
+Object.defineProperty(Instance.prototype, 'defaultIcon', {
+	get: function() {
+		return getDefaultInstanceIcon(this.name);
+	}
+})
 
 const voxura = new Voxura(APP_DIR);
 voxura.addPlatform(new mdpkmPlatform());

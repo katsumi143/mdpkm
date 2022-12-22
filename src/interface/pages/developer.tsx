@@ -8,11 +8,10 @@ import voxura from '../../voxura';
 import Patcher from '../../plugins/patcher';
 import PluginSystem from '../../plugins';
 import { COMPONENT_MAP } from '../../voxura';
-import { getDefaultIcon } from '../../../voxura/src/util';
 import { useCurrentAccount } from '../../voxura';
 import mdpkm, { INSTANCE_CREATORS } from '../../mdpkm';
 import { APP_DIR, APP_NAME, APP_VERSION } from '../../util/constants';
-import { toast, getDefaultInstanceBanner } from '../../util';
+import { toast, getDefaultInstanceIcon, getDefaultInstanceBanner } from '../../util';
 export default function Developer() {
 	const { t } = useTranslation();
 	const account = useCurrentAccount();
@@ -55,7 +54,7 @@ export default function Developer() {
 
 		<InputLabel spaciouser>Default Instance Icon Tester</InputLabel>
 		<Grid spacing={8}>
-			<ImageWrapper src={getDefaultIcon(iconTest)} size={32} canPreview/>
+			<ImageWrapper src={getDefaultInstanceIcon(iconTest)} size={32} canPreview/>
 			<TextInput
 				value={iconTest}
 				onChange={setIconTest}
