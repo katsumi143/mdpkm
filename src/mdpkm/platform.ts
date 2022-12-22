@@ -1,6 +1,6 @@
 import { fetch, ResponseType } from '@tauri-apps/api/http';
 
-import { Mod, Project, Platform } from '../voxura';
+import { Mod, Project, Platform } from '../../voxura';
 export default class mdpkmPlatform extends Platform {
 	public static id = 'mdpkm';
 	public search(query: string, options: {

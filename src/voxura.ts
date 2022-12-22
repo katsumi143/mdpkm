@@ -3,14 +3,12 @@ import CheckCircle from '~icons/bi/check-circle';
 import DownloadIcon from '~icons/bi/download';
 import { useMemo, useState, useEffect } from 'react';
 
-import { toast, getDefaultInstanceIcon } from './util';
-import { Voxura, Instance } from '../voxura';
 import { APP_DIR } from './util/constants';
 import { Download } from '../voxura/src/downloader';
 import type Account from '../voxura/src/auth/account';
 import mdpkmPlatform from './mdpkm/platform';
-import VersionedComponent from '../voxura/src/instances/component/versioned-component';
-import type { ComponentVersions } from '../voxura/src/types';
+import { toast, getDefaultInstanceIcon } from './util';
+import { Voxura, Instance, ComponentVersions, VersionedComponent } from '../voxura';
 
 Object.defineProperty(Instance.prototype, 'defaultIcon', {
 	get: function() {
@@ -71,7 +69,7 @@ export function useInstances() {
 };
 export function useRecentInstances() {
     const subscription = useMemo(() => ({
-        subscribe: (callback: any) => voxura.instances.listenForEvent('changed', callback),
+        subscribe: (callback: any) => voxura.instances.listenForEvent('listChanged', callback),
         getCurrentValue: () => voxura.instances.getRecent()
     }), []);
     return useSubscription(subscription);
