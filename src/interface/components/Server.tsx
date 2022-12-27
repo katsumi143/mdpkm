@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
-import { Link, Grid, Image, Button, Typography } from 'voxeliface';
+import { Link, Grid, Image, Typography } from 'voxeliface';
 
 import ImagePreview from './ImagePreview';
 
+import type { Instance } from '../../../voxura';
 import { useAppSelector } from '../../store/hooks';
 export type ServerProps = {
 	name: string,
@@ -12,15 +13,15 @@ export type ServerProps = {
 	type?: string,
 	players?: any,
 	address?: string,
-	instanceId?: string,
+	instance?: Instance,
 	acceptTextures?: number
 };
-export default function Server({ name, icon, motd, type, players, address, instanceId, acceptTextures }: ServerProps) {
+export default function Server({ name, icon, motd, type, players, address, acceptTextures }: ServerProps) {
     const { t } = useTranslation('interface');
     const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
     const [previewIcon, setPreviewIcon] = useState(false);
     
-    const iconSize = isCompact ? 32 : 48;
+    const iconSize = isCompact ? 32 : 40;
     const serverIcon = icon ? icon.startsWith('data:') ? icon : `data:image/png;base64,${icon}` : 'img/icons/minecraft/unknown_server.png';
     return <Grid height="fit-content" spacing={12} smoothing={1} borderRadius={16} css={{
 		border: 'transparent solid 1px',

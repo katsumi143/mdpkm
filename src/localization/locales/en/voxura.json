@@ -1,4 +1,12 @@
 {
+	"component.java-agent": "Java Agent",
+
+	"component.java-temurin": "Eclipse Temurin (Java)",
+	"component.java-temurin.summary": "placeholder",
+	"component.java-temurin.versions": "Java Versions",
+	"component.java-temurin.release_category.0": "Releases",
+	"component.java-temurin.release_category.0.singular": "Release",
+
     "component.minecraft-java-vanilla": "Minecraft: Java Edition",
     "component.minecraft-java-vanilla.summary": "Simply Vanilla Minecraft, no mods or anything special.",
     "component.minecraft-java-vanilla.versions": "Minecraft Versions",
@@ -10,6 +18,8 @@
     "component.minecraft-java-vanilla.release_category.2.singular": "Old Beta",
     "component.minecraft-java-vanilla.release_category.3": "Old Alphas",
     "component.minecraft-java-vanilla.release_category.3.singular": "Old Alpha",
+	"component.minecraft-java-vanilla.content_tab.0": "Resource Packs",
+	"component.minecraft-java-vanilla.settings_tab.0": "Servers",
 
     "component.minecraft-bedrock-vanilla": "Minecraft Bedrock Edition",
     "component.minecraft-bedrock-vanilla.summary": "Simply Bedrock Edition with downloadable content.\nWindows 10+ only, requires a Microsoft Store account.",
@@ -35,5 +45,10 @@
 
 	"platform.modrinth": "Modrinth",
 	"platform.curseforge": "CurseForge",
-	"platform.feedthebeast": "Feed the Beast"
+	"platform.feedthebeast": "Feed the Beast",
+
+	"launch_error.missing_game": "Your instance is missing a valid game component.",
+	"launch_error.missing_dependency": "$t(voxura:component.{{0}}) requires $t(voxura:component.{{1}}) version {{2}}.",
+	"launch_error.manifest_download_failed": "Failed to download manifest for $t(voxura:component.{{0}}) v{{1}}",
+	"launch_error.dependency_version_unsatisfied": "$t(voxura:component.{{0}}) requires $t(voxura:component.{{1}}) version {{2}}, but only version {{3}} was found."
 }

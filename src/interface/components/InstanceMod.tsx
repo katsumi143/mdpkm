@@ -9,24 +9,22 @@ import { Link, Grid, Image, Button, Typography, TextHeader } from 'voxeliface';
 import Patcher from '../../plugins/patcher';
 import type Mod from '../../../voxura/src/util/mod';
 import { useInstance } from '../../voxura';
+import type { Instance } from '../../../voxura';
 import { useAppSelector } from '../../store/hooks';
 export type InstanceModProps = {
     mod: Mod,
     updates?: any[],
     embedded?: boolean,
-    instanceId?: string
+    instance?: Instance
 };
-export default Patcher.register(function InstanceMod({ mod, embedded, instanceId }: InstanceModProps) {
+export default Patcher.register(function InstanceMod({ mod, embedded, instance }: InstanceModProps) {
     const { t } = useTranslation('interface');
 	const update = null;
-    const instance = useInstance(instanceId ?? '');
     const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
     const [showInfo, setShowInfo] = useState(false);
     const [previewIcon, setPreviewIcon] = useState(false);
     const deleteMod = () => null;
-    if (!instance)
-        throw new Error('could not find instance');
-
+	
     const iconSize = isCompact ? 32 : 40;
     return <Grid vertical>
         <Grid spacing={8} vertical smoothing={1} background="$secondaryBackground2" borderRadius={16} css={{

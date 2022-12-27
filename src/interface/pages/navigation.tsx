@@ -13,14 +13,16 @@ import Accounts from './accounts';
 import Downloads from './downloads';
 import Instances from './instances';
 import Developer from './developer';
+import LaunchError from '../components/LaunchError';
 import { Main, SideNavigation, NavigationItem } from 'voxeliface';
 
 import { setPage } from '../../store/slices/interface';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 export default function Navigation() {
     const { t } = useTranslation('interface');
-    const dispatch = useAppDispatch();
     const page = useAppSelector(state => state.interface.page);
+	const dispatch = useAppDispatch();
+	const launchError = useAppSelector(state => state.interface.launchError);
 
     const changePage = (page: string) => dispatch(setPage(page));
     return <App>
@@ -65,6 +67,7 @@ export default function Navigation() {
             </SideNavigation>
             <Toaster position="bottom-right"/>
         </Main>
+		{launchError && <LaunchError data={launchError}/>}
     </App>;
 };
 

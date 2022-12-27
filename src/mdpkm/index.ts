@@ -2,8 +2,8 @@ import { t } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
 import NewsSource from './news/source';
-import { Instance } from '../../voxura';
 import { NEWS_SOURCES } from './news';
+import { Instance, Component } from '../../voxura';
 export enum LoaderIssueId {
     MissingLoaderEntry,
     LaunchUnavailable,
@@ -86,3 +86,25 @@ import MinecraftJavaVanilla from './instance-creator/minecraft-java-vanilla';
 export const INSTANCE_CREATORS = [new MinecraftJavaVanilla(), new FabricLoader(), new QuiltLoader()];
 
 export { default as InstanceCreator } from './instance-creator';
+
+import ServerManagement from '../interface/components/ServerManagement';
+import ResourcePackManagement from '../interface/components/ResourcePackManagement';
+import { JSXElementConstructor } from 'react';
+export const COMPONENT_EXTRAS: Record<Component<any>["id"], ComponentExtra> = {
+	[QuiltLoader.id]: {
+		enabledContentTabs: ['essential', 'modSearch', 'modManagement']
+	},
+	[FabricLoader.id]: {
+		enabledContentTabs: ['essential', 'modSearch', 'modManagement']
+	},
+	[MinecraftJavaVanilla.id]: {
+		contentTabs: [ResourcePackManagement],
+		settingsTabs: [ServerManagement]
+	}
+};
+
+export interface ComponentExtra {
+	contentTabs?: JSXElementConstructor<{ instance: Instance }>[],
+	settingsTabs?: JSXElementConstructor<{ instance: Instance }>[],
+	enabledContentTabs?: ('essential' | 'modSearch' | 'modManagement')[]
+};

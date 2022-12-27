@@ -107,14 +107,6 @@ export default class mdpkmPlatform extends Platform {
     public async getMod(id: string): Promise<mdpkmMod> {
         return new mdpkmMod(id, await this.getProjectData(id), this);
     }
-
-    public get displayName() {
-        return 'mdpkm';
-    }
-
-    public get webIcon() {
-        return 'img/icons/platforms/modrinth.svg';
-    }
 };
 
 interface ProjectData {

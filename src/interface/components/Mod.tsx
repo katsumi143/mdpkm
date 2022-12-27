@@ -10,25 +10,24 @@ import { ModSide } from '../../../voxura/src/platform/mod';
 import { useInstance } from '../../voxura';
 import { useAppSelector } from '../../store/hooks';
 import { useStoredValue } from '../../../voxura/src/storage';
-import type { Mod, Platform, VoxuraStore } from '../../../voxura';
+import type { Mod, Platform, Instance, VoxuraStore } from '../../../voxura';
 export type ModProps = {
     id?: string,
     data?: Mod,
     featured?: boolean,
 	platform?: Platform,
-    instanceId?: string,
+    instance?: Instance,
     recommended?: boolean
 };
-export default Patcher.register(function Mod({ id, data, featured, platform, instanceId, recommended }: ModProps) {
+export default Patcher.register(function Mod({ id, data, featured, platform, instance, recommended }: ModProps) {
     const { t } = useTranslation('interface');
-    const instance = useInstance(instanceId!);
 	const projects = useStoredValue<VoxuraStore["projects"]>('projects', {});
     const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
 	const useSymlinks = useAppSelector(state => state.settings['download.useLinks']);
     const showSummary = useAppSelector(state => state.settings['instances.modSearchSummaries']);
     const [mod, setMod] = useState(data);
     const [loading, setLoading] = useState(!data);
-    const installed = Object.values(projects).some(p => p.id === (id ?? data?.id));//store?.modifications?.some(m => m[3] === mod?.slug);
+    const installed = instance ? Object.entries(projects).filter(e => instance.modifications.some(m => m.md5 === e[0])).some(e => e[1].id === (id ?? data?.id)) : false;
     const installing = false;//downloading?.some(d => d.id === (mod?.id ?? mod?.project_id));
     const installMod = () => instance?.installMod(mod!, useSymlinks);
 	console.log(projects, id ?? data?.id);

@@ -4,12 +4,11 @@ import { Grid, Button, TextInput, Typography, TextHeader, InputLabel } from 'vox
 
 import ImageWrapper from '../components/ImageWrapper';
 
-import voxura from '../../voxura';
 import Patcher from '../../plugins/patcher';
 import PluginSystem from '../../plugins';
-import { COMPONENT_MAP } from '../../voxura';
-import { useCurrentAccount } from '../../voxura';
+import { COMPONENT_MAP } from '../../../voxura';
 import mdpkm, { INSTANCE_CREATORS } from '../../mdpkm';
+import voxura, { useCurrentAccount } from '../../voxura';
 import { APP_DIR, APP_NAME, APP_VERSION } from '../../util/constants';
 import { toast, getDefaultInstanceIcon, getDefaultInstanceBanner } from '../../util';
 export default function Developer() {

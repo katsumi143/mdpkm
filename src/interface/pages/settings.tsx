@@ -258,8 +258,8 @@ export default Patcher.register(function Settings() {
 						<Typography noSelect lineheight={1}>
 							{t(`app.mdpkm.plugin.${plugin.id}:name`)}
 						</Typography>
-						<Typography size={14} color="$secondaryColor" noSelect lineheight={1}>
-							{plugin.id} {plugin.version}
+						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
+							{t('common.label.version', [plugin.version])}
 						</Typography>
 					</Grid>
 					<Grid spacing={8} css={{ right: 16, position: 'absolute' }}>

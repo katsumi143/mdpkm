@@ -4,7 +4,8 @@ import { Grid, Button, Typography, BasicSpinner } from 'voxeliface';
 
 import Instance from './Instance';
 import LoadingInstances from './LoadingInstances';
-import voxura, { Instance as VoxuraInstance, useInstances } from '../../voxura';
+import voxura, { useInstances } from '../../voxura';
+import { Instance as VoxuraInstance } from '../../../voxura';
 
 export type InstanceListProps = {
     id: string

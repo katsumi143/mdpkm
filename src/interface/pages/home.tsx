@@ -21,7 +21,7 @@ export default function Home() {
 	const greeting = useMemo(() => getGreeting(), []);
 	const [news, setNews] = useState<any[] | null>(null);
 	useEffect(() => {
-		mdpkm.getNewsSource('minecraft')?.getNews().then(setNews);
+		mdpkm.getNewsSource('minecraft')?.getNews().then(news => setNews(news.slice(0, 10)));
 	}, []);
 
 	const loadingInstances = voxura.instances.loading;
@@ -50,10 +50,12 @@ export default function Home() {
 						}
 					}}/>
 					<Grid vertical>
-						<Typography size={20}>
+						<Typography size={20} noSelect>
 							{t(`home.greeting.${greeting}`)}
 						</Typography>
-						<Typography size={18} color="$secondaryColor">{account?.name}!</Typography>
+						<Typography size={18} color="$secondaryColor" noSelect>
+							{account?.name}!
+						</Typography>
 					</Grid>
 				</Grid>
 				<Grid spacing={8} vertical>
@@ -61,11 +63,11 @@ export default function Home() {
 						borderBottom: '1px solid $secondaryBorder2',
 						paddingBottom: 6
 					}}>
-						<Typography>{t('home.news.title')}</Typography>
+						<Typography noSelect>{t('home.news.title')}</Typography>
 						<ViewAll/>
 					</Grid>
-					<Grid width="100%" spacing={8} borderRadius={8} css={{ overflowX: 'auto' }}>
-						{news?.map((item, key) => <NewsItem key={key} item={item} />)}
+					<Grid width="100%" spacing={8} borderRadius={8} css={{ overflow: 'hidden' }}>
+						{news?.map((item, key) => <NewsItem key={key} item={item}/>)}
 					</Grid>
 				</Grid>
 			</Grid>
@@ -74,7 +76,7 @@ export default function Home() {
 					borderBottom: '1px solid $secondaryBorder2',
 					paddingBottom: 6
 				}}>
-					<Typography>{t('home.recent_instances.title')}</Typography>
+					<Typography noSelect>{t('home.recent_instances.title')}</Typography>
 					<ViewAll onClick={() => dispatch(setPage('instances'))}/>
 				</Grid>
 				<Grid height="100%" spacing={8} vertical css={{ overflowY: 'auto' }}>
@@ -102,7 +104,7 @@ export type ViewAllProps = {
 };
 function ViewAll({ onClick }: ViewAllProps) {
 	const { t } = useTranslation('interface');
-	return <Typography size={12} color="$linkColor" onClick={onClick} css={{
+	return <Typography size={12} color="$linkColor" onClick={onClick} noSelect css={{
 		cursor: 'pointer',
 		'&:hover': { color: '$primaryColor' }
 	}}>

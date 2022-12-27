@@ -7,7 +7,6 @@ export default function DefaultApp(props: AppProps) {
     const theme = useAppSelector(state => state.settings.theme);
     return <BreakpointProvider>
 		<App
-			css={{ borderRadius: 8 }}
 			theme={theme}
 			{...props}
 		/>

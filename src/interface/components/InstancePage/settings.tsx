@@ -49,17 +49,6 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 				<TextInput value={name} onChange={setName}/>
 
 				<InputLabel spaciouser>
-					{t('instance_page.settings.memory', [memory[0].toLocaleString('en', { minimumFractionDigits: 1 })])}
-				</InputLabel>
-				<Slider
-					min={.5}
-					max={Math.floor((TOTAL_SYSTEM_MEMORY / 1000000000) / 1.4)}
-					step={.5}
-					value={memory}
-					onChange={setMemory}
-				/>
-
-				<InputLabel spaciouser>
 					{t('instance_page.settings.resolution')}
 				</InputLabel>
 				<Grid spacing={8}>
@@ -98,22 +87,39 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 						</Button>
 					</Dialog.Trigger>
 					<Dialog.Content>
-						<Dialog.Title>Are you absolutely sure?</Dialog.Title>
-						<Dialog.Description>
-							This action cannot be undone.<br/>
-							'{instance.name}' will be lost forever! (A long time!)
+						<Dialog.Title>{t('dialog.delete_instance')}</Dialog.Title>
+						<Dialog.Description css={{ whiteSpace: 'pre' }}>
+							{t('dialog.delete_instance.body', [instance.name])}
 						</Dialog.Description>
-						<Grid margin="25 0 0" justifyContent="end">
+						<Grid spacing={16} justifyContent="end">
 							<Dialog.Close asChild>
 								<Button theme="accent" onClick={deleteInstance}>
-									Yes, delete Instance
+									<IconBiCheckLg/>
+									{t('common.action.confirm')}
+								</Button>
+							</Dialog.Close>
+							<Dialog.Close asChild>
+								<Button theme="secondary">
+									<IconBiXLg/>
+									{t('common.action.cancel')}
 								</Button>
 							</Dialog.Close>
 						</Grid>
 					</Dialog.Content>
 				</Dialog.Root>
 			</TabItem>
-			<TabItem name="Advanced" icon={<IconBiGear/>} value={1}>
+			<TabItem name="Advanced" icon={<IconBiGear/>} value={1} spacing={0} padding="0 8px !important">
+				<InputLabel>
+					{t('instance_page.settings.memory', [memory[0].toLocaleString('en', { minimumFractionDigits: 1 })])}
+				</InputLabel>
+				<Slider
+					min={.5}
+					max={Math.floor((TOTAL_SYSTEM_MEMORY / 1000000000) / 1.4)}
+					step={.5}
+					value={memory}
+					onChange={setMemory}
+				/>
+
 				<Typography size={14} color="$linkColor" margin="32px 0 0" onClick={() => setAdvanced(true)} css={{
 					cursor: 'pointer'
 				}}>

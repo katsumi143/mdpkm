@@ -18,19 +18,15 @@ Object.defineProperty(Instance.prototype, 'defaultIcon', {
 
 const voxura = new Voxura(APP_DIR);
 voxura.addPlatform(new mdpkmPlatform());
-voxura.init().then(() => {
-	voxura.startInstances();
-	voxura.auth.loadFromFile().then(() => voxura.auth.refreshAccounts());
-});
 
 const hiddenDownloads = ['component_library'];
 voxura.downloader.listenForEvent('downloadStarted', (download: Download) => {
 	if (hiddenDownloads.indexOf(download.id) === -1)
-    	toast('Download Started', t(`download.${download.id}`, download.extraData) as any, DownloadIcon);
+    	toast('Download Started', t(`mdpkm:download.${download.id}`, download.extraData) as any, DownloadIcon);
 });
 voxura.downloader.listenForEvent('downloadFinished', (download: Download) => {
     if (hiddenDownloads.indexOf(download.id) === -1)	
-		toast('Download Finished', t(`download.${download.id}`, download.extraData) as any, CheckCircle);
+		toast('Download Finished', t(`mdpkm:download.${download.id}`, download.extraData) as any, CheckCircle);
 })
 
 export function useAccounts(): Account[] {
@@ -83,12 +79,15 @@ export function useDownloads() {
     return useSubscription(subscription);
 };
 
-export function useComponentVersions(component: VersionedComponent | typeof VersionedComponent) {
+export function useComponentVersions(component?: VersionedComponent | typeof VersionedComponent) {
     const [value, setValue] = useState<ComponentVersions | null>(null);
     useEffect(() => {
-        setValue(null);
-        component.getVersions().then(setValue);
-    }, []);
+		if (component?.getVersions) {
+			setValue(null);
+			component?.getVersions().then(setValue);
+		} else
+			setValue([]);
+    }, [component]);
     return value;
 };
 
@@ -138,9 +137,6 @@ function useSubscription<T>({ subscribe, getCurrentValue }: {
     }, [getCurrentValue, subscribe]);
     return valueToReturn;
 }
-
-export * from '../voxura';
-export { AvatarType } from '../voxura/src/auth/account';
 
 console.log('started voxura', voxura);
 (globalThis as any).voxura = voxura;

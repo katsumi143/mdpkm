@@ -1,3 +1,4 @@
+import { fetch } from '@tauri-apps/api/http';
 import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 import { Grid, TextInput, InputLabel, Typography } from 'voxeliface';
@@ -6,15 +7,29 @@ import VersionPicker from '../../interface/components/VersionPicker';
 
 import InstanceCreator from '.';
 import voxura, { useComponentVersions } from '../../voxura';
-import { MinecraftJava, ComponentVersion } from '../../../voxura';
+import { JavaTemurin, MinecraftJava, ComponentVersion } from '../../../voxura';
+import { MANIFESTS_URL, MinecraftJavaManifest, VersionManifestResponse } from '../../../voxura/src/component/minecraft-java';
 export default class MinecraftJavaVanilla extends InstanceCreator {
     public static id = 'minecraft-java-vanilla';
-    public async create(data: any[]) {
+    public async create(data: any[], save: boolean = true) {
         const instance = await voxura.instances.createInstance(data[0]);
-        instance.store.components.push(new MinecraftJava(instance, {
-            version: data[1]
-        }));
-        await instance.store.save();
+
+		const manifests = await fetch<VersionManifestResponse>(MANIFESTS_URL);
+		const manifestData = manifests.data.versions.find(m => m.id === data[1]);
+		if (!manifestData)
+			throw new Error('could not find manifest');
+
+		const manifest = await fetch<MinecraftJavaManifest>(manifestData.url);
+        instance.store.components.push(
+			new MinecraftJava(instance, {
+				version: data[1]
+			}),
+			new JavaTemurin(instance, {
+				version: await JavaTemurin.getLatestVersion(manifest.data.javaVersion.majorVersion)
+			})
+		);
+		if (save)
+        	await instance.store.save();
 
         return instance;
     }

@@ -3,7 +3,9 @@
 	"instance_category.favorites": "Your Favourites",
 
 	"download.temurin": "Eclipse Temurin Java Development Kit {{0}}",
+	"download.java_agent": "Java Agent",
 	"download.minecraft_java": "Minecraft: Java Edition {{0}}",
+	"download.component_manifest": "{{0}} {{1}} Manifest",
 	"download.component_libraries": "{{0}} {{1}} Libraries",
 	"download.minecraft_java_assets": "Minecraft: Java Edition {{0}} Assets",
 	"download.minecraft_java_manifest": "Minecraft: Java Edition {{0}} Manifest",

@@ -1,17 +1,17 @@
 import React from 'react';
 import i18next from 'i18next';
-import * as xml from 'xmlbuilder2';
-import * as http from '@tauri-apps/api/http';
 import { encode } from 'js-base64';
-import * as reacti18n from 'react-i18next';
+import * as ReactDOM from 'react-dom';
+import * as TauriAPI from '@tauri-apps/api';
+import * as Reacti18n from 'react-i18next';
 import { readDir, createDir, readTextFile } from '@tauri-apps/api/fs';
 
 import Plugin from './plugin';
-import Patcher from './patcher';
 import * as Util from '../util';
 import * as mdpkm from '../mdpkm';
 import { APP_DIR } from '../util/constants';
-import * as Voxura from '../voxura';
+import * as Voxura from '../../voxura';
+import * as Constants from '../util/constants';
 import * as Voxeliface from 'voxeliface';
 
 // For plugin developers:
@@ -64,23 +64,20 @@ export default class PluginSystem {
         for (const { name, path, children } of files)
             if (name && !children && name.endsWith('.plugin.js'))
                 await this.loadPluginFile(name, path).catch(err => {
-                    console.warn(err);
-                    Util.toast('Unknown plugin error', `${name} failed to load.`)
+                    Util.toast('Unknown plugin error', `${name} failed to load.`);
+					throw err;
                 });
     }
 };
 
-(globalThis as any).__mdpkm__ = {
-    xml,
-    Util,
-    http,
-    mdpkm,
-    React,
-    Plugin,
-    Voxura,
-    i18next,
-    Patcher,
-    reacti18n,
-    Voxeliface,
-    PluginSystem
-};
+const global = globalThis as any;
+global.Util = Util;
+global.mdpkm = mdpkm;
+global.React = React;
+global.Voxura = Voxura;
+global.i18next = i18next;
+global.ReactDOM = ReactDOM;
+global.TauriAPI = TauriAPI;
+global.Reacti18n = Reacti18n;
+global.Constants = Constants;
+global.Voxeliface = Voxeliface;

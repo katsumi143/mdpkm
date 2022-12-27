@@ -11,16 +11,12 @@ import Server from './Server';
 import { Grid, Button, Spinner, TextInput, TextHeader, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
 import Patcher from '../../plugins/patcher';
-import { useInstance } from '../../voxura';
+import type { Instance } from '../../../voxura';
 export type ServerManagementProps = {
-    instanceId: string
+    instance: Instance
 };
-export default Patcher.register(function ServerManagement({ instanceId }: ServerManagementProps) {
+export default Patcher.register(function ServerManagement({ instance }: ServerManagementProps) {
     const { t } = useTranslation('interface');
-    const instance = useInstance(instanceId);
-    if (!instance)
-        return;
-
     const [data, setData] = useState<any>();
     const [items, setItems] = useState<any>();
     const [filter, setFilter] = useState('');
@@ -83,8 +79,8 @@ export default Patcher.register(function ServerManagement({ instanceId }: Server
         } else
             setAddingInfo(null);
     }, [addingAddress2]);
-    useEffect(() => setItems(null), [instanceId]);
-	console.log(data);
+    useEffect(() => setItems(null), [instance.id]);
+
     return <React.Fragment>
         <Grid spacing={8} padding="4px 0" justifyContent="space-between">
             <Grid vertical>
@@ -125,7 +121,7 @@ export default Patcher.register(function ServerManagement({ instanceId }: Server
                     name={item.name}
                     icon={item.icon}
                     address={item.ip}
-                    instanceId={instanceId}
+                    instance={instance}
                     acceptTextures={item.acceptTextures?.value}
                 />
             )}

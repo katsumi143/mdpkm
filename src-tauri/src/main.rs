@@ -25,9 +25,8 @@ fn main() {
 				.center()
 				.focused(true)
 				.resizable(true)
-				.maximized(sys.long_os_version().unwrap().to_lowercase().contains("steam"))
 				.inner_size(1200.0, 650.0)
-				.transparent(true)
+				.fullscreen(sys.long_os_version().unwrap().to_lowercase().contains("steam"))
 				.decorations(false)
 				.build()?;
 			Ok(())

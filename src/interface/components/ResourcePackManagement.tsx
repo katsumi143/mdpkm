@@ -3,20 +3,18 @@ import { open } from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
 import { exists, readTextFile } from '@tauri-apps/api/fs';
 import React, { useState, useEffect } from 'react';
-
-import ImagePreview from './ImagePreview';
 import { Link, Grid, Image, Button, Typography, BasicSpinner } from 'voxeliface';
 
+import ImagePreview from './ImagePreview';
+
 import Util from '../../common/util';
-import Patcher from '../../plugins/patcher';
-import { useInstance } from '../../voxura';
+import type { Instance } from '../../../voxura';
 import { useAppSelector } from '../../store/hooks';
 export type ResourcePackManagementProps = {
-    instanceId: string
+    instance: Instance
 };
-export default Patcher.register(function ResourcePackManagement({ instanceId }: ResourcePackManagementProps) {
+export default function ResourcePackManagement({ instance }: ResourcePackManagementProps) {
     const { t } = useTranslation('interface');
-    const instance = useInstance(instanceId);
     const [items, setItems] = useState<any[] | string | null>(null);
     const [filter, setFilter] = useState('');
     const addResourcePack = async() => {
@@ -71,7 +69,7 @@ export default Patcher.register(function ResourcePackManagement({ instanceId }: 
             });
         }
     }, [items]);
-    useEffect(() => setItems(null), [instanceId]);
+    useEffect(() => setItems(null), [instance.id]);
     return <React.Fragment>
         <Grid margin="4px 0" spacing={8} justifyContent="space-between">
             <Grid vertical>
@@ -102,7 +100,7 @@ export default Patcher.register(function ResourcePackManagement({ instanceId }: 
             name.toLowerCase().includes(filter)
         ).map((item, key) => <ResourcePack key={key} item={item}/>)}
     </React.Fragment>;
-});
+};
 
 export type ResourcePackProps = {
     item: any

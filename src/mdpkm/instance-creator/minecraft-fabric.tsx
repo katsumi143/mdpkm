@@ -5,17 +5,15 @@ import { Grid, Select, TextInput, InputLabel, Typography } from 'voxeliface';
 import VersionPicker from '../../interface/components/VersionPicker';
 
 import InstanceCreator from '.';
+import MinecraftJavaCreator from './minecraft-java-vanilla';
+import { useComponentVersions } from '../../voxura';
 import type { ComponentVersion } from '../../../voxura/src/types';
-import voxura, { useComponentVersions } from '../../voxura';
 import { MinecraftJava, MinecraftFabric } from '../../../voxura';
 export default class FabricLoader extends InstanceCreator {
     public static id = 'fabric';
     public async create(data: any[]) {
-        const instance = await voxura.instances.createInstance(data[0]);
+        const instance = await new MinecraftJavaCreator().create(data, false);
         instance.store.components.push(
-            new MinecraftJava(instance, {
-                version: data[1]
-            }),
             new this.component(instance, {
                 version: data[2]
             })
@@ -26,25 +24,26 @@ export default class FabricLoader extends InstanceCreator {
     }
 
     public render(setData: (value: any[]) => void, setSatisfied: (value: boolean) => void) {
-        return <Component setData={setData} setSatisfied={setSatisfied}/>;
+        return <Component creator={this} setData={setData} setSatisfied={setSatisfied}/>;
     }
 
-    protected readonly component = MinecraftFabric;
+    public readonly component = MinecraftFabric;
 };
 
 export type ComponentProps = {
-    setData: (value: any[]) => void,
+	creator: FabricLoader
+    setData: (value: any[]) => void
     setSatisfied: (value: boolean) => void
 };
-function Component({ setData, setSatisfied }: ComponentProps) {
+function Component({ setData, creator, setSatisfied }: ComponentProps) {
     const { t } = useTranslation('interface');
     const [name, setName] = useState('');
     const [version, setVersion] = useState<ComponentVersion | null>(null);
-    const [version2, setVersion2] = useState<ComponentVersion | null>(null);
+    const [version2, setVersion2] = useState<number>(0);
     const versions = useComponentVersions(MinecraftJava);
-    const versions2 = useComponentVersions(MinecraftFabric)?.[0];
+    const versions2 = useComponentVersions(creator.component)?.[0];
     useEffect(() => {
-        setData([name, version?.id, version2?.id]);
+        setData([name, version?.id, versions2?.[version2]?.id]);
         setSatisfied(!!name && !!versions && !!versions2);
     }, [name, version, version2, versions, versions2]);
     return <Grid width="100%" height="100%" spacing={16}>
@@ -58,11 +57,11 @@ function Component({ setData, setSatisfied }: ComponentProps) {
             </Typography>
 
             <InputLabel spacious>{t('common.label.val_version', {
-                val: t(`voxura:component.${FabricLoader.id}`)
+                val: t(`voxura:component.${creator.component.id}`)
             })}</InputLabel>
             <Select.Minimal value={version2} loading={!versions2} onChange={setVersion2}>
                 <Select.Group name={t('common.select_group.component_versions')}>
-                    {versions2?.map((version, key) => <Select.Item key={key} value={version}>
+                    {versions2?.map((version, key) => <Select.Item key={key} value={key}>
                         {version.id}
                     </Select.Item>)}
                 </Select.Group>

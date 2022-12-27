@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import { Image, ImageProps } from 'voxeliface';
+import React, { useState, MouseEventHandler } from 'react';
 
-import { Image } from 'voxeliface';
 import ImagePreview from './ImagePreview';
-import { ImageProps } from 'voxeliface/components/Image';
 export type ImageWrapperProps = ImageProps & {
+	ratio?: number,
     shadow?: boolean,
-    canPreview?: boolean
+    canPreview?: boolean,
+	previewWidth?: number
 };
-export default function ImageWrapper({ shadow, canPreview, ...props }: ImageWrapperProps) {
+export default function ImageWrapper({ ratio, shadow, children, canPreview, previewWidth, ...props }: ImageWrapperProps) {
     const [preview, setPreview] = useState(false);
-    const toggle = () => {
+    const toggle: MouseEventHandler<HTMLDivElement> = event => {
+		event.stopPropagation();
         if (canPreview)
             setPreview(v => !v);
     };
@@ -19,6 +21,6 @@ export default function ImageWrapper({ shadow, canPreview, ...props }: ImageWrap
             boxShadow: shadow && '$buttonShadow',
             ...props.css
         }}/>
-        {preview && <ImagePreview {...props} src={props.src} size={256} onClose={toggle}/>}
+        {preview && <ImagePreview src={props.src} ratio={ratio} width={previewWidth} onClose={toggle}/>}
     </React.Fragment>;
 };

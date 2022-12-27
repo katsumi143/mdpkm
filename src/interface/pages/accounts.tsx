@@ -8,8 +8,8 @@ import { Grid, Image, Button, Portal, Typography, TextHeader, BasicSpinner, Drop
 import ImagePreview from '../components/ImagePreview';
 
 import { toast } from '../../util';
-import type { Account } from '../../../voxura';
-import voxura, { AvatarType, useAccounts, useCurrentAccount } from '../../voxura';
+import { Account, AvatarType } from '../../../voxura';
+import voxura, { useAccounts, useCurrentAccount } from '../../voxura';
 export default function Accounts() {
     const { t } = useTranslation('interface');
     const current = useCurrentAccount();
@@ -105,7 +105,7 @@ function UserAccount({ account, current, changeAccount, deleteAccount }: UserAcc
         <Image src={avatarUrl} size={40} onClick={() => setPreviewAvatar(true)} borderRadius={24} css={{
             cursor: 'zoom-in'
         }}/>
-        {previewAvatar && <ImagePreview src={avatarUrl} size={192} onClose={() => setPreviewAvatar(false)}/>}
+        {previewAvatar && <ImagePreview src={avatarUrl} onClose={() => setPreviewAvatar(false)}/>}
         <Grid spacing={2} vertical>
 			<Typography noSelect lineheight={1}>
 				{account.xboxName}

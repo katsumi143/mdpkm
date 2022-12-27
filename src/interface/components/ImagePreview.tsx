@@ -1,6 +1,7 @@
 import { keyframes } from '@stitches/react';
+import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 import React, { MouseEventHandler } from 'react';
-import { Grid, Image, Portal, Typography } from 'voxeliface';
+import { Grid, Image, Portal, Typography, ImageProps } from 'voxeliface';
 
 const openAnimation = keyframes({
     '0%': {
@@ -33,11 +34,12 @@ const openAnimation3 = keyframes({
 });
 export type ImagePreviewProps = {
     src?: string,
-    size?: number,
-    onClose: MouseEventHandler<HTMLDivElement>,
+	ratio?: number,
+	width?: number,
+    onClose?: MouseEventHandler<HTMLDivElement>,
     pixelated?: boolean
 };
-export default function ImagePreview({ src, size, onClose, pixelated }: ImagePreviewProps) {
+export default function ImagePreview({ src, ratio = 1, width = 256, onClose, pixelated }: ImagePreviewProps) {
     return <Portal>
         <Grid width="100vw" height="100vh" spacing={8} onClick={onClose} vertical alignItems="center" background="#000000bf" justifyContent="center" css={{
             top: 0,
@@ -47,10 +49,14 @@ export default function ImagePreview({ src, size, onClose, pixelated }: ImagePre
             position: 'absolute',
             animation: `${openAnimation2} 1s`
         }}>
-            <Image src={src} size={size} smoothing={1} borderRadius={8} css={{
-                animation: `${openAnimation} .5s cubic-bezier(0, 0, 0, 1.0)`,
-                imageRendering: pixelated && 'pixelated'
-            }}/>
+			<Grid width={width}>
+				<AspectRatio.Root ratio={ratio}>
+					<Image src={src} width="100%" height="100%" smoothing={1} borderRadius={16} css={{
+						animation: `${openAnimation} .5s cubic-bezier(0, 0, 0, 1.0)`,
+						imageRendering: pixelated && 'pixelated'
+					}}/>
+				</AspectRatio.Root>
+			</Grid>
             <Typography size={14} color="$secondaryColor" family="$secondary" css={{
                 animation: `${openAnimation3} .75s`
             }}>

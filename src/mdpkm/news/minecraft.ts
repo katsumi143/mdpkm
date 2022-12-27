@@ -2,15 +2,14 @@ import { fetch } from '@tauri-apps/api/http';
 
 import NewsItem from './item';
 import NewsSource from './source';
-export default class MinecraftNews extends NewsSource<MinecraftNewsData> {
+export default class MinecraftNews extends NewsSource<NewsEntry> {
     public readonly id = 'minecraft';
-    public async getNews(useCache = true): Promise<NewsItem<MinecraftNewsData>[]> {
+    public async getNews(useCache = true): Promise<NewsItem<NewsEntry>[]> {
         if (useCache && this.news)
             return this.news;
 
-        const { data } = await fetch<NewsResponse>('https://www.minecraft.net/content/minecraft-net/_jcr_content.articles.grid?pageSize=250');
-
-        return this.news = data.article_grid.map(data => new MinecraftNewsItem(this, data));
+        const { data } = await fetch<NewsResponse>(`${API_BASE}/news.json`);
+        return this.news = data.entries.map(data => new MinecraftNewsItem(this, data));
     }
 
     public get displayName() {
@@ -18,35 +17,44 @@ export default class MinecraftNews extends NewsSource<MinecraftNewsData> {
     }
 };
 
-type NewsResponse = {
-    article_grid: MinecraftNewsData[],
-    article_count: number
-};
-type NewsTile = {
-    title: string,
-    image: {
-        imageURL: string
-    }
-};
-type MinecraftNewsData = {
-	article_url: string,
-    default_tile: NewsTile,
-    preferred_tile?: NewsTile
-};
-class MinecraftNewsItem extends NewsItem<MinecraftNewsData> {
+export const API_BASE = 'https://launchercontent.mojang.com';
+
+export interface NewsResponse {
+    version: number
+	entries: NewsEntry[]
+}
+export interface NewsEntry {
+	id: string
+    tag: string
+	date: string
+	text: string
+	title: string
+	category: string
+	newsType: string[]
+	cardBorder: boolean
+	readMoreLink: string
+	playPageImage: NewsImage
+	newsPageImage: NewsImage & {
+		dimensions: {
+			width: number,
+			height: number
+		}
+	}
+}
+export interface NewsImage {
+	url: string
+	title: string
+}
+class MinecraftNewsItem extends NewsItem<NewsEntry> {
     public get title() {
-        return this.tile.title;
+        return this.data.title;
     }
 
     public get image() {
-        return 'https://minecraft.net' + this.tile.image.imageURL;
+        return `${API_BASE}${this.data.playPageImage.url}`;
     }
 
 	public get url() {
-		return 'https://minecraft.net' + this.data.article_url;
+		return this.data.readMoreLink;
 	}
-
-    private get tile() {
-        return this.data.preferred_tile ?? this.data.default_tile;
-    }
 };

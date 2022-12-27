@@ -90,9 +90,12 @@ export default function SkinFrame({ css, skin, cape, walk, zoom = false, image =
 			composer.render();
 		};
 	
+		skinViewer.globalLight.intensity = 1;
+		skinViewer.cameraLight.intensity = 0;
+
 		skinViewer.controls.enablePan = false;
 		skinViewer.controls.autoRotate = false;
-		skinViewer.controls.rotateSpeed = .25;
+		skinViewer.controls.rotateSpeed = .3;
 	
 		skinViewer.renderer.forceContextRestore();
 		return () => skinViewer.dispose();
@@ -109,7 +112,7 @@ export default function SkinFrame({ css, skin, cape, walk, zoom = false, image =
 
 class WalkAnimation extends PlayerAnimation {
     animate({ skin, cape }: PlayerObject) {
-        const time = this.progress * 4;
+        const time = this.progress * 5;
         skin.leftLeg.rotation.x = Math.sin(time) / 3;
         skin.rightLeg.rotation.x = Math.sin(time + Math.PI) / 3;
 

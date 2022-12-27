@@ -1,5 +1,6 @@
 import React from 'react';
 import { open } from '@tauri-apps/api/shell';
+import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 
 import ImageWrapper from '../ImageWrapper';
 import type NewsItem from '../../../mdpkm/news/item';
@@ -11,17 +12,17 @@ export default function NewsItemComponent({ item }: NewsItemProps) {
 	const view = () => open(item.url);
     return <Tooltip.Root delayDuration={50}>
         <Tooltip.Trigger asChild>
-            <Grid width={96} onClick={view} vertical smoothing={1} background="$secondaryBackground2" borderRadius={8} css={{
-                cursor: 'pointer',
-				minWidth: 96,
-                overflow: 'hidden'
+            <Grid width={120} height={130} onClick={view} vertical smoothing={1} background="$secondaryBackground2" borderRadius={8} justifyContent="space-between" css={{
+                cursor: 'pointer'
             }}>
-                <ImageWrapper src={item.image} size={96} canPreview background="$secondaryBackground"/>
-                <Grid padding={8} vertical>
-                    <Typography size={12} color="$secondaryColor" weight={400} lineheight={1.1}>
+				<AspectRatio.Root ratio={3 / 2}>
+                	<ImageWrapper src={item.image} width="100%" ratio={3 / 2} height="100%" canPreview previewWidth={256}/>
+				</AspectRatio.Root>
+				<Grid padding={8} vertical>
+                    <Typography size={12} color="$secondaryColor" weight={400} noSelect lineheight={1.1}>
                         {item.source.displayName}
                     </Typography>
-                    <Typography size={14} whitespace="nowrap" css={{
+                    <Typography size={14} noSelect whitespace="nowrap" css={{
                         display: 'block',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis'

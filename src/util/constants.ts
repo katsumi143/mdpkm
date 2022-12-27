@@ -20,10 +20,16 @@ export const INSTANCE_STATE_ICONS = [
 export const IMAGES = {
     'placeholder': 'img/icons/instances/default8.svg',
 
+	'component.quilt': 'img/icons/loaders/quilt.svg',
+	'component.fabric': 'img/icons/loaders/fabric.png',
+	'component.java-agent': 'img/icons/java-agent.svg',
+	'component.java-temurin': 'img/icons/temurin.png',
     'component.minecraft-java-vanilla': 'img/icons/minecraft/java.png',
     'component.minecraft-bedrock-vanilla': 'img/icons/minecraft/bedrock.png',
-    'component.fabric': 'img/icons/loaders/fabric.png',
-    'component.quilt': 'img/icons/loaders/quilt.svg',
+
+	'platform.modrinth': 'img/icons/platform/modrinth.svg',
+	'platform.curseforge': 'img/icons/platform/curseforge.svg',
+	'platform.feedthebeast': 'img/icons/platform/feedthebeast.png',
 
 	'instance_banner.1': 'img/banners/instances/banner1_1.png',
 	'instance_banner.2': 'img/banners/instances/banner2.png',

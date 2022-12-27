@@ -20,7 +20,7 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 	const [adding, setAdding] = useState(false);
 
 	const { components } = store;
-	const otherComponents = components.filter(c => c.type === ComponentType.Loader);
+	const otherComponents = components.filter(c => c.type !== ComponentType.Game);
 	return <React.Fragment>
 		<Link size={12} padding="4px 8px">
 			<IconBiQuestionLg/>
@@ -77,7 +77,7 @@ function Issue({ issue }: IssueProps) {
 
 export type ComponentProps = {
 	instance: Instance,
-	component: Component
+	component: Component<any>
 };
 function ComponentUI({ instance, component }: ComponentProps) {
 	const { t } = useTranslation('interface');
@@ -93,7 +93,7 @@ function ComponentUI({ instance, component }: ComponentProps) {
 		border: 'transparent solid 1px',
 		background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
 	}}>
-		<ImageWrapper src={getImage(`component.${component.id}`)} size={40} shadow smoothing={1} canPreview background="$secondaryBackground" borderRadius={8} />
+		<ImageWrapper src={getImage(`component.${component.id}`)} size={40} smoothing={1} canPreview background="$secondaryBackground" borderRadius={8} />
 		<Grid spacing={2} vertical justifyContent="center">
 			<Typography noSelect lineheight={1}>
 				{t(`voxura:component.${component.id}`)}
@@ -121,10 +121,10 @@ export type ComponentAdderProps = {
 	instance: Instance
 };
 function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
-	const { t } = useTranslation();
+	const { t } = useTranslation('interface');
 	const [saving, setSaving] = useState(false);
 	const [version, setVersion] = useState<ComponentVersion | null>(null);
-	const [component, setComponent] = useState<number>(0);
+	const [component, setComponent] = useState<number | null>(null);
 	const components = COMPONENT_MAP.filter(c => c.type !== ComponentType.Game && !instance.store.components.some(s => s.id === c.id));
 	if (!components.length) {
 		toast('Prompt cancelled', 'There are no components available.');
@@ -132,14 +132,14 @@ function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 		return null;
 	}
 
-	const versions = useComponentVersions(components[component] as typeof VersionedComponent);
+	const versions = useComponentVersions(components[component!] as typeof VersionedComponent)
 	const saveChanges = () => {
 		setSaving(true);
 		if (!versions)
 			throw new Error();
 
-		instance.store.components.push(new components[component](instance, {
-			version: version!.id
+		instance.store.components.push(new components[component!](instance, {
+			version: version?.id
 		}));
 		instance.store.save().then(() => {
 			instance.emitEvent('changed');
@@ -150,31 +150,36 @@ function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 	return <Modal width="60%">
 		<TextHeader noSelect>Component Adder</TextHeader>
 		<InputLabel>Component</InputLabel>
-		<Select.Minimal value={component} onChange={setComponent} disabled={!versions || saving}>
+		<Select.Minimal value={component} onChange={setComponent} loading={!versions && component !== null} disabled={(!versions || saving) && component !== null}>
 			<Select.Group name="Available Instance Components">
 				{components.map((component, key) => <Select.Item key={key} value={key}>
 					{t(`voxura:component.${component.id}`)}
 				</Select.Item>)}
 			</Select.Group>
+			<Select.Item value={null} disabled>
+				Select a component
+			</Select.Item>
 		</Select.Minimal>
 
-		<InputLabel spacious>Component Version</InputLabel>
-		<Typography size={14} noSelect>
-			{version ? `${t(`voxura:component.${components[component].id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
-		</Typography>
+		{versions?.length !== 0 && <React.Fragment>
+			<InputLabel spacious>Component Version</InputLabel>
+			<Typography size={14} noSelect>
+				{version ? `${t(`voxura:component.${components[component]?.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
+			</Typography>
 
-		<Grid height={256} margin="16px 0 0">
-			{versions && <VersionPicker id={components[component].id} value={version} versions={versions} onChange={setVersion} />}
-		</Grid>
+			<Grid height={256} margin="16px 0 0">
+				{versions && <VersionPicker id={components[component]?.id} value={version} versions={versions} onChange={setVersion} />}
+			</Grid>
+		</React.Fragment>}
 
 		<Grid margin="16px 0 0" spacing={8}>
 			<Button theme="accent" onClick={saveChanges} disabled={!versions || saving}>
 				{saving ? <BasicSpinner size={16} /> : <IconBiPlusLg />}
 				Add Component
 			</Button>
-			<Button theme="secondary" onClick={onClose} disabled={!versions || saving}>
-				<IconBiXLg />
-				{t(`app.mdpkm.common:actions.cancel`)}
+			<Button theme="secondary" onClick={onClose} disabled={(!versions || saving) && component !== null}>
+				<IconBiXLg/>
+				{t(`common.action.cancel`)}
 			</Button>
 		</Grid>
 	</Modal>;
@@ -185,7 +190,7 @@ export type ComponentEditorProps = {
 	component: VersionedComponent
 };
 function ComponentEditor({ onClose, component }: ComponentEditorProps) {
-	const { t } = useTranslation();
+	const { t } = useTranslation('interface');
 	const versions = useComponentVersions(component);
 	const versionMatcher = (v: ComponentVersion) => v.id === component.version;
 	const [saving, setSaving] = useState(false);
@@ -215,11 +220,11 @@ function ComponentEditor({ onClose, component }: ComponentEditorProps) {
 		<Grid margin="16px 0 0" spacing={8}>
 			<Button theme="accent" onClick={saveChanges} disabled={!versions || saving}>
 				{saving ? <BasicSpinner size={16}/> : <IconBiPencilFill/>}
-				{t(`app.mdpkm.common:actions.save_changes`)}
+				{t('common.action.save_changes')}
 			</Button>
 			<Button theme="secondary" onClick={onClose} disabled={!versions || saving}>
 				<IconBiXLg/>
-				{t(`app.mdpkm.common:actions.cancel`)}
+				{t('common.action.cancel')}
 			</Button>
 		</Grid>
 	</Modal>;

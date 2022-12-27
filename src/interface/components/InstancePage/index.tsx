@@ -12,11 +12,15 @@ import Tabs from '../Tabs';
 import Content from './content';
 import Settings from './settings';
 import ImageWrapper from '../ImageWrapper';
+import { useDispatch } from 'react-redux';
 import type { GridProps } from 'voxeliface';
 import { Grid, Link, Image, TabItem, Typography, BasicSpinner, DropdownMenu } from 'voxeliface';
 
 import Patcher from '../../../plugins/patcher';
+import { LaunchError } from '../../../../voxura';
 import { useAppSelector } from '../../../store/hooks';
+import { setLaunchError } from '../../../store/slices/interface';
+import { COMPONENT_EXTRAS } from '../../../mdpkm';
 import { INSTANCE_STATE_ICONS } from '../../../util/constants';
 import { useInstance, useCurrentAccount } from '../../../voxura';
 import { toast, getDefaultInstanceBanner } from '../../../util';
@@ -28,13 +32,14 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 	const { t } = useTranslation('interface');
 	const account = useCurrentAccount();
 	const uiStyle = useAppSelector(state => state.settings.uiStyle);
+	const dispatch = useDispatch();
 	const instance = useInstance(id);
 	const isCompact = uiStyle === 'compact';
 	const StateIcon = INSTANCE_STATE_ICONS[instance?.state as any];
 	const banner = useMemo(() => {
 		const { banner } = instance ?? {};
 		return banner ? 'data:image/png;base64,' + Buffer.from(banner).toString('base64') : getDefaultInstanceBanner(instance?.name);
-	}, [id, instance?.banner]);
+	}, [instance?.banner]);
 
 	const [tabPage, setTabPage] = useState(0);
 	if (!instance)
@@ -44,6 +49,8 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 		toast('Client has launched', instance.name);
 	}).catch(err => {
 		toast('Unexpected error', 'Failed to launch client.');
+		if (err instanceof LaunchError)
+			dispatch(setLaunchError([id, err.message, err.extraData]));
 		throw err;
 	});
 	const openFolder = () => open(instance.path);
@@ -96,11 +103,11 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 					</ImageWrapper>
 				</Grid>
 				<Grid spacing={isCompact ? 4 : 4} vertical justifyContent="center">
-					<Typography size={isCompact ? 20 : 22} family="$tertiary" lineheight={1} css={{ alignItems: 'start' }}>
+					<Typography size={isCompact ? 20 : 22} family="$tertiary" noSelect lineheight={1} css={{ alignItems: 'start' }}>
 						{instance.isFavourite && <IconBiStarFill fontSize={16}/>}
 						{instance.name}
 					</Typography>
-					<Typography size={isCompact ? 14 : 16} color="$secondaryColor" weight={400} family="$secondary" spacing={6} lineheight={1}>
+					<Typography size={isCompact ? 14 : 16} color="$secondaryColor" weight={400} family="$secondary" spacing={6} noSelect lineheight={1}>
 						<StateIcon fontSize={12}/>
 						{t(`instance.state.${instance.state}`)}
 					</Typography>
@@ -166,7 +173,7 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 			<TabItem name={t('instance_page.tab.home')} icon={<IconBiInfoCircle/>} value={0}>
 				<Home setTab={setTabPage} instance={instance}/>
 			</TabItem>
-			<TabItem name={t('instance_page.tab.content')} icon={<IconBiBox2/>} value={1}>
+			<TabItem name={t('instance_page.tab.content')} icon={<IconBiBox2/>} value={1} disabled={!instance.store.components.map(c => COMPONENT_EXTRAS[c.id]).some(e => e?.contentTabs?.length || e?.enabledContentTabs?.length)}>
 				<Content instance={instance}/>
 			</TabItem>
 			<TabItem name={t('instance_page.tab.game')} icon={<IconBiBox/>} value={2}>

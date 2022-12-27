@@ -35,7 +35,7 @@ export default Patcher.register(function Modal({ width, height, children }: Moda
             position: 'absolute',
             animation: `${openAnimation2} .5s`
         }}>
-            <Grid width={width} height={height} padding={12} vertical background="$secondaryBackground" borderRadius={8} css={{
+            <Grid width={width} height={height} padding={12} vertical smoothing={1} background="$secondaryBackground" borderRadius={16} css={{
                 border: '1px solid $secondaryBorder2',
                 position: 'relative',
                 animation: `${openAnimation} .5s cubic-bezier(0, 0, 0, 1.0)`

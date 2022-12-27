@@ -3,8 +3,9 @@ import { Grid, Image, Typography } from 'voxeliface';
 import { TauriHeader, TauriHeaderProps } from 'voxeliface-tauri';
 
 import { setPage } from '../../store/slices/interface';
+import { AvatarType } from '../../../voxura';
 import { useAppDispatch } from '../../store/hooks';
-import { AvatarType, useCurrentAccount } from '../../voxura';
+import { useCurrentAccount } from '../../voxura';
 
 export type HeaderProps = TauriHeaderProps;
 export default function DefaultHeader(props: HeaderProps) {

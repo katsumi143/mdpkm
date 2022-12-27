@@ -3,12 +3,14 @@
 	"common.action.edit": "Edit",
     "common.action.view": "View",
 	"common.action.back": "Back",
+	"common.action.close": "Close",
 	"common.action.search": "Search",
     "common.action.select": "Select",
 	"common.action.launch": "Launch",
 	"common.action.delete": "Delete",
 	"common.action.remove": "Remove",
 	"common.action.cancel": "Cancel",
+	"common.action.confirm": "Confirm",
 	"common.action.install": "Install",
 	"common.action.refresh": "Refresh",
     "common.action.view_all": "View all",
@@ -220,5 +222,11 @@
 	"user_account.options.view_namemc": "View NameMC Profile",
 
 	"select_file": "Select File",
-	"select_file.none": "No file selected"
+	"select_file.none": "No file selected",
+
+	"launch_error": "Unexpected Launch Error",
+	"launch_error.origin": "Originated from “{{0}}”",
+
+	"dialog.delete_instance": "Are you absolutely sure?",
+	"dialog.delete_instance.body": "This action cannot be undone.\n“{{0}}” will be lost forever! (A long time!)"
 }
