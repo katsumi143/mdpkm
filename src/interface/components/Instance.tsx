@@ -7,7 +7,6 @@ import { Link, Grid, Typography, ContextMenu } from 'voxeliface';
 import InstanceIcon from './InstanceIcon';
 
 import voxura from '../../voxura';
-import Patcher from '../../plugins/patcher';
 import { toast } from '../../util';
 import type { Instance } from '../../../voxura';
 import { INSTANCE_STATE_ICONS } from '../../util/constants';
@@ -37,7 +36,7 @@ export interface InstanceProps {
 	instance: Instance
 	selected?: boolean
 }
-export default Patcher.register(function Instance({ css, selected, instance }: InstanceProps) {
+export default function InstanceComponent({ css, selected, instance }: InstanceProps) {
 	const { t } = useTranslation('interface');
 	const dispatch = useAppDispatch();
 	const StateIcon = INSTANCE_STATE_ICONS[instance.state];
@@ -137,4 +136,4 @@ export default Patcher.register(function Instance({ css, selected, instance }: I
 			</ContextMenu.MenuItem>
 		</ContextMenu.Content>
 	</ContextMenu.Root>;
-})
+}

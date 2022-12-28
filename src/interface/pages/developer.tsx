@@ -4,12 +4,11 @@ import { Grid, Button, TextInput, Typography, TextHeader, InputLabel } from 'vox
 
 import ImageWrapper from '../components/ImageWrapper';
 
-import Patcher from '../../plugins/patcher';
 import PluginSystem from '../../plugins';
 import { COMPONENT_MAP } from '../../../voxura';
 import mdpkm, { INSTANCE_CREATORS } from '../../mdpkm';
 import voxura, { useCurrentAccount } from '../../voxura';
-import { APP_DIR, APP_NAME, APP_VERSION } from '../../util/constants';
+import { APP_DIR, APP_NAME, APP_VERSION, TAURI_VERSION } from '../../util/constants';
 import { toast, getDefaultInstanceIcon, getDefaultInstanceBanner } from '../../util';
 export default function Developer() {
 	const { t } = useTranslation();
@@ -37,12 +36,6 @@ export default function Developer() {
 			</Button>
 			<Button theme="accent" onClick={() => voxura.auth.refreshAccounts()}>
 				Refresh voxura accounts (tokens, etc)
-			</Button>
-		</Grid>
-		<Grid margin="8px 0 0" spacing={8}>
-			<Button theme="accent" onClick={() => Patcher.patches = {}}>
-				<IconBiExclamationTriangleFill />
-				Remove all component patches
 			</Button>
 		</Grid>
 		<Grid margin="8px 0" spacing={8}>
@@ -120,13 +113,7 @@ export default function Developer() {
 				Path: {PluginSystem.path}
 			</Typography>
 			<Typography size={14} weight={400} family="$secondary">
-				Patches: {Object.keys(Patcher.patches).length}
-			</Typography>
-			<Typography size={14} weight={400} family="$secondary">
 				Loaded Plugins: {Object.keys(PluginSystem.loaded).length}
-			</Typography>
-			<Typography size={14} weight={400} family="$secondary">
-				Patchable Components: {Object.keys(Patcher.registered).length}
 			</Typography>
 		</Grid>
 
@@ -154,7 +141,7 @@ export default function Developer() {
 		<InputLabel spaciouser>Loaded Plugins ({Object.keys(PluginSystem.loaded).length})</InputLabel>
 		<Grid vertical>
 			{Object.values(PluginSystem.loaded).map(plugin => <Typography size={14} weight={400} family="$secondary">
-				{plugin.id} v{plugin.version} (app v{plugin.minAppVersion} minimum)
+				{plugin.id} v{plugin.version}
 			</Typography>)}
 		</Grid>
 
@@ -168,6 +155,10 @@ export default function Developer() {
 			</Typography>
 			<Typography size={14} weight={400} family="$secondary">
 				APP_DIR: {APP_DIR}
+			</Typography>
+
+			<Typography size={14} weight={400} family="$secondary">
+				TAURI_VERSION: {TAURI_VERSION}
 			</Typography>
 		</Grid>
 	</Grid>;

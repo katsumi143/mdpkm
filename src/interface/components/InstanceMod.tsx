@@ -6,7 +6,6 @@ import Modal from './Modal';
 import ImagePreview from './ImagePreview';
 import { Link, Grid, Image, Button, Typography, TextHeader } from 'voxeliface';
 
-import Patcher from '../../plugins/patcher';
 import type Mod from '../../../voxura/src/util/mod';
 import type { Instance } from '../../../voxura';
 import { useAppSelector } from '../../store/hooks';
@@ -16,7 +15,7 @@ export interface InstanceModProps {
     embedded?: boolean
     instance?: Instance
 }
-export default Patcher.register(function InstanceMod({ mod, embedded }: InstanceModProps) {
+export default function InstanceMod({ mod, embedded }: InstanceModProps) {
     const { t } = useTranslation('interface');
 	const update = null;
     const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
@@ -113,4 +112,4 @@ export default Patcher.register(function InstanceMod({ mod, embedded }: Instance
             </Modal>
         }
     </Grid>;
-})
+}

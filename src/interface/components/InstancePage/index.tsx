@@ -16,7 +16,6 @@ import ImageWrapper from '../ImageWrapper';
 import { useDispatch } from 'react-redux';
 import type { GridProps } from 'voxeliface';
 
-import Patcher from '../../../plugins/patcher';
 import { LaunchError } from '../../../../voxura';
 import { useAppSelector } from '../../../store/hooks';
 import { setLaunchError } from '../../../store/slices/interface';
@@ -28,7 +27,7 @@ import { toast, getDefaultInstanceBanner } from '../../../util';
 export interface InstancePageProps {
 	id: string
 }
-export default Patcher.register(function InstancePage({ id }: InstancePageProps) {
+export default function InstancePage({ id }: InstancePageProps) {
 	const { t } = useTranslation('interface');
 	const account = useCurrentAccount();
 	const uiStyle = useAppSelector(state => state.settings.uiStyle);
@@ -246,7 +245,7 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 			</Grid>
 		</InstanceInfo>}
 	</Grid>;
-});
+}
 
 const InstanceInfoAnimation = keyframes({
 	from: {

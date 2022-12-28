@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Image, ImageProps } from 'voxeliface';
 
-import Patcher from '../../plugins/patcher';
 import ImagePreview from './ImagePreview';
 import type { Instance } from '../../../voxura';
 export interface InstanceIconProps extends ImageProps {
@@ -9,7 +8,7 @@ export interface InstanceIconProps extends ImageProps {
     instance: Instance
     borderRadius: number
 }
-export default Patcher.register(function InstanceIcon({ size = 48, instance, borderRadius = 8, ...props }: InstanceIconProps) {
+export default function InstanceIcon({ size = 48, instance, borderRadius = 8, ...props }: InstanceIconProps) {
     const [preview, setPreview] = useState(false);
     return <React.Fragment>
         <Image src={instance.webIcon} onClick={() => setPreview(true)} smoothing={1} background="$secondaryBackground" borderRadius={borderRadius} {...props} css={{
@@ -26,4 +25,4 @@ export default Patcher.register(function InstanceIcon({ size = 48, instance, bor
         }}/>
         {preview && <ImagePreview src={instance.webIcon} onClose={() => setPreview(false)}/>}
     </React.Fragment>;
-})
+}

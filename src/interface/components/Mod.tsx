@@ -5,7 +5,6 @@ import { Grid, Button, Spinner, Typography, BasicSpinner } from 'voxeliface';
 
 import ImageWrapper from './ImageWrapper';
 
-import Patcher from '../../plugins/patcher';
 import { ModSide } from '../../../voxura/src/platform/mod';
 import { useAppSelector } from '../../store/hooks';
 import { useStoredValue } from '../../../voxura/src/storage';
@@ -18,7 +17,7 @@ export interface ModProps {
     instance?: Instance
     recommended?: boolean
 }
-export default Patcher.register(function Mod({ id, data, featured, platform, instance, recommended }: ModProps) {
+export default function ModComponent({ id, data, featured, platform, instance, recommended }: ModProps) {
     const { t } = useTranslation('interface');
 	const projects = useStoredValue<VoxuraStore["projects"]>('projects', {});
     const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
@@ -131,4 +130,4 @@ export default Patcher.register(function Mod({ id, data, featured, platform, ins
             </Grid>
         </React.Fragment>}
     </Grid>;
-})
+}

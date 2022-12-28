@@ -9,12 +9,11 @@ import { Grid, Button, Spinner, TextInput, TextHeader, Typography, InputLabel, B
 import Modal from './Modal';
 import Server from './Server';
 
-import Patcher from '../../plugins/patcher';
 import type { Instance } from '../../../voxura';
 export interface ServerManagementProps {
     instance: Instance
 }
-export default Patcher.register(function ServerManagement({ instance }: ServerManagementProps) {
+export default function ServerManagement({ instance }: ServerManagementProps) {
     const { t } = useTranslation('interface');
     const [data, setData] = useState<any>();
     const [items, setItems] = useState<any>();
@@ -173,4 +172,4 @@ export default Patcher.register(function ServerManagement({ instance }: ServerMa
             </Grid>
         </Modal>}
     </React.Fragment>;
-})
+}

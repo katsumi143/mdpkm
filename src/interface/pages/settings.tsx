@@ -9,7 +9,6 @@ import { Grid, Image, Select, Switch, Button, Tooltip, TextInput, TextHeader, Ty
 
 import BrowserLink from '../components/BrowserLink';
 import Util from '../../common/util';
-import Patcher from '../../plugins/patcher';
 import { toast } from '../../util';
 import { setPage } from '../../store/slices/interface';
 import PluginSystem from '../../plugins';
@@ -18,7 +17,7 @@ import { set, saveSettings } from '../../store/slices/settings';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { APP_NAME, APP_VERSION, TAURI_VERSION, PLACEHOLDER_ICON } from '../../util/constants';
 
-export default Patcher.register(function Settings() {
+export default function Settings() {
 	const { t, i18n } = useTranslation('interface');
 	const theme = useAppSelector(state => state.settings.theme);
 	const uiStyle = useAppSelector(state => state.settings.uiStyle);
@@ -314,7 +313,7 @@ export default Patcher.register(function Settings() {
 			</Grid>
 		</Grid>
 	</Grid>;
-})
+}
 
 export interface SettingProps {
 	name?: string

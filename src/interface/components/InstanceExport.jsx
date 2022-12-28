@@ -17,7 +17,6 @@ import Typography from '/voxeliface/components/Typography';
 import BasicSpinner from '/voxeliface/components/BasicSpinner';
 
 import Util from '../../common/util';
-import Patcher from '../../plugins/patcher';
 import { useInstance } from '../../voxura';
 
 const banned = [
@@ -45,7 +44,7 @@ const select = [
     'config',
     'mods'
 ];
-export default Patcher.register(function InstanceExport({ instanceId }) {
+export default function InstanceExport({ instanceId }) {
     const { t } = useTranslation();
     const instance = useInstance(instanceId);
     const [items, setItems] = useState();
@@ -144,4 +143,4 @@ export default Patcher.register(function InstanceExport({ instanceId }) {
             })}
         </Grid>
     </React.Fragment>;
-});
+}
