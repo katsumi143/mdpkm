@@ -18,9 +18,9 @@ export default function Content({ instance }: ContentProps) {
 	const [tab, setTab] = useState(0);
 
 	const extras: [ComponentExtra, string][] = instance.store.components.map(c => [COMPONENT_EXTRAS[c.id], c.id]);
-	const useEssential = extras.some(([e]) => e.enabledContentTabs?.includes('essential'));
-	const useModSearch = extras.some(([e]) => e.enabledContentTabs?.includes('modSearch'));
-	const useModManagement = extras.some(([e]) => e.enabledContentTabs?.includes('modManagement'));
+	const useEssential = extras.some(([e]) => e?.enabledContentTabs?.includes('essential'));
+	const useModSearch = extras.some(([e]) => e?.enabledContentTabs?.includes('modSearch'));
+	const useModManagement = extras.some(([e]) => e?.enabledContentTabs?.includes('modManagement'));
     return <React.Fragment>
 		<Tabs
 			value={tab}
