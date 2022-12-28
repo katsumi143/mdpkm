@@ -8,7 +8,7 @@ export type ImageWrapperProps = ImageProps & {
     canPreview?: boolean,
 	previewWidth?: number
 };
-export default function ImageWrapper({ ratio, shadow, children, canPreview, previewWidth, ...props }: ImageWrapperProps) {
+export default function ImageWrapper({ ratio, shadow, canPreview, previewWidth, ...props }: ImageWrapperProps) {
     const [preview, setPreview] = useState(false);
     const toggle: MouseEventHandler<HTMLDivElement> = event => {
 		event.stopPropagation();
