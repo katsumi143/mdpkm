@@ -20,6 +20,7 @@ export default Patcher.register(function InstanceIcon({ size = 48, instance, bor
             minWidth: size,
             minHeight: size,
             boxShadow: '$buttonShadow',
+			backgroundSize: 'cover',
             
             ...props?.css
         }}/>

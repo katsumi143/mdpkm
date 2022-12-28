@@ -97,6 +97,7 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 					<ImageWrapper src={instance.webIcon} size={isCompact ? 64 : 80} smoothing={1} canPreview background="$secondaryBackground2" borderRadius={8} css={{
 						alignItems: 'end',
 						justifyContent: 'end',
+						backgroundSize: 'cover',
 						'&:hover': { '& > div': { opacity: 1 } }
 					}}>
 						<ImageOptions img={instance.icon} onEdit={e => changeImage('icon', e)} onRemove={e => removeImage('icon', e)}/>
