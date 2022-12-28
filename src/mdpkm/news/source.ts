@@ -8,4 +8,4 @@ export default abstract class NewsSource<T> {
 
     public abstract getNews(): Promise<NewsItem<T>[]>
     public abstract get displayName(): string
-};
+}

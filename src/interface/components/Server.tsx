@@ -6,16 +6,16 @@ import ImagePreview from './ImagePreview';
 
 import type { Instance } from '../../../voxura';
 import { useAppSelector } from '../../store/hooks';
-export type ServerProps = {
-	name: string,
-	icon?: string,
-	motd?: string,
-	type?: string,
-	players?: any,
-	address?: string,
-	instance?: Instance,
+export interface ServerProps {
+	name: string
+	icon?: string
+	motd?: string
+	type?: string
+	players?: any
+	address?: string
+	instance?: Instance
 	acceptTextures?: number
-};
+}
 export default function Server({ name, icon, motd, type, players, address, acceptTextures }: ServerProps) {
     const { t } = useTranslation('interface');
     const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
@@ -41,7 +41,7 @@ export default function Server({ name, icon, motd, type, players, address, accep
                     cursor: 'zoom-in'
                 }}
             />
-            {previewIcon && <ImagePreview src={serverIcon} size={192} onClose={() => setPreviewIcon(false)} pixelated/>}
+            {previewIcon && <ImagePreview src={serverIcon} onClose={() => setPreviewIcon(false)} pixelated/>}
             <Grid height="100%" spacing={2} vertical justifyContent="center">
                 <Typography size={isCompact ? 14 : 16} noSelect lineheight={1} whitespace="nowrap">
                     {name || t('server.no_name')}
@@ -86,4 +86,4 @@ export default function Server({ name, icon, motd, type, players, address, accep
 			</Link>
 		</Grid>
     </Grid>;
-};
+}

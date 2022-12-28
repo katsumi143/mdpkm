@@ -7,9 +7,9 @@ import Loader from './loader';
 
 import type { Instance } from '../../../../voxura';
 import { ComponentExtra, COMPONENT_EXTRAS } from '../../../mdpkm';
-export type GameProps = {
+export interface GameProps {
     instance: Instance
-};
+}
 export default function Game({ instance }: GameProps) {
     const { t } = useTranslation('interface');
     const [tab, setTab] = useState(0);
@@ -25,4 +25,4 @@ export default function Game({ instance }: GameProps) {
 			</TabItem>
 		)).flat().filter(x => x)}
     </Tabs>
-};
+}

@@ -6,9 +6,9 @@ import InstanceMod from './InstanceMod';
 
 import type Mod from '../../../voxura/src/util/mod';
 import type { Instance } from '../../../voxura';
-export type ModManagementProps = {
+export interface ModManagementProps {
 	instance: Instance
-};
+}
 export default function ModManagement({ instance }: ModManagementProps) {
     const { t } = useTranslation('interface');
     const [items, setItems] = useState<Mod[] | string>('loading');
@@ -79,4 +79,4 @@ export default function ModManagement({ instance }: ModManagementProps) {
 			<InstanceMod key={index} mod={mod} updates={updates} instance={instance}/>
 		) : <Spinner/>}
     </React.Fragment>;
-};
+}

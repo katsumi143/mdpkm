@@ -3,26 +3,21 @@ import { removeFile } from '@tauri-apps/api/fs';
 import { checkUpdate } from '@tauri-apps/api/updater';
 import { open as open2 } from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
+import type { GridDirection } from 'voxeliface/components/Grid';
 import React, { useState, ReactNode } from 'react';
-import { getName, getVersion, getTauriVersion } from '@tauri-apps/api/app';
-
-import BrowserLink from '../components/BrowserLink';
-import { GridDirection } from 'voxeliface/components/Grid';
 import { Grid, Image, Select, Switch, Button, Tooltip, TextInput, TextHeader, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
+import BrowserLink from '../components/BrowserLink';
 import Util from '../../common/util';
 import Patcher from '../../plugins/patcher';
 import { toast } from '../../util';
 import { setPage } from '../../store/slices/interface';
 import PluginSystem from '../../plugins';
 import { VOXURA_VERSION } from '../../../voxura';
-import { PLACEHOLDER_ICON } from '../../util/constants';
 import { set, saveSettings } from '../../store/slices/settings';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { APP_NAME, APP_VERSION, TAURI_VERSION, PLACEHOLDER_ICON } from '../../util/constants';
 
-const appName = await getName();
-const appVersion = await getVersion();
-const tauriVersion = await getTauriVersion();
 export default Patcher.register(function Settings() {
 	const { t, i18n } = useTranslation('interface');
 	const theme = useAppSelector(state => state.settings.theme);
@@ -296,10 +291,10 @@ export default Patcher.register(function Settings() {
 				<Image src="img/icons/brand_default.svg" size={48} onClick={yippee} />
 				<Grid spacing={2} vertical>
 					<Typography noSelect lineheight={1}>
-						{t('settings.about.version', [appName, appVersion])}
+						{t('settings.about.version', [APP_NAME, APP_VERSION])}
 					</Typography>
 					<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
-						{t('settings.about.version2', [tauriVersion, VOXURA_VERSION])}
+						{t('settings.about.version2', [TAURI_VERSION, VOXURA_VERSION])}
 					</Typography>
 				</Grid>
 			</Grid>
@@ -319,15 +314,15 @@ export default Patcher.register(function Settings() {
 			</Grid>
 		</Grid>
 	</Grid>;
-});
+})
 
-type SettingProps = {
-	name?: string,
-	children?: ReactNode | ReactNode[],
-	noSummary?: boolean,
+export interface SettingProps {
+	name?: string
+	children?: ReactNode | ReactNode[]
+	noSummary?: boolean
 	direction?: GridDirection
-};
-function Setting({ name, children, direction, noSummary }: SettingProps) {
+}
+export function Setting({ name, children, direction, noSummary }: SettingProps) {
 	const { t } = useTranslation('interface');
 	const stringBase = `settings.${name ?? 'placeholder'}`;
 	return <Grid width="100%" css={{ marginBottom: 16 }}>
@@ -348,4 +343,4 @@ function Setting({ name, children, direction, noSummary }: SettingProps) {
 			</Grid>
 		</Grid>
 	</Grid>
-};
+}

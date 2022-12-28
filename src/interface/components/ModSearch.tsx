@@ -6,13 +6,14 @@ import { Grid, Image, Select, Button, TextInput, Typography, InputLabel, TextHea
 import Mod from './Mod';
 import Modal from './Modal';
 
+import voxura from '../../voxura';
+import type { Instance } from '../../../voxura';
 import { useAppSelector } from '../../store/hooks';
 import { toast, getImage } from '../../util';
-import voxura, { Instance } from '../../voxura';
-export type ModSearchProps = {
-	onClose?: MouseEventHandler<HTMLAnchorElement>,
+export interface ModSearchProps {
+	onClose?: MouseEventHandler<HTMLAnchorElement>
     instance: Instance
-};
+}
 export default function ModSearchContainer(props: ModSearchProps) {
 	const { t } = useTranslation('interface');
     if (useAppSelector(state => state.settings['instances.modSearchPopout']))
@@ -30,7 +31,7 @@ export default function ModSearchContainer(props: ModSearchProps) {
 			<ModSearch {...props}/>
 		</Modal>;
     return <ModSearch {...props}/>;
-};
+}
 
 export function ModSearch({ instance }: ModSearchProps) {
     const { t } = useTranslation('interface');
@@ -164,7 +165,7 @@ export function ModSearch({ instance }: ModSearchProps) {
 			</InputLabel>
 		</Grid>
 	</Grid>;
-};
+}
 
 const StyledPage = styled('button', {
     width: 32,
@@ -187,12 +188,13 @@ const StyledPage = styled('button', {
     }
 });
 
-export type PaginationProps = {
-    page: number,
-    pages: (string | number)[],
+// TODO: move this into a separate file
+export interface PaginationProps {
+    page: number
+    pages: (string | number)[]
     setPage: (page: number) => void
-};
-function Pagination({ page, pages, setPage }: PaginationProps) {
+}
+export function Pagination({ page, pages, setPage }: PaginationProps) {
     return <Grid spacing={4} alignItems="center">
         <StyledPage onClick={() => setPage(Math.max(page - 1, 1))}>
             <IconBiChevronLeft fontSize={10}/>
@@ -213,4 +215,4 @@ function Pagination({ page, pages, setPage }: PaginationProps) {
             <IconBiChevronRight fontSize={10}/>
         </StyledPage>
     </Grid>;
-};
+}

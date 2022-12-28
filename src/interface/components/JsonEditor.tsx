@@ -1,10 +1,9 @@
 import Editor from '@monaco-editor/react';
-import React, { useState, useEffect } from 'react';
-import { editor, MarkerSeverity } from 'monaco-editor';
+import React, { useState } from 'react';
 
-export type JsonEditorProps = {
+export interface JsonEditorProps {
     value: Object
-};
+}
 export default function JsonEditor({ value }: JsonEditorProps) {
     const [data, setData] = useState<any>(JSON.stringify(value, null, 4));
     const [monaco, setMonaco] = useState<any>();
@@ -32,7 +31,6 @@ export default function JsonEditor({ value }: JsonEditorProps) {
                 }, 1000);
         } catch(err) {}
     }, [data]);*/
-    console.log(editor);
     return <Editor
         value={data}
         theme="vs-dark"
@@ -41,4 +39,4 @@ export default function JsonEditor({ value }: JsonEditorProps) {
         onChange={setData}
         onValidate={console.log}
     />;
-};
+}

@@ -29,4 +29,4 @@ export default function StyledTabs(props: TabsProps) {
 		},
 		...props.css
 	}}/>;
-};
+}

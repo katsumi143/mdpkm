@@ -27,7 +27,7 @@ voxura.downloader.listenForEvent('downloadStarted', (download: Download) => {
 voxura.downloader.listenForEvent('downloadFinished', (download: Download) => {
     if (hiddenDownloads.indexOf(download.id) === -1)	
 		toast('Download Finished', t(`mdpkm:download.${download.id}`, download.extraData) as any, CheckCircle);
-})
+});
 
 export function useAccounts(): Account[] {
     const subscription = useMemo(() => ({
@@ -35,14 +35,14 @@ export function useAccounts(): Account[] {
         getCurrentValue: () => voxura.auth.accounts
     }), []);
     return useSubscription(subscription);
-};
+}
 export function useCurrentAccount(): Account | undefined {
     const subscription = useMemo(() => ({
         subscribe: (callback: any) => voxura.auth.listenForEvent('selectedChanged', callback),
         getCurrentValue: () => voxura.auth.getCurrent()
     }), []);
     return useSubscription(subscription);
-};
+}
 
 export function useInstance(id: string) {
     const subscription = useMemo(() => ({
@@ -55,21 +55,21 @@ export function useInstance(id: string) {
         getCurrentValue: () => voxura.getInstance(id)
     }), [id]);
     return useSubscription(subscription);
-};
+}
 export function useInstances() {
     const subscription = useMemo(() => ({
         subscribe: (callback: any) => voxura.instances.listenForEvent('listChanged', callback),
         getCurrentValue: () => voxura.instances.getAll()
     }), []);
     return useSubscription(subscription);
-};
+}
 export function useRecentInstances() {
     const subscription = useMemo(() => ({
         subscribe: (callback: any) => voxura.instances.listenForEvent('listChanged', callback),
         getCurrentValue: () => voxura.instances.getRecent()
     }), []);
     return useSubscription(subscription);
-};
+}
 
 export function useDownloads() {
     const subscription = useMemo(() => ({
@@ -77,7 +77,7 @@ export function useDownloads() {
         getCurrentValue: () => voxura.downloader.downloads
     }), []);
     return useSubscription(subscription);
-};
+}
 
 export function useComponentVersions(component?: VersionedComponent | typeof VersionedComponent) {
     const [value, setValue] = useState<ComponentVersions | null>(null);
@@ -89,7 +89,7 @@ export function useComponentVersions(component?: VersionedComponent | typeof Ver
 			setValue([]);
     }, [component]);
     return value;
-};
+}
 
 function useSubscription<T>({ subscribe, getCurrentValue }: {
     subscribe: (callback: Function) => () => void,
@@ -138,6 +138,5 @@ function useSubscription<T>({ subscribe, getCurrentValue }: {
     return valueToReturn;
 }
 
-console.log('started voxura', voxura);
 (globalThis as any).voxura = voxura;
 export default voxura;

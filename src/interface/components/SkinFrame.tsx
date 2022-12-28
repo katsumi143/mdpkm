@@ -8,21 +8,21 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { SkinViewer, PlayerObject, PlayerAnimation } from 'skinview3d';
 import React, { useMemo, useState, useEffect, ReactNode } from 'react';
 
-export type SkinFrameProps = {
-	css?: CSS,
-	skin: any,
-	cape?: any,
-	walk?: boolean,
-	zoom?: boolean,
-	width?: number,
-	image?: boolean,
-	model?: 'auto-detect' | 'default' | 'slim',
-	height?: number,
-	control?: boolean,
-	children?: ReactNode,
-	stillWalk?: boolean,
+export interface SkinFrameProps {
+	css?: CSS
+	skin: any
+	cape?: any
+	walk?: boolean
+	zoom?: boolean
+	width?: number
+	image?: boolean
+	model?: 'auto-detect' | 'default' | 'slim'
+	height?: number
+	control?: boolean
+	children?: ReactNode
+	stillWalk?: boolean
 	background?: 'none' | string
-};
+}
 export default function SkinFrame({ css, skin, cape, walk, zoom = false, image = false, model = 'auto-detect', width = 64, height = 64, control = false, children, stillWalk, background }: SkinFrameProps) {
 	const skinViewer = useMemo(() => new SkinViewer({
 		fov: 8,
@@ -108,9 +108,9 @@ export default function SkinFrame({ css, skin, cape, walk, zoom = false, image =
     return <Grid ref={node => node && node.appendChild(skinViewer.canvas)} width={width} height={height} css={{
 		position: 'relative', ...css
 	}}>{children}</Grid>;
-};
+}
 
-class WalkAnimation extends PlayerAnimation {
+export class WalkAnimation extends PlayerAnimation {
     animate({ skin, cape }: PlayerObject) {
         const time = this.progress * 5;
         skin.leftLeg.rotation.x = Math.sin(time) / 3;
@@ -121,8 +121,8 @@ class WalkAnimation extends PlayerAnimation {
 
 		cape.rotation.x = Math.PI / 10 + Math.sin(time / 4) / 30;
     }
-};
-class WalkAnimationStill extends PlayerAnimation {
+}
+export class WalkAnimationStill extends PlayerAnimation {
     animate({ skin, cape }: PlayerObject) {
         const time = 5;
         skin.leftLeg.rotation.x = Math.sin(time) / 3;
@@ -133,4 +133,4 @@ class WalkAnimationStill extends PlayerAnimation {
 
 		cape.rotation.x = Math.PI / 10 + Math.sin(time / 4) / 30;
     }
-};
+}

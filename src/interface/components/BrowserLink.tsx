@@ -1,8 +1,7 @@
 import { open } from '@tauri-apps/api/shell';
 import { styled } from '@stitches/react';
-import React, { ReactNode } from 'react';
-
 import { Link, Tooltip } from 'voxeliface';
+import React, { ReactNode } from 'react';
 
 const StyledTrigger = styled(Tooltip.Trigger, {
     border: 'none',
@@ -12,10 +11,10 @@ const StyledTrigger = styled(Tooltip.Trigger, {
     fontFamily: 'inherit',
     lineHeight: 'inherit'
 });
-export type BrowserLinkProps = {
+export interface BrowserLinkProps {
     href: string,
     children?: ReactNode | ReactNode[]
-};
+}
 export default function BrowserLink({ href, children }: BrowserLinkProps) {
     return <Tooltip.Root delayDuration={1000}>
         <StyledTrigger>
@@ -26,4 +25,4 @@ export default function BrowserLink({ href, children }: BrowserLinkProps) {
             <Tooltip.Arrow/>
         </Tooltip.Content>
     </Tooltip.Root>
-};
+}

@@ -4,11 +4,11 @@ import { Image, ImageProps } from 'voxeliface';
 import Patcher from '../../plugins/patcher';
 import ImagePreview from './ImagePreview';
 import type { Instance } from '../../../voxura';
-export type InstanceIconProps = ImageProps & {
-    size?: number,
-    instance: Instance,
-    borderRadius?: number
-};
+export interface InstanceIconProps extends ImageProps {
+    size?: number
+    instance: Instance
+    borderRadius: number
+}
 export default Patcher.register(function InstanceIcon({ size = 48, instance, borderRadius = 8, ...props }: InstanceIconProps) {
     const [preview, setPreview] = useState(false);
     return <React.Fragment>
@@ -26,4 +26,4 @@ export default Patcher.register(function InstanceIcon({ size = 48, instance, bor
         }}/>
         {preview && <ImagePreview src={instance.webIcon} onClose={() => setPreview(false)}/>}
     </React.Fragment>;
-});
+})

@@ -1,7 +1,7 @@
 import { keyframes } from '@stitches/react';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 import React, { MouseEventHandler } from 'react';
-import { Grid, Image, Portal, Typography, ImageProps } from 'voxeliface';
+import { Grid, Image, Portal, Typography } from 'voxeliface';
 
 const openAnimation = keyframes({
     '0%': {
@@ -32,13 +32,13 @@ const openAnimation3 = keyframes({
         opacity: 1
     }
 });
-export type ImagePreviewProps = {
-    src?: string,
-	ratio?: number,
-	width?: number,
-    onClose?: MouseEventHandler<HTMLDivElement>,
+export interface ImagePreviewProps {
+    src?: string
+	ratio?: number
+	width?: number
+    onClose?: MouseEventHandler<HTMLDivElement>
     pixelated?: boolean
-};
+}
 export default function ImagePreview({ src, ratio = 1, width = 256, onClose, pixelated }: ImagePreviewProps) {
     return <Portal>
         <Grid width="100vw" height="100vh" spacing={8} onClick={onClose} vertical alignItems="center" background="#000000bf" justifyContent="center" css={{
@@ -64,4 +64,4 @@ export default function ImagePreview({ src, ratio = 1, width = 256, onClose, pix
             </Typography>
         </Grid>
     </Portal>;
-};
+}

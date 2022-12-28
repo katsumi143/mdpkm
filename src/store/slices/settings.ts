@@ -2,15 +2,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { readJsonFile, writeJsonFile } from 'voxelified-commons/tauri';
 
 import { APP_DIR } from '../../util/constants';
-type Settings = {
-    theme: string,
-    uiStyle: string,
-    account: string,
-    language: string,
-	'download.useLinks': boolean,
-    'instances.showBanner': boolean,
-    'instances.modSearchPopout': boolean,
-    'instances.defaultResolution': number[],
+export interface Settings {
+    theme: string
+    uiStyle: string
+    account: string
+    language: string
+	'download.useLinks': boolean
+    'instances.showBanner': boolean
+    'instances.modSearchPopout': boolean
+    'instances.defaultResolution': number[]
     'instances.modSearchSummaries': boolean
 };
 const settingsPath = `${APP_DIR}/settings.json`;

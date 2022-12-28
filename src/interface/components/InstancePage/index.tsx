@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { CSS, keyframes } from '@stitches/react';
 import { copyFile, removeFile } from '@tauri-apps/api/fs';
 import React, { useMemo, useState, ReactNode, MouseEvent } from 'react';
+import { Grid, Link, Image, TabItem, Typography, BasicSpinner, DropdownMenu } from 'voxeliface';
 
 import Home from './home';
 import Game from './game';
@@ -14,7 +15,6 @@ import Settings from './settings';
 import ImageWrapper from '../ImageWrapper';
 import { useDispatch } from 'react-redux';
 import type { GridProps } from 'voxeliface';
-import { Grid, Link, Image, TabItem, Typography, BasicSpinner, DropdownMenu } from 'voxeliface';
 
 import Patcher from '../../../plugins/patcher';
 import { LaunchError } from '../../../../voxura';
@@ -25,9 +25,9 @@ import { INSTANCE_STATE_ICONS } from '../../../util/constants';
 import { useInstance, useCurrentAccount } from '../../../voxura';
 import { toast, getDefaultInstanceBanner } from '../../../util';
 
-export type InstancePageProps = {
+export interface InstancePageProps {
 	id: string
-};
+}
 export default Patcher.register(function InstancePage({ id }: InstancePageProps) {
 	const { t } = useTranslation('interface');
 	const account = useCurrentAccount();
@@ -257,12 +257,12 @@ const InstanceInfoAnimation = keyframes({
 	}
 });
 
-export type InstanceInfoProps = {
-	css?: CSS,
-	animate?: boolean,
+export interface InstanceInfoProps {
+	css?: CSS
+	animate?: boolean
 	children: ReactNode
-};
-function InstanceInfo({ css, animate, children }: InstanceInfoProps) {
+}
+export function InstanceInfo({ css, animate, children }: InstanceInfoProps) {
 	return <Grid margin="0 1rem 1rem" spacing={16} padding="16px 24px" alignItems="center" background="$secondaryBackground2" borderRadius="1rem" css={{
 		position: 'relative',
 		animation: animate ? `${InstanceInfoAnimation} .5s cubic-bezier(0.4, 0, 0.2, 1)` : null,
@@ -270,14 +270,14 @@ function InstanceInfo({ css, animate, children }: InstanceInfoProps) {
 	}}>
 		{children}
 	</Grid>;
-};
+}
 
-export type ImageOptionsProps = {
-	img?: Uint8Array | void,
-	onEdit: GridProps["onClick"],
+export interface ImageOptionsProps {
+	img?: Uint8Array | void
+	onEdit: GridProps["onClick"]
 	onRemove: GridProps["onClick"]
-};
-function ImageOptions({ img, onEdit, onRemove }: ImageOptionsProps) {
+}
+export function ImageOptions({ img, onEdit, onRemove }: ImageOptionsProps) {
 	return <Grid height="fit-content" css={{
 		opacity: 0,
 		transition: 'opacity .5s'
@@ -285,16 +285,16 @@ function ImageOptions({ img, onEdit, onRemove }: ImageOptionsProps) {
 		{(!!img && onRemove) && <ImageOption icon={<IconBiXLg fontSize={10}/>} onClick={onRemove}/>}
 		{onEdit && <ImageOption icon={<IconBiPencilFill fontSize={10}/>} onClick={onEdit}/>}
 	</Grid>;
-};
+}
 
-export type ImageOptionProps = {
-	icon: ReactNode,
+export interface ImageOptionProps {
+	icon: ReactNode
 	onClick: GridProps["onClick"]
-};
-function ImageOption({ icon, onClick }: ImageOptionProps) {
+}
+export function ImageOption({ icon, onClick }: ImageOptionProps) {
 	return <Grid margin={4} padding={4} onClick={onClick} background="#00000080" borderRadius="50%" css={{
 		cursor: 'pointer'
 	}}>
 		<Typography color="#fff">{icon}</Typography>
 	</Grid>;
-};
+}

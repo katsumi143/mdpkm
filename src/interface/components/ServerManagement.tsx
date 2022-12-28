@@ -1,20 +1,19 @@
 import * as nbt from 'nbt-ts';
 import { fetch } from '@tauri-apps/api/http';
 import { Buffer } from 'buffer';
-import { fileExists } from 'voxelified-commons/tauri';
 import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
-import { readBinaryFile, writeBinaryFile } from '@tauri-apps/api/fs';
+import { exists, readBinaryFile, writeBinaryFile } from '@tauri-apps/api/fs';
+import { Grid, Button, Spinner, TextInput, TextHeader, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
 import Modal from './Modal';
 import Server from './Server';
-import { Grid, Button, Spinner, TextInput, TextHeader, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
 import Patcher from '../../plugins/patcher';
 import type { Instance } from '../../../voxura';
-export type ServerManagementProps = {
+export interface ServerManagementProps {
     instance: Instance
-};
+}
 export default Patcher.register(function ServerManagement({ instance }: ServerManagementProps) {
     const { t } = useTranslation('interface');
     const [data, setData] = useState<any>();
@@ -56,7 +55,7 @@ export default Patcher.register(function ServerManagement({ instance }: ServerMa
             const path = `${instance.path}/servers.dat`;
             setData({});
             setItems('loading');
-            fileExists(path).then(exists => {
+            exists(path).then(exists => {
                 if (exists)
                     readBinaryFile(path).then(data => {
 						const decoded = nbt.decode(Buffer.from(data));
@@ -174,4 +173,4 @@ export default Patcher.register(function ServerManagement({ instance }: ServerMa
             </Grid>
         </Modal>}
     </React.Fragment>;
-});
+})

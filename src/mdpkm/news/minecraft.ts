@@ -15,7 +15,7 @@ export default class MinecraftNews extends NewsSource<NewsEntry> {
     public get displayName() {
         return 'minecraft.net';
     }
-};
+}
 
 export const API_BASE = 'https://launchercontent.mojang.com';
 
@@ -45,7 +45,7 @@ export interface NewsImage {
 	url: string
 	title: string
 }
-class MinecraftNewsItem extends NewsItem<NewsEntry> {
+export class MinecraftNewsItem extends NewsItem<NewsEntry> {
     public get title() {
         return this.data.title;
     }
@@ -57,4 +57,4 @@ class MinecraftNewsItem extends NewsItem<NewsEntry> {
 	public get url() {
 		return this.data.readMoreLink;
 	}
-};
+}

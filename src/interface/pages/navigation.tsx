@@ -1,6 +1,7 @@
 import React from 'react';
 import { Toaster } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { Main, SideNavigation, NavigationItem } from 'voxeliface';
 
 import App from '../components/App';
 import Home from './home';
@@ -14,7 +15,6 @@ import Downloads from './downloads';
 import Instances from './instances';
 import Developer from './developer';
 import LaunchError from '../components/LaunchError';
-import { Main, SideNavigation, NavigationItem } from 'voxeliface';
 
 import { setPage } from '../../store/slices/interface';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -69,6 +69,6 @@ export default function Navigation() {
         </Main>
 		{launchError && <LaunchError data={launchError}/>}
     </App>;
-};
+}
 
-const SHOULD_HIDE_SIDE = ['import', 'create'];
+export const SHOULD_HIDE_SIDE = ['import', 'create'];

@@ -2,9 +2,9 @@ import React from 'react';
 import { keyframes } from '@stitches/react';
 import { writeText } from '@tauri-apps/api/clipboard';
 import { useTranslation } from 'react-i18next';
+import { Link, Grid, Typography, ContextMenu } from 'voxeliface';
 
 import InstanceIcon from './InstanceIcon';
-import { Link, Grid, Typography, ContextMenu } from 'voxeliface';
 
 import voxura from '../../voxura';
 import Patcher from '../../plugins/patcher';
@@ -32,11 +32,11 @@ const viewAnimation = keyframes({
 	}
 });
 
-type InstanceProps = {
-	css: Record<string, any>,
-	instance: Instance,
+export interface InstanceProps {
+	css: Record<string, any>
+	instance: Instance
 	selected?: boolean
-};
+}
 export default Patcher.register(function Instance({ css, selected, instance }: InstanceProps) {
 	const { t } = useTranslation('interface');
 	const dispatch = useAppDispatch();
@@ -137,4 +137,4 @@ export default Patcher.register(function Instance({ css, selected, instance }: I
 			</ContextMenu.MenuItem>
 		</ContextMenu.Content>
 	</ContextMenu.Root>;
-});
+})

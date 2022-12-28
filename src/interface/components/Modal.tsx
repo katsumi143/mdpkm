@@ -21,9 +21,9 @@ const openAnimation2 = keyframes({
         background: '#00000099'
     }
 });
-export type ModalProps = {
-    width?: string | number,
-    height?: string | number,
+export interface ModalProps {
+    width?: string | number
+    height?: string | number
     children?: ReactNode | ReactNode[]
 };
 export default Patcher.register(function Modal({ width, height, children }: ModalProps) {
@@ -44,4 +44,4 @@ export default Patcher.register(function Modal({ width, height, children }: Moda
             </Grid>
         </Grid>
     </Portal>;
-});
+})

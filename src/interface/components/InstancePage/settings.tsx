@@ -1,17 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
+import { Grid, Slider, Dialog, Button, TabItem, TextInput, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
 import Tabs from '../Tabs';
 import JsonEditor from '../JsonEditor';
-import { Grid, Slider, Dialog, Button, TabItem, TextInput, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
 import { toast } from '../../../util';
-import type { Instance } from '../../../voxura';
+import type { Instance } from '../../../../voxura';
 import { TOTAL_SYSTEM_MEMORY } from '../../../util/constants';
-
-export type InstanceSettingsProps = {
+export interface InstanceSettingsProps {
     instance: Instance
-};
+}
 export default function InstanceSettings({ instance }: InstanceSettingsProps) {
     const { t } = useTranslation('interface');
 	const [tab, setTab] = useState(0);
@@ -132,4 +131,4 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 			{t('common.action.save_changes')}
 		</Button>
     </React.Fragment>;
-};
+}

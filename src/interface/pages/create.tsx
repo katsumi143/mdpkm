@@ -31,16 +31,17 @@ export default function Create() {
             </Grid>
         </AnimateSharedLayout>
     </Grid>;
-};
+}
 
-export type ComponentProps = {
-    id: string,
-    selected: boolean,
+// TODO: move into a separate file
+export interface ComponentProps {
+    id: string
+    selected: boolean
     setSelected: (value: string | null) => void
-};
-function Component({ id, selected, setSelected }: ComponentProps) {
+}
+export function Component({ id, selected, setSelected }: ComponentProps) {
     const { t } = useTranslation('interface');
-    return <>
+    return <React.Fragment>
         <ComponentContainer layoutId={`component-${id}`}>
             <Grid height="fit-content" padding={8} spacing={12}>
                 <ImageWrapper src={getImage(`component.${id}`)} size={40} shadow smoothing={1} canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
@@ -63,14 +64,14 @@ function Component({ id, selected, setSelected }: ComponentProps) {
         <AnimatePresence>
             {selected && <Setup id={id} cancel={() => setSelected(null)}/>}
         </AnimatePresence>
-    </>;
-};
+    </React.Fragment>;
+}
 
-export type SetupProps = {
-    id: string,
+export interface SetupProps {
+    id: string
     cancel: () => void
-};
-function Setup({ id, cancel }: SetupProps) {
+}
+export function Setup({ id, cancel }: SetupProps) {
     const { t } = useTranslation('interface');
     const creator = INSTANCE_CREATORS.find(c => c.id === id);
     const dispatch = useAppDispatch();
@@ -127,7 +128,7 @@ function Setup({ id, cancel }: SetupProps) {
             </Grid>
         </Grid>
     </ComponentContainer>;
-};
+}
 
 const ComponentContainer = styled(motion.div, {
     border: 'transparent solid 1px',

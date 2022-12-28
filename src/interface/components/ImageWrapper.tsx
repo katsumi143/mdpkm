@@ -2,12 +2,12 @@ import { Image, ImageProps } from 'voxeliface';
 import React, { useState, MouseEventHandler } from 'react';
 
 import ImagePreview from './ImagePreview';
-export type ImageWrapperProps = ImageProps & {
-	ratio?: number,
-    shadow?: boolean,
-    canPreview?: boolean,
+export interface ImageWrapperProps extends ImageProps {
+	ratio?: number
+    shadow?: boolean
+    canPreview?: boolean
 	previewWidth?: number
-};
+}
 export default function ImageWrapper({ ratio, shadow, canPreview, previewWidth, ...props }: ImageWrapperProps) {
     const [preview, setPreview] = useState(false);
     const toggle: MouseEventHandler<HTMLDivElement> = event => {
@@ -23,4 +23,4 @@ export default function ImageWrapper({ ratio, shadow, canPreview, previewWidth, 
         }}/>
         {preview && <ImagePreview src={props.src} ratio={ratio} width={previewWidth} onClose={toggle}/>}
     </React.Fragment>;
-};
+}

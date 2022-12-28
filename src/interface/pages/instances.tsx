@@ -1,9 +1,9 @@
 import React from 'react';
+import { Grid, Button } from 'voxeliface';
 import { useTranslation } from 'react-i18next';
 
 import InstanceList from '../components/InstanceList';
 import InstancePage from '../components/InstancePage';
-import { Grid, Button } from 'voxeliface';
 
 import { setPage } from '../../store/slices/interface';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -28,4 +28,4 @@ export default function Instances() {
         </Grid>
         <InstancePage id={instance}/>
     </Grid>;
-};
+}

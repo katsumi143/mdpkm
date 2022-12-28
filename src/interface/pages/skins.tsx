@@ -1,14 +1,14 @@
+import { fetch } from '@tauri-apps/api/http';
 import { Buffer } from 'buffer';
 import { useTranslation } from 'react-i18next';
 import { readBinaryFile } from '@tauri-apps/api/fs';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
-import { fetch } from '@tauri-apps/api/http';
 import React, { useState, useEffect } from 'react';
+import { Grid, Image, Select, Button, Divider, Spinner, Markdown, TextInput, Typography, InputLabel, TextHeader } from 'voxeliface';
 
 import Modal from '../components/Modal';
 import SkinFrame from '../components/SkinFrame';
 import FileSelect from '../components/FileSelect';
-import { Grid, Image, Select, Button, Divider, Spinner, Markdown, TextInput, Typography, InputLabel, TextHeader } from 'voxeliface';
 
 import { useCurrentAccount } from '../../voxura';
 import { addSkin, saveSkins, writeSkin } from '../../store/slices/skins';
@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { toast, getSkinData, getCapeData } from '../../util';
 import { ProfileType, MinecraftCape, MinecraftProfile } from '../../../voxura';
 
+// TODO: rewrite
 const SKIN_MODEL = { CLASSIC: 'default', SLIM: 'slim' } as const;
 export default function Skins() {
     const { t } = useTranslation('interface');
@@ -334,18 +335,18 @@ export default function Skins() {
             </Grid>
         </Modal>}
     </Grid>;
-};
+}
 
-export type SkinProps = {
-    data: any,
-    capes: any[],
-    index: number,
-    current: boolean,
-    loading: boolean,
-    useSkin: (value: number) => void,
+export interface SkinProps {
+    data: any
+    capes: any[]
+    index: number
+    current: boolean
+    loading: boolean
+    useSkin: (value: number) => void
     editSkin: (value: number) => void
-};
-function Skin({ data, capes, index, current, loading, useSkin, editSkin }: SkinProps) {
+}
+export function Skin({ data, capes, index, current, loading, useSkin, editSkin }: SkinProps) {
     const { t } = useTranslation('interface');
     return <Grid padding={8} spacing={4} vertical alignItems="center" background="$primaryBackground" borderRadius="8px" justifyContent="space-between" css={{
         border: '$secondaryBorder solid 1px'
@@ -375,4 +376,4 @@ function Skin({ data, capes, index, current, loading, useSkin, editSkin }: SkinP
             </Button>
         </Grid>
     </Grid>;
-};
+}

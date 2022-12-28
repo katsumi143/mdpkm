@@ -7,9 +7,9 @@ import LoadingInstances from './LoadingInstances';
 import voxura, { useInstances } from '../../voxura';
 import { Instance as VoxuraInstance } from '../../../voxura';
 
-export type InstanceListProps = {
+export interface InstanceListProps {
     id: string
-};
+}
 export default function InstanceList({ id }: InstanceListProps) {
     const { t } = useTranslation('interface');
     const instances = useInstances();
@@ -74,4 +74,4 @@ export default function InstanceList({ id }: InstanceListProps) {
 			</Grid>}
         </Grid>
     </React.Fragment>;
-};
+}

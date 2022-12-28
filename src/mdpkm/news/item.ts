@@ -10,4 +10,4 @@ export default abstract class NewsItem<T> {
     public abstract get title(): string
     public abstract get image(): string
 	public abstract get url(): string
-};
+}

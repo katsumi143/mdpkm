@@ -10,9 +10,9 @@ import ImagePreview from './ImagePreview';
 import Util from '../../common/util';
 import type { Instance } from '../../../voxura';
 import { useAppSelector } from '../../store/hooks';
-export type ResourcePackManagementProps = {
+export interface ResourcePackManagementProps {
     instance: Instance
-};
+}
 export default function ResourcePackManagement({ instance }: ResourcePackManagementProps) {
     const { t } = useTranslation('interface');
     const [items, setItems] = useState<any[] | string | null>(null);
@@ -100,12 +100,13 @@ export default function ResourcePackManagement({ instance }: ResourcePackManagem
             name.toLowerCase().includes(filter)
         ).map((item, key) => <ResourcePack key={key} item={item}/>)}
     </React.Fragment>;
-};
+}
 
-export type ResourcePackProps = {
+// TODO: move this into a separate file
+export interface ResourcePackProps {
     item: any
-};
-function ResourcePack({ item }: ResourcePackProps) {
+}
+export function ResourcePack({ item }: ResourcePackProps) {
     const { t } = useTranslation('interface');
     const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
     const [previewIcon, setPreviewIcon] = useState(false);
@@ -127,7 +128,7 @@ function ResourcePack({ item }: ResourcePackProps) {
                 boxShadow: '$buttonShadow'
             }}
         />
-        {previewIcon && <ImagePreview src={packIcon} size={192} onClose={() => setPreviewIcon(false)} pixelated/>}
+        {previewIcon && <ImagePreview src={packIcon} onClose={() => setPreviewIcon(false)} pixelated/>}
         <Grid spacing={2} vertical>
             <Typography size={isCompact ? 14 : 16} noSelect lineheight={1}>
                 {item.name}
@@ -146,4 +147,4 @@ function ResourcePack({ item }: ResourcePackProps) {
             </Link>
         </Grid>
     </Grid>;
-};
+}

@@ -87,7 +87,7 @@ export default function Home() {
 			</Grid>
 		</Grid>
 	</Grid>;
-};
+}
 
 function getGreeting() {
 	const date = new Date();
@@ -97,12 +97,13 @@ function getGreeting() {
 	else if (hours <= 17)
 		return 1;
 	return 2;
-};
+}
 
-export type ViewAllProps = {
+// TODO: move into a separate file
+export interface ViewAllProps {
 	onClick?: MouseEventHandler<HTMLSpanElement>
-};
-function ViewAll({ onClick }: ViewAllProps) {
+}
+export function ViewAll({ onClick }: ViewAllProps) {
 	const { t } = useTranslation('interface');
 	return <Typography size={12} color="$linkColor" onClick={onClick} noSelect css={{
 		cursor: 'pointer',
@@ -111,4 +112,4 @@ function ViewAll({ onClick }: ViewAllProps) {
 		{t('common.action.view_all')}
 		<IconBiArrowRight/>
 	</Typography>
-};
+}

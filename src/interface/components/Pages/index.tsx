@@ -1,12 +1,12 @@
+import { Grid } from 'voxeliface';
 import React, { Children, ReactNode, cloneElement, ReactElement } from 'react';
 import { animated, useTransition } from 'react-spring';
 
-import { Grid } from 'voxeliface';
-type PagesProps = {
-    css?: Record<string, any>,
-    value: any,
+export interface PagesProps {
+    css?: Record<string, any>
+    value: any
     children: ReactNode | ReactNode[]
-};
+}
 export default function Pages({ value, children, css }: PagesProps) {
     // TODO proper typings yippee!
     const items: any[] = Children.toArray(children);
@@ -41,4 +41,4 @@ export default function Pages({ value, children, css }: PagesProps) {
             )}
         </Grid>
     </Grid>;
-};
+}

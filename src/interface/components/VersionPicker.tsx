@@ -1,15 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
-
 import { Grid, Typography, TypographyProps } from 'voxeliface';
 
 import type { ComponentVersion, ComponentVersions } from '../../../voxura/src/types';
-export type VersionPickerProps = {
-    id: string,
-    value: ComponentVersion | null,
-    versions: ComponentVersions,
+export interface VersionPickerProps {
+    id: string
+    value: ComponentVersion | null
+    versions: ComponentVersions
     onChange: (value: ComponentVersion) => void
-};
+}
 export default function VersionPicker({ id, value, versions, onChange }: VersionPickerProps) {
     const { t } = useTranslation('interface');
     const [category, setCategory] = useState(0);
@@ -65,12 +64,12 @@ export default function VersionPicker({ id, value, versions, onChange }: Version
             </Grid>
         </Grid>
     </Grid>;
-};
+}
 
-export type VersionDateProps = TypographyProps & {
+export interface VersionDateProps extends TypographyProps {
 	date: Date
 }
-function VersionDate({ date, ...props }: VersionDateProps) {
+export function VersionDate({ date, ...props }: VersionDateProps) {
 	const { t } = useTranslation('interface');
 	const [day, data] = getDayString(date);
 	return <Typography size={12} family="$secondary" noSelect {...props}>
@@ -90,4 +89,4 @@ function getDayString(date: Date): [string, number[]?] {
     if (days >= 30)
         return ['released_months', [Math.floor(days / 30)]];
     return ['released_days', [Math.floor(days)]];
-};
+}

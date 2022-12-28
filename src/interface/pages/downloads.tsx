@@ -33,7 +33,7 @@ export default function Downloads() {
             </Grid>
         </React.Fragment>}
     </Grid>;
-};
+}
 
 const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 function formatBytes(bytes: number) {
@@ -41,12 +41,13 @@ function formatBytes(bytes: number) {
         return '0 B';
     const k = 1024, dm = 2, i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + (sizes[i] ?? '?');
-};
+}
 
-export type DownloadComponentProps = {
+// TODO: move into a separate file
+export interface DownloadComponentProps {
 	download: Download
-};
-function DownloadComponent({ download }: DownloadComponentProps) {
+}
+export function DownloadComponent({ download }: DownloadComponentProps) {
 	const { t } = useTranslation('interface');
     const progress = download.totalProgress;
     return <Grid padding={8} spacing={12} smoothing={1} alignItems="center" borderRadius={16} css={{
@@ -56,7 +57,7 @@ function DownloadComponent({ download }: DownloadComponentProps) {
         <ImageWrapper src={getImage(`download.${download.id}`)} size={48} shadow canPreview borderRadius={8}/>
         <Grid vertical>
             <Typography spacing={6} noSelect>
-                {t(`mdpkm:download.${download.id}`, download.extraData)}
+                {t(`mdpkm:download.${download.id}`, download.extraData) as any}
                 {download.subDownloads.length > 0 && <Typography size={12} color="$secondaryColor" weight={400} noSelect>
 					{t('download.additional', { count: download.subDownloads.length })}
                 </Typography>}
@@ -101,4 +102,4 @@ function DownloadComponent({ download }: DownloadComponentProps) {
             </React.Fragment>}
         </Grid>
     </Grid>;
-};
+}

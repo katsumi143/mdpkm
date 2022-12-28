@@ -8,21 +8,21 @@ export enum LoaderIssueId {
     MissingLoaderEntry,
     LaunchUnavailable,
     MissingLoader
-};
+}
 export enum LoaderIssueType {
     Warning,
     Error
-};
+}
 export interface LoaderIssue {
-    id: LoaderIssueId,
-    type: LoaderIssueType,
+    id: LoaderIssueId
+    type: LoaderIssueType
     extra?: any[]
-};
+}
 export interface LoaderEntryOptions {
-    icon?: string,
-    display?: (instance: Instance) => string,
+    icon?: string
+    display?: (instance: Instance) => string
     category?: string
-};
+}
 export class LoaderEntry {
     public readonly id: string;
     public readonly category: string;
@@ -66,7 +66,7 @@ export class LoaderEntry {
     private get displaySummaryKey(): string {
         return this.translationKey + '.summary';
     }
-};
+}
 
 export default new class mdpkm {
     public readonly newsSources: NewsSource<unknown>[] = [];
@@ -78,7 +78,7 @@ export default new class mdpkm {
     public getNewsSource(id: string) {
         return this.newsSources.find(source => source.id === id);
     }
-};
+}
 
 import QuiltLoader from './instance-creator/minecraft-quilt';
 import FabricLoader from './instance-creator/minecraft-fabric';
@@ -107,4 +107,4 @@ export interface ComponentExtra {
 	contentTabs?: JSXElementConstructor<{ instance: Instance }>[],
 	settingsTabs?: JSXElementConstructor<{ instance: Instance }>[],
 	enabledContentTabs?: ('essential' | 'modSearch' | 'modManagement')[]
-};
+}

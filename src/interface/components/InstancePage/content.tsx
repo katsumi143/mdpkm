@@ -10,9 +10,9 @@ import ModManagement from '../ModManagement';
 import voxura from '../../../voxura';
 import type { Instance } from '../../../../voxura';
 import { ComponentExtra, COMPONENT_EXTRAS } from '../../../mdpkm';
-export type ContentProps = {
+export interface ContentProps {
     instance: Instance
-};
+}
 export default function Content({ instance }: ContentProps) {
 	const { t } = useTranslation('interface');
 	const [tab, setTab] = useState(0);
@@ -59,4 +59,4 @@ export default function Content({ instance }: ContentProps) {
 			)).flat().filter(x => x)}
 		</Tabs>
 	</React.Fragment>;
-};
+}

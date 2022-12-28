@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { Button, TextInput } from 'voxeliface';
 
 export interface FileSelectProps {
-	name: string,
-	path?: string,
-	setPath: (path: string) => void,
-	disabled?: boolean,
+	name: string
+	path?: string
+	setPath: (path: string) => void
+	disabled?: boolean
 	extensions?: string[]
-};
+}
 export default function FileSelect({ name, path, setPath, disabled, extensions = [] }: FileSelectProps) {
 	const { t } = useTranslation('interface');
 	const select = () => open({
@@ -30,4 +30,4 @@ export default function FileSelect({ name, path, setPath, disabled, extensions =
 			{t('select_file')}
 		</Button>
 	</TextInput>;
-};
+}

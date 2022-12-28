@@ -1,18 +1,18 @@
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
+import { Link, Grid, Select, Button, Typography, TextHeader, InputLabel, BasicSpinner } from 'voxeliface';
 
 import Modal from '../Modal';
 import ImageWrapper from '../ImageWrapper';
 import VersionPicker from '../VersionPicker';
-import { Link, Grid, Select, Button, Typography, TextHeader, InputLabel, BasicSpinner } from 'voxeliface';
 
 import { LoaderIssue } from '../../../mdpkm';
 import { toast, getImage } from '../../../util';
 import { useComponentVersions } from '../../../voxura';
 import { Instance, Component, COMPONENT_MAP, ComponentType, GameComponent, ComponentVersion, VersionedComponent } from '../../../../voxura';
-export type InstanceLoaderProps = {
+export interface InstanceLoaderProps {
 	instance: Instance
-};
+}
 export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 	const { t } = useTranslation('interface');
 	const { store } = instance;
@@ -47,16 +47,16 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 
 		{adding && <ComponentAdder onClose={() => setAdding(false)} instance={instance} />}
 	</React.Fragment>
-};
+}
 
 import ExclamationOctagonFill from '~icons/bi/exclamation-octagon-fill';
 import ExclamationTriangleFill from '~icons/bi/exclamation-triangle-fill';
 const ISSUE_ICONS = [ExclamationTriangleFill, ExclamationOctagonFill];
 
-type IssueProps = {
+export interface IssueProps {
 	issue: LoaderIssue
-};
-function Issue({ issue }: IssueProps) {
+}
+export function Issue({ issue }: IssueProps) {
 	const { t } = useTranslation();
 	const Icon = ISSUE_ICONS[issue.type];
 	return <Grid padding="12px 16px" spacing={16} background="$secondaryBackground2" borderRadius={16}>
@@ -73,13 +73,13 @@ function Issue({ issue }: IssueProps) {
 			</Typography>
 		</Grid>
 	</Grid>;
-};
+}
 
-export type ComponentProps = {
-	instance: Instance,
+export interface ComponentProps {
+	instance: Instance
 	component: Component<any>
-};
-function ComponentUI({ instance, component }: ComponentProps) {
+}
+export function ComponentUI({ instance, component }: ComponentProps) {
 	const { t } = useTranslation('interface');
 	const [editing, setEditing] = useState(false);
 	const isGame = component instanceof GameComponent;
@@ -114,13 +114,13 @@ function ComponentUI({ instance, component }: ComponentProps) {
 		</Grid>
 		{editing && isVersioned && <ComponentEditor onClose={() => setEditing(false)} component={component} />}
 	</Grid>;
-};
+}
 
-export type ComponentAdderProps = {
-	onClose: () => void,
+export interface ComponentAdderProps {
+	onClose: () => void
 	instance: Instance
-};
-function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
+}
+export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 	const { t } = useTranslation('interface');
 	const [saving, setSaving] = useState(false);
 	const [version, setVersion] = useState<ComponentVersion | null>(null);
@@ -183,13 +183,13 @@ function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 			</Button>
 		</Grid>
 	</Modal>;
-};
+}
 
-export type ComponentEditorProps = {
-	onClose: () => void,
+export interface ComponentEditorProps {
+	onClose: () => void
 	component: VersionedComponent
 };
-function ComponentEditor({ onClose, component }: ComponentEditorProps) {
+export function ComponentEditor({ onClose, component }: ComponentEditorProps) {
 	const { t } = useTranslation('interface');
 	const versions = useComponentVersions(component);
 	const versionMatcher = (v: ComponentVersion) => v.id === component.version;
@@ -228,4 +228,4 @@ function ComponentEditor({ onClose, component }: ComponentEditorProps) {
 			</Button>
 		</Grid>
 	</Modal>;
-};
+}

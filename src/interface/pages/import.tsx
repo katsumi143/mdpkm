@@ -1,4 +1,3 @@
-import { open } from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
 import { Link, Grid, Alert, Button, Typography, TextHeader, InputLabel } from 'voxeliface';
@@ -50,4 +49,4 @@ export default function Import() {
             </Grid>}
         </Grid>
     </Grid>;
-};
+}

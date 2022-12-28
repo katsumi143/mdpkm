@@ -3,12 +3,11 @@ import { Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+import store from '../store';
 import Navigation from './pages/navigation';
 
-import store from '../store';
-
 import 'voxeliface/style.css';
-function AppContainer() {
+export function AppContainer() {
     return <Provider store={store}>
         <BrowserRouter>
             <Routes>
@@ -16,7 +15,7 @@ function AppContainer() {
             </Routes>
         </BrowserRouter>
     </Provider>;
-};
+}
 
 const root = createRoot(document.getElementById('root')!);
 root.render(<AppContainer/>);

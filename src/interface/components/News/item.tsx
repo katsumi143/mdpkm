@@ -1,13 +1,13 @@
 import React from 'react';
 import { open } from '@tauri-apps/api/shell';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
+import { Grid, Tooltip, Typography } from 'voxeliface';
 
 import ImageWrapper from '../ImageWrapper';
 import type NewsItem from '../../../mdpkm/news/item';
-import { Grid, Tooltip, Typography } from 'voxeliface';
-export type NewsItemProps = {
+export interface NewsItemProps {
     item: NewsItem<unknown>
-};
+}
 export default function NewsItemComponent({ item }: NewsItemProps) {
 	const view = () => open(item.url);
     return <Tooltip.Root delayDuration={50}>
@@ -40,4 +40,4 @@ export default function NewsItemComponent({ item }: NewsItemProps) {
             {item.title}
         </Tooltip.Content>
     </Tooltip.Root>;
-};
+}

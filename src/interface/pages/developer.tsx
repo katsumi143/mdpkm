@@ -17,7 +17,7 @@ export default function Developer() {
 	const [crash, setCrash] = useState<any>(null);
 	const [iconTest, setIconTest] = useState('28839');
 	const [bannerTest, setBannerTest] = useState('billy is awesome');
-	return <Grid width="100%" height="inherit" padding=".75rem 1rem" vertical>
+	return <Grid width="100%" height="inherit" padding="12px 1rem" vertical>
 		<TextHeader>Developer Stuff</TextHeader>
 		<Grid spacing={8}>
 			<Button theme="accent" onClick={() => setCrash({})}>
@@ -171,4 +171,4 @@ export default function Developer() {
 			</Typography>
 		</Grid>
 	</Grid>;
-};
+}

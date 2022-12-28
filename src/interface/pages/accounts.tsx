@@ -81,15 +81,16 @@ export default function Accounts() {
             </Grid>
         </Portal>}
     </Grid>;
-};
+}
 
-export type UserAccountProps = {
-    account: Account,
-    current?: Account,
-    changeAccount: (account: Account) => void,
+// TODO: move into a separate file
+export interface UserAccountProps {
+    account: Account
+    current?: Account
+    changeAccount: (account: Account) => void
     deleteAccount: (account: Account) => void
-};
-function UserAccount({ account, current, changeAccount, deleteAccount }: UserAccountProps) {
+}
+export function UserAccount({ account, current, changeAccount, deleteAccount }: UserAccountProps) {
     const { t } = useTranslation('interface');
     const isCurrent = account === current;
     const avatarUrl = account.getAvatarUrl(AvatarType.Xbox);

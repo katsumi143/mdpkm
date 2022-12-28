@@ -1,8 +1,8 @@
+import { Grid, Typography } from 'voxeliface';
 import { styled, keyframes } from '@stitches/react';
 import type { Toast as HotToast } from 'react-hot-toast';
 import React, { FunctionComponent } from 'react';
 
-import { Grid, Typography } from 'voxeliface';
 const animation = keyframes({
     from: {
         transform: 'translateX(120%)'
@@ -30,12 +30,12 @@ const StyledToast = styled(Grid, {
 	}
 });
 
-export type ToastProps = {
-    t: HotToast,
-    icon: FunctionComponent,
-    body?: string,
-    title?: string,
-};
+export interface ToastProps {
+    t: HotToast
+    icon: FunctionComponent
+    body?: string
+    title?: string
+}
 export default function Toast({ t, title = 'Toast title', body = 'Toast body', icon: Icon = IconBiInfoCircle }: ToastProps) {
     return <StyledToast visible={t.visible} smoothing={1} borderRadius={16}>
         <Typography noSelect>
@@ -50,4 +50,4 @@ export default function Toast({ t, title = 'Toast title', body = 'Toast body', i
             </Typography>
         </Grid>
     </StyledToast>;
-};
+}

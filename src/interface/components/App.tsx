@@ -11,4 +11,4 @@ export default function DefaultApp(props: AppProps) {
 			{...props}
 		/>
 	</BreakpointProvider>;
-};
+}

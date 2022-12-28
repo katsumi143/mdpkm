@@ -1,24 +1,23 @@
 import { open } from '@tauri-apps/api/shell';
 import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
+import { Grid, Button, Spinner, Typography, BasicSpinner } from 'voxeliface';
 
 import ImageWrapper from './ImageWrapper';
-import { Grid, Button, Spinner, Typography, BasicSpinner } from 'voxeliface';
 
 import Patcher from '../../plugins/patcher';
 import { ModSide } from '../../../voxura/src/platform/mod';
-import { useInstance } from '../../voxura';
 import { useAppSelector } from '../../store/hooks';
 import { useStoredValue } from '../../../voxura/src/storage';
 import type { Mod, Platform, Instance, VoxuraStore } from '../../../voxura';
-export type ModProps = {
-    id?: string,
-    data?: Mod,
-    featured?: boolean,
-	platform?: Platform,
-    instance?: Instance,
+export interface ModProps {
+    id?: string
+    data?: Mod
+    featured?: boolean
+	platform?: Platform
+    instance?: Instance
     recommended?: boolean
-};
+}
 export default Patcher.register(function Mod({ id, data, featured, platform, instance, recommended }: ModProps) {
     const { t } = useTranslation('interface');
 	const projects = useStoredValue<VoxuraStore["projects"]>('projects', {});
@@ -47,7 +46,6 @@ export default Patcher.register(function Mod({ id, data, featured, platform, ins
         if(data && data !== mod)
             setMod(data);
     }, [data]);
-	console.log(mod);
 
     const iconSize = isCompact ? 32 : 44;
     return <Grid padding={8} background="$secondaryBackground2" smoothing={1} borderRadius={16} css={{
@@ -133,4 +131,4 @@ export default Patcher.register(function Mod({ id, data, featured, platform, ins
             </Grid>
         </React.Fragment>}
     </Grid>;
-});
+})

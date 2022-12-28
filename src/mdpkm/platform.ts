@@ -107,17 +107,17 @@ export default class mdpkmPlatform extends Platform {
     public async getMod(id: string): Promise<mdpkmMod> {
         return new mdpkmMod(id, await this.getProjectData(id), this);
     }
-};
+}
 
-interface ProjectData {
+export interface ProjectData {
 	slug: string
 	title: string
 	author: string
     project_id: string
-};
+}
 export class mdpkmProject extends Project {
     
-};
+}
 export class mdpkmMod extends Mod implements mdpkmProject {
     public getVersions(): Promise<any[]> {
 		return fetch<EssentialVersionsResponse>('https://downloads.essential.gg/v1/mods/essential/container').then(({ data }) => {
@@ -133,14 +133,14 @@ export class mdpkmMod extends Mod implements mdpkmProject {
 			}));
 		});
     }
-};
+}
 
-interface EssentialVersion {
+export interface EssentialVersion {
 	url: string
 	version: string
 	checksum: string
-};
-interface EssentialVersionsResponse {
+}
+export interface EssentialVersionsResponse {
 	stable: Record<string, EssentialVersion>
 	staging: Record<string, EssentialVersion>
-};
+}

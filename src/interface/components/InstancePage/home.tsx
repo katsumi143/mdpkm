@@ -1,15 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import React, { ReactNode } from 'react';
-
-import ImageWrapper from '../ImageWrapper';
 import { Grid, Image, Button, Typography, BasicSpinner } from 'voxeliface';
 
 import { getImage } from '../../../util';
-import type { Instance } from '../../../voxura';
-export type InstanceHomeProps = {
+import type { Instance } from '../../../../voxura';
+export interface InstanceHomeProps {
     setTab: (tab: number) => void,
     instance: Instance
-};
+}
 export default function InstanceHome({ setTab, instance }: InstanceHomeProps) {
     const { t } = useTranslation('interface');
     const { store } = instance;
@@ -40,7 +38,7 @@ export default function InstanceHome({ setTab, instance }: InstanceHomeProps) {
             </Information>
         </Grid>
     </React.Fragment>
-};
+}
 
 function useDayString(date?: number) {
     const { t } = useTranslation('interface');
@@ -54,12 +52,12 @@ function useDayString(date?: number) {
     if (days === 1)
         return t('common.date.yesterday');
     return t('common.date.days_ago', [days]);
-};
-export type InformationProps = {
-    fill?: boolean,
-	text?: ReactNode,
-    icon?: ReactNode,
-    buttons?: ReactNode,
+}
+export interface InformationProps {
+    fill?: boolean
+	text?: ReactNode
+    icon?: ReactNode
+    buttons?: ReactNode
     children?: ReactNode
 };
 function Information({ fill, icon, text, buttons, children }: InformationProps) {
@@ -84,14 +82,14 @@ function Information({ fill, icon, text, buttons, children }: InformationProps) 
             {buttons}
         </Grid>
     </Grid>;
-};
-export type DateThingProps = {
-    icon?: ReactNode,
-    title: string,
+}
+export interface DateThingProps {
+    icon?: ReactNode
+    title: string
     value?: number
-};
+}
 function DateThing({ icon, title, value }: DateThingProps) {
     return <Information icon={icon} text={title}>
         {useDayString(value)}
     </Information>;
-};
+}

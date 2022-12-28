@@ -9,4 +9,4 @@ export default function LoadingInstances() {
 			{t('loading_instances')}
 		</Typography>
 	</Grid>;
-};
+}

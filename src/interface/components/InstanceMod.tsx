@@ -8,16 +8,15 @@ import { Link, Grid, Image, Button, Typography, TextHeader } from 'voxeliface';
 
 import Patcher from '../../plugins/patcher';
 import type Mod from '../../../voxura/src/util/mod';
-import { useInstance } from '../../voxura';
 import type { Instance } from '../../../voxura';
 import { useAppSelector } from '../../store/hooks';
-export type InstanceModProps = {
-    mod: Mod,
-    updates?: any[],
-    embedded?: boolean,
+export interface InstanceModProps {
+    mod: Mod
+    updates?: any[]
+    embedded?: boolean
     instance?: Instance
-};
-export default Patcher.register(function InstanceMod({ mod, embedded, instance }: InstanceModProps) {
+}
+export default Patcher.register(function InstanceMod({ mod, embedded }: InstanceModProps) {
     const { t } = useTranslation('interface');
 	const update = null;
     const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
@@ -92,7 +91,7 @@ export default Patcher.register(function InstanceMod({ mod, embedded, instance }
                         boxShadow: '$buttonShadow',
                         imageRendering: 'pixelated'
                     }}/>
-                    {previewIcon && <ImagePreview src={mod.webIcon} size={192} onClose={() => setPreviewIcon(false)}/>}
+                    {previewIcon && <ImagePreview src={mod.webIcon} onClose={() => setPreviewIcon(false)}/>}
                     <Grid spacing={2} vertical>
                         <Typography lineheight={1}>
                             {mod.name}
@@ -114,4 +113,4 @@ export default Patcher.register(function InstanceMod({ mod, embedded, instance }
             </Modal>
         }
     </Grid>;
-});
+})
