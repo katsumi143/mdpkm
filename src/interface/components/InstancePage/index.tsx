@@ -37,8 +37,10 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 	const isCompact = uiStyle === 'compact';
 	const StateIcon = INSTANCE_STATE_ICONS[instance?.state as any];
 	const banner = useMemo(() => {
-		const { banner } = instance ?? {};
-		return banner ? 'data:image/png;base64,' + Buffer.from(banner).toString('base64') : getDefaultInstanceBanner(instance?.name);
+		if (!instance)
+			return '';
+		const { name, banner, bannerFormat } = instance;
+		return banner ? `data:image/${bannerFormat};base64,${Buffer.from(banner).toString('base64')}` : getDefaultInstanceBanner(name);
 	}, [instance?.banner]);
 
 	const [tabPage, setTabPage] = useState(0);
@@ -59,12 +61,12 @@ export default Patcher.register(function InstancePage({ id }: InstancePageProps)
 		dialog.open({
 			filters: [{
 				name: 'Image',
-				extensions: ['png']
+				extensions: ['png', 'gif']
 			}]
 		}).then(path => {
 			if (typeof path !== 'string')
 				return;
-			copyFile(path, `${instance.path}/${name}.png`).then(() =>
+			copyFile(path, `${instance.path}/${name}.${path.split('.').reverse()[0]}`).then(() =>
 				instance[name === 'icon' ? 'readIcon' : 'readBanner']().then(() => instance.emitEvent('changed'))
 			);
 		});

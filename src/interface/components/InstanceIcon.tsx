@@ -24,6 +24,6 @@ export default Patcher.register(function InstanceIcon({ size = 48, instance, bor
             
             ...props?.css
         }}/>
-        {preview && <ImagePreview src={instance.webIcon} size={192} onClose={() => setPreview(false)}/>}
+        {preview && <ImagePreview src={instance.webIcon} onClose={() => setPreview(false)}/>}
     </React.Fragment>;
 });
