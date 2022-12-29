@@ -102,7 +102,7 @@
             },
             "fs": {
                 "all": true,
-                "scope": ["$APPDATA", "$APPDATA/*"]
+                "scope": ["$APPDATA", "$APPDATA/**"]
             }
         },
         "security": {
