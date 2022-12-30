@@ -68,7 +68,7 @@ export default function ModComponent({ id, data, featured, platform, instance, r
             </Grid>
         </Grid> : <React.Fragment>
             <ImageWrapper src={mod.webIcon} size={iconSize} shadow smoothing={1} canPreview background="$secondaryBackground" borderRadius={8} css={{
-                filter: mod.isNsfw && 'blur(2px)',
+                filter: mod.isExplict && 'blur(2px)',
                 minWidth: iconSize
             }}/>
             <Grid margin={isCompact ? '4px 0 0 10px' : '4px 0 0 12px'} padding="2px 0" spacing={2} vertical>
@@ -89,7 +89,7 @@ export default function ModComponent({ id, data, featured, platform, instance, r
                             {t('mod.recommended')}
                         </Typography>
                     }
-                    {mod.isNsfw &&
+                    {mod.isExplict &&
                         <Typography size={14} color="#e18e8e" noSelect lineheight={1}>
                             {t('mod.explict')}
                         </Typography>

@@ -26,7 +26,6 @@
     "component.minecraft-bedrock-vanilla.release_category.0": "Versions",
     "component.minecraft-bedrock-vanilla.release_category.0.singular": "Version",
 
-    
     "component.forge": "Forge Loader",
     "component.forge.summary": "Forge is a free, open-source modding API.",
     "component.forge.release_category.0": "Versions",

@@ -174,7 +174,7 @@
 	"mod.author": "by {{mod.author}}",
 	"mod.featured": "Featured",
 	"mod.recommended": "Recommended",
-	"mod.explict": "NSFW",
+	"mod.explict": "Explict",
 	"mod.side.0": "Client mod",
 	"mod.side.1": "Server mod",
 	"mod.side.2": "Universal mod",
