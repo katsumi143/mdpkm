@@ -68,7 +68,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 						overflow: 'hidden',
 						position: 'relative'
 					}}>
-						<ImageWrapper src={instance.webIcon} size={isCompact ? 36 : 48} smoothing={1} background="$secondaryBackground2" borderRadius={8} css={{
+						<ImageWrapper src={instance.webIcon} size={isCompact ? 36 : 48} smoothing={1} canPreview background="$secondaryBackground2" borderRadius={8} css={{
 							minWidth: isCompact ? 36 : 48,
 							backgroundSize: 'cover'
 						}}/>
