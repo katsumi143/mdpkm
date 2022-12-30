@@ -270,5 +270,6 @@
 	"toast.no_update": "No updates available",
 	"toast.no_update.body": "mdpkm is already up-to-date.",
 
-	"toast.copied": "Copied to clipboard"
+	"toast.copied": "Copied to clipboard",
+	"toast.copied_id.body": "The ID of “{{0}}” has been copied."
 }
