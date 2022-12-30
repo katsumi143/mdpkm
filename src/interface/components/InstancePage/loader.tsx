@@ -77,7 +77,7 @@ export function Issue({ issue }: IssueProps) {
 
 export interface ComponentProps {
 	instance: Instance
-	component: Component<any>
+	component: Component
 }
 export function ComponentUI({ instance, component }: ComponentProps) {
 	const { t } = useTranslation('interface');

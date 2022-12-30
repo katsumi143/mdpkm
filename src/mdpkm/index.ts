@@ -91,7 +91,7 @@ export { default as InstanceCreator } from './instance-creator';
 import ServerManagement from '../interface/components/ServerManagement';
 import ResourcePackManagement from '../interface/components/ResourcePackManagement';
 import { JSXElementConstructor } from 'react';
-export const COMPONENT_EXTRAS: Record<Component<any>["id"], ComponentExtra> = {
+export const COMPONENT_EXTRAS: Record<Component["id"], ComponentExtra> = {
 	[QuiltLoader.id]: {
 		enabledContentTabs: ['essential', 'modSearch', 'modManagement']
 	},
