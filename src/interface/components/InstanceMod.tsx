@@ -12,17 +12,17 @@ import type { Instance } from '../../../voxura';
 import { useAppSelector } from '../../store/hooks';
 export interface InstanceModProps {
     mod: Mod
+	instance: Instance
     embedded?: boolean
-    instance?: Instance
 }
 export default function InstanceMod({ mod, embedded, instance }: InstanceModProps) {
     const { t } = useTranslation('interface');
 	const update = null;
     const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
-    const deleteMod = () => null;
-	const satisfied = instance ? mod.dependencies.every(d => instance.store.components.some(c => d.id.includes(c.id))) : true;
+	const satisfied = mod.dependencies.every(d => instance.store.components.some(c => d.id.includes(c.id)));
 	
     const iconSize = isCompact ? 32 : 40;
+	const removeMod = () => instance.removeMod(mod);
 	const openWebsite = () => open(mod.source?.baseProjectURL + mod.id);
     return <Grid vertical>
         <Grid spacing={8} vertical smoothing={1} borderRadius={16} css={{
@@ -89,7 +89,7 @@ export default function InstanceMod({ mod, embedded, instance }: InstanceModProp
                         <IconBiCloudArrowDown/>
                         Update
                     </Button>}
-                    {!embedded && <Link size={isCompact ? 11 : 12} padding="0 16px" onClick={deleteMod}>
+                    {!embedded && <Link size={isCompact ? 11 : 12} padding="0 16px" onClick={removeMod}>
                         <IconBiTrash3Fill/>
                         <Breakpoint customQuery="(min-width: 580px)">
                             {t('common.action.delete')}
