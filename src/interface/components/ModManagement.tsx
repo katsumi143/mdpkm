@@ -4,34 +4,19 @@ import { Grid, Button, Spinner, TextInput, Typography, BasicSpinner } from 'voxe
 
 import InstanceMod from './InstanceMod';
 
-import type Mod from '../../../voxura/src/util/mod';
 import type { Instance } from '../../../voxura';
 export interface ModManagementProps {
 	instance: Instance
 }
 export default function ModManagement({ instance }: ModManagementProps) {
     const { t } = useTranslation('interface');
-    const [items, setItems] = useState<Mod[] | string>('loading');
     const [filter, setFilter] = useState('');
-    const [updates, setUpdates] = useState();
-    const [updateChecking, setUpdateChecking] = useState(false);
-    const checkForUpdates = () => {
-        /*setUpdateChecking(true);
-        instance.checkForUpdates().then(updates => {
-            setUpdates(updates);
-            setUpdateChecking(false);
-        });*/
-    };
-    const refreshList = () => {
-        setItems('loading');
-        instance.readMods().then(setItems);
-    };
+	const items = instance.modifications;
+	const loading = instance.readingMods;
+	const refresh = () => instance.readMods();
     useEffect(() => {
-        setItems('loading');
-        if (instance.modifications.length > 0)
-            setItems(instance.modifications);
-        else
-            refreshList();
+        if (instance.modifications.length === 0)
+            instance.readMods();
     }, [instance.id]);
     return <React.Fragment>
        <Grid margin="4px 0" spacing={8} justifyContent="space-between">
@@ -40,7 +25,7 @@ export default function ModManagement({ instance }: ModManagementProps) {
 					{t('mod_management')}
 				</Typography>
 				<Typography size={12} color="$secondaryColor" weight={400} noSelect>
-					{items === 'loading' || !items ?
+					{loading ?
 						t('app.mdpkm.common:states.loading') :
 						t('mod_management.count', [items.length])
 					}
@@ -53,12 +38,12 @@ export default function ModManagement({ instance }: ModManagementProps) {
 					onChange={setFilter}
 					placeholder={t('mod_management.search')}
 				/>
-				<Button theme="secondary" onClick={refreshList} disabled={items === 'loading'}>
-					{items === 'loading' ? <BasicSpinner size={16}/> : <IconBiArrowClockwise/>}
+				<Button theme="secondary" onClick={refresh} disabled={loading}>
+					{loading ? <BasicSpinner size={16}/> : <IconBiArrowClockwise/>}
 					{t('common.action.refresh')}
 				</Button>
-				<Button theme="accent" onClick={checkForUpdates} disabled={updateChecking}>
-					{updateChecking ? <BasicSpinner size={16}/> : <IconBiCloudArrowDown/>}
+				<Button theme="accent" disabled>
+					{loading ? <BasicSpinner size={16}/> : <IconBiCloudArrowDown/>}
 					{t('mod_management.update')}
 				</Button>
 			</Grid>
@@ -75,8 +60,8 @@ export default function ModManagement({ instance }: ModManagementProps) {
 		: items.filter(({ id, name }) =>
 			id?.toLowerCase().includes(filter) ||
 			name?.toLowerCase().includes(filter)
-		).sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id)).map((mod, index) =>
-			<InstanceMod key={index} mod={mod} instance={instance}/>
+		).sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id)).map(mod =>
+			<InstanceMod key={mod.id} mod={mod} instance={instance}/>
 		) : <Spinner/>}
     </React.Fragment>;
 }
