@@ -34,7 +34,6 @@ export default function InstancePage({ id }: InstancePageProps) {
 	const dispatch = useDispatch();
 	const instance = useInstance(id);
 	const isCompact = uiStyle === 'compact';
-	const StateIcon = INSTANCE_STATE_ICONS[instance?.state as any];
 	const banner = useMemo(() => {
 		if (!instance)
 			return '';
@@ -46,6 +45,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 	if (!instance)
 		return;
 
+	const StateIcon = INSTANCE_STATE_ICONS[instance.state];
 	const launchInstance = () => instance.launch().then(() => {
 		toast('Client has launched', instance.name);
 	}).catch(err => {

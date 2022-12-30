@@ -23,18 +23,15 @@ export default class FabricLoader extends InstanceCreator {
         return instance;
     }
 
-    public render(setData: (value: any[]) => void, setSatisfied: (value: boolean) => void) {
-        return <Component creator={this} setData={setData} setSatisfied={setSatisfied}/>;
-    }
-
     public readonly component = MinecraftFabric;
-};
+	public ReactComponent = Component;
+}
 
-export type ComponentProps = {
+export interface ComponentProps {
 	creator: FabricLoader
     setData: (value: any[]) => void
     setSatisfied: (value: boolean) => void
-};
+}
 function Component({ setData, creator, setSatisfied }: ComponentProps) {
     const { t } = useTranslation('interface');
     const [name, setName] = useState('');
@@ -69,4 +66,4 @@ function Component({ setData, creator, setSatisfied }: ComponentProps) {
         </Grid>
         {versions && <VersionPicker id={MinecraftJava.id} value={version} versions={versions} onChange={setVersion}/>}
     </Grid>;
-};
+}

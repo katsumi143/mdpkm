@@ -82,8 +82,9 @@ export default new class mdpkm {
 
 import QuiltLoader from './instance-creator/minecraft-quilt';
 import FabricLoader from './instance-creator/minecraft-fabric';
+import InstanceCreator from './instance-creator';
 import MinecraftJavaVanilla from './instance-creator/minecraft-java-vanilla';
-export const INSTANCE_CREATORS = [new MinecraftJavaVanilla(), new FabricLoader(), new QuiltLoader()];
+export const INSTANCE_CREATORS: InstanceCreator[] = [new MinecraftJavaVanilla(), new FabricLoader(), new QuiltLoader()];
 
 export { default as InstanceCreator } from './instance-creator';
 

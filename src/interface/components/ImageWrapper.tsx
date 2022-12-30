@@ -21,6 +21,6 @@ export default function ImageWrapper({ ratio, shadow, canPreview, previewWidth, 
             boxShadow: shadow && '$buttonShadow',
             ...props.css
         }}/>
-        {preview && <ImagePreview src={props.src} ratio={ratio} width={previewWidth} onClose={toggle}/>}
+        {preview && <ImagePreview src={props.src} ratio={ratio} width={previewWidth} onClose={toggle} pixelated={props.pixelated}/>}
     </React.Fragment>;
 }

@@ -28,7 +28,6 @@ export default function ModComponent({ id, data, featured, platform, instance, r
     const installed = instance ? Object.entries(projects).filter(e => instance.modifications.some(m => m.md5 === e[0])).some(e => e[1].id === (id ?? data?.id)) : false;
     const installing = false;//downloading?.some(d => d.id === (mod?.id ?? mod?.project_id));
     const installMod = () => instance?.installMod(mod!, useSymlinks);
-	console.log(projects, id ?? data?.id);
     useEffect(() => {
         if(id && platform && !mod)
 			platform.getMod(id).then(mod => {

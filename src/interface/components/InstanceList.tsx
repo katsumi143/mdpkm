@@ -50,10 +50,8 @@ export default function InstanceList({ id }: InstanceListProps) {
 					<Typography size={14} color="$secondaryColor" weight={400} margin="4px 16px" family="$secondary" noSelect lineheight={1}>
 						{category}
 					</Typography>
-					{instances.map((instance, key) =>
-						<Instance key={key} instance={instance} selected={id === instance.id} css={{
-							animationDelay: `${100 * key}ms`
-						}}/>
+					{instances.map(instance =>
+						<Instance id={instance.id} key={instance.id} selected={id === instance.id}/>
 					)}
 				</React.Fragment>;
 			}) : <Grid margin="1rem 0" vertical alignItems="center">

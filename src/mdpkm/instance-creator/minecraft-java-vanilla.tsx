@@ -34,15 +34,13 @@ export default class MinecraftJavaVanilla extends InstanceCreator {
         return instance;
     }
 
-    public render(setData: (value: any[]) => void, setSatisfied: (value: boolean) => void) {
-        return <Component setData={setData} setSatisfied={setSatisfied}/>;
-    }
-};
+	public ReactComponent = Component;
+}
 
-export type ComponentProps = {
-    setData: (value: any[]) => void,
+export interface ComponentProps {
+    setData: (value: any[]) => void
     setSatisfied: (value: boolean) => void
-};
+}
 function Component({ setData, setSatisfied }: ComponentProps) {
     const { t } = useTranslation('interface');
     const [name, setName] = useState('');
@@ -64,4 +62,4 @@ function Component({ setData, setSatisfied }: ComponentProps) {
         </Grid>
         {versions && <VersionPicker id={MinecraftJava.id} value={version} versions={versions} onChange={setVersion}/>}
     </Grid>
-};
+}

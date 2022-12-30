@@ -89,6 +89,7 @@ export function Setup({ id, cancel }: SetupProps) {
     if (!creator)
         throw new Error();
 
+	const { ReactComponent } = creator;
     return <ComponentContainer selected layoutId={`component-${id}`}>
         <Grid width="100%" height="fit-content" css={{
             position: 'relative',
@@ -116,7 +117,7 @@ export function Setup({ id, cancel }: SetupProps) {
             overflow: 'hidden',
             position: 'relative'
         }}>
-            {creator.render(setData, setSatisfied)}
+            {<ReactComponent creator={creator} setData={setData} setSatisfied={setSatisfied}/>}
             <Grid css={{
                 bottom: 16,
                 position: 'absolute'

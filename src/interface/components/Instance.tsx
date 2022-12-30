@@ -1,14 +1,13 @@
-import React from 'react';
 import { keyframes } from '@stitches/react';
 import { writeText } from '@tauri-apps/api/clipboard';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useMemo } from 'react';
 import { Link, Grid, Typography, ContextMenu } from 'voxeliface';
 
-import InstanceIcon from './InstanceIcon';
+import ImageWrapper from './ImageWrapper';
 
-import voxura from '../../voxura';
 import { toast } from '../../util';
-import type { Instance } from '../../../voxura';
+import voxura, { useInstance } from '../../voxura';
 import { INSTANCE_STATE_ICONS } from '../../util/constants';
 import { setPage, setCurrentInstance } from '../../store/slices/interface';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -32,33 +31,33 @@ const viewAnimation = keyframes({
 });
 
 export interface InstanceProps {
-	css: Record<string, any>
-	instance: Instance
+	id: string
 	selected?: boolean
 }
-export default function InstanceComponent({ css, selected, instance }: InstanceProps) {
+export default memo(({ id, selected }: InstanceProps) => {
 	const { t } = useTranslation('interface');
 	const dispatch = useAppDispatch();
-	const StateIcon = INSTANCE_STATE_ICONS[instance.state];
+	const instance = useInstance(id);
 	const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
 	if (!instance)
-		return;
+		return null;
 
 	const loading = voxura.instances.loading;
+	const StateIcon = INSTANCE_STATE_ICONS[instance.state];
 	const favorite = () => instance.setCategory(t('mdpkm:instance_category.favorites'));
 	const copyId = () => writeText(instance.id).then(() => toast(t('app.mdpkm.common:toast.copied'), t('app.mdpkm.common:toast.copied_instance_id.body')));
 	const view = () => {
 		dispatch(setCurrentInstance(instance.id));
 		dispatch(setPage('instances'));
 	};
+	
 	return <ContextMenu.Root>
 		<ContextMenu.Trigger fullWidth>
 			<Grid width="100%" height="fit-content" padding={isCompact ? '0 8px' : '0 8px'} alignItems="start" css={{
 				cursor: 'default',
 				opacity: loading ? 0.25 : 0,
 				animation: loading ? undefined : `${Animation} 500ms cubic-bezier(0.4, 0, 0.2, 1)`,
-				animationFillMode: 'forwards',
-				...css
+				animationFillMode: 'forwards'
 			}}>
 				<Grid width="100%" height="100%" alignItems="center" borderRadius={isCompact ? 8 : 16} justifyContent="space-between" css={{
 					border: selected ? 'transparent solid 1px' : '$secondaryBorder solid 1px',
@@ -69,7 +68,10 @@ export default function InstanceComponent({ css, selected, instance }: InstanceP
 						overflow: 'hidden',
 						position: 'relative'
 					}}>
-						<InstanceIcon size={isCompact ? 36 : 48} instance={instance} hideLoader={isCompact} borderRadius={isCompact ? 4 : 8} />
+						<ImageWrapper src={instance.webIcon} size={isCompact ? 36 : 48} smoothing={1} background="$secondaryBackground2" borderRadius={8} css={{
+							minWidth: isCompact ? 36 : 48,
+							backgroundSize: 'cover'
+						}}/>
 						<Grid spacing={isCompact ? 2 : 4} vertical alignItems="start" css={{ overflow: 'hidden' }}>
 							<Typography
 								size={isCompact ? 14 : 16}
@@ -136,4 +138,4 @@ export default function InstanceComponent({ css, selected, instance }: InstanceP
 			</ContextMenu.MenuItem>
 		</ContextMenu.Content>
 	</ContextMenu.Root>;
-}
+});
