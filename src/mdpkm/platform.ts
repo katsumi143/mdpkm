@@ -107,6 +107,10 @@ export default class mdpkmPlatform extends Platform {
     public async getMod(id: string): Promise<mdpkmMod> {
         return new mdpkmMod(id, await this.getProjectData(id), this);
     }
+
+	public get baseProjectURL() {
+		return '';
+	}
 }
 
 export interface ProjectData {
