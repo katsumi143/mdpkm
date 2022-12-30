@@ -52,6 +52,13 @@
 	"common.label.resolution_width": "Width",
 	"common.label.resolution_height": "Height",
 
+	"common.label.loading": "Loading",
+
+	"common.label.empty_dir": "This directory is empty",
+
+	"common.label.items_one": "{{count}} Item",
+	"common.label.items_other": "{{count}} Items",
+
     "common.select_group.minecraft_versions": "Minecraft Versions",
     "common.select_group.component_versions": "Component Versions",
 
@@ -161,7 +168,6 @@
 	"settings.about.github": "Open GitHub Page",
 	
 	"mod_management": "Mod Management",
-	"mod_management.count": "{{0}} Installed",
 	"mod_management.search": "Search mods",
 	"mod_management.update": "Get Updates",
 	"mod_management.tab.0": "Mod Management",
@@ -220,6 +226,9 @@
 	"instance_page.settings.delete": "Delete Instance",
 
 	"loading_instances": "Loading Instances",
+
+	"resource_packs": "Resource Packs",
+	"resource_packs.add": "Add Resource Pack",
 
 	"accounts.header": "Account Management",
 	"accounts.select_account": "You don't have an account selected.\nYou must select or add an account to play Minecraft.",

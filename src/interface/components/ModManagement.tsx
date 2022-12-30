@@ -26,8 +26,8 @@ export default function ModManagement({ instance }: ModManagementProps) {
 				</Typography>
 				<Typography size={12} color="$secondaryColor" weight={400} noSelect>
 					{loading ?
-						t('app.mdpkm.common:states.loading') :
-						t('mod_management.count', [items.length])
+						t('common.label.loading') :
+						t('common.label.items', { count: items.length })
 					}
 				</Typography>
 			</Grid>
@@ -48,20 +48,15 @@ export default function ModManagement({ instance }: ModManagementProps) {
 				</Button>
 			</Grid>
 		</Grid>
-		{Array.isArray(items) ? items.length === 0 ?
-			<React.Fragment>
-				<Typography size="1.2rem" family="$primarySans">
-					{t('app.mdpkm.common:headers.empty_list')}
-				</Typography>
-				<Typography size=".9rem" color="$secondaryColor" weight={400} textalign="start" lineheight={0} css={{ display: 'block' }}>
-					Find some mods via the <b>Mod Search</b> tab!
-				</Typography>
-			</React.Fragment>
-		: items.filter(({ id, name }) =>
-			id?.toLowerCase().includes(filter) ||
-			name?.toLowerCase().includes(filter)
-		).sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id)).map(mod =>
-			<InstanceMod key={mod.id} mod={mod} instance={instance}/>
-		) : <Spinner/>}
+		{!loading ? items.length ?
+			items.filter(({ id, name }) =>
+				id?.toLowerCase().includes(filter) ||
+				name?.toLowerCase().includes(filter)
+			).sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id)).map(mod =>
+				<InstanceMod key={mod.id} mod={mod} instance={instance}/>
+			)
+		: <Typography noSelect>
+			{t('common.label.empty_dir')}
+		</Typography> : <Spinner/>}
     </React.Fragment>;
 }

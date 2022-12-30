@@ -3,7 +3,7 @@ import { open } from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
 import { exists, readTextFile } from '@tauri-apps/api/fs';
 import React, { useState, useEffect } from 'react';
-import { Link, Grid, Image, Button, Typography, BasicSpinner } from 'voxeliface';
+import { Link, Grid, Image, Button, Spinner, Typography, BasicSpinner } from 'voxeliface';
 
 import ImagePreview from './ImagePreview';
 
@@ -74,14 +74,12 @@ export default function ResourcePackManagement({ instance }: ResourcePackManagem
         <Grid margin="4px 0" spacing={8} justifyContent="space-between">
             <Grid vertical>
                 <Typography size={14} noSelect lineheight={1}>
-                    {t('app.mdpkm.resourcepack_management.title')}
+                    {t('resource_packs')}
                 </Typography>
                 <Typography size={12} color="$secondaryColor" weight={400} noSelect>
                     {items === 'loading' || !items ?
-                        t('app.mdpkm.common:states.loading') :
-                        t(`app.mdpkm.resourcepack_management.count${items.length === 1 ? '1' : ''}`, {
-                            val: items.length
-                        })
+                        t('common.label.loading') :
+                        t('common.label.items', { count: items.length })
                     }
                 </Typography>
             </Grid>
@@ -92,13 +90,17 @@ export default function ResourcePackManagement({ instance }: ResourcePackManagem
                 </Button>
                 <Button theme="accent" onClick={addResourcePack} disabled={instance?.store.gameComponent.id === 'bedrock'}>
                     <IconBiPlusLg/>
-                    {t('app.mdpkm.resourcepack_management.add')}
+                    {t('resource_packs.add')}
                 </Button>
             </Grid>
         </Grid>
-        {Array.isArray(items) && items?.filter(({ name }) =>
-            name.toLowerCase().includes(filter)
-        ).map((item, key) => <ResourcePack key={key} item={item}/>)}
+        {Array.isArray(items) ? items.length ?
+			items?.filter(({ name }) =>
+				name.toLowerCase().includes(filter)
+			).map((item, key) => <ResourcePack key={key} item={item}/>)
+		: <Typography noSelect>
+			{t('common.label.empty_dir')}
+		</Typography> : <Spinner/>}
     </React.Fragment>;
 }
 

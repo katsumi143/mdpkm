@@ -26,7 +26,7 @@ export default function InstanceList({ id }: InstanceListProps) {
                     {t('common.header.instance_list')}
                 </Typography>
                 <Typography size={12} color="$secondaryColor" weight={400} noSelect lineheight={1}>
-                    {!instances ? 'Loading' : instances.length + ' Installed'}
+                    {loading ? t('common.label.loading') : t('common.label.items', { count: instances.length })}
                 </Typography>
             </Grid>
             <Button theme="secondary" onClick={refresh} disabled={loading || voxura.instances.loading}>
