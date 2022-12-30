@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Grid, Typography, TextHeader } from 'voxeliface';
 
 import { getImage } from '../../util';
@@ -56,9 +56,9 @@ export function DownloadComponent({ download }: DownloadComponentProps) {
 	}}>
         <ImageWrapper src={getImage(`download.${download.id}`)} size={48} shadow canPreview borderRadius={8}/>
         <Grid vertical>
-            <Typography spacing={6} noSelect>
-                {t(`mdpkm:download.${download.id}`, download.extraData) as any}
-                {download.subDownloads.length > 0 && <Typography size={12} color="$secondaryColor" weight={400} noSelect>
+            <Typography noFlex noSelect>
+				<Trans values={download.extraData} i18nKey={`mdpkm:download.${download.id}`}/>
+                {download.subDownloads.length > 0 && <Typography size={12} color="$secondaryColor" weight={400} margin="0 6px" noSelect>
 					{t('download.additional', { count: download.subDownloads.length })}
                 </Typography>}
             </Typography>

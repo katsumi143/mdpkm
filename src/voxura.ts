@@ -22,11 +22,11 @@ voxura.addPlatform(new mdpkmPlatform());
 const hiddenDownloads = ['component_library'];
 voxura.downloader.listenForEvent('downloadStarted', (download: Download) => {
 	if (hiddenDownloads.indexOf(download.id) === -1)
-    	toast('Download Started', t(`mdpkm:download.${download.id}`, download.extraData) as any, DownloadIcon);
+    	toast(['interface:toast.download_started'], [`mdpkm:download.${download.id}`, download.extraData], DownloadIcon);
 });
 voxura.downloader.listenForEvent('downloadFinished', (download: Download) => {
     if (hiddenDownloads.indexOf(download.id) === -1)	
-		toast('Download Finished', t(`mdpkm:download.${download.id}`, download.extraData) as any, CheckCircle);
+		toast(['interface:toast.download_finished'], [`mdpkm:download.${download.id}`, download.extraData], CheckCircle);
 });
 
 export function useAccounts(): Account[] {

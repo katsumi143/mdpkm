@@ -38,11 +38,6 @@ export default function Developer() {
 				Refresh voxura accounts (tokens, etc)
 			</Button>
 		</Grid>
-		<Grid margin="8px 0" spacing={8}>
-			<Button theme="accent" onClick={() => toast('Test Notification', 'hello :)')}>
-				Create Test Toast
-			</Button>
-		</Grid>
 
 		<InputLabel spaciouser>Default Instance Icon Tester</InputLabel>
 		<Grid spacing={8}>

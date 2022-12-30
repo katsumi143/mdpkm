@@ -53,17 +53,16 @@ export default function Settings() {
 		const manifest = await Util.readFileInZip(pluginPath, 'manifest.json').then(JSON.parse).catch(console.warn);
 		if (!manifest || !manifest.id || !manifest.name) {
 			await removeFile(pluginPath);
-			return toast(`Invalid plugin.`);
+			return toast(['interface:error.unknown'], ['interface:error.unknown']);
 		}
 		await PluginSystem.loadPluginFile(manifest.name, pluginPath);
 		setRerender(Date.now());
-		toast(`Successfully added ${manifest.name}!`);
 	};
 	const updateCheck = () => {
 		setUpdating(true);
 		checkUpdate().then(({ shouldUpdate }) => {
 			if (!shouldUpdate)
-				toast('No updates available', 'You\'re already up to date!');
+				toast(['interface:toast.no_update'], ['interface:toast.no_update.body']);
 			setUpdating(false);
 		});
 	};

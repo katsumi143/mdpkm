@@ -47,9 +47,9 @@ export default function InstancePage({ id }: InstancePageProps) {
 
 	const StateIcon = INSTANCE_STATE_ICONS[instance.state];
 	const launchInstance = () => instance.launch().then(() => {
-		toast('Client has launched', instance.name);
+		toast(['interface:toast.instance_launched'], ['interface:toast.instance_launched.body', [instance.name]]);
 	}).catch(err => {
-		toast('Unexpected error', 'Failed to launch client.');
+		toast(['interface:error.unknown'], ['interface:launch_error']);
 		if (err instanceof LaunchError)
 			dispatch(setLaunchError([id, err.message, err.extraData]));
 		throw err;

@@ -53,7 +53,7 @@ export default function Skins() {
             variant: addingModel
         }));
         dispatch(saveSkins());
-        toast('Skin saved', `Saved '${addingName}' successfully.`);
+        toast(['interface:toast.skin_saved'], ['toast.changes_saved.body', [addingName]]);
 
         setAdding(false);
         setAddingName('');
@@ -76,7 +76,7 @@ export default function Skins() {
             setAddingCape(null);
             setEditingSkin(null);
             setAddingModel('CLASSIC');
-            toast('Skin saved', `Saved changes to '${skin.name}' successfully.`);
+			toast(['interface:toast.skin_saved'], ['toast.changes_saved.body', [skin.name]]);
         }
     };
     const editSkin = (key: number) => {
@@ -96,7 +96,7 @@ export default function Skins() {
             account!.changeSkin(new Uint8Array(Buffer.from(skin.image, 'base64').buffer), skin.variant).then(() =>
                 account!.changeCape(skin.cape)
             ).then(async(profile) => {
-                toast('Skin saved', `Your skin uploaded successfully!`);
+				toast(['interface:toast.skin_uploaded'], ['interface:toast.skin_uploaded.body']);
 				const skin = profile.skins.find(s => s.state === 'ACTIVE')!;
 				const capes: MinecraftCape[] = [];
                 for (const cape of profile.capes)
@@ -110,7 +110,7 @@ export default function Skins() {
 				getSkinData(skin).then(data => setCurrent(Buffer.from(data).toString('base64')));
 				setSkinModel(SKIN_MODEL[skin.variant]);
             }).catch(err => {
-                toast('Unexpected error', 'Check your internet connection.');
+				toast(['interface:error.unknown'], ['interface:toast.check_connection.body']);
                 throw err;
             }).then(() => setSetting(false));
         }
@@ -135,7 +135,7 @@ export default function Skins() {
                 setLoading(false);
             }).catch(err => {
                 console.error(err);
-                toast('Unexpected error', 'Failed to load profile.');
+				toast(['interface:error.unknown'], ['interface:toast.check_connection.body']);
 
                 setLoading(false);
                 setCurrent('img/skins/CLASSIC.png');

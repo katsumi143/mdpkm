@@ -50,7 +50,7 @@ export function ModSearch({ instance }: ModSearchProps) {
     const [searching, setSearching] = useState(false);
     const search = (api: string) => {
         if (searching)
-            return toast('how did we get here?', 'Already searching.');
+            return;
 
         setSearching(true);
         voxura.getPlatform(api).searchMods(query, {
@@ -93,7 +93,7 @@ export function ModSearch({ instance }: ModSearchProps) {
             setMods([]);
             setSearching(false);
             console.error(err);
-            toast('Unexpected error', err.message ?? 'Unknown Reason.');
+			toast(['interface:error.unknown'], ['interface:toast.check_connection.body']);
         });
     };
     useEffect(() => {

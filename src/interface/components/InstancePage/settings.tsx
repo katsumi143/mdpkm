@@ -27,7 +27,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 
         instance.store.memoryAllocation = memory[0];
         instance.store.save().then(() => {
-            toast('Changes saved', 'woohoo');
+			toast(['interface:toast.changes_saved'], ['interface:toast.changes_saved.body', [instance.name]]);
             setSaving(false);
         });
     };

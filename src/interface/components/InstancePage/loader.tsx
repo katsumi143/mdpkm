@@ -127,7 +127,6 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 	const [component, setComponent] = useState<number | null>(null);
 	const components = COMPONENT_MAP.filter(c => c.type !== ComponentType.Game && !instance.store.components.some(s => s.id === c.id));
 	if (!components.length) {
-		toast('Prompt cancelled', 'There are no components available.');
 		onClose();
 		return null;
 	}
@@ -143,7 +142,7 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 		}));
 		instance.store.save().then(() => {
 			instance.emitEvent('changed');
-			toast('Your changes have been saved', 'The component was saved successfully.');
+			toast(['interface:toast.changes_saved'], ['interface:toast.changes_saved.body', [components[component!].id]]);
 			onClose();
 		});
 	};
@@ -202,7 +201,7 @@ export function ComponentEditor({ onClose, component }: ComponentEditorProps) {
 		const { instance } = component;
 		instance.store.save().then(() => {
 			instance.emitEvent('changed');
-			toast('Your changes have been saved', 'The component was saved successfully.');
+			toast(['interface:toast.changes_saved'], ['interface:toast.changes_saved.body', [component.id]]);
 			onClose();
 		});
 	};

@@ -19,17 +19,17 @@ export default function Accounts() {
     const changeAccount = (account: Account) => voxura.auth.selectAccount(account);
     const deleteAccount = async(account: Account) => {
         await account.remove();
-        toast(`Account removed`, `${account.name} has been removed.`);
+		toast(['interface:toast.account_removed'], ['interface:toast.account_removed.body', [account.name]]);
     }
     const addNewAccount = () => {
-		toast('Check your browser', 'A new tab has opened in your default browser.');
+		toast(['interface:toast.auth_check_browser'], ['interface:toast.auth_check_browser.body']);
 		voxura.auth.requestMicrosoftAccessCode(true).then(code => {
 			appWindow.setFocus();
 			return voxura.auth.login(code).then(account =>
-				toast('Account added', `${account.name} has been added.`)
+				toast(['interface:toast.auth_success'], ['interface:toast.auth_success.body', [account.name]])
 			);
 		}).catch(err => {
-			toast('Unexpected error', 'An unknown error occurred.');
+			toast(['interface:error.unknown'], ['interface:error.unknown']);
 			throw err;
 		})
     };
@@ -97,8 +97,10 @@ export function UserAccount({ account, current, changeAccount, deleteAccount }: 
     const [previewAvatar, setPreviewAvatar] = useState(false);
     const copyUUID = () => {
         if (!account.uuid)
-            return toast(t('app.mdpkm.common:toast.common_error_1'), t('app.mdpkm.common:toast.account_uuid_missing.body'));
-        writeText(account.uuid).then(() => toast(t('app.mdpkm.common:toast.copied'), t('app.mdpkm.common:toast.copied_account_uuid.body')));
+            return toast(['interface:error.unknown'], ['interface:error.unknown']);
+        writeText(account.uuid).then(() =>
+			toast(['interface:toast.copied'], ['interface:toast.copied'])
+		);
     };
     return <Grid width="50%" border={`1px solid $secondaryBorder${isCurrent ? 2 : ''}`} padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" borderRadius={16} css={{
         position: 'relative'

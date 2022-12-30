@@ -238,5 +238,37 @@
 	"dialog.delete_instance": "Are you absolutely sure?",
 	"dialog.delete_instance.body": "This action cannot be undone.\n“{{0}}” will be lost forever! (A long time!)",
 
-	"error.unknown": "Something went wrong!"
+	"error.unknown": "Something went wrong!",
+
+	"toast.plugin_error": "Plugin Error",
+	"toast.plugin_loaded": "Plugin Loaded",
+	"toast.plugin_loaded.body": "{{0}} loaded successfully.",
+	"toast.plugin_load_fail.body": "{{0}] failed to load.",
+
+	"toast.download_started": "Download Started",
+	"toast.download_finished": "Download Finished",
+
+	"toast.instance_launched": "Instance Client has launched",
+	"toast.instance_launched.body": "{{0}}",
+
+	"toast.changes_saved": "Your changes have been saved",
+	"toast.changes_saved.body": "Saved changes made to “{{0}}”.",
+
+	"toast.auth_success": "Account Added",
+	"toast.auth_success.body": "“{{0}}” has been added.",
+	"toast.account_removed": "Account Removed",
+	"toast.account_removed.body": "“{{0}}” has been removed.",
+	"toast.auth_check_browser": "Check your browser",
+	"toast.auth_check_browser.body": "A new tab opened in your default browser.",
+
+	"toast.skin_saved": "Skin Saved",
+	"toast.skin_uploaded": "Skin Uploaded",
+	"toast.skin_uploaded.body": "“{{0}}” has been uploaded and applied.",
+
+	"toast.check_connection.body": "Check your internet connection.",
+
+	"toast.no_update": "No updates available",
+	"toast.no_update.body": "mdpkm is already up-to-date.",
+
+	"toast.copied": "Copied to clipboard"
 }

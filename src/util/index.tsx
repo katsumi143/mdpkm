@@ -6,8 +6,8 @@ import { fetch, ResponseType } from '@tauri-apps/api/http';
 import Toast from '../interface/components/Toast';
 import { IMAGES } from './constants';
 import type { MinecraftCape, MinecraftSkin } from '../../voxura';
-export function toast(title?: string | null, body?: string | null, icon?: any, duration?: number) {
-    hotToast.custom(t => <Toast t={t} title={title ?? ''} body={body ?? ''} icon={icon}/>, {
+export function toast(title: [string, any[]?], body: [string, any[]?], icon?: any, duration?: number) {
+    hotToast.custom(t => <Toast t={t} title={title} body={body} icon={icon}/>, {
         duration: duration ?? 10000
     });
 }
