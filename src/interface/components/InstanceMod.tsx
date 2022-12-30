@@ -1,9 +1,10 @@
 import React from 'react';
+import { open } from '@tauri-apps/api/shell';
 import { Breakpoint } from 'react-socks';
 import { useTranslation } from 'react-i18next';
 
 import ImageWrapper from './ImageWrapper';
-import { Link, Grid, Button, Typography } from 'voxeliface';
+import { Link, Grid, Button, Tooltip, Typography } from 'voxeliface';
 
 import type Mod from '../../../voxura/src/util/mod';
 import { IMAGES } from '../../util/constants';
@@ -22,6 +23,7 @@ export default function InstanceMod({ mod, embedded, instance }: InstanceModProp
 	const satisfied = instance ? mod.dependencies.every(d => instance.store.components.some(c => d.id.includes(c.id))) : true;
 	
     const iconSize = isCompact ? 32 : 40;
+	const openWebsite = () => open(mod.source?.baseProjectURL + mod.id);
     return <Grid vertical>
         <Grid spacing={8} vertical smoothing={1} borderRadius={16} css={{
             border: 'transparent solid 1px',
@@ -42,17 +44,40 @@ export default function InstanceMod({ mod, embedded, instance }: InstanceModProp
                     right: 0,
                     position: 'absolute'
                 }}>
-					{!satisfied && <Typography size={12} color="#ffba64" margin="0 16px" noSelect>
-						<IconBiExclamationTriangleFill/>
-						{t('mod.issue.incompatible')}
-					</Typography>}
+					{!satisfied && <Tooltip.Root delayDuration={50}>
+						<Tooltip.Trigger asChild>
+							<Typography size={12} color="#ffba64" margin="0 16px" noSelect>
+								<IconBiExclamationTriangleFill/>
+								{t('mod.issue.incompatible')}
+							</Typography>
+						</Tooltip.Trigger>
+						<Tooltip.Portal>
+							<Tooltip.Content>
+								This feature is incomplete.
+								<Tooltip.Arrow/>
+							</Tooltip.Content>
+						</Tooltip.Portal>
+					</Tooltip.Root>}
                     <Grid vertical alignItems="end">
-                        {mod.source && <Breakpoint customQuery="(min-width: 820px)">
-                            <Typography size={12} color="$secondaryColor" spacing={6} noSelect>
-                                <IconBiCloudFill/>
-                                {t(`voxura:platform.${mod.source.id}`)}
-                            </Typography>
-                        </Breakpoint>}
+						{mod.source && <Tooltip.Root delayDuration={50}>
+							<Tooltip.Trigger asChild>
+								<Typography size={12} color="$secondaryColor" spacing={6} onClick={openWebsite} noSelect css={{
+									cursor: 'pointer',
+									'&:hover': {
+										color: '$primaryColor'
+									}
+								}}>
+									<IconBiCloudFill/>
+									{t(`voxura:platform.${mod.source.id}`)}
+								</Typography>
+							</Tooltip.Trigger>
+							<Tooltip.Portal>
+								<Tooltip.Content>
+									{t('mod.visit_site', {mod})}
+									<Tooltip.Arrow/>
+								</Tooltip.Content>
+							</Tooltip.Portal>
+						</Tooltip.Root>}
                         <Breakpoint customQuery="(min-width: 690px)">
                             {!update && <Typography size={12} color="$secondaryColor" spacing={6} noSelect>
                                 <IconBiBoxFill fontSize={10}/>
