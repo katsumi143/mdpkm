@@ -103,7 +103,7 @@ export function ModSearch({ instance }: ModSearchProps) {
 	return <Grid width="100%" height="100%" spacing={8} vertical css={{ overflow: 'hidden' }}>
 		<Grid width="100%" spacing={8} justifyContent="space-between">
 			<Grid width="100%" vertical>
-				<InputLabel>{t('app.mdpkm.common:labels.search_query')}</InputLabel>
+				<InputLabel>{t('common.label.search_query')}</InputLabel>
 				<TextInput width="100%" value={query} onChange={setQuery}>
 					<Button theme="secondary" onClick={() => search(api)} disabled={searching}>
 						{searching ? <BasicSpinner size={16}/> : <IconBiSearch/>}
@@ -113,7 +113,7 @@ export function ModSearch({ instance }: ModSearchProps) {
 			</Grid>
 			<Grid spacing={8}>
 				<Grid vertical>
-					<InputLabel>{t('app.mdpkm.common:labels.category')}</InputLabel>
+					<InputLabel>{t('common.label.category')}</InputLabel>
 					<Select.Minimal value={category} onChange={setCategory} disabled={searching}>
 						<Select.Group name="Categories">
 							<Select.Item value="none">
@@ -133,7 +133,7 @@ export function ModSearch({ instance }: ModSearchProps) {
 					</Select.Minimal>
 				</Grid>
 				<Grid vertical>
-					<InputLabel>{t('app.mdpkm.common:labels.platform')}</InputLabel>
+					<InputLabel>{t('common.label.platform')}</InputLabel>
 					<Select.Minimal value={api} onChange={setApi} disabled={searching}>
 						<Select.Group name="Mod Platforms">
 							{Object.values(voxura.platforms).map(({ id }, key) =>
@@ -161,7 +161,7 @@ export function ModSearch({ instance }: ModSearchProps) {
 		<Grid width="100%" padding="0 8px" justifyContent="space-between">
 			<Pagination page={page} pages={pages} setPage={setPage}/>
 			<InputLabel>
-				{t('app.mdpkm.mod_search.results', { val: hits })}
+				{t('mod_search.results', { count: hits })}
 			</InputLabel>
 		</Grid>
 	</Grid>;

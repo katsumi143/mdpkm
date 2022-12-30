@@ -40,12 +40,15 @@
 
 	"common.label.actions": "Actions",
 	"common.label.version": "Version {{0}}",
+	"common.label.category": "Category",
+	"common.label.platform": "Platform",
 	"common.label.processes": "Processes",
 	"common.label.installed": "Installed",
 	"common.label.installing": "Installing",
     "common.label.item_count": "{{0}} Items",
 	"common.label.toggle_true": "On",
 	"common.label.toggle_false": "Off",
+	"common.label.search_query": "Search Query",
 	"common.label.resolution_width": "Width",
 	"common.label.resolution_height": "Height",
 
@@ -165,6 +168,9 @@
 	"mod_management.tab.1": "Mod Search",
 	"mod_management.tab.2": "Essential",
 
+	"mod_search.results_one": "{{count}} Result",
+	"mod_search.results_other": "{{count}} Results",
+
 	"mod.author": "by {{mod.author}}",
 	"mod.featured": "Featured",
 	"mod.recommended": "Recommended",
@@ -230,5 +236,7 @@
 	"launch_error.origin": "Originated from “{{0}}”",
 
 	"dialog.delete_instance": "Are you absolutely sure?",
-	"dialog.delete_instance.body": "This action cannot be undone.\n“{{0}}” will be lost forever! (A long time!)"
+	"dialog.delete_instance.body": "This action cannot be undone.\n“{{0}}” will be lost forever! (A long time!)",
+
+	"error.unknown": "Something went wrong!"
 }

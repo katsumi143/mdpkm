@@ -76,7 +76,7 @@ export default function ModManagement({ instance }: ModManagementProps) {
 			id?.toLowerCase().includes(filter) ||
 			name?.toLowerCase().includes(filter)
 		).sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id)).map((mod, index) =>
-			<InstanceMod key={index} mod={mod} updates={updates} instance={instance}/>
+			<InstanceMod key={index} mod={mod} instance={instance}/>
 		) : <Spinner/>}
     </React.Fragment>;
 }
