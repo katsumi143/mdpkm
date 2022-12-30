@@ -80,8 +80,8 @@ export default function Home() {
 					<ViewAll onClick={() => dispatch(setPage('instances'))}/>
 				</Grid>
 				<Grid height="100%" spacing={8} vertical css={{ overflowY: 'auto' }}>
-					{loadingInstances ? <LoadingInstances/> : recent.map((instance, key) =>
-						<Instance key={key} instance={instance} css={{ padding: 0 }} />
+					{loadingInstances ? <LoadingInstances/> : recent.map(instance =>
+						<Instance id={instance.id} key={instance.id}/>
 					)}
 				</Grid>
 			</Grid>

@@ -53,7 +53,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 	
 	return <ContextMenu.Root>
 		<ContextMenu.Trigger fullWidth>
-			<Grid width="100%" height="fit-content" padding={isCompact ? '0 8px' : '0 8px'} alignItems="start" css={{
+			<Grid width="100%" height="fit-content" alignItems="start" css={{
 				cursor: 'default',
 				opacity: loading ? 0.25 : 0,
 				animation: loading ? undefined : `${Animation} 500ms cubic-bezier(0.4, 0, 0.2, 1)`,

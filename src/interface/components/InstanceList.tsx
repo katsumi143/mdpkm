@@ -34,7 +34,7 @@ export default function InstanceList({ id }: InstanceListProps) {
                 {t('common.action.refresh')}
             </Button>
         </Grid>
-        <Grid height="100%" spacing={8} padding="8px 0" vertical css={{
+        <Grid height="100%" spacing={8} padding="8px 8px" vertical css={{
 			position: 'relative',
             overflow: voxura.instances.loading ? 'hidden' : 'hidden auto'
         }}>
@@ -47,7 +47,7 @@ export default function InstanceList({ id }: InstanceListProps) {
 				return acc;
 			}, {})).sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0).map(([category, instances], key) => {
 				return <React.Fragment key={key}>
-					<Typography size={14} color="$secondaryColor" weight={400} margin="4px 16px" family="$secondary" noSelect lineheight={1}>
+					<Typography size={14} color="$secondaryColor" weight={400} margin="8px 8px 4px" family="$secondary" noSelect lineheight={1}>
 						{category}
 					</Typography>
 					{instances.map(instance =>
