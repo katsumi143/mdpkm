@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { Grid, Button, Typography, BasicSpinner } from 'voxeliface';
 
 import Instance from './Instance';
+import { toast } from '../../util';
 import LoadingInstances from './LoadingInstances';
 import voxura, { useInstances } from '../../voxura';
-import { Instance as VoxuraInstance } from '../../../voxura';
+import { InstanceState, Instance as VoxuraInstance } from '../../../voxura';
 
 export interface InstanceListProps {
     id: string
@@ -14,10 +15,11 @@ export default function InstanceList({ id }: InstanceListProps) {
     const { t } = useTranslation('interface');
     const instances = useInstances();
     const [loading, setLoading] = useState(false);
-    const refresh = async() => {
+    const refresh = () => {
+		if (voxura.instances.getAll().some(i => i.state !== InstanceState.None))
+			return toast('instance_refresh_none_idle');
         setLoading(true);
-        await voxura.instances.refreshInstances();
-        setLoading(false);
+        voxura.instances.refreshInstances().then(() => setLoading(false));
     };
     return <React.Fragment>
         <Grid width="100%" padding="12px 16px" alignItems="center" background="$secondaryBackground" justifyContent="space-between">

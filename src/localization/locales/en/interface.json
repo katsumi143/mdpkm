@@ -298,5 +298,10 @@
 	"toast.project_incompatible.body": "No compatible versions of “{{0}}” were found for your Instance.",
 
 	"toast.unknown_error": "$t(interface:error.generic)",
-	"toast.unknown_error.body": "An unknown error occurred."
+	"toast.unknown_error.body": "An unknown error occurred.",
+
+	"toast.action_fail": "This action could not be completed",
+
+	"toast.instance_refresh_none_idle": "$t(interface:toast.action_fail)",
+	"toast.instance_refresh_none_idle.body": "All Instances must be idle to refresh the Instance List."
 }
