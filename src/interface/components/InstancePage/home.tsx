@@ -28,7 +28,10 @@ export default function InstanceHome({ setTab, instance }: InstanceHomeProps) {
             </Information>
             <DateThing icon={<IconBiCalendarPlus/>} title={t('common.label.instance_created')} value={instance.store.dateCreated}/>
             <DateThing icon={<IconBiCalendarHeart/>} title={t('common.label.last_launched')} value={instance.store.dateLaunched}/>
-            <Information icon={<IconBiBox2/>} text={t('common.label.content_installed')} buttons={
+            <Information icon={<IconBiStopwatch/>} text={t('common.label.play_time')}>
+                {useTimeString(instance.store.playTime)}
+            </Information>
+			<Information icon={<IconBiBox2/>} text={t('common.label.content_installed')} buttons={
                 <Button theme="accent" onClick={refreshContent} disabled={instance.readingMods}>
                     {instance.readingMods ? <BasicSpinner size={16}/> : <IconBiArrowClockwise/>}
                     {t('common.action.refresh')}
@@ -52,6 +55,20 @@ function useDayString(date?: number) {
     if (days === 1)
         return t('common.date.yesterday');
     return t('common.date.days_ago', [days]);
+}
+function useTimeString(date: number) {
+    const { t } = useTranslation('interface');
+    if (typeof(date) !== 'number')
+        return t('common.date.never');
+    
+	const hours = Math.round(date / 3600000);
+	const minutes = Math.round(date / 60000);
+	const seconds = Math.round(date / 1000);
+	if (hours > 0)
+		return t('common.time.hours', { count: hours });
+	else if (minutes > 0)
+		return t('common.time.minutes', { count: minutes });
+    return t('common.time.seconds', { count: seconds });
 }
 export interface InformationProps {
     fill?: boolean

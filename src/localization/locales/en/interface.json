@@ -30,6 +30,7 @@
     "common.label.minecraft_version": "Minecraft Version",
     "common.label.val_version": "{{val}} Version",
 
+	"common.label.play_time": "Play Time",
     "common.label.instance_created": "Instance created",
     "common.label.last_launched": "Last launched",
     "common.label.content_installed": "Content installed",
@@ -74,6 +75,15 @@
     "common.date.released_days": "Released {{0}} days ago",
     "common.date.released_months": "Released {{0}} months ago",
     "common.date.released_years": "Released {{0}} years ago",
+
+	"common.time.hours_one": "{{count}} hour",
+	"common.time.hours_other": "{{count}} hours",
+
+	"common.time.minutes_one": "{{count}} minute",
+	"common.time.minutes_other": "{{count}} minutes",
+
+	"common.time.seconds_one": "{{count}} second",
+	"common.time.seconds_other": "{{count}} seconds",
 
 	"common.locale.en": "English",
 	"common.locale.lv": "Latvian",
