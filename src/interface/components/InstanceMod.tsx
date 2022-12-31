@@ -81,7 +81,7 @@ export default function InstanceMod({ mod, embedded, instance }: InstanceModProp
                         <Breakpoint customQuery="(min-width: 690px)">
                             {!update && <Typography size={12} color="$secondaryColor" spacing={6} noSelect>
                                 <IconBiBoxFill fontSize={10}/>
-                                {t(`voxura:component.${mod.dependencies[0]?.id}`)}
+                                {t(`voxura:component.${mod.dependencies[0]?.id[0]}`)}
                             </Typography>}
                         </Breakpoint>
                     </Grid>
