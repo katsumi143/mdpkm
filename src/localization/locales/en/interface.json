@@ -154,8 +154,6 @@
 	"settings.instances.modSearchSummaries": "Mod Search Summaries",
 
 	"settings.download": "Download Settings",
-	"settings.download.useLinks": "Use Symbolic Links",
-	"settings.download.useLinks.summary": "Saves storage space by creating links to a central file.",
 
 	"settings.plugins": "Plugin Settings",
 	"settings.plugins.add": "Add Plugin",
@@ -298,9 +296,6 @@
 
 	"toast.project_incompatible": "$t(interface:error.generic)",
 	"toast.project_incompatible.body": "No compatible versions of “{{0}}” were found for your Instance.",
-
-	"toast.symlink_error": "$t(interface:error.generic)",
-	"toast.symlink_error.body": "An unknown error occurred while linking “{{0}}”.",
 
 	"toast.unknown_error": "$t(interface:error.generic)",
 	"toast.unknown_error.body": "An unknown error occurred."

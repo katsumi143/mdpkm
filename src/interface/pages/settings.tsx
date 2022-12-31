@@ -23,7 +23,6 @@ export default function Settings() {
 	const uiStyle = useAppSelector(state => state.settings.uiStyle);
 	const dispatch = useAppDispatch();
 	const language = useAppSelector(state => state.settings.language);
-	const useSymlinks = useAppSelector(state => state.settings['download.useLinks']);
 	const modSearchPopout = useAppSelector(state => state.settings['instances.modSearchPopout']);
 	const showInstanceBanner = useAppSelector(state => state.settings['instances.showBanner']);
 	const modSearchSummaries = useAppSelector(state => state.settings['instances.modSearchSummaries']);
@@ -209,15 +208,7 @@ export default function Settings() {
 
 		<TextHeader spacious noSelect>{t('settings.download')}</TextHeader>
 		<Grid spacing={8} padding="0 1rem" vertical>
-			<Setting name="download.useLinks" direction="horizontal">
-				<Switch
-					value={useSymlinks}
-					onChange={v => setSetting('download.useLinks', v)}
-				/>
-				<Typography size={13} color="$secondaryColor" noSelect>
-					{t(`common.label.toggle_${useSymlinks}`)}
-				</Typography>
-			</Setting>
+			
 		</Grid>
 
 		<TextHeader spacious noSelect>{t('settings.plugins', {
