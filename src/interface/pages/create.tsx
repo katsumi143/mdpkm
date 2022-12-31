@@ -49,6 +49,9 @@ export function Component({ id, selected, setSelected }: ComponentProps) {
                     <Typography noSelect layoutId={`component-title-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}`)}
                     </Typography>
+					<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect layoutId={`component-summary-${id}`} lineheight={1}>
+                        {t(`voxura:component.${id}.summary`)}
+                    </Typography>
                 </Grid>
             </Grid>
             <Grid height="100%" layoutId={`component-link-${id}`} css={{
@@ -100,6 +103,9 @@ export function Setup({ id, cancel }: SetupProps) {
                 <Grid spacing={4} vertical justifyContent="center">
                     <Typography noSelect layoutId={`component-title-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}`)}
+                    </Typography>
+					<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect layoutId={`component-summary-${id}`} lineheight={1}>
+                        {t(`voxura:component.${id}.summary`)}
                     </Typography>
                 </Grid>
             </Grid>
