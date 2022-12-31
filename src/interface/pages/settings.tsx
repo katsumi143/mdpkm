@@ -53,7 +53,7 @@ export default function Settings() {
 		const manifest = await Util.readFileInZip(pluginPath, 'manifest.json').then(JSON.parse).catch(console.warn);
 		if (!manifest || !manifest.id || !manifest.name) {
 			await removeFile(pluginPath);
-			return toast(['interface:error.unknown'], ['interface:error.unknown']);
+			return toast('unknown_error');
 		}
 		await PluginSystem.loadPluginFile(manifest.name, pluginPath);
 		setRerender(Date.now());
@@ -62,7 +62,7 @@ export default function Settings() {
 		setUpdating(true);
 		checkUpdate().then(({ shouldUpdate }) => {
 			if (!shouldUpdate)
-				toast(['interface:toast.no_update'], ['interface:toast.no_update.body']);
+				toast('no_update');
 			setUpdating(false);
 		});
 	};

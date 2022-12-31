@@ -2,7 +2,7 @@ import React from 'react';
 import { keyframes } from '@stitches/react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Grid, Button, Portal, Typography } from 'voxeliface';
+import { Grid, Button, Portal, Tooltip, Typography } from 'voxeliface';
 
 import { useInstance } from '../../voxura';
 import { setLaunchError } from '../../store/slices/interface';
@@ -46,11 +46,21 @@ export default function LaunchError({ data }: LaunchErrorProps) {
 			<Grid width="40%" padding={16} vertical smoothing={1} background="$secondaryBackground2" borderRadius={16} css={{
 				animation: `${openAnimation} .5s cubic-bezier(0, 0, 0, 1.0)`
 			}}>
-				<Typography size={24} family="$tertiary">
-					{t('launch_error')}
-				</Typography>
+				<Tooltip.Root delayDuration={1000}>
+					<Tooltip.Trigger asChild>
+						<Typography size={24} family="$tertiary">
+							{t('launch_error')}
+						</Typography>
+					</Tooltip.Trigger>
+					<Tooltip.Portal>
+						<Tooltip.Content style={{ zIndex: 100000 }} sideOffset={32}>
+							{data[1]}
+							<Tooltip.Arrow/>
+						</Tooltip.Content>
+					</Tooltip.Portal>
+				</Tooltip.Root>
 				<Typography color="$secondaryColor" weight={400} family="$secondary">
-					{t(`voxura:launch_error.${data[1]}`, data[2])}
+					{t([`voxura:launch_error.${data[1]}`, 'error.generic'], data[2])}
 				</Typography>
 				<Grid margin="auto 0 0" padding="16px 0 0" alignItems="end" justifyContent="space-between">
 					<Typography size={12} color="$secondaryColor" weight={400} noFlex family="$secondary">

@@ -92,8 +92,9 @@ export function ModSearch({ instance }: ModSearchProps) {
         }).catch(err => {
             setMods([]);
             setSearching(false);
-            console.error(err);
-			toast(['interface:error.unknown'], ['interface:toast.check_connection.body']);
+			toast('check_connection');
+			
+			throw err;
         });
     };
     useEffect(() => {

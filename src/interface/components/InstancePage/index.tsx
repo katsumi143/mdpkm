@@ -16,7 +16,7 @@ import ImageWrapper from '../ImageWrapper';
 import { useDispatch } from 'react-redux';
 import type { GridProps } from 'voxeliface';
 
-import { LaunchError } from '../../../../voxura';
+import { InstanceState } from '../../../../voxura';
 import { useAppSelector } from '../../../store/hooks';
 import { setLaunchError } from '../../../store/slices/interface';
 import { COMPONENT_EXTRAS } from '../../../mdpkm';
@@ -47,11 +47,12 @@ export default function InstancePage({ id }: InstancePageProps) {
 
 	const StateIcon = INSTANCE_STATE_ICONS[instance.state];
 	const launchInstance = () => instance.launch().then(() => {
-		toast(['interface:toast.instance_launched'], ['interface:toast.instance_launched.body', [instance.name]]);
+		toast('instance_launched', [instance.name]);
 	}).catch(err => {
-		toast(['interface:error.unknown'], ['interface:launch_error']);
-		if (err instanceof LaunchError)
-			dispatch(setLaunchError([id, err.message, err.extraData]));
+		toast('launch_error', [instance.name]);
+		dispatch(setLaunchError([id, err.message, err.extraData]));
+
+		instance.setState(InstanceState.None);
 		throw err;
 	});
 	const openFolder = () => open(instance.path);

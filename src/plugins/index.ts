@@ -50,7 +50,7 @@ export default class PluginSystem {
         const plugin: Plugin = this.loaded[manifest.id] = new PluginClass(this);
         await plugin.init();
 
-        Util.toast(['interface:toast.plugin_loaded'], ['interface:toast.plugin_loaded.body', [name]]);
+        Util.toast('plugin_loaded', [plugin.id]);
     }
 
     static async loadPluginFile(name: string, path: string) {
@@ -68,7 +68,7 @@ export default class PluginSystem {
         for (const { name, path, children } of files)
             if (name && !children && name.endsWith('.plugin.js'))
                 await this.loadPluginFile(name, path).catch(err => {
-                    Util.toast(['interface:toast.plugin_error'], ['interface:toast.plugin_load_fail.body', [name]]);
+                    Util.toast('plugin_load_fail', [name]);
 					throw err;
                 });
     }

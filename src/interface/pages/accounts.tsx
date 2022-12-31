@@ -19,17 +19,15 @@ export default function Accounts() {
     const changeAccount = (account: Account) => voxura.auth.selectAccount(account);
     const deleteAccount = async(account: Account) => {
         await account.remove();
-		toast(['interface:toast.account_removed'], ['interface:toast.account_removed.body', [account.name]]);
+		toast('account_removed', [account.name]);
     }
     const addNewAccount = () => {
-		toast(['interface:toast.auth_check_browser'], ['interface:toast.auth_check_browser.body']);
+		toast('auth_check_browser');
 		voxura.auth.requestMicrosoftAccessCode(true).then(code => {
 			appWindow.setFocus();
-			return voxura.auth.login(code).then(account =>
-				toast(['interface:toast.auth_success'], ['interface:toast.auth_success.body', [account.name]])
-			);
+			return voxura.auth.login(code).then(account => toast('auth_success', [account.name]));
 		}).catch(err => {
-			toast(['interface:error.unknown'], ['interface:error.unknown']);
+			toast('unknown_error');
 			throw err;
 		})
     };
@@ -97,9 +95,9 @@ export function UserAccount({ account, current, changeAccount, deleteAccount }: 
     const [previewAvatar, setPreviewAvatar] = useState(false);
     const copyUUID = () => {
         if (!account.uuid)
-            return toast(['interface:error.unknown'], ['interface:error.unknown']);
+            return toast('unknown_error');
         writeText(account.uuid).then(() =>
-			toast(['interface:toast.copied'], ['interface:toast.copied'])
+			toast('copied_id')
 		);
     };
     return <Grid width="50%" border={`1px solid $secondaryBorder${isCurrent ? 2 : ''}`} padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" borderRadius={16} css={{

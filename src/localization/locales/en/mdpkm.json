@@ -3,7 +3,7 @@
 	"instance_category.favorites": "Your Favourites",
 
 	"download.temurin": "Eclipse Temurin Java Development Kit {{0}}",
-	"download.game_mod": "<strong>{{0}}</strong> from <strong>$t(voxura:platform.{{1}})</strong> (Game Modification)",
+	"download.game_mod": "“{{0}}” from $t(voxura:platform.{{1}}) (Game Modification)",
 	"download.java_agent": "Java Agent",
 	"download.minecraft_java": "Minecraft: Java Edition {{0}}",
 	"download.component_manifest": "{{0}} {{1}} Manifest",

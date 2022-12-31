@@ -45,7 +45,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 	const loading = voxura.instances.loading;
 	const StateIcon = INSTANCE_STATE_ICONS[instance.state];
 	const favorite = () => instance.setCategory(t('mdpkm:instance_category.favorites'));
-	const copyId = () => writeText(instance.id).then(() => toast(['interface:toast.copied'], ['interface:toast.copied_id.body', [instance.name]]));
+	const copyId = () => writeText(instance.id).then(() => toast('copied_id', [instance.name]));
 	const view = () => {
 		dispatch(setCurrentInstance(instance.id));
 		dispatch(setPage('instances'));

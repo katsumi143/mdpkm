@@ -5,9 +5,11 @@ import { Grid, Button, Spinner, Typography, BasicSpinner } from 'voxeliface';
 
 import ImageWrapper from './ImageWrapper';
 
+import { toast } from '../../util';
 import { ModSide } from '../../../voxura/src/platform/mod';
 import { useAppSelector } from '../../store/hooks';
 import { useStoredValue } from '../../../voxura/src/storage';
+import { SymlinkError, CompatibilityError } from '../../../voxura/src/instance';
 import type { Mod, Platform, Instance, VoxuraStore } from '../../../voxura';
 export interface ModProps {
     id?: string
@@ -27,18 +29,21 @@ export default function ModComponent({ id, data, featured, platform, instance, r
     const [loading, setLoading] = useState(!data);
     const installed = instance ? Object.entries(projects).filter(e => instance.modifications.some(m => m.md5 === e[0])).some(e => e[1].id === (id ?? data?.id)) : false;
     const installing = false;//downloading?.some(d => d.id === (mod?.id ?? mod?.project_id));
-    const installMod = () => instance?.installMod(mod!, useSymlinks);
+    const installMod = () => instance?.installMod(mod!, useSymlinks).catch(err => {
+		if (err instanceof CompatibilityError)
+			toast('project_incompatible', [mod?.displayName]);
+		else if (err instanceof SymlinkError)
+			toast('symlink_error', [mod?.displayName]);
+		else
+			toast('download_fail', [mod?.displayName]);
+		throw err;
+	});
     useEffect(() => {
         if(id && platform && !mod)
 			platform.getMod(id).then(mod => {
 				setMod(mod);
 				setLoading(false);
-			}).catch(err => {
-                console.warn(err);
-                let message = 'An unknown error occured.';
-                if (err.message.includes(503))
-                    message = 'The service is unavailable.';
-            });
+			});
     }, [id, mod, platform]);
     useEffect(() => {
         if(data && data !== mod)

@@ -247,16 +247,21 @@
 	"dialog.delete_instance": "Are you absolutely sure?",
 	"dialog.delete_instance.body": "This action cannot be undone.\n“{{0}}” will be lost forever! (A long time!)",
 
-	"error.unknown": "Something went wrong!",
+	"error.generic": "Something went wrong!",
 
 	"toast.plugin_error": "Plugin Error",
 	"toast.plugin_loaded": "Plugin Loaded",
-	"toast.plugin_loaded.body": "{{0}} loaded successfully.",
-	"toast.plugin_load_fail.body": "{{0}] failed to load.",
+	"toast.plugin_loaded.body": "“{{0}}” loaded successfully.",
+	"toast.plugin_load_fail": "$t(interface:toast.plugin_error)",
+	"toast.plugin_load_fail.body": "“{{0}}” failed to load.",
 
 	"toast.download_started": "Download Started",
+	"toast.download_started.body": "{{0}}",
 	"toast.download_finished": "Download Finished",
+	"toast.download_finished.body": "{{0}}",
 
+	"toast.launch_error": "$t(interface:launch_error)",
+	"toast.launch_error.body": "An unknown error occurred while launching “{{0}}”.",
 	"toast.instance_launched": "Instance Client has launched",
 	"toast.instance_launched.body": "{{0}}",
 
@@ -271,14 +276,32 @@
 	"toast.auth_check_browser.body": "A new tab opened in your default browser.",
 
 	"toast.skin_saved": "Skin Saved",
+	"toast.skin_saved.body": "$t(interface:toast.auth_success.body, [\"{{0}}\"])",
 	"toast.skin_uploaded": "Skin Uploaded",
 	"toast.skin_uploaded.body": "“{{0}}” has been uploaded and applied.",
 
+	"toast.check_connection": "$t(interface:error.generic)",
 	"toast.check_connection.body": "Check your internet connection.",
 
 	"toast.no_update": "No updates available",
 	"toast.no_update.body": "mdpkm is already up-to-date.",
 
 	"toast.copied": "Copied to clipboard",
-	"toast.copied_id.body": "The ID of “{{0}}” has been copied."
+	"toast.copied_id": "$t(interface:toast.copied)",
+	"toast.copied_id.body": "The ID of “{{0}}” has been copied.",
+
+	"toast.install_fail": "$t(interface:error.generic)",
+	"toast.install_fail.body": "An unknown error occurred while installing “{{0}}”.",
+
+	"toast.download_fail": "$t(interface:error.generic)",
+	"toast.download_fail.body": "An unknown error occurred while downloading “{{0}}”.",
+
+	"toast.project_incompatible": "$t(interface:error.generic)",
+	"toast.project_incompatible.body": "No compatible versions of “{{0}}” were found for your Instance.",
+
+	"toast.symlink_error": "$t(interface:error.generic)",
+	"toast.symlink_error.body": "An unknown error occurred while linking “{{0}}”.",
+
+	"toast.unknown_error": "$t(interface:error.generic)",
+	"toast.unknown_error.body": "An unknown error occurred."
 }

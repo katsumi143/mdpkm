@@ -53,7 +53,7 @@ export default function Skins() {
             variant: addingModel
         }));
         dispatch(saveSkins());
-        toast(['interface:toast.skin_saved'], ['toast.changes_saved.body', [addingName]]);
+        toast('skin_saved', [addingName]);
 
         setAdding(false);
         setAddingName('');
@@ -76,7 +76,7 @@ export default function Skins() {
             setAddingCape(null);
             setEditingSkin(null);
             setAddingModel('CLASSIC');
-			toast(['interface:toast.skin_saved'], ['toast.changes_saved.body', [skin.name]]);
+			toast('skin_saved', [skin.name]);
         }
     };
     const editSkin = (key: number) => {
@@ -95,8 +95,10 @@ export default function Skins() {
             setSetting(true);
             account!.changeSkin(new Uint8Array(Buffer.from(skin.image, 'base64').buffer), skin.variant).then(() =>
                 account!.changeCape(skin.cape)
-            ).then(async(profile) => {
-				toast(['interface:toast.skin_uploaded'], ['interface:toast.skin_uploaded.body']);
+            ).then(profile => {
+				toast('skin_uploaded', [skin.name]);
+				return profile;
+			}).then(async(profile) => {
 				const skin = profile.skins.find(s => s.state === 'ACTIVE')!;
 				const capes: MinecraftCape[] = [];
                 for (const cape of profile.capes)
@@ -110,7 +112,7 @@ export default function Skins() {
 				getSkinData(skin).then(data => setCurrent(Buffer.from(data).toString('base64')));
 				setSkinModel(SKIN_MODEL[skin.variant]);
             }).catch(err => {
-				toast(['interface:error.unknown'], ['interface:toast.check_connection.body']);
+				toast('check_connection');
                 throw err;
             }).then(() => setSetting(false));
         }
@@ -134,11 +136,11 @@ export default function Skins() {
                 setSkinModel(SKIN_MODEL[skin.variant]);
                 setLoading(false);
             }).catch(err => {
-                console.error(err);
-				toast(['interface:error.unknown'], ['interface:toast.check_connection.body']);
-
-                setLoading(false);
+				setLoading(false);
                 setCurrent('img/skins/CLASSIC.png');
+				toast('check_connection');
+
+				throw err;
             });
         }
     }, [profile, account]);

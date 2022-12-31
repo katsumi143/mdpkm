@@ -142,7 +142,7 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 		}));
 		instance.store.save().then(() => {
 			instance.emitEvent('changed');
-			toast(['interface:toast.changes_saved'], ['interface:toast.changes_saved.body', [components[component!].id]]);
+			toast('changes_saved', [components[component!].id]);
 			onClose();
 		});
 	};
@@ -201,7 +201,7 @@ export function ComponentEditor({ onClose, component }: ComponentEditorProps) {
 		const { instance } = component;
 		instance.store.save().then(() => {
 			instance.emitEvent('changed');
-			toast(['interface:toast.changes_saved'], ['interface:toast.changes_saved.body', [component.id]]);
+			toast('changes_saved', [component.id]);
 			onClose();
 		});
 	};
