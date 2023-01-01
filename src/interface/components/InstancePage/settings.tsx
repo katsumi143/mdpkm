@@ -6,8 +6,8 @@ import Tabs from '../Tabs';
 import JsonEditor from '../JsonEditor';
 
 import { toast } from '../../../util';
-import type { Instance } from '../../../../voxura';
 import { TOTAL_SYSTEM_MEMORY } from '../../../util/constants';
+import { Instance, InstanceState } from '../../../../voxura';
 export interface InstanceSettingsProps {
     instance: Instance
 }
@@ -37,9 +37,14 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
         setResolution(instance.store.gameResolution);
     }, [instance.name, instance.store.memoryAllocation, instance.store.gameResolution]);
 
+	if (instance.state !== InstanceState.None)
+		return <Typography size={12} color="#ffba64" margin="8px 16px" noSelect>
+			<IconBiExclamationTriangleFill/>
+			{t('instance_page.settings.disabled')}
+		</Typography>;
     if (advanced)
         return <JsonEditor value={instance.store.data}/>;
-    return <React.Fragment>
+    return <Grid height="100%" vertical>
         <Tabs value={tab} onChange={setTab} css={{ height: '100%' }}>
 			<TabItem name="General" icon={<IconBiGear/>} value={0} spacing={0} padding="0 8px !important">
 				<InputLabel>
@@ -130,5 +135,5 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 			{saving ? <BasicSpinner size={16}/> : <IconBiPencilFill fontSize={11}/>}
 			{t('common.action.save_changes')}
 		</Button>
-    </React.Fragment>;
+    </Grid>;
 }

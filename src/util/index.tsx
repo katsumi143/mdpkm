@@ -1,6 +1,7 @@
 import React from 'react';
 import hotToast from 'react-hot-toast';
 import { Buffer } from 'buffer';
+import { invoke } from '@tauri-apps/api';
 import { fetch, ResponseType } from '@tauri-apps/api/http';
 
 import Toast from '../interface/components/Toast';
@@ -57,4 +58,16 @@ export function getCapeData(cape: MinecraftCape) {
 		method: 'GET',
 		responseType: ResponseType.Binary
 	}).then(r => `data:image/png;base64,${Buffer.from(r.data).toString('base64')}`);
+}
+
+export function copyDir(path: string, target: string) {
+	return invoke<string>('copy_dir', { path, target });
+}
+
+export function readTextFileInZip(path: string, target: string) {
+	return invoke<string>('read_text_file_in_zip', { path, target });
+}
+
+export function readBinaryFileInZip(path: string, target: string) {
+	return invoke<number[]>('read_binary_file_in_zip', { path, target });
 }

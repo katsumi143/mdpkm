@@ -58,7 +58,7 @@ function Component({ setData, creator, setSatisfied }: ComponentProps) {
             })}</InputLabel>
             <Select.Minimal value={version2} loading={!versions2} onChange={setVersion2}>
                 <Select.Group name={t('common.select_group.component_versions')}>
-                    {versions2?.map((version, key) => <Select.Item key={key} value={key}>
+                    {versions2?.map((version, key) => <Select.Item key={version.id} value={key}>
                         {version.id}
                     </Select.Item>)}
                 </Select.Group>

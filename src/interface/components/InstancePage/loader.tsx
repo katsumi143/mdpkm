@@ -9,7 +9,7 @@ import VersionPicker from '../VersionPicker';
 import { LoaderIssue } from '../../../mdpkm';
 import { toast, getImage } from '../../../util';
 import { useComponentVersions } from '../../../voxura';
-import { Instance, Component, COMPONENT_MAP, ComponentType, GameComponent, ComponentVersion, VersionedComponent } from '../../../../voxura';
+import { Instance, Component, InstanceState, COMPONENT_MAP, ComponentType, GameComponent, ComponentVersion, VersionedComponent } from '../../../../voxura';
 export interface InstanceLoaderProps {
 	instance: Instance
 }
@@ -18,6 +18,12 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 	const { store } = instance;
 	const component = instance.gameComponent;
 	const [adding, setAdding] = useState(false);
+
+	if (instance.state !== InstanceState.None)
+		return <Typography size={12} color="#ffba64" margin="8px 16px" noSelect>
+			<IconBiExclamationTriangleFill/>
+			{t('instance_page.settings.disabled')}
+		</Typography>;
 
 	const { components } = store;
 	const otherComponents = components.filter(c => c.type !== ComponentType.Game);
@@ -37,7 +43,7 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 		</Typography>}
 		<Grid spacing={8} vertical>
 			{otherComponents.map((component, key) =>
-				<ComponentUI key={key} instance={instance} component={component}/>
+				<ComponentUI key={component.id} instance={instance} component={component}/>
 			)}
 		</Grid>
 		<Button theme="accent" onClick={() => setAdding(true)}>
@@ -151,7 +157,7 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 		<InputLabel>Component</InputLabel>
 		<Select.Minimal value={component} onChange={setComponent} loading={!versions && component !== null} disabled={(!versions || saving) && component !== null}>
 			<Select.Group name="Available Instance Components">
-				{components.map((component, key) => <Select.Item key={key} value={key}>
+				{components.map((component, key) => <Select.Item key={component.id} value={key}>
 					{t(`voxura:component.${component.id}`)}
 				</Select.Item>)}
 			</Select.Group>

@@ -1,34 +1,37 @@
 import toast from 'react-hot-toast';
 import { open } from '@tauri-apps/api/dialog';
+import { Buffer } from 'buffer';
+import * as shell from '@tauri-apps/api/shell';
 import { useTranslation } from 'react-i18next';
-import { exists, readTextFile } from '@tauri-apps/api/fs';
-import React, { useState, useEffect } from 'react';
-import { Link, Grid, Image, Button, Spinner, Typography, BasicSpinner } from 'voxeliface';
+import React, { useMemo, useState, useEffect } from 'react';
+import { exists, readDir, copyFile, createDir, readTextFile, readBinaryFile } from '@tauri-apps/api/fs';
+import { Link, Grid, Image, Button, Spinner, TextInput, Typography, BasicSpinner } from 'voxeliface';
 
 import ImagePreview from './ImagePreview';
 
-import Util from '../../common/util';
 import type { Instance } from '../../../voxura';
 import { useAppSelector } from '../../store/hooks';
+import { readTextFileInZip, readBinaryFileInZip } from '../../util';
 export interface ResourcePackManagementProps {
     instance: Instance
 }
 export default function ResourcePackManagement({ instance }: ResourcePackManagementProps) {
+	// TODO: rewrite
+	const path = instance.path + '/resourcepacks';
     const { t } = useTranslation('interface');
     const [items, setItems] = useState<any[] | string | null>(null);
     const [filter, setFilter] = useState('');
     const addResourcePack = async() => {
-        const path = await open({
+        const filePath = await open({
             title: 'Select Resource Pack',
             filters: [{ name: 'Resource Packs', extensions: ['zip'] }]
         });
-        if (typeof path !== 'string')
+        if (typeof filePath !== 'string')
             return;
-        const split = path.split(/\/+|\\+/);
+        const split = filePath.split(/\/+|\\+/);
         const packName = split.reverse()[0];
-        const packsPath = `${instance?.path}/resourcepacks`;
-        await Util.createDirAll(packsPath);
-        await Util.moveFolder(path, `${packsPath}/${packName}`);
+        await createDir(path, { recursive: true });
+        await copyFile(filePath, `${path}/${packName}`);
 
         toast.success(`Successfully added ${packName}!`, { duration: 5000 });
         setItems(null);
@@ -37,21 +40,20 @@ export default function ResourcePackManagement({ instance }: ResourcePackManagem
         if (!items) {
             if (!instance)
                 return;
-            const path = `${instance.path}/resourcepacks`;
             setItems('loading');
             exists(path).then(exists => {
                 if (exists)
-                    Util.readDir(path).then(async files => {
+                    readDir(path).then(async entries => {
                         const resourcePacks = [];
-                        for (const { name, path, isDir } of files) {
+                        for (const { name, path, children } of entries) {
                             try {
-                                const icon = await (isDir ?
-                                    Util.readFileBase64(`${path}/pack.png`) :
-                                    Util.readFileInZipBase64(path, 'pack.png')
+                                const icon = await (children ?
+                                    readBinaryFile(`${path}/pack.png`) :
+                                    readBinaryFileInZip(path, 'pack.png')
                                 ).catch(console.warn);
-                                const metadata = await (isDir ?
+                                const metadata = await (children ?
                                     readTextFile(`${path}/pack.mcmeta`) :
-                                    Util.readFileInZip(path, 'pack.mcmeta')
+                                    readTextFileInZip(path, 'pack.mcmeta')
                                 ).then(JSON.parse);
                                 resourcePacks.push({
                                     name,
@@ -71,7 +73,7 @@ export default function ResourcePackManagement({ instance }: ResourcePackManagem
     }, [items]);
     useEffect(() => setItems(null), [instance.id]);
     return <React.Fragment>
-        <Grid margin="4px 0" spacing={8} justifyContent="space-between">
+        <Grid margin="4px 0" justifyContent="space-between">
             <Grid vertical>
                 <Typography size={14} noSelect lineheight={1}>
                     {t('resource_packs')}
@@ -83,16 +85,22 @@ export default function ResourcePackManagement({ instance }: ResourcePackManagem
                     }
                 </Typography>
             </Grid>
-            <Grid spacing={8}>
-                <Button theme="secondary" onClick={() => setItems(null)} disabled={items === 'loading'}>
-                    {items === 'loading' ? <BasicSpinner size={16}/> : <IconBiArrowClockwise/>}
-                    {t('common.action.refresh')}
-                </Button>
-                <Button theme="accent" onClick={addResourcePack} disabled={instance?.store.gameComponent.id === 'bedrock'}>
-                    <IconBiPlusLg/>
-                    {t('resource_packs.add')}
-                </Button>
-            </Grid>
+			<Grid spacing={8}>
+				<TextInput
+					width={256}
+					value={filter}
+					onChange={setFilter}
+					placeholder={t('resource_packs.filter')}
+				/>
+				<Button theme="secondary" onClick={() => setItems(null)} disabled={items === 'loading'}>
+					{items === 'loading' ? <BasicSpinner size={16}/> : <IconBiArrowClockwise/>}
+					{t('common.action.refresh')}
+				</Button>
+				<Button theme="secondary" onClick={() => shell.open(path)}>
+					<IconBiFolder2Open/>
+					{t('common.action.open_folder')}
+				</Button>
+			</Grid>
         </Grid>
         {Array.isArray(items) ? items.length ?
 			items?.filter(({ name }) =>
@@ -101,19 +109,30 @@ export default function ResourcePackManagement({ instance }: ResourcePackManagem
 		: <Typography noSelect>
 			{t('common.label.empty_dir')}
 		</Typography> : <Spinner/>}
+		<Grid margin="auto 0 0" spacing={8}>
+			<Button theme="accent" onClick={addResourcePack} disabled={instance?.store.gameComponent.id === 'bedrock'}>
+				<IconBiPlusLg/>
+				{t('resource_packs.add')}
+			</Button>
+		</Grid>
     </React.Fragment>;
 }
 
 // TODO: move this into a separate file
 export interface ResourcePackProps {
-    item: any
+    item: {
+		name: string,
+		icon: number[],
+		metadata: any
+	}
 }
 export function ResourcePack({ item }: ResourcePackProps) {
     const { t } = useTranslation('interface');
     const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
     const [previewIcon, setPreviewIcon] = useState(false);
 
-    const packIcon = item.icon ? `data:image/png;base64,${item.icon}` : 'img/icons/minecraft/unknown_pack.png';
+	const icon = useMemo(() => item.icon ? Buffer.from(item.icon).toString('base64') : null, [item.icon]);
+    const packIcon = icon ? `data:image/png;base64,${icon}` : 'img/icons/minecraft/unknown_pack.png';
     return <Grid padding={8} spacing={isCompact ? 10 : 12} alignItems="center" background="$secondaryBackground2" borderRadius={16} css={{
         border: 'transparent solid 1px',
         position: 'relative',

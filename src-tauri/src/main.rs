@@ -3,6 +3,8 @@
     windows_subsystem = "windows"
 )]
 
+pub mod cmd;
+
 use tauri::{ window::WindowBuilder, WindowUrl };
 use sysinfo::{ System, SystemExt };
 fn main() {
@@ -14,7 +16,11 @@ fn main() {
             get_total_memory,
             fs_create_dir_all,
             fs_read_file_in_zip,
-            fs_read_dir_recursive
+            fs_read_dir_recursive,
+
+			cmd::copy_dir,
+			cmd::read_text_file_in_zip,
+			cmd::read_binary_file_in_zip
         ])
 		.setup(|app| {
 			let mut sys = System::new_all();

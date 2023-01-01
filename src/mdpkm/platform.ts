@@ -1,7 +1,7 @@
 import { fetch, ResponseType } from '@tauri-apps/api/http';
 
-import { Mod, Project, Platform } from '../../voxura';
-export default class mdpkmPlatform extends Platform {
+import { Mod, Project, Platform, Instance, ProjectSide, GameComponent } from '../../voxura';
+export default class mdpkmPlatform extends Platform<mdpkmProject> {
 	public static id = 'mdpkm';
 	public search(query: string, options: {
         limit?: number,
@@ -57,31 +57,13 @@ export default class mdpkmPlatform extends Platform {
         offset: number,
         total_hits: number
     }> {
-        const {
-            limit = 20,
-            facets,
-            offset = 0,
-            loaders,
-            versions,
-            categories,
-            projectType
-        } = options;
-        return fetch<any>('https://api.modrinth.com/v2/search', {
-            query: {
-                query,
-                limit: limit.toString(),
-                offset: offset.toString(),
-                facets: facets ? JSON.stringify([
-                    ...facets,
-                    categories?.filter(v => v).map(cat => `categories:${cat}`),
-                    loaders?.filter(v => v).map(cat => `categories:${cat}`),
-                    versions?.filter(v => v).map(ver => `versions:${ver}`),
-                    ...[projectType && [`project_type:${projectType}`]]
-                ].filter(v => v)) : undefined
-            },
-            method: 'GET',
-            responseType: ResponseType.JSON
-        }).then(d => d.data);
+		const hits = Object.values(INTERNAL_PROJECTS);
+        return Promise.resolve({
+			hits,
+			limit: hits.length,
+			offset: 0,
+			total_hits: hits.length
+		});
     }
 
     public async getProject(id: string): Promise<mdpkmProject> {
@@ -89,24 +71,16 @@ export default class mdpkmPlatform extends Platform {
     }
 
     private getProjectData(id: string): Promise<ProjectData> {
-		if (id === 'essential-container')
-			return Promise.resolve({
-				slug: id,
-				title: 'Essential',
-				author: 'Essential',
-				synopsis: 'placeholder',
-				icon_url: 'img/icons/essential_mod.svg',
-				downloads: 0,
-				project_id: id,
-				client_side: 'required',
-				server_side: 'unsupported'
-			});
-        return fetch<ProjectData>('https://api.modrinth.com/v2/project/' + id).then(r => r.data);
+		return Promise.resolve(INTERNAL_PROJECTS[id])
     }
 
     public async getMod(id: string): Promise<mdpkmMod> {
         return new mdpkmMod(id, await this.getProjectData(id), this);
     }
+
+	public get baseUserURL() {
+		return '';
+	}
 
 	public get baseProjectURL() {
 		return '';
@@ -117,12 +91,25 @@ export interface ProjectData {
 	slug: string
 	title: string
 	author: string
+	website: string
+	icon_url?: string
+	downloads?: number
     project_id: string
+	description: string
 }
-export class mdpkmProject extends Project {
-    
-}
-export class mdpkmMod extends Mod implements mdpkmProject {
+export class mdpkmProject extends Project<ProjectData, mdpkmPlatform> {
+	public getSide(): ProjectSide {
+        return ProjectSide.Client;
+    }
+
+    public async getLatestVersion(instance: Instance) {
+        const versions = await this.getVersions();
+		const { components } = instance.store;
+        return versions.find(({ loaders, game_versions }) =>
+            loaders.some((l: any) => components.some(c => c.getPlatformId(this.source) === l)) && game_versions.some((v: any) => components.some(c => c instanceof GameComponent && c.version === v))
+        );
+    }
+
     public getVersions(): Promise<any[]> {
 		return fetch<EssentialVersionsResponse>('https://downloads.essential.gg/v1/mods/essential/container').then(({ data }) => {
 			return Object.entries(data.stable).map(([id, version]) => ({
@@ -137,6 +124,37 @@ export class mdpkmMod extends Mod implements mdpkmProject {
 			}));
 		});
     }
+
+	public get displayName() {
+        return this.data.title;
+    }
+
+    public get summary() {
+        return this.data.description;
+    }
+
+    public get author() {
+        return this.data.author;
+    }
+
+    public get slug() {
+        return this.data.slug;
+    }
+
+    public get downloads() {
+        return this.data.downloads;
+    }
+
+    public get website(): string {
+        return this.data.website;
+    }
+
+    public get webIcon(): string | undefined {
+        return this.data.icon_url;
+    }
+}
+export class mdpkmMod extends mdpkmProject implements Mod {
+    
 }
 
 export interface EssentialVersion {
@@ -147,4 +165,16 @@ export interface EssentialVersion {
 export interface EssentialVersionsResponse {
 	stable: Record<string, EssentialVersion>
 	staging: Record<string, EssentialVersion>
+}
+
+export const INTERNAL_PROJECTS: Record<string, ProjectData> = {
+	'essential-container': {
+		slug: 'essential-container',
+		title: 'Essential',
+		author: 'Essential',
+		website: 'https://essential.gg',
+		icon_url: 'img/icons/essential_mod.svg',
+		project_id: 'essential-container',
+		description: 'Essential is a quality of life mod that boosts Minecraft Java to the next level.'
+	}
 }

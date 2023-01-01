@@ -1,7 +1,7 @@
 import { keyframes } from '@stitches/react';
 import { writeText } from '@tauri-apps/api/clipboard';
 import { useTranslation } from 'react-i18next';
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import { Link, Grid, Typography, ContextMenu } from 'voxeliface';
 
 import ImageWrapper from './ImageWrapper';
@@ -35,10 +35,15 @@ export interface InstanceProps {
 	selected?: boolean
 }
 export default memo(({ id, selected }: InstanceProps) => {
+	const ref = useRef<HTMLDivElement>(null);
 	const { t } = useTranslation('interface');
 	const dispatch = useAppDispatch();
 	const instance = useInstance(id);
 	const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
+	useEffect(() => {
+		if (selected)
+			ref.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth'});
+	}, [selected]);
 	if (!instance)
 		return null;
 
@@ -52,8 +57,8 @@ export default memo(({ id, selected }: InstanceProps) => {
 	};
 	
 	return <ContextMenu.Root>
-		<ContextMenu.Trigger fullWidth>
-			<Grid width="100%" height="fit-content" alignItems="start" css={{
+		<ContextMenu.Trigger asChild>
+			<Grid ref={ref} width="100%" alignItems="start" css={{
 				cursor: 'default',
 				opacity: loading ? 0.25 : 0,
 				animation: loading ? undefined : `${Animation} 500ms cubic-bezier(0.4, 0, 0.2, 1)`,

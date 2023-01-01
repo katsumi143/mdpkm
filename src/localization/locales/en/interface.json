@@ -22,7 +22,8 @@
 	"common.action.select_folder": "Select Folder",
     "common.action.create_instance": "Create Instance",
 	"common.action.import_instance": "Import Instance",
-    "common.action.return_to_instances": "Return to your instances",
+	"common.action.check_for_updates": "Check for Updates",
+    "common.action.return_to_instances": "Return to your Instances",
 
     "common.header.instance_list": "Your Instances",
 
@@ -114,7 +115,7 @@
     "home.greeting.2": "Good evening,",
 
     "home.news.title": "What's new",
-    "home.recent_instances.title": "Recent instances",
+    "home.recent_instances.title": "Recent Instances",
 
 	"skin_management": "Skin Management",
 	"skin_management.current": "Current Skin",
@@ -160,7 +161,6 @@
 	"settings.instances": "Instance Settings",
 	"settings.instances.pageBanner": "Page Banner",
 	"settings.instances.defaultResolution": "Default Game Resolution",
-	"settings.instances.modSearchPopout": "Mod Search Popout",
 	"settings.instances.modSearchSummaries": "Mod Search Summaries",
 
 	"settings.download": "Download Settings",
@@ -171,17 +171,15 @@
 	"settings.about": "About this build",
 	"settings.about.version": "{{0}} v{{1}}",
 	"settings.about.version2": "Tauri {{0}} & Voxura {{1}}",
-	"settings.about.update": "Check for updates",
 	"settings.about.report_bug": "Report Issue",
 	"settings.about.github": "Open GitHub Page",
 	
-	"mod_management": "Mod Management",
-	"mod_management.search": "Search mods",
-	"mod_management.update": "Get Updates",
-	"mod_management.tab.0": "Mod Management",
-	"mod_management.tab.1": "Mod Search",
-	"mod_management.tab.2": "Essential",
+	"mod_management": "Game Modifications",
+	"mod_management.filter": "Filter Modifications",
+	"mod_management.search": "Search for Mods",
+	"mod_management.warning": "You should only manage mods when your Instance is idle.",
 
+	"mod_search": "Modification Search",
 	"mod_search.results_one": "{{count}} Result",
 	"mod_search.results_other": "{{count}} Results",
 
@@ -196,6 +194,8 @@
 	"mod.downloads": "{{mod.downloads, number}} Downloads",
 	"mod.visit_site": "View on $t(voxura:platform.{{mod.source.id}}) Website",
 	"mod.issue.incompatible": "Incompatible",
+
+	"essential": "Essential",
 
 	"server_management": "Server Management",
 	"server_management.count_one": "{{count}} Server",
@@ -232,11 +232,14 @@
 	"instance_page.settings.memory": "Memory Allocation ({{0}} GB)",
 	"instance_page.settings.resolution": "Game Window Resolution",
 	"instance_page.settings.delete": "Delete Instance",
+	"instance_page.settings.disabled": "You can only edit the Instance when it's idle.",
 
 	"loading_instances": "Loading Instances",
 
 	"resource_packs": "Resource Packs",
+	"resource_packs.filter": "Filter Resource Packs",
 	"resource_packs.add": "Add Resource Pack",
+	"resource_packs.search": "Search for Resource Packs",
 
 	"accounts.header": "Account Management",
 	"accounts.select_account": "You don't have an account selected.\nYou must select or add an account to play Minecraft.",

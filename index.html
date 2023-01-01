@@ -6,7 +6,81 @@
         <title>mdpkm</title>
     </head>
     <body>
-        <div id="root"></div>
+        <div id="root">
+			<div id="s">
+				<div id="spin">
+					<span></span>
+				</div>
+			</div>
+		</div>
+		<style>
+			body {
+				margin: 0;
+				background: hsl(130 25% 30%);
+			}
+			@keyframes spin1 {
+				0% { transform: rotate(0) }
+				100% { transform: rotate(360deg) }
+			}
+			#s {
+				width: 100vw;
+				height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			#spin {
+				width: var(--size);
+				height: var(--size);
+				overflow: hidden;
+				animation: spin1 3s linear infinite;
+				box-sizing: border-box;
+				--size: 32px;
+			}
+			#spin > span {
+				top: 0;
+				left: 0;
+				clip: rect(calc(var(--size) / 2), var(--size), var(--size), 0);
+				right: 0;
+				width: var(--size);
+				bottom: 0;
+				margin: auto;
+				height: var(--size);
+				position: absolute;
+				animation: spin1 1.5s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+			}
+			#spin > span:before {
+				top: 0;
+				left: 0;
+				right: 0;
+				width: inherit;
+				bottom: 0;
+				margin: auto;
+				height: inherit;
+				border: calc(var(--size) / 10.66666666) solid transparent;
+				content: '';
+				position: absolute;
+				animation: spin1 1.5s cubic-bezier(.77, 0, .175, 1) infinite;
+				box-sizing: border-box;
+				border-top: calc(var(--size) / 10.66666666) solid hsl(130 100% 93%);
+				border-radius: 50%;
+			}
+			#spin > span:after {
+				top: 0;
+				left: 0;
+				right: 0;
+				width: var(--size);
+				bottom: 0;
+				margin: auto;
+				height: var(--size);
+				border: calc(var(--size) / 10.66666666) solid hsl(130 40% 74%);
+				content: '';
+				opacity: 0.5;
+				position: absolute;
+				box-sizing: border-box;
+				border-radius: 50%;
+			}
+		</style>
         <script type="module" src="src/main.ts"></script>
     </body>
 </html>

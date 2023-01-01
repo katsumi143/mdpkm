@@ -33,12 +33,13 @@
     
     "component.fabric": "Fabric Loader",
     "component.fabric.summary": "Fabric is a lightweight, experimental modding toolchain.",
-    "component.fabric.versions": "Fabric Versions",
+    "component.fabric.versions": "Fabric Loader Versions",
     "component.fabric.release_category.0": "Versions",
     "component.fabric.release_category.0.singular": "Version",
     
     "component.quilt": "Quilt Loader",
     "component.quilt.summary": "Quilt is an open-source, community-driven modding toolchain.",
+	"component.quilt.version": "Quilt Loader Versions",
     "component.quilt.release_category.0": "Versions",
     "component.quilt.release_category.0.singular": "Version",
 

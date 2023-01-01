@@ -1,21 +1,20 @@
 import { open } from '@tauri-apps/api/shell';
 import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
-import { Grid, Button, Spinner, Typography, BasicSpinner } from 'voxeliface';
+import { Grid, Button, Spinner, Tooltip, Typography, BasicSpinner } from 'voxeliface';
 
 import ImageWrapper from './ImageWrapper';
 
 import { toast } from '../../util';
-import { ModSide } from '../../../voxura/src/platform/mod';
 import { useAppSelector } from '../../store/hooks';
 import { useStoredValue } from '../../../voxura/src/storage';
 import { CompatibilityError } from '../../../voxura/src/instance';
-import type { Mod, Platform, Instance, VoxuraStore } from '../../../voxura';
+import { Mod, Project, Platform, Instance, ProjectSide, VoxuraStore } from '../../../voxura';
 export interface ModProps {
     id?: string
-    data?: Mod
+    data?: Project<any, Platform<any>> & Mod
     featured?: boolean
-	platform?: Platform
+	platform?: Platform<any>
     instance?: Instance
     recommended?: boolean
 }
@@ -35,6 +34,8 @@ export default function ModComponent({ id, data, featured, platform, instance, r
 			toast('download_fail', [mod?.displayName]);
 		throw err;
 	});
+	const openAuthor = () => open(mod!.source.baseUserURL + mod!.author)
+	const openWebsite = () => open(mod!.website);
     useEffect(() => {
         if(id && platform && !mod)
 			platform.getMod(id).then(mod => {
@@ -74,13 +75,38 @@ export default function ModComponent({ id, data, featured, platform, instance, r
                 minWidth: iconSize
             }}/>
             <Grid margin={isCompact ? '4px 0 0 10px' : '4px 0 0 12px'} padding="2px 0" spacing={2} vertical>
-                <Typography size={isCompact ? 14 : '1.1rem'} spacing={4} noSelect lineheight={1}>
-                    {mod.displayName}
-                    {mod.author && 
-                        <Typography size={isCompact ? 10 : 12} color="$secondaryColor" family="$secondary" lineheight={1}>
-                            {t('mod.author', {mod})}
-                        </Typography>
-                    }
+                <Grid spacing={4}>
+					<Tooltip.Root delayDuration={50}>
+						<Tooltip.Trigger asChild>
+							<Typography size={isCompact ? 14 : 16} onClick={openWebsite} noSelect lineheight={1} css={{
+								cursor: 'pointer'
+							}}>
+								{mod.displayName}
+							</Typography>
+						</Tooltip.Trigger>
+						<Tooltip.Portal>
+							<Tooltip.Content>
+								{t('mod.visit_site', {mod})}
+								<Tooltip.Arrow/>
+							</Tooltip.Content>
+						</Tooltip.Portal>
+					</Tooltip.Root>
+					{mod.author && <Tooltip.Root delayDuration={50}>
+						<Tooltip.Trigger asChild>
+							<Typography size={isCompact ? 10 : 12} color="$secondaryColor" family="$secondary" onClick={openAuthor} noSelect lineheight={1} css={{
+								cursor: 'pointer',
+								'&:hover': { color: '$linkColor' }
+							}}>
+								{t('mod.author', {mod})}
+							</Typography>
+						</Tooltip.Trigger>
+						<Tooltip.Portal>
+							<Tooltip.Content>
+								{t('mod.visit_site', {mod})}
+								<Tooltip.Arrow/>
+							</Tooltip.Content>
+						</Tooltip.Portal>
+					</Tooltip.Root>}
                     {featured &&
                         <Typography size={14} color="#cbc365" noSelect lineheight={1}>
                             {t('mod.featured')}
@@ -96,7 +122,7 @@ export default function ModComponent({ id, data, featured, platform, instance, r
                             {t('mod.explict')}
                         </Typography>
                     }
-                </Typography>
+				</Grid>
                 {!isCompact && <Typography size={12} color="$secondaryColor" weight={400} noSelect lineheight={1}>
                     {t(`mod.side.${mod.getSide()}`)}
                 </Typography>}
@@ -114,17 +140,11 @@ export default function ModComponent({ id, data, featured, platform, instance, r
                         {t('mod.downloads', {mod})}
                     </Typography>
                 }
-                {mod.website &&
-                    <Button size={isCompact ? 'smaller' : 'small'} theme="secondary" onClick={() => open(mod.website)}>
-                        <IconBiBoxArrowUpRight/>
-                        {t('common.action.visit_website')}
-                    </Button>
-                }
-                <Button size={isCompact ? 'smaller' : 'small'} theme="accent" onClick={installMod} disabled={mod.getSide() === ModSide.Unknown || installing || installed}>
+                <Button size={isCompact ? 'smaller' : 'small'} theme="accent" onClick={installMod} disabled={mod.getSide() === ProjectSide.Unknown || installing || installed}>
                     {installing ?
                         <BasicSpinner size={16}/> : <IconBiDownload/>
                     }
-                    {installed ? t('common.label.installed') : mod.getSide() === ModSide.Unknown ? t('app.mdpkm.common:states.unavailable') :
+                    {installed ? t('common.label.installed') : mod.getSide() === ProjectSide.Unknown ? t('app.mdpkm.common:states.unavailable') :
                         installing ? t('common.label.installing') : t('common.action.install')
                     }
                 </Button>

@@ -14,6 +14,7 @@ import Accounts from './accounts';
 import Downloads from './downloads';
 import Instances from './instances';
 import Developer from './developer';
+import ModSearch from './modSearch';
 import LaunchError from '../components/LaunchError';
 
 import { setPage } from '../../store/slices/interface';
@@ -52,6 +53,9 @@ export default function Navigation() {
                 <NavigationItem name={t('navigation.create')} icon={null} value="create" hidden>
                     <Create/>
                 </NavigationItem>
+				<NavigationItem name={t('navigation.mod_search')} icon={null} value="modSearch" hidden>
+                    <ModSearch/>
+                </NavigationItem>
                 <NavigationItem name={t('navigation.developer')} icon={<IconBiWrenchAdjustableCircle/>} value="developer" hidden footer>
                     <Developer/>
                 </NavigationItem>
@@ -71,4 +75,4 @@ export default function Navigation() {
     </App>;
 }
 
-export const SHOULD_HIDE_SIDE = ['import', 'create'];
+export const SHOULD_HIDE_SIDE = ['import', 'create', 'modSearch'];

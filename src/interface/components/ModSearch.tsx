@@ -1,39 +1,18 @@
 import { styled } from '@stitches/react';
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState, MouseEventHandler } from 'react';
-import { Grid, Image, Select, Button, TextInput, Typography, InputLabel, TextHeader, BasicSpinner } from 'voxeliface';
+import { Grid, Image, Select, Button, TextInput, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
 import Mod from './Mod';
-import Modal from './Modal';
 
 import voxura from '../../voxura';
-import type { Instance } from '../../../voxura';
-import { useAppSelector } from '../../store/hooks';
 import { toast, getImage } from '../../util';
+import type { Project, Instance, Mod as PlatformMod } from '../../../voxura';
 export interface ModSearchProps {
 	onClose?: MouseEventHandler<HTMLAnchorElement>
     instance: Instance
 }
-export default function ModSearchContainer(props: ModSearchProps) {
-	const { t } = useTranslation('interface');
-    if (useAppSelector(state => state.settings['instances.modSearchPopout']))
-		return <Modal width="80%" height="69%">
-			<Grid spacing={16}>
-				<TextHeader>
-					<IconBiSearch/>
-					Modification Search
-				</TextHeader>
-				<Button theme="accent" onClick={props.onClose}>
-					<IconBiArrowLeft/>
-					{t('common.action.back')}
-				</Button>
-			</Grid>
-			<ModSearch {...props}/>
-		</Modal>;
-    return <ModSearch {...props}/>;
-}
-
-export function ModSearch({ instance }: ModSearchProps) {
+export default function ModSearch({ instance }: ModSearchProps) {
     const { t } = useTranslation('interface');
 
     const { store } = instance;
@@ -42,7 +21,7 @@ export function ModSearch({ instance }: ModSearchProps) {
     const [api, setApi] = useState('modrinth');
     const [hits, setHits] = useState(0);
     const [page, setPage] = useState(1);
-    const [mods, setMods] = useState<any[]>([]);
+    const [mods, setMods] = useState<(Project<any, any> & PlatformMod)[]>([]);
     const [query, setQuery] = useState('');
     const [pages, setPages] = useState<(string | number)[]>([]);
     const [category, setCategory] = useState('none');
@@ -101,7 +80,7 @@ export function ModSearch({ instance }: ModSearchProps) {
         search(api);
     }, [api, page, category, instance.id]);
 	
-	return <Grid width="100%" height="100%" spacing={8} vertical css={{ overflow: 'hidden' }}>
+	return <Grid width="100%" height="100%" spacing={8} vertical>
 		<Grid width="100%" spacing={8} justifyContent="space-between">
 			<Grid width="100%" vertical>
 				<InputLabel>{t('common.label.search_query')}</InputLabel>
@@ -137,8 +116,8 @@ export function ModSearch({ instance }: ModSearchProps) {
 					<InputLabel>{t('common.label.platform')}</InputLabel>
 					<Select.Minimal value={api} onChange={setApi} disabled={searching}>
 						<Select.Group name="Mod Platforms">
-							{Object.values(voxura.platforms).map(({ id }, key) =>
-								<Select.Item key={key} value={id}>
+							{Object.values(voxura.platforms).map(({ id }) =>
+								<Select.Item key={id} value={id}>
 									<Image src={getImage(`platform.${id}`)} size={16}/>
 									{t(`voxura:platform.${id}`)}
 								</Select.Item>
@@ -149,7 +128,7 @@ export function ModSearch({ instance }: ModSearchProps) {
 			</Grid>
 		</Grid>
 		<Grid height="100%" spacing={8} vertical borderRadius={16} css={{ overflow: 'hidden auto' }}>
-			{mods.map((mod, index) => <Mod key={index} data={mod} instance={instance}/>)}
+			{mods.map(mod => <Mod key={mod.id} data={mod} instance={instance}/>)}
 			{mods.length === 0 && <Grid vertical>
 				<Typography size={18}>
 					{t('app.mdpkm.common:headers.empty_list')}

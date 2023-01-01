@@ -9,7 +9,6 @@ export interface Settings {
     language: string
 	'download.useLinks': boolean
     'instances.showBanner': boolean
-    'instances.modSearchPopout': boolean
     'instances.defaultResolution': number[]
     'instances.modSearchSummaries': boolean
 };
@@ -24,7 +23,6 @@ export const settingsSlice = createSlice({
         language: settings?.language ?? 'en',
 		'download.useLinks': settings?.['download.useLinks'] ?? true,
         'instances.showBanner': settings?.['instances.showBanner'] ?? true,
-        'instances.modSearchPopout': settings?.['instances.modSearchPopout'] ?? false,
         'instances.defaultResolution': settings?.['instances.defaultResolution'] ?? [900, 500],
         'instances.modSearchSummaries': settings?.['instances.modSearchSummaries'] ?? true
     },

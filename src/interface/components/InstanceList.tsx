@@ -47,8 +47,8 @@ export default function InstanceList({ id }: InstanceListProps) {
 
 				acc[category].push(val);
 				return acc;
-			}, {})).sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0).map(([category, instances], key) => {
-				return <React.Fragment key={key}>
+			}, {})).sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0).map(([category, instances]) => {
+				return <React.Fragment key={category}>
 					<Typography size={14} color="$secondaryColor" weight={400} margin="8px 8px 4px" family="$secondary" noSelect lineheight={1}>
 						{category}
 					</Typography>

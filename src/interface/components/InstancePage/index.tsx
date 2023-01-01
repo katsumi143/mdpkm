@@ -18,9 +18,9 @@ import type { GridProps } from 'voxeliface';
 
 import { InstanceState } from '../../../../voxura';
 import { useAppSelector } from '../../../store/hooks';
-import { setLaunchError } from '../../../store/slices/interface';
 import { COMPONENT_EXTRAS } from '../../../mdpkm';
 import { INSTANCE_STATE_ICONS } from '../../../util/constants';
+import { setInstanceTab, setLaunchError } from '../../../store/slices/interface';
 import { useInstance, useCurrentAccount } from '../../../voxura';
 import { toast, getDefaultInstanceBanner } from '../../../util';
 
@@ -28,6 +28,7 @@ export interface InstancePageProps {
 	id: string
 }
 export default function InstancePage({ id }: InstancePageProps) {
+	const tab = useAppSelector(state => state.interface.instanceTab);
 	const { t } = useTranslation('interface');
 	const account = useCurrentAccount();
 	const uiStyle = useAppSelector(state => state.settings.uiStyle);
@@ -41,10 +42,10 @@ export default function InstancePage({ id }: InstancePageProps) {
 		return banner ? `data:image/${bannerFormat};base64,${Buffer.from(banner).toString('base64')}` : getDefaultInstanceBanner(name);
 	}, [instance?.banner]);
 
-	const [tabPage, setTabPage] = useState(0);
 	if (!instance)
-		return;
+		return null;
 
+	const setTab = (tab: number) => dispatch(setInstanceTab(tab));
 	const StateIcon = INSTANCE_STATE_ICONS[instance.state];
 	const launchInstance = () => instance.launch().then(() => {
 		toast('instance_launched', [instance.name]);
@@ -165,8 +166,8 @@ export default function InstancePage({ id }: InstancePageProps) {
 			</Grid>
 		</Grid>
 		<Tabs
-			value={tabPage}
-			onChange={setTabPage}
+			value={tab}
+			onChange={setTab}
 			css={{
 				width: 'auto',
 				height: '100%',
@@ -174,7 +175,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 			}}
 		>
 			<TabItem name={t('instance_page.tab.home')} icon={<IconBiInfoCircle/>} value={0}>
-				<Home setTab={setTabPage} instance={instance}/>
+				<Home setTab={setTab} instance={instance}/>
 			</TabItem>
 			<TabItem name={t('instance_page.tab.content')} icon={<IconBiBox2/>} value={1} disabled={!instance.store.components.map(c => COMPONENT_EXTRAS[c.id]).some(e => e?.contentTabs?.length || e?.enabledContentTabs?.length)}>
 				<Content instance={instance}/>

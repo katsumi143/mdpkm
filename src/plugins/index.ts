@@ -69,7 +69,7 @@ export default class PluginSystem {
             if (name && !children && name.endsWith('.plugin.js'))
                 await this.loadPluginFile(name, path).catch(err => {
                     Util.toast('plugin_load_fail', [name]);
-					throw err;
+					console.log(err);
                 });
     }
 };

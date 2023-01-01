@@ -12,6 +12,7 @@ export interface VersionPickerProps {
 export default function VersionPicker({ id, value, versions, onChange }: VersionPickerProps) {
     const { t } = useTranslation('interface');
     const [category, setCategory] = useState(0);
+	useEffect(() => onChange(versions[category][0]), [id]);
     useEffect(() => {
         if (!value)
             onChange(versions[category][0]);
@@ -46,8 +47,8 @@ export default function VersionPicker({ id, value, versions, onChange }: Version
                 {t(`voxura:component.${id}.versions`)}
             </Typography>
             <Grid spacing={4} vertical borderRadius={8} css={{ overflow: 'auto' }}>
-                {versions[category].map((item, key) =>
-                    <Grid key={key} padding="4px 12px" onClick={() => onChange(item)} smoothing={1} borderRadius={8} justifyContent="space-between" css={{
+                {versions[category].map(item =>
+                    <Grid key={item.id} padding="4px 12px" onClick={() => onChange(item)} smoothing={1} borderRadius={8} justifyContent="space-between" css={{
                         cursor: 'pointer',
                         boxShadow: value === item ? '$buttonShadow' : undefined,
                         background: value === item ? '$buttonBackground' : '$secondaryBackground',

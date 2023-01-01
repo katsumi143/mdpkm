@@ -1,19 +1,19 @@
 import { open } from '@tauri-apps/api/shell';
-import { removeFile } from '@tauri-apps/api/fs';
 import { checkUpdate } from '@tauri-apps/api/updater';
 import { open as open2 } from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
 import type { GridDirection } from 'voxeliface/components/Grid';
 import React, { useState, ReactNode } from 'react';
+import { copyFile, createDir, removeFile } from '@tauri-apps/api/fs';
 import { Grid, Image, Select, Switch, Button, Tooltip, TextInput, TextHeader, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
 import BrowserLink from '../components/BrowserLink';
-import Util from '../../common/util';
-import { toast } from '../../util';
+
 import { setPage } from '../../store/slices/interface';
 import PluginSystem from '../../plugins';
 import { VOXURA_VERSION } from '../../../voxura';
 import { set, saveSettings } from '../../store/slices/settings';
+import { toast, readTextFileInZip } from '../../util';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { APP_NAME, APP_VERSION, TAURI_VERSION, PLACEHOLDER_ICON } from '../../util/constants';
 
@@ -23,7 +23,6 @@ export default function Settings() {
 	const uiStyle = useAppSelector(state => state.settings.uiStyle);
 	const dispatch = useAppDispatch();
 	const language = useAppSelector(state => state.settings.language);
-	const modSearchPopout = useAppSelector(state => state.settings['instances.modSearchPopout']);
 	const showInstanceBanner = useAppSelector(state => state.settings['instances.showBanner']);
 	const modSearchSummaries = useAppSelector(state => state.settings['instances.modSearchSummaries']);
 	const defaultInstanceResolution = useAppSelector(state => state.settings['instances.defaultResolution']);
@@ -46,10 +45,10 @@ export default function Settings() {
 			return;
 		const split = path.split(/\/+|\\+/);
 		const pluginPath = `${PluginSystem.path}/${split.reverse()[0]}`;
-		await Util.createDirAll(PluginSystem.path);
-		await Util.moveFolder(path, pluginPath);
+		await createDir(PluginSystem.path, { recursive: true });
+		await copyFile(path, pluginPath);
 
-		const manifest = await Util.readFileInZip(pluginPath, 'manifest.json').then(JSON.parse).catch(console.warn);
+		const manifest = await readTextFileInZip(pluginPath, 'manifest.json').then(JSON.parse).catch(console.warn);
 		if (!manifest || !manifest.id || !manifest.name) {
 			await removeFile(pluginPath);
 			return toast('unknown_error');
@@ -182,17 +181,6 @@ export default function Settings() {
 					/>
 				</Grid>
 			</Setting>
-			<Setting name="instances.modSearchPopout" direction="horizontal">
-				<Switch
-					value={modSearchPopout}
-					onChange={v =>
-						setSetting('instances.modSearchPopout', v)
-					}
-				/>
-				<Typography size={13} color="$secondaryColor" noSelect>
-					{t(`common.label.toggle_${modSearchPopout}`)}
-				</Typography>
-			</Setting>
 			<Setting name="instances.modSearchSummaries" direction="horizontal">
 				<Switch
 					value={modSearchSummaries}
@@ -230,9 +218,8 @@ export default function Settings() {
 					{t('common.action.open_folder')}
 				</Button>
 			</Grid>
-			{Object.entries(PluginSystem.loaded).map(([id, plugin]) => {
-				const pluginLoaders: any[] = [];//LOADER_MAP.filter(l => l.source?.id === id);
-				return <Grid key={id} padding={8} spacing={8} smoothing={1} alignItems="center" borderRadius={16} css={{
+			{Object.values(PluginSystem.loaded).map(plugin =>
+				<Grid key={plugin.id} padding={8} spacing={8} smoothing={1} alignItems="center" borderRadius={16} css={{
 					border: 'transparent solid 1px',
 					position: 'relative',
 					background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
@@ -240,23 +227,13 @@ export default function Settings() {
 					<Image src={plugin.icon ?? PLACEHOLDER_ICON} size={48} borderRadius={8} />
 					<Grid spacing={2} vertical>
 						<Typography noSelect lineheight={1}>
-							{t(`app.mdpkm.plugin.${plugin.id}:name`)}
+							{t(`mdpkm:plugin.${plugin.id}`)}
 						</Typography>
 						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
 							{t('common.label.version', [plugin.version])}
 						</Typography>
 					</Grid>
 					<Grid spacing={8} css={{ right: 16, position: 'absolute' }}>
-						{pluginLoaders.length > 0 &&
-							<Typography size={14} color="$secondaryColor" weight={400} noSelect>
-								{pluginLoaders.map(({ icon }, key) =>
-									<Image key={key} src={icon} size={20} background="$primaryBackground" borderRadius={4} />
-								)}
-								{t(`app.mdpkm.settings.plugins.item.adds_loader${pluginLoaders.length > 1 ? 's' : ''}`, {
-									val: pluginLoaders.length
-								})}
-							</Typography>
-						}
 						<Tooltip.Root delayDuration={250}>
 							<Tooltip.Trigger asChild>
 								<Button theme="secondary" disabled>
@@ -271,7 +248,7 @@ export default function Settings() {
 						</Tooltip.Root>
 					</Grid>
 				</Grid>
-			})}
+			)}
 		</Grid>
 
 		<TextHeader spacious noSelect>{t('settings.about')}</TextHeader>
@@ -290,7 +267,7 @@ export default function Settings() {
 			<Grid spacing={8}>
 				<Button theme="accent" onClick={updateCheck} disabled={updating}>
 					{updating ? <BasicSpinner size={16} /> : <IconBiCloudArrowDown />}
-					{t('settings.about.update')}
+					{t('common.action.check_for_updates')}
 				</Button>
 				<Button theme="accent" onClick={reportIssue}>
 					<IconBiEnvelopeOpen />
