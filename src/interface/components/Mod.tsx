@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 import { Grid, Button, Spinner, Tooltip, Typography, ContextMenu, BasicSpinner } from 'voxeliface';
 
+import HeartIcon from './icons/heart';
 import ImageWrapper from './ImageWrapper';
 
 import { toast } from '../../util';
@@ -143,10 +144,16 @@ export default function ModComponent({ id, data, featured, platform, instance, r
 					right: 8,
 					position: 'absolute'
 				}}>
-					{typeof mod.downloads === 'number' &&
-						<Typography size={isCompact ? 11 : 12} color="$secondaryColor" margin="0 8px 0 0" spacing={6} noSelect>
+					{mod.followers &&
+						<Typography size={isCompact ? 11 : 12} color="$secondaryColor" weight={400} family="$secondary" margin="0 8px 0 0" spacing={6} noSelect>
+							<IconBiSuitHeartFill fontSize={10}/>
+							{t('mod.followers', { count: mod.followers })}
+						</Typography>
+					}
+					{mod.downloads &&
+						<Typography size={isCompact ? 11 : 12} color="$secondaryColor" weight={400} family="$secondary" margin="0 8px 0 0" spacing={6} noSelect>
 							<IconBiDownload/>
-							{t('mod.downloads', {mod})}
+							{t('common.label.downloads', { count: mod.downloads })}
 						</Typography>
 					}
 					<Button size={isCompact ? 'smaller' : 'small'} theme="accent" onClick={installMod} disabled={mod.getSide() === ProjectSide.Unknown || installing || installed}>

@@ -61,8 +61,11 @@
 
 	"common.label.empty_dir": "This directory is empty",
 
-	"common.label.items_one": "{{count}} Item",
-	"common.label.items_other": "{{count}} Items",
+	"common.label.items_one": "{{count, number}} Item",
+	"common.label.items_other": "{{count, number}} Items",
+
+	"common.label.downloads_one": "{{count, number}} Download",
+	"common.label.downloads_other": "{{count, number}} Downloads",
 
     "common.select_group.minecraft_versions": "Minecraft Versions",
     "common.select_group.component_versions": "Component Versions",
@@ -194,7 +197,8 @@
 	"mod.side.1": "Server mod",
 	"mod.side.2": "Universal mod",
 	"mod.side.3": "Unknown mod",
-	"mod.downloads": "{{mod.downloads, number}} Downloads",
+	"mod.followers_one": "{{count, number}} Follower",
+	"mod.followers_other": "{{count, number}} Followers",
 	"mod.visit_site": "View on $t(voxura:platform.{{mod.source.id}}) Website",
 	"mod.issue.incompatible": "Incompatible",
 

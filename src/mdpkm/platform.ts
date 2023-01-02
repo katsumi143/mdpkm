@@ -92,6 +92,7 @@ export interface ProjectData {
 	title: string
 	author: string
 	website: string
+	follows?: number
 	icon_url?: string
 	downloads?: number
     project_id: string
@@ -143,6 +144,9 @@ export class mdpkmProject extends Project<ProjectData, mdpkmPlatform> {
 
     public get downloads() {
         return this.data.downloads;
+    }
+	public get followers() {
+        return this.data.follows;
     }
 
     public get website(): string {
