@@ -9,7 +9,7 @@ import ImageWrapper from './ImageWrapper';
 import { toast } from '../../util';
 import voxura, { useInstance } from '../../voxura';
 import { INSTANCE_STATE_ICONS } from '../../util/constants';
-import { setPage, setCurrentInstance } from '../../store/slices/interface';
+import { setPage, setInstanceTab, setCurrentInstance } from '../../store/slices/interface';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 const Animation = keyframes({
 	'0%': {
@@ -49,6 +49,10 @@ export default memo(({ id, selected }: InstanceProps) => {
 
 	const loading = voxura.instances.loading;
 	const StateIcon = INSTANCE_STATE_ICONS[instance.state];
+	const viewTab = (tab: number) => {
+		view();
+		dispatch(setInstanceTab(tab));
+	};
 	const favorite = () => instance.setCategory(t('mdpkm:instance_category.favorites'));
 	const copyId = () => writeText(instance.id).then(() => toast('copied_id', [instance.name]));
 	const view = () => {
@@ -120,7 +124,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 				Instance Options ({instance.name})
 			</ContextMenu.MenuLabel>
 			<ContextMenu.MenuItem>
-				<IconBiPlay/>
+				<IconBiPlayFill/>
 				{t('common.action.launch')}
 			</ContextMenu.MenuItem>
 			<ContextMenu.MenuItem onClick={view}>
@@ -132,14 +136,27 @@ export default memo(({ id, selected }: InstanceProps) => {
 				<IconBiStar/>
 				Add to Favourites
 			</ContextMenu.MenuItem>
-			<ContextMenu.MenuItem>
-				<IconBiGear/>
-				Instance Settings
+			<ContextMenu.MenuSeparator/>
+			<ContextMenu.MenuItem onClick={() => viewTab(0)}>
+				<IconBiInfoCircle/>
+				{t('instance_page.tab.home')}
 			</ContextMenu.MenuItem>
-			<ContextMenu.MenuSeparator />
+			<ContextMenu.MenuItem onClick={() => viewTab(1)}>
+				<IconBiBox2/>
+				{t('instance_page.tab.content')}
+			</ContextMenu.MenuItem>
+			<ContextMenu.MenuItem onClick={() => viewTab(2)}>
+				<IconBiBox/>
+				{t('instance_page.tab.game')}
+			</ContextMenu.MenuItem>
+			<ContextMenu.MenuItem onClick={() => viewTab(3)}>
+				<IconBiGear/>
+				{t('instance_page.settings')}
+			</ContextMenu.MenuItem>
+			<ContextMenu.MenuSeparator/>
 			<ContextMenu.MenuItem onClick={copyId}>
 				<IconBiClipboardPlus/>
-				Copy ID
+				{t('common.action.copy_id')}
 			</ContextMenu.MenuItem>
 		</ContextMenu.Content>
 	</ContextMenu.Root>;
