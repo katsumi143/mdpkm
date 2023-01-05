@@ -1,6 +1,6 @@
 import { styled } from '@stitches/react';
 import { useTranslation } from 'react-i18next';
-import React, { useEffect, useState, MouseEventHandler } from 'react';
+import React, { useRef, useMemo, useEffect, useState, MouseEventHandler } from 'react';
 import { Grid, Image, Select, Button, TextInput, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
 import Mod from './Mod';
@@ -16,26 +16,28 @@ export default function ModSearch({ instance }: ModSearchProps) {
     const { t } = useTranslation('interface');
 
     const { store } = instance;
-    const { gameComponent } = store;
+    const { components, gameComponent } = store;
 
+	const container = useRef<HTMLDivElement>(null);
     const [api, setApi] = useState('modrinth');
     const [hits, setHits] = useState(0);
     const [page, setPage] = useState(1);
-    const [mods, setMods] = useState<(Project<any, any> & PlatformMod)[]>([]);
     const [query, setQuery] = useState('');
     const [pages, setPages] = useState<(string | number)[]>([]);
+	const [items, setItems] = useState<(Project<any, any> & PlatformMod)[]>([]);
     const [category, setCategory] = useState('none');
     const [pageLimit, setPageLimit] = useState(20);
     const [searching, setSearching] = useState(false);
-    const search = (api: string) => {
+	const platform = useMemo(() => voxura.getPlatform(api), [api]);
+    const search = () => {
         if (searching)
             return;
 
         setSearching(true);
-        voxura.getPlatform(api).searchMods(query, {
+        platform.searchMods(query, {
             limit: pageLimit,
             offset: (page - 1) * pageLimit,
-            loaders: [gameComponent.id],
+            loaders: components.map(l => l.getPlatformId(platform)),
             versions: [gameComponent.version, gameComponent.version.substring(0, Math.max(4, gameComponent.version.lastIndexOf('.')))],
             categories: category === 'none' ? undefined : [category]
         }).then(({ hits, limit, total_hits }) => {
@@ -65,11 +67,11 @@ export default function ModSearch({ instance }: ModSearchProps) {
                     setPages([1, 2, 3, 4, 5, '-', pageAmount]);
             else
                 setPages(Array.from({ length: pageAmount }, (_, i) => i + 1));
-            setMods(hits);
             setHits(total_hits);
+			setItems(hits);
             setSearching(false);
         }).catch(err => {
-            setMods([]);
+            setItems([]);
             setSearching(false);
 			toast('check_connection');
 			
@@ -77,15 +79,18 @@ export default function ModSearch({ instance }: ModSearchProps) {
         });
     };
     useEffect(() => {
-        search(api);
+        search();
     }, [api, page, category, instance.id]);
+	useEffect(() => {
+		container.current?.scroll({ top: 0, behavior: 'smooth' });
+	}, [items]);
 	
 	return <Grid width="100%" height="100%" spacing={8} vertical>
 		<Grid width="100%" spacing={8} justifyContent="space-between">
 			<Grid width="100%" vertical>
 				<InputLabel>{t('common.label.search_query')}</InputLabel>
 				<TextInput width="100%" value={query} onChange={setQuery}>
-					<Button theme="secondary" onClick={() => search(api)} disabled={searching}>
+					<Button theme="secondary" onClick={search} disabled={searching}>
 						{searching ? <BasicSpinner size={16}/> : <IconBiSearch/>}
 						{t('common.action.search')}
 					</Button>
@@ -127,9 +132,9 @@ export default function ModSearch({ instance }: ModSearchProps) {
 				</Grid>
 			</Grid>
 		</Grid>
-		<Grid height="100%" spacing={8} vertical borderRadius={16} css={{ overflow: 'hidden auto' }}>
-			{mods.map(mod => <Mod key={mod.id} data={mod} instance={instance}/>)}
-			{mods.length === 0 && <Grid vertical>
+		<Grid ref={container} height="100%" spacing={8} vertical borderRadius={16} css={{ overflow: 'hidden auto' }}>
+			{items.map(item => <Mod key={item.id} data={item} instance={instance}/>)}
+			{items.length === 0 && <Grid vertical>
 				<Typography size={18}>
 					{t('app.mdpkm.common:headers.empty_list')}
 				</Typography>
