@@ -21,6 +21,19 @@
 	"component.minecraft-java-vanilla.content_tab.0": "Resource Packs",
 	"component.minecraft-java-vanilla.settings_tab.0": "Servers",
 
+	"component.minecraft-java-server": "Minecraft: Java Edition Dedicated Server",
+    "component.minecraft-java-server.summary": "$t(voxura:component.minecraft-java-vanilla.summary)",
+	"component.minecraft-java-server.versions": "$t(voxura:component.minecraft-java-vanilla.versions)",
+    "component.minecraft-java-server.release_category.0": "$t(voxura:component.minecraft-java-vanilla.release_category.0)",
+    "component.minecraft-java-server.release_category.0.singular": "$t(voxura:component.minecraft-java-vanilla.release_category.0.singular)",
+    "component.minecraft-java-server.release_category.1": "$t(voxura:component.minecraft-java-vanilla.release_category.1)",
+    "component.minecraft-java-server.release_category.1.singular": "$t(voxura:component.minecraft-java-vanilla.release_category.1.singular)",
+    "component.minecraft-java-server.release_category.2": "$t(voxura:component.minecraft-java-vanilla.release_category.2.singular)",
+    "component.minecraft-java-server.release_category.2.singular": "$t(voxura:component.minecraft-java-vanilla.release_category.2.singular)",
+    "component.minecraft-java-server.release_category.3": "$t(voxura:component.minecraft-java-vanilla.release_category.3)",
+    "component.minecraft-java-server.release_category.3.singular": "$t(voxura:component.minecraft-java-vanilla.release_category.3.singular)",
+	"component.minecraft-java-server.settings_tab.0": "Server Properties",
+
     "component.minecraft-bedrock-vanilla": "Minecraft Bedrock Edition",
     "component.minecraft-bedrock-vanilla.summary": "Simply Bedrock Edition with downloadable content.\nWindows 10+ only, requires a Microsoft Store account.",
     "component.minecraft-bedrock-vanilla.release_category.0": "Versions",
@@ -42,6 +55,9 @@
 	"component.quilt.version": "Quilt Loader Versions",
     "component.quilt.release_category.0": "Versions",
     "component.quilt.release_category.0.singular": "Version",
+
+	"component.minecraft-java-server-paper": "Paper",
+	"component.minecraft-java-server-paper.summary": "Paper is the next generation of Minecraft servers, offering uncompromising performance.",
 
 	"platform.modrinth": "Modrinth",
 	"platform.curseforge": "CurseForge",

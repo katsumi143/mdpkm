@@ -47,7 +47,6 @@ export default memo(({ id, selected }: InstanceProps) => {
 	if (!instance)
 		return null;
 
-	const loading = voxura.instances.loading;
 	const StateIcon = INSTANCE_STATE_ICONS[instance.state];
 	const viewTab = (tab: number) => {
 		view();
@@ -64,8 +63,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 		<ContextMenu.Trigger asChild>
 			<Grid ref={ref} width="100%" alignItems="start" css={{
 				cursor: 'default',
-				opacity: loading ? 0.25 : 0,
-				animation: loading ? undefined : `${Animation} 500ms cubic-bezier(0.4, 0, 0.2, 1)`,
+				animation: `${Animation} 500ms cubic-bezier(0.4, 0, 0.2, 1)`,
 				animationFillMode: 'forwards'
 			}}>
 				<Grid width="100%" height="100%" alignItems="center" borderRadius={isCompact ? 8 : 16} justifyContent="space-between" css={{

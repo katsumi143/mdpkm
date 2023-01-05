@@ -80,29 +80,42 @@ export default new class mdpkm {
     }
 }
 
-import QuiltLoader from './instance-creator/minecraft-quilt';
-import FabricLoader from './instance-creator/minecraft-fabric';
-import InstanceCreator from './instance-creator';
-import MinecraftJavaVanilla from './instance-creator/minecraft-java-vanilla';
-export const INSTANCE_CREATORS: InstanceCreator[] = [new MinecraftJavaVanilla(), new FabricLoader(), new QuiltLoader()];
+import MinecraftQuilt from './instance-creator/minecraft-quilt';
+import MinecraftPaper from './instance-creator/minecraft-paper';
+import MinecraftFabric from './instance-creator/minecraft-fabric';
+import MinecraftJavaClient from './instance-creator/minecraft-java-client';
+import MinecraftJavaServer from './instance-creator/minecraft-java-server';
+import type InstanceCreator from './instance-creator';
+export const INSTANCE_CREATORS: InstanceCreator[] = [
+	new MinecraftJavaClient(),
+	new MinecraftQuilt(),
+	new MinecraftFabric(),
+
+	new MinecraftJavaServer(),
+	new MinecraftPaper()
+]
 
 export { default as InstanceCreator } from './instance-creator';
 
 import ServerManagement from '../interface/components/ServerManagement';
+import JavaServerSettings from '../interface/components/JavaServerSettings';
 import ResourcePackManagement from '../interface/components/ResourcePackManagement';
 import { JSXElementConstructor } from 'react';
 export const COMPONENT_EXTRAS: Record<Component["id"], ComponentExtra> = {
-	[QuiltLoader.id]: {
+	[MinecraftQuilt.id]: {
 		enabledContentTabs: ['essential', 'modSearch', 'modManagement']
 	},
-	[FabricLoader.id]: {
+	[MinecraftFabric.id]: {
 		enabledContentTabs: ['essential', 'modSearch', 'modManagement']
 	},
-	[MinecraftJavaVanilla.id]: {
+	[MinecraftJavaClient.id]: {
 		contentTabs: [ResourcePackManagement],
 		settingsTabs: [ServerManagement]
+	},
+	[MinecraftJavaServer.id]: {
+		settingsTabs: [JavaServerSettings]
 	}
-};
+}
 
 export interface ComponentExtra {
 	contentTabs?: JSXElementConstructor<{ instance: Instance }>[],

@@ -7,6 +7,7 @@ import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
 import ImageWrapper from '../components/ImageWrapper';
 
 import { getImage } from '../../util';
+import InstanceCreator from '../../mdpkm/instance-creator';
 import { useAppDispatch } from '../../store/hooks';
 import { INSTANCE_CREATORS } from '../../mdpkm';
 import { setPage, setCurrentInstance } from '../../store/slices/interface';
@@ -24,10 +25,26 @@ export default function Create() {
             {t('common.action.return_to_instances')}
         </Link>
         <AnimateSharedLayout>
-            <Grid height="100%" margin="16px 0 0" vertical spacing={8} css={{ position: 'relative' }}>
-                {INSTANCE_CREATORS.map((component, key) =>
-                    <Component id={component.id} key={key} selected={selected === component.id} setSelected={setSelected}/>
-                )}
+            <Grid height="100%" margin="16px 0 0" vertical spacing={16} css={{ position: 'relative' }}>
+                {Object.entries(INSTANCE_CREATORS.reduce((acc: Record<string, InstanceCreator[]>, val) => {
+					const { category } = val;
+					if (!acc[category])
+						acc[category] = [];
+	
+					acc[category].push(val);
+					return acc;
+				}, {})).map(([category, creators]) =>
+					<Grid key={category} spacing={4} vertical>
+						<Typography size={14} color="$secondaryColor" weight={400} family="$secondary">
+							{t(`mdpkm:instance_creator.category.${category}`)}
+						</Typography>
+						<Grid spacing={8} vertical>
+							{creators.map(creator =>
+								<Component id={creator.id} key={creator.id} selected={selected === creator.id} setSelected={setSelected}/>
+							)}
+						</Grid>
+					</Grid>
+				)}
             </Grid>
         </AnimateSharedLayout>
     </Grid>;

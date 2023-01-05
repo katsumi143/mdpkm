@@ -24,7 +24,7 @@ export default function Downloads() {
 
         {completed.length > 0 && <React.Fragment>
             <Grid width="100%" margin="32px 0 8px" spacing={6} alignItems="center">
-                <Typography size="1.1rem" noSelect>{t('downloads.completed')}</Typography>
+                <Typography size={18} noSelect>{t('downloads.completed')}</Typography>
                 <Typography size=".8rem" color="$secondaryColor" noSelect>({completed.length})</Typography>
                 <Grid width="100%" height={1} margin="0 0 0 4px" background="$secondaryBorder2"/>
             </Grid>

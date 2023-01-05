@@ -131,7 +131,7 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 	const [saving, setSaving] = useState(false);
 	const [version, setVersion] = useState<ComponentVersion | null>(null);
 	const [component, setComponent] = useState<number | null>(null);
-	const components = COMPONENT_MAP.filter(c => c.type !== ComponentType.Game && !instance.store.components.some(s => s.id === c.id));
+	const components = COMPONENT_MAP.filter(c => c.instanceTypes.includes(instance.type) && c.type !== ComponentType.Game && !instance.store.components.some(s => s.id === c.id));
 	if (!components.length) {
 		onClose();
 		return null;

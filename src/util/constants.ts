@@ -17,7 +17,7 @@ export const INSTANCE_STATE_ICONS = [
     CheckSquare,
     Hourglass,
     CaretRightSquare
-];
+]
 export const IMAGES = {
     'placeholder': 'img/icons/instances/default8.svg',
 
@@ -25,8 +25,10 @@ export const IMAGES = {
 	'component.fabric': 'img/icons/loaders/fabric.png',
 	'component.java-agent': 'img/icons/java-agent.svg',
 	'component.java-temurin': 'img/icons/temurin.png',
+	'component.minecraft-java-server': 'img/icons/minecraft/java.png',
     'component.minecraft-java-vanilla': 'img/icons/minecraft/java.png',
     'component.minecraft-bedrock-vanilla': 'img/icons/minecraft/bedrock.png',
+	'component.minecraft-java-server-paper': 'img/icons/component/paper.svg',
 
 	'platform.modrinth': 'img/icons/platform/modrinth.svg',
 	'platform.curseforge': 'img/icons/platform/curseforge.svg',
@@ -38,4 +40,4 @@ export const IMAGES = {
 
 	'download.temurin': 'img/icons/temurin.png',
 	'download.minecraft_java': 'img/icons/minecraft/java.png'
-};
+}

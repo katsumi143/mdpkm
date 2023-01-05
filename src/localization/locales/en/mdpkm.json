@@ -2,6 +2,9 @@
 	"instance_category.default": "Your Instances",
 	"instance_category.favorites": "Your Favourites",
 
+	"instance_creator.category.minecraft": "Minecraft: Java Edition (Client)",
+	"instance_creator.category.minecraft2": "Minecraft: Java Edition (Server)",
+
 	"download.temurin": "Eclipse Temurin Java Development Kit {{0}}",
 	"download.game_mod": "“{{0}}” from $t(voxura:platform.{{1}}) (Game Modification)",
 	"download.java_agent": "Java Agent",

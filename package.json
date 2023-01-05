@@ -44,6 +44,7 @@
         "monaco-editor": "^0.34.1",
         "nbt-ts": "^1.3.5",
         "p-map-browser": "^1.2.0",
+        "properties-file": "^2.1.21",
         "react": "^18.0.0",
         "react-dom": "^18.0.0",
         "react-hot-toast": "^2.2.0",

@@ -7,12 +7,13 @@ import VersionPicker from '../../interface/components/VersionPicker';
 
 import InstanceCreator from '.';
 import voxura, { useComponentVersions } from '../../voxura';
-import { JavaTemurin, MinecraftJava, ComponentVersion } from '../../../voxura';
 import { MANIFESTS_URL, MinecraftJavaManifest, VersionManifestResponse } from '../../../voxura/src/component/minecraft-java';
-export default class MinecraftJavaVanilla extends InstanceCreator {
-    public static id = 'minecraft-java-vanilla';
+import { JavaTemurin, InstanceType, MinecraftJavaClient, ComponentVersion, VersionedComponent } from '../../../voxura';
+export default class MinecraftJavaClientCreator extends InstanceCreator {
+    public static id: string = 'minecraft-java-vanilla'
+	public static category: string = 'minecraft'
     public async create(data: any[], save: boolean = true) {
-        const instance = await voxura.instances.createInstance(data[0]);
+        const instance = await voxura.instances.createInstance(data[0], InstanceType.Client);
 
 		const manifests = await fetch<VersionManifestResponse>(MANIFESTS_URL);
 		const manifestData = manifests.data.versions.find(m => m.id === data[1]);
@@ -21,7 +22,7 @@ export default class MinecraftJavaVanilla extends InstanceCreator {
 
 		const manifest = await fetch<MinecraftJavaManifest>(manifestData.url);
         instance.store.components.push(
-			new MinecraftJava(instance, {
+			new (this.component as any)(instance, {
 				version: data[1]
 			}),
 			new JavaTemurin(instance, {
@@ -34,18 +35,21 @@ export default class MinecraftJavaVanilla extends InstanceCreator {
         return instance;
     }
 
-	public ReactComponent = Component;
+	public readonly component: typeof VersionedComponent = MinecraftJavaClient
+	public ReactComponent = Component
 }
 
 export interface ComponentProps {
     setData: (value: any[]) => void
+	creator: MinecraftJavaClientCreator
     setSatisfied: (value: boolean) => void
 }
-function Component({ setData, setSatisfied }: ComponentProps) {
+function Component({ creator, setData, setSatisfied }: ComponentProps) {
     const { t } = useTranslation('interface');
     const [name, setName] = useState('');
     const [version, setVersion] = useState<ComponentVersion | null>(null);
-    const versions = useComponentVersions(MinecraftJava);
+	const { component } = creator;
+    const versions = useComponentVersions(component);
     useEffect(() => {
         setData([name, version?.id]);
         setSatisfied(!!name && !!versions);
@@ -57,9 +61,9 @@ function Component({ setData, setSatisfied }: ComponentProps) {
 
             <InputLabel spacious>{t('common.label.minecraft_version')}</InputLabel>
             <Typography size={14} noSelect>
-                {version ? `${t(`voxura:component.${MinecraftJava.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
+                {version ? `${t(`voxura:component.${component.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
             </Typography>
         </Grid>
-        {versions && <VersionPicker id={MinecraftJava.id} value={version} versions={versions} onChange={setVersion}/>}
+        {versions && <VersionPicker id={component.id} value={version} versions={versions} onChange={setVersion}/>}
     </Grid>
 }

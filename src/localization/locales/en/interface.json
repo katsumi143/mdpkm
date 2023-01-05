@@ -256,6 +256,13 @@
 	"user_account.options.label": "Account Options",
 	"user_account.options.view_namemc": "View NameMC Profile",
 
+	"server_settings.pvp": "Player Combat (PvP)",
+	"server_settings.gamemode": "Gamemode",
+	"server_settings.gamemode.survival": "Survival",
+	"server_settings.gamemode.creative": "Creative",
+	"server_settings.gamemode.adventure": "Adventure",
+	"server_settings.world_name": "World Name",
+
 	"select_file": "Select File",
 	"select_file.none": "No file selected",
 
