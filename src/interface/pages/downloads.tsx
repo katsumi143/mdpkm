@@ -24,8 +24,8 @@ export default function Downloads() {
 
         {completed.length > 0 && <React.Fragment>
             <Grid width="100%" margin="32px 0 8px" spacing={6} alignItems="center">
-                <Typography size={18} noSelect>{t('downloads.completed')}</Typography>
-                <Typography size=".8rem" color="$secondaryColor" noSelect>({completed.length})</Typography>
+                <Typography noSelect>{t('downloads.completed')}</Typography>
+                <Typography size={12} color="$secondaryColor" noSelect>({completed.length})</Typography>
                 <Grid width="100%" height={1} margin="0 0 0 4px" background="$secondaryBorder2"/>
             </Grid>
             <Grid spacing={8} vertical>
@@ -49,7 +49,7 @@ export interface DownloadComponentProps {
 }
 export function DownloadComponent({ download }: DownloadComponentProps) {
 	const { t } = useTranslation('interface');
-    const progress = download.totalProgress;
+    const { progress } = download;
     return <Grid padding={8} spacing={12} smoothing={1} alignItems="center" borderRadius={16} css={{
 		border: 'transparent solid 1px',
         background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box',
@@ -58,8 +58,8 @@ export function DownloadComponent({ download }: DownloadComponentProps) {
         <Grid vertical>
             <Typography noFlex noSelect>
 				<Trans values={download.extraData} i18nKey={`mdpkm:download.${download.id}`}/>
-                {download.subDownloads.length > 0 && <Typography size={12} color="$secondaryColor" weight={400} margin="0 6px" noSelect>
-					{t('download.additional', { count: download.subDownloads.length })}
+                {download.tasks.length > 0 && <Typography size={12} color="$secondaryColor" weight={400} margin="0 6px" noSelect css={{ display: 'inline-block' }}>
+					{t('download.additional', { count: download.tasks.length })}
                 </Typography>}
             </Typography>
             <Grid spacing={4}>

@@ -8,7 +8,7 @@ import InstanceCreator from '.';
 import MinecraftJavaCreator from './minecraft-java-client';
 import { useComponentVersions } from '../../voxura';
 import type { ComponentVersion } from '../../../voxura/src/types';
-import { MinecraftJava, MinecraftFabric } from '../../../voxura';
+import { MinecraftFabric, MinecraftJavaClient } from '../../../voxura';
 export default class FabricLoader extends InstanceCreator {
     public static id = 'fabric'
 	public static category: string = 'minecraft'
@@ -38,7 +38,7 @@ function Component({ setData, creator, setSatisfied }: ComponentProps) {
     const [name, setName] = useState('');
     const [version, setVersion] = useState<ComponentVersion | null>(null);
     const [version2, setVersion2] = useState<number>(0);
-    const versions = useComponentVersions(MinecraftJava);
+    const versions = useComponentVersions(MinecraftJavaClient);
     const versions2 = useComponentVersions(creator.component)?.[0];
     useEffect(() => {
         setData([name, version?.id, versions2?.[version2]?.id]);
@@ -51,7 +51,7 @@ function Component({ setData, creator, setSatisfied }: ComponentProps) {
 
             <InputLabel spacious>{t('common.label.minecraft_version')}</InputLabel>
             <Typography size={14} noSelect>
-                {version ? `${t(`voxura:component.${MinecraftJava.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
+                {version ? `${t(`voxura:component.${MinecraftJavaClient.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
             </Typography>
 
             <InputLabel spacious>{t('common.label.val_version', {
@@ -65,6 +65,6 @@ function Component({ setData, creator, setSatisfied }: ComponentProps) {
                 </Select.Group>
             </Select.Minimal>
         </Grid>
-        {versions && <VersionPicker id={MinecraftJava.id} value={version} versions={versions} onChange={setVersion}/>}
+        {versions && <VersionPicker id={MinecraftJavaClient.id} value={version} versions={versions} onChange={setVersion}/>}
     </Grid>;
 }
