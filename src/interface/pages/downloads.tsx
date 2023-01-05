@@ -54,7 +54,7 @@ export function DownloadComponent({ download }: DownloadComponentProps) {
 		border: 'transparent solid 1px',
         background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box',
 	}}>
-        <ImageWrapper src={getImage(`download.${download.id}`)} size={48} shadow canPreview borderRadius={8}/>
+        <ImageWrapper src={getImage(`download.${download.id}`)} size={48} smoothing={1} canPreview borderRadius={8}/>
         <Grid vertical>
             <Typography noFlex noSelect>
 				<Trans values={download.extraData} i18nKey={`mdpkm:download.${download.id}`}/>

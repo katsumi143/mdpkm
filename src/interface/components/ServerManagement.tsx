@@ -57,7 +57,7 @@ export default function ServerManagement({ instance }: ServerManagementProps) {
             exists(path).then(exists => {
                 if (exists)
                     readBinaryFile(path).then(data => {
-						const decoded = nbt.decode(Buffer.from(data));
+						const decoded: any = nbt.decode(Buffer.from(data));
 						setData(decoded);
 						setItems(decoded.value.servers);
 					});
@@ -78,6 +78,7 @@ export default function ServerManagement({ instance }: ServerManagementProps) {
             setAddingInfo(null);
     }, [addingAddress2]);
     useEffect(() => setItems(null), [instance.id]);
+	console.log(items);
 
     return <React.Fragment>
         <Grid spacing={8} padding="4px 0" justifyContent="space-between">
@@ -110,9 +111,10 @@ export default function ServerManagement({ instance }: ServerManagementProps) {
             </Grid>
         </Grid>
         <Grid spacing={8} vertical>
-            {Array.isArray(items) && items?.filter(({ ip, name }) =>
-                ip?.toLowerCase().includes(filter) ||
-                name?.toLowerCase().includes(filter)
+            {Array.isArray(items) && items?.filter(({ ip, name, hidden }) =>
+				!hidden?.value &&
+                (ip?.toLowerCase().includes(filter) ||
+                name?.toLowerCase().includes(filter))
             ).map((item, index) =>
                 <Server
                     key={index}
@@ -124,17 +126,15 @@ export default function ServerManagement({ instance }: ServerManagementProps) {
                 />
             )}
         </Grid>
-        {addingServer && <Modal>
+        {addingServer && <Modal width="60%">
             <TextHeader noSelect>
                 {t('server_management.adding')}
-                <Typography size={12} color="$secondaryColor" weight={400} noSelect>
-                    {t('app.mdpkm.server_management.adding.header_note')}
-                </Typography>
             </TextHeader>
             <Grid spacing={32} justifyContent="space-between">
-                <Grid vertical>
+                <Grid width="100%" vertical>
                     <InputLabel>{t('server_management.adding.name')}</InputLabel>
                     <TextInput
+						width="100%"
                         value={addingName}
                         onChange={setAddingName}
                         placeholder={t('server.no_name')}
@@ -142,6 +142,7 @@ export default function ServerManagement({ instance }: ServerManagementProps) {
 
                     <InputLabel spacious>{t('server_management.adding.address')}</InputLabel>
                     <TextInput
+						width="100%"
                         value={addingAddress}
                         onBlur={() => setAddingAddress2(() => addingAddress)}
                         onChange={setAddingAddress}
@@ -150,7 +151,7 @@ export default function ServerManagement({ instance }: ServerManagementProps) {
                     <Grid margin="2rem 0 0" spacing={8}>
                         <Button theme="accent" onClick={addServer} disabled={!addingAddress}>
                             <IconBiPlusLg/>
-                            {t('server_management.adding')}
+                            {t('server_management.add')}
                         </Button>
                         <Button theme="secondary" onClick={closeAdding}>
                             <IconBiXLg/>

@@ -71,7 +71,7 @@ export default function Home() {
 					</Grid>
 				</Grid>
 			</Grid>
-			<Grid width="35%" height="100%" spacing={16} padding="12px 1rem 12px 0" vertical>
+			<Grid width="35%" height="100%" padding="12px 1rem 12px 0" vertical>
 				<Grid justifyContent="space-between" css={{
 					borderBottom: '1px solid $secondaryBorder2',
 					paddingBottom: 6
@@ -79,7 +79,7 @@ export default function Home() {
 					<Typography noSelect>{t('home.recent_instances.title')}</Typography>
 					<ViewAll onClick={() => dispatch(setPage('instances'))}/>
 				</Grid>
-				<Grid height="100%" spacing={8} vertical css={{ overflowY: 'auto' }}>
+				<Grid height="100%" spacing={8} padding="16px 0 0" vertical css={{ overflowY: 'auto' }}>
 					{loadingInstances ? <LoadingInstances/> : recent.map(instance =>
 						<Instance id={instance.id} key={instance.id}/>
 					)}

@@ -35,7 +35,7 @@ export default function Create() {
 					return acc;
 				}, {})).map(([category, creators]) =>
 					<Grid key={category} spacing={4} vertical>
-						<Typography size={14} color="$secondaryColor" weight={400} family="$secondary">
+						<Typography size={14} color="$secondaryColor" weight={400} family="$secondary" noSelect>
 							{t(`mdpkm:instance_creator.category.${category}`)}
 						</Typography>
 						<Grid spacing={8} vertical>
@@ -61,7 +61,7 @@ export function Component({ id, selected, setSelected }: ComponentProps) {
     return <React.Fragment>
         <ComponentContainer layoutId={`component-${id}`}>
             <Grid height="fit-content" padding={8} spacing={12}>
-                <ImageWrapper src={getImage(`component.${id}`)} size={40} shadow smoothing={1} canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
+                <ImageWrapper src={getImage(`component.${id}`)} size={40} smoothing={1} canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
                 <Grid spacing={4} vertical justifyContent="center">
                     <Typography noSelect layoutId={`component-title-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}`)}
@@ -116,7 +116,7 @@ export function Setup({ id, cancel }: SetupProps) {
             borderBottom: '1px solid $secondaryBorder2'
         }}>
             <Grid padding={8} spacing={12}>
-                <ImageWrapper src={getImage(`component.${id}`)} size={40} shadow smoothing={1} canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
+                <ImageWrapper src={getImage(`component.${id}`)} size={40} smoothing={1} canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
                 <Grid spacing={4} vertical justifyContent="center">
                     <Typography noSelect layoutId={`component-title-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}`)}

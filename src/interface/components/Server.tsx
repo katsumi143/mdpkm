@@ -16,7 +16,7 @@ export interface ServerProps {
 	instance?: Instance
 	acceptTextures?: number
 }
-export default function Server({ name, icon, motd, type, players, address, acceptTextures }: ServerProps) {
+export default function Server({ name, icon, motd, type, players, address, instance, acceptTextures }: ServerProps) {
     const { t } = useTranslation('interface');
     const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
     const [previewIcon, setPreviewIcon] = useState(false);
@@ -76,14 +76,16 @@ export default function Server({ name, icon, motd, type, players, address, accep
                     {type}
                 </Typography>}
             </Grid>
-			<Link size={isCompact ? 11 : 12} height="100%" padding="0 16px" disabled>
-				<IconBiPencilFill/>
-				{t('common.action.edit')}
-			</Link>
-			<Link size={isCompact ? 11 : 12} height="100%" padding="0 16px" disabled>
-				<IconBiTrash3Fill/>
-				{t('common.action.delete')}
-			</Link>
+			{instance && <>
+				<Link size={isCompact ? 11 : 12} height="100%" padding="0 16px" disabled>
+					<IconBiPencilFill/>
+					{t('common.action.edit')}
+				</Link>
+				<Link size={isCompact ? 11 : 12} height="100%" padding="0 16px" disabled>
+					<IconBiTrash3Fill/>
+					{t('common.action.delete')}
+				</Link>
+			</>}
 		</Grid>
     </Grid>;
 }

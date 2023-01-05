@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 import { Grid, Button, Spinner, Tooltip, Typography, ContextMenu, BasicSpinner } from 'voxeliface';
 
-import HeartIcon from './icons/heart';
 import ImageWrapper from './ImageWrapper';
 
 import { toast } from '../../util';
@@ -80,7 +79,7 @@ export default function ModComponent({ id, data, featured, platform, instance, r
 				position: 'relative',
 				background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box',
 			}}>
-				<ImageWrapper src={mod.webIcon} size={iconSize} shadow smoothing={1} canPreview background="$secondaryBackground" borderRadius={8} css={{
+				<ImageWrapper src={mod.webIcon} size={iconSize} smoothing={1} canPreview background="$secondaryBackground" borderRadius={8} css={{
 					filter: mod.isExplict && 'blur(2px)',
 					minWidth: iconSize
 				}}/>

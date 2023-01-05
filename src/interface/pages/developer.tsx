@@ -5,11 +5,11 @@ import { Grid, Button, TextInput, Typography, TextHeader, InputLabel } from 'vox
 import ImageWrapper from '../components/ImageWrapper';
 
 import PluginSystem from '../../plugins';
-import { COMPONENT_MAP } from '../../../voxura';
-import mdpkm, { INSTANCE_CREATORS } from '../../mdpkm';
 import voxura, { useCurrentAccount } from '../../voxura';
+import { InstanceType, COMPONENT_MAP } from '../../../voxura';
+import mdpkm, { COMPONENT_EXTRAS, INSTANCE_CREATORS } from '../../mdpkm';
 import { APP_DIR, APP_NAME, APP_VERSION, TAURI_VERSION } from '../../util/constants';
-import { toast, getDefaultInstanceIcon, getDefaultInstanceBanner } from '../../util';
+import { getDefaultInstanceIcon, getDefaultInstanceBanner } from '../../util';
 export default function Developer() {
 	const { t } = useTranslation();
 	const account = useCurrentAccount();
@@ -113,16 +113,30 @@ export default function Developer() {
 		</Grid>
 
 		<InputLabel spaciouser>COMPONENT_MAP ({COMPONENT_MAP.length})</InputLabel>
-		<Grid vertical>
-			{COMPONENT_MAP.map(component => <Typography size={14} weight={400} family="$secondary">
-				{component.id} ({component.name})
+		<Grid spacing={16} vertical>
+			{COMPONENT_MAP.map(({ id, instanceTypes }) => <Typography size={14} weight={400} family="$secondary">
+				[{id}]<br/>
+				translation: {t(`voxura:component.${id}`)}<br/>
+				instance types: {instanceTypes.map(t => InstanceType[t]).join(', ')}
+			</Typography>)}
+		</Grid>
+
+		<InputLabel spaciouser>COMPONENT_EXTRAS ({Object.keys(COMPONENT_EXTRAS).length})</InputLabel>
+		<Grid spacing={16} vertical>
+			{Object.entries(COMPONENT_EXTRAS).map(([ id, data ]) => <Typography size={14} weight={400} family="$secondary">
+				[{id}]<br/>
+				contentTabs: {data.contentTabs?.map(t => t.name).join(', ')}<br/>
+				settingsTabs: {data.settingsTabs?.map(t => t.name).join(', ')}<br/>
+				enabledContentTabs: {data.enabledContentTabs?.join(', ')}
 			</Typography>)}
 		</Grid>
 
 		<InputLabel spaciouser>INSTANCE_CREATORS ({INSTANCE_CREATORS.length})</InputLabel>
-		<Grid vertical>
-			{INSTANCE_CREATORS.map(({ id }) => <Typography size={14} weight={400} family="$secondary">
-				{t('voxura:component.' + id)} ({id})
+		<Grid spacing={16} vertical>
+			{INSTANCE_CREATORS.map(({ id, category }) => <Typography size={14} weight={400} family="$secondary">
+				[{id}]<br/>
+				category: {category}<br/>
+				translation: {t('voxura:component.' + id)}
 			</Typography>)}
 		</Grid>
 

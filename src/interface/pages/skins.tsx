@@ -242,7 +242,6 @@ export default function Skins() {
                         <Select.Group name={t('skin_management.add_modal.cape.category')}>
                             {capes.map((cape, key) => <Select.Item key={key} value={cape.id}>
                                 <Image src={cape.url} size={24} height={32} css={{
-									background: '#fff',
                                     backgroundSize: '128px 66px',
                                     imageRendering: 'pixelated',
                                     backgroundPosition: '0 7%'

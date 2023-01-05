@@ -4,6 +4,7 @@ import { TauriHeader, TauriHeaderProps } from 'voxeliface-tauri';
 
 import { setPage } from '../../store/slices/interface';
 import { AvatarType } from '../../../voxura';
+import { APP_VERSION } from '../../util/constants';
 import { useAppDispatch } from '../../store/hooks';
 import { useCurrentAccount } from '../../voxura';
 
@@ -13,6 +14,12 @@ export default function DefaultHeader(props: HeaderProps) {
     const dispatch = useAppDispatch();
     const viewAccounts = () => dispatch(setPage('accounts'));
     return <TauriHeader brand={<Image src="img/banners/brand_text.svg" width={148} height={48}/>} clickable={false} {...props}>
+		{APP_VERSION.includes('beta') && <Typography size={14} color="$secondaryColor" margin="2px 0 0" css={{
+			left: 172,
+			position: 'absolute',
+		}}>
+			BETA
+		</Typography>}
 		{account && <Grid spacing={12} onClick={viewAccounts} borderRadius={8} css={{
 			right: 144,
 			cursor: 'pointer',
