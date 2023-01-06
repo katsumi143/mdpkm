@@ -50,7 +50,7 @@ export default function Developer() {
 
 		<InputLabel spaciouser>Default Instance Banner Tester</InputLabel>
 		<Grid spacing={8}>
-			<ImageWrapper src={getDefaultInstanceBanner(bannerTest)} size={64} width={124} canPreview/>
+			<ImageWrapper src={getDefaultInstanceBanner(bannerTest)} size={64} width={124} ratio={1.96} canPreview previewWidth={768}/>
 			<TextInput
 				value={bannerTest}
 				onChange={setBannerTest}

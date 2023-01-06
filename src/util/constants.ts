@@ -35,9 +35,14 @@ export const IMAGES = {
 	'platform.curseforge': 'img/icons/platform/curseforge.svg',
 	'platform.feedthebeast': 'img/icons/platform/feedthebeast.png',
 
-	'instance_banner.1': 'img/banners/instances/banner1_1.png',
-	'instance_banner.2': 'img/banners/instances/banner2.png',
-	'instance_banner.3': 'img/banners/instances/banner3.png',
+	'instance_banner.1': 'img/banners/instances/banner1_1.webp',
+	'instance_banner.2': 'img/banners/instances/banner2.webp',
+	'instance_banner.3': 'img/banners/instances/banner3.webp',
+	'instance_banner.4': 'img/banners/instances/banner4.webp',
+	'instance_banner.5': 'img/banners/instances/banner5.webp',
+	'instance_banner.6': 'img/banners/instances/banner6.webp',
+	'instance_banner.7': 'img/banners/instances/banner7.webp',
+	'instance_banner.8': 'img/banners/instances/banner8.webp',
 
 	'download.temurin': 'img/icons/temurin.png',
 	'download.minecraft_java': 'img/icons/minecraft/java.png'

@@ -27,7 +27,7 @@ export default function Home() {
 	const loadingInstances = voxura.instances.loading;
 	return <Grid width="100%" height="inherit" vertical css={{ overflow: 'hidden' }}>
 		<Grid height="100%" spacing={16} justifyContent="space-between" css={{ overflow: 'hidden' }}>
-			<Grid width="100%" height="60%" background={`url(img/banners/instances/banner1_${greeting + 1}.png)`} css={{
+			<Grid width="100%" height="60%" background={`url(img/banners/instances/banner1_${greeting + 1}.webp)`} css={{
 				zIndex: -1,
 				opacity: 0.5,
 				position: 'absolute',

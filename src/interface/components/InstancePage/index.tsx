@@ -40,7 +40,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 			return '';
 		const { name, banner, bannerFormat } = instance;
 		return banner ? `data:image/${bannerFormat};base64,${Buffer.from(banner).toString('base64')}` : getDefaultInstanceBanner(name);
-	}, [instance?.banner]);
+	}, [instance?.name, instance?.banner]);
 
 	if (!instance)
 		return null;

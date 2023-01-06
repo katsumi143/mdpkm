@@ -43,7 +43,7 @@ export function getDefaultInstanceBanner(name?: string) {
 		hash = name.charCodeAt(i) + ((hash << 5) - hash);
 	hash = Math.abs(hash);
 
-	return getImage('instance_banner.' + (hash % 3 + 1));
+	return getImage('instance_banner.' + (hash % 8 + 1));
 }
 
 export function getSkinData(skin: MinecraftSkin) {
