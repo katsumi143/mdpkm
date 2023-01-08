@@ -3,23 +3,27 @@ import React, { useState } from 'react';
 import { Grid, TabItem, Typography } from 'voxeliface';
 
 import Tabs from '../Tabs';
-import ModItem from '../Mod';
+import Project from '../platform/project';
 import ModManagement from '../ModManagement';
 
 import voxura from '../../../voxura';
+import { setContentTab } from '../../../store/slices/interface';
 import { Instance, InstanceState } from '../../../../voxura';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { ComponentExtra, COMPONENT_EXTRAS } from '../../../mdpkm';
 export interface ContentProps {
     instance: Instance
 }
 export default function Content({ instance }: ContentProps) {
+	const tab = useAppSelector(state => state.interface.contentTab);
 	const { t } = useTranslation('interface');
-	const [tab, setTab] = useState(0);
+	const dispatch = useAppDispatch();
 
 	const extras: [ComponentExtra, string][] = instance.store.components.map(c => [COMPONENT_EXTRAS[c.id], c.id]);
 	const useEssential = extras.some(([e]) => e?.enabledContentTabs?.includes('essential'));
 	const useModManagement = extras.some(([e]) => e?.enabledContentTabs?.includes('modManagement'));
-    return <React.Fragment>
+    const setTab = (value: number) => dispatch(setContentTab(value));
+	return <React.Fragment>
 		<Tabs
 			value={tab}
 			onChange={setTab}
@@ -46,7 +50,7 @@ export default function Content({ instance }: ContentProps) {
 				<Typography size={12} color="$secondaryColor" margin="0 0 8px" weight={400} family="$secondary" noSelect textalign="start">
 					Essential is a quality of life mod that boosts Minecraft Java to the next level.
 				</Typography>
-				<ModItem id="essential-container" featured platform={voxura.getPlatform('mdpkm')} instance={instance}/>
+				<Project id="essential-container" platform={voxura.getPlatform('mdpkm')} instance={instance}/>
 			</TabItem>
 			{extras.map(extra => extra[0]?.contentTabs?.map((ContentTab, key) =>
 				<TabItem key={key} name={t(`voxura:component.${extra[1]}.content_tab.${key}`)} icon={<IconBiList fontSize={11}/>} value={3 + key}>

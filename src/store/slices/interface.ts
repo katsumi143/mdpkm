@@ -1,9 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { ProjectType } from '../../../voxura';
 export const interfaceSlice = createSlice({
     name: 'interface',
     initialState: {
         page: 'home',
+		contentTab: 0,
+		searchType: ProjectType.Mod,
 		instanceTab: 0,
 		launchError: null as [string, string, any[] | undefined] | null,
         currentInstance: ''
@@ -12,6 +15,12 @@ export const interfaceSlice = createSlice({
         setPage: (state, { payload }: PayloadAction<string>) => {
             state.page = payload;
         },
+		setContentTab: (state, { payload }: PayloadAction<number>) => {
+			state.contentTab = payload;
+		},
+		setSearchType: (state, { payload }: PayloadAction<ProjectType>) => {
+			state.searchType = payload;
+		},
 		setLaunchError: (state, { payload }: PayloadAction<[string, string, any[] | undefined] | null>) => {
 			state.launchError = payload;
 		},
@@ -24,5 +33,5 @@ export const interfaceSlice = createSlice({
     }
 });
 
-export const { setPage, setLaunchError, setInstanceTab, setCurrentInstance } = interfaceSlice.actions;
+export const { setPage, setContentTab, setSearchType, setLaunchError, setInstanceTab, setCurrentInstance } = interfaceSlice.actions;
 export default interfaceSlice.reducer;

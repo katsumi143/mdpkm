@@ -1,81 +1,37 @@
-import { fetch, ResponseType } from '@tauri-apps/api/http';
+import { fetch } from '@tauri-apps/api/http';
 
-import { Mod, Project, Platform, Instance, ProjectSide, GameComponent } from '../../voxura';
-export default class mdpkmPlatform extends Platform<mdpkmProject> {
-	public static id = 'mdpkm';
-	public search(query: string, options: {
+import { Project, Platform, Instance, ProjectType, GameComponent } from '../../voxura';
+const mdpkmPlatform = new class mdpkmPlatform extends Platform<mdpkmProject> {
+	public id = 'mdpkm'
+	public search(query: string, type: ProjectType, options: {
         limit?: number,
         facets?: string[],
         offset?: number,
         loaders?: string[],
         versions?: string[],
-        categories?: string[],
-        projectType?: string
+        categories?: string[]
     } = {}): Promise<{
-        hits: mdpkmProject[],
-        limit: number,
-        offset: number,
-        total_hits: number
+        hits: mdpkmProject[]
+        limit: number
+		total: number
+        offset: number
     }> {
-        return this.searchRaw(query, options).then(data => ({
-            ...data,
-            hits: data.hits.map(h => new mdpkmProject(h.project_id, h, this))
-        }));
-    }
-
-    public searchMods(query: string, options: {
-        limit?: number,
-        facets?: string[],
-        offset?: number,
-        loaders?: string[],
-        versions?: string[],
-        categories?: string[],
-        projectType?: string
-    } = {}): Promise<{
-        hits: mdpkmMod[],
-        limit: number,
-        offset: number,
-        total_hits: number
-    }> {
-        return this.searchRaw(query, options).then(data => ({
-            ...data,
-            hits: data.hits.map(h => new mdpkmMod(h.project_id, h, this))
-        }));
-    }
-
-    private searchRaw(query: string, options: {
-        limit?: number,
-        facets?: string[],
-        offset?: number,
-        loaders?: string[],
-        versions?: string[],
-        categories?: string[],
-        projectType?: string
-    } = {}): Promise<{
-        hits: ProjectData[],
-        limit: number,
-        offset: number,
-        total_hits: number
-    }> {
-		const hits = Object.values(INTERNAL_PROJECTS);
+        const hits = Object.values(INTERNAL_PROJECTS);
         return Promise.resolve({
-			hits,
+			hits: hits.map(h => new mdpkmProject(h.id, ProjectType.Mod, h)),
 			limit: hits.length,
-			offset: 0,
-			total_hits: hits.length
+			total: hits.length,
+			offset: 0
 		});
     }
 
     public async getProject(id: string): Promise<mdpkmProject> {
-        return new mdpkmProject(id, await this.getProjectData(id), this);
+		const data = await this.getProjectData(id);
+        return new mdpkmProject(id, ProjectType.Mod, data);
     }
 
     private getProjectData(id: string): Promise<ProjectData> {
 		return Promise.resolve(INTERNAL_PROJECTS[id])
-    }
-
-    public async getMod(id: string): Promise<mdpkmMod> {
-        return new mdpkmMod(id, await this.getProjectData(id), this);
     }
 
 	public get baseUserURL() {
@@ -86,24 +42,11 @@ export default class mdpkmPlatform extends Platform<mdpkmProject> {
 		return '';
 	}
 }
+export default mdpkmPlatform
 
-export interface ProjectData {
-	slug: string
-	title: string
-	author: string
-	website: string
-	follows?: number
-	icon_url?: string
-	downloads?: number
-    project_id: string
-	description: string
-}
-export class mdpkmProject extends Project<ProjectData, mdpkmPlatform> {
-	public getSide(): ProjectSide {
-        return ProjectSide.Client;
-    }
-
-    public async getLatestVersion(instance: Instance) {
+export class mdpkmProject extends Project<ProjectData> {
+	public source = mdpkmPlatform
+	public async getLatestVersion(instance: Instance) {
         const versions = await this.getVersions();
 		const { components } = instance.store;
         return versions.find(({ loaders, game_versions }) =>
@@ -156,11 +99,34 @@ export class mdpkmProject extends Project<ProjectData, mdpkmPlatform> {
     public get webIcon(): string | undefined {
         return this.data.icon_url;
     }
-}
-export class mdpkmMod extends mdpkmProject implements Mod {
-    
+
+	public get categories() {
+		return this.data.categories;
+	}
+	public get displayCategories() {
+		return this.categories;
+	}
+
+	public get clientSide() {
+		return 'optional' as any;
+	}
+	public get serverSide() {
+		return 'unsupported' as any;
+	}
 }
 
+export interface ProjectData {
+	id: string
+	slug: string
+	title: string
+	author: string
+	website: string
+	follows?: number
+	icon_url?: string
+	downloads?: number
+	categories: string[]
+	description: string
+}
 export interface EssentialVersion {
 	url: string
 	version: string
@@ -173,12 +139,13 @@ export interface EssentialVersionsResponse {
 
 export const INTERNAL_PROJECTS: Record<string, ProjectData> = {
 	'essential-container': {
+		id: 'essential-container',
 		slug: 'essential-container',
 		title: 'Essential',
 		author: 'Essential',
 		website: 'https://essential.gg',
 		icon_url: 'img/icon/project/essential.svg',
-		project_id: 'essential-container',
+		categories: ['social', 'fabric', 'forge'],
 		description: 'Essential is a quality of life mod that boosts Minecraft Java to the next level.'
 	}
 }

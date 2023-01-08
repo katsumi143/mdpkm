@@ -3,29 +3,29 @@ import { useTranslation } from 'react-i18next';
 import React, { useRef, useMemo, useEffect, useState, MouseEventHandler } from 'react';
 import { Grid, Image, Select, Button, TextInput, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
-import Mod from './Mod';
+import ListItem from './project';
 
-import voxura from '../../voxura';
-import { toast, getImage } from '../../util';
-import type { Project, Instance, Mod as PlatformMod } from '../../../voxura';
-export interface ModSearchProps {
+import voxura from '../../../voxura';
+import { i, toast } from '../../../util';
+import { useAppSelector } from '../../../store/hooks';
+import { Project, Instance, ProjectType } from '../../../../voxura';
+export interface PlatformSearchProps {
 	onClose?: MouseEventHandler<HTMLAnchorElement>
     instance: Instance
 }
-export default function ModSearch({ instance }: ModSearchProps) {
-    const { t } = useTranslation('interface');
-
+export default function PlatformSearch({ instance }: PlatformSearchProps) {
     const { store } = instance;
     const { components, gameComponent } = store;
 
+	const { t } = useTranslation('interface');
 	const container = useRef<HTMLDivElement>(null);
+	const projectType = useAppSelector(state => state.interface.searchType);
     const [api, setApi] = useState('modrinth');
     const [hits, setHits] = useState(0);
     const [page, setPage] = useState(1);
     const [query, setQuery] = useState('');
     const [pages, setPages] = useState<(string | number)[]>([]);
-	const [items, setItems] = useState<(Project<any, any> & PlatformMod)[]>([]);
-    const [category, setCategory] = useState('none');
+	const [items, setItems] = useState<Project<any>[]>([]);
     const [pageLimit, setPageLimit] = useState(20);
     const [searching, setSearching] = useState(false);
 	const platform = useMemo(() => voxura.getPlatform(api), [api]);
@@ -34,14 +34,13 @@ export default function ModSearch({ instance }: ModSearchProps) {
             return;
 
         setSearching(true);
-        platform.searchMods(query, {
+        platform.search(query, projectType, {
             limit: pageLimit,
             offset: (page - 1) * pageLimit,
-            loaders: components.map(l => l.getPlatformId(platform)),
-            versions: [gameComponent.version, gameComponent.version.substring(0, Math.max(4, gameComponent.version.lastIndexOf('.')))],
-            categories: category === 'none' ? undefined : [category]
-        }).then(({ hits, limit, total_hits }) => {
-            const pageAmount = Math.ceil(total_hits / limit);
+            loaders: projectType === ProjectType.Mod ? components.map(l => l.getPlatformId(platform)) : undefined,
+            versions: [gameComponent.version, gameComponent.version.substring(0, Math.max(4, gameComponent.version.lastIndexOf('.')))]
+        }).then(({ hits, limit, total }) => {
+            const pageAmount = Math.ceil(total / limit);
             if(pageAmount > 4)
                 if(page + 3 >= pageAmount)
                     setPages([
@@ -67,7 +66,7 @@ export default function ModSearch({ instance }: ModSearchProps) {
                     setPages([1, 2, 3, 4, 5, '-', pageAmount]);
             else
                 setPages(Array.from({ length: pageAmount }, (_, i) => i + 1));
-            setHits(total_hits);
+            setHits(total);
 			setItems(hits);
             setSearching(false);
         }).catch(err => {
@@ -80,10 +79,10 @@ export default function ModSearch({ instance }: ModSearchProps) {
     };
     useEffect(() => {
         search();
-    }, [api, page, category, instance.id]);
+    }, [api, page, instance.id]);
 	useEffect(() => {
-		container.current?.scroll({ top: 0, behavior: 'smooth' });
-	}, [items]);
+		container.current?.scroll(0, 0);
+	}, [searching]);
 	
 	return <Grid width="100%" height="100%" spacing={8} vertical>
 		<Grid width="100%" spacing={8} justifyContent="space-between">
@@ -96,44 +95,22 @@ export default function ModSearch({ instance }: ModSearchProps) {
 					</Button>
 				</TextInput>
 			</Grid>
-			<Grid spacing={8}>
-				<Grid vertical>
-					<InputLabel>{t('common.label.category')}</InputLabel>
-					<Select.Minimal value={category} onChange={setCategory} disabled={searching}>
-						<Select.Group name="Categories">
-							<Select.Item value="none">
-								{t('app.mdpkm.mod_search.categories.none')}
+			<Grid width="40%" vertical>
+				<InputLabel>{t('common.label.platform')}</InputLabel>
+				<Select.Minimal value={api} onChange={setApi} disabled={searching}>
+					<Select.Group name="Mod Platforms">
+						{Object.values(voxura.platforms).map(({ id }) =>
+							<Select.Item key={id} value={id}>
+								<Image src={i(`platform.${id}`)} size={16}/>
+								{t(`voxura:platform.${id}`)}
 							</Select.Item>
-							{/*API.get(api)?.categories.filter(c => c.project_type === 'mod').map(({ name, icon }, index) =>
-								<Select.Item key={index} value={name}>
-									<div style={{
-										width: '16px',
-										color: 'var(--colors-primaryColor)',
-										height: '16px'
-									}} dangerouslySetInnerHTML={{ __html: icon }}/>
-									{t(`app.mdpkm.mod_search.categories.${api}.${name}`)}
-								</Select.Item>
-							)*/}
-						</Select.Group>
-					</Select.Minimal>
-				</Grid>
-				<Grid vertical>
-					<InputLabel>{t('common.label.platform')}</InputLabel>
-					<Select.Minimal value={api} onChange={setApi} disabled={searching}>
-						<Select.Group name="Mod Platforms">
-							{Object.values(voxura.platforms).map(({ id }) =>
-								<Select.Item key={id} value={id}>
-									<Image src={getImage(`platform.${id}`)} size={16}/>
-									{t(`voxura:platform.${id}`)}
-								</Select.Item>
-							)}
-						</Select.Group>
-					</Select.Minimal>
-				</Grid>
+						)}
+					</Select.Group>
+				</Select.Minimal>
 			</Grid>
 		</Grid>
 		<Grid ref={container} height="100%" spacing={8} vertical borderRadius={16} css={{ overflow: 'hidden auto' }}>
-			{items.map(item => <Mod key={item.id} data={item} instance={instance}/>)}
+			{items.map(item => <ListItem key={item.id} data={item} instance={instance}/>)}
 			{items.length === 0 && <Grid vertical>
 				<Typography size={18}>
 					{t('app.mdpkm.common:headers.empty_list')}
@@ -146,7 +123,7 @@ export default function ModSearch({ instance }: ModSearchProps) {
 		<Grid width="100%" padding="0 8px" justifyContent="space-between">
 			<Pagination page={page} pages={pages} setPage={setPage}/>
 			<InputLabel>
-				{t('mod_search.results', { count: hits })}
+				{t('platform_search.results', { count: hits })}
 			</InputLabel>
 		</Grid>
 	</Grid>;
@@ -168,9 +145,20 @@ const StyledPage = styled('button', {
     borderRadius: 24,
     justifyContent: 'center',
 
-    '&:hover': {
-        background: '$primaryBackground'
-    }
+    variants: {
+		disabled: {
+			true: {
+				cursor: 'not-allowed',
+				opacity: .5
+			},
+			false: {
+				'&:hover': {
+					background: '$primaryBackground'
+				}
+			}
+		}
+	},
+	defaultVariants: { disabled: false }
 });
 
 // TODO: move this into a separate file
@@ -181,13 +169,13 @@ export interface PaginationProps {
 }
 export function Pagination({ page, pages, setPage }: PaginationProps) {
     return <Grid spacing={4} alignItems="center">
-        <StyledPage onClick={() => setPage(Math.max(page - 1, 1))}>
+        <StyledPage onClick={() => setPage(Math.max(page - 1, 1))} disabled={page === 1}>
             <IconBiChevronLeft fontSize={10}/>
         </StyledPage>
         {pages.map(page2 =>
             typeof page2 === 'string' ?
                 <Grid width={24} height={2} background="$tagBorder"/>
-            : <StyledPage css={{
+            : <StyledPage key={page2} css={{
                 color: page === page2 ? '$buttonColor' : undefined,
 				userSelect: 'none',
                 background: page === page2 ? '$buttonBackground' : undefined,
@@ -196,7 +184,7 @@ export function Pagination({ page, pages, setPage }: PaginationProps) {
                 {page2}
             </StyledPage>
         )}
-        <StyledPage onClick={() => setPage(Math.min(page + 1, pages[pages.length - 1] as number))}>
+        <StyledPage onClick={() => setPage(Math.min(page + 1, pages[pages.length - 1] as number))} disabled={page === pages[pages.length - 1]}>
             <IconBiChevronRight fontSize={10}/>
         </StyledPage>
     </Grid>;

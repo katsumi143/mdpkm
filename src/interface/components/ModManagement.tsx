@@ -5,9 +5,9 @@ import { Grid, Button, Spinner, TextInput, Typography, BasicSpinner } from 'voxe
 
 import InstanceMod from './InstanceMod';
 
-import { setPage } from '../../store/slices/interface';
 import { useAppDispatch } from '../../store/hooks';
-import { Instance, InstanceState } from '../../../voxura';
+import { setPage, setSearchType } from '../../store/slices/interface';
+import { Instance, ProjectType, InstanceState } from '../../../voxura';
 export interface ModManagementProps {
 	instance: Instance
 }
@@ -17,7 +17,10 @@ export default function ModManagement({ instance }: ModManagementProps) {
 	const [filter, setFilter] = useState('');
 	const items = instance.modifications;
 	const loading = instance.readingMods;
-	const search = () => dispatch(setPage('modSearch'));
+	const search = () => {
+		dispatch(setPage('search'));
+		dispatch(setSearchType(ProjectType.Mod));
+	};
 	const refresh = () => instance.readMods();
 	const openFolder = () => open(instance.modsPath);
 	useEffect(() => {

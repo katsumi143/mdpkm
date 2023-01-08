@@ -9,13 +9,13 @@ import Home from './home';
 import Skins from './skins';
 import Create from './create';
 import Import from './import';
+import Search from './search';
 import Header from '../components/Header';
 import Settings from './settings';
 import Accounts from './accounts';
 import Downloads from './downloads';
 import Instances from './instances';
 import Developer from './developer';
-import ModSearch from './modSearch';
 import LaunchError from '../components/LaunchError';
 
 import { setPage } from '../../store/slices/interface';
@@ -55,8 +55,8 @@ export default function Navigation() {
 					<NavigationItem name={t('navigation.create')} icon={null} value="create" hidden>
 						<Create/>
 					</NavigationItem>
-					<NavigationItem name={t('navigation.mod_search')} icon={null} value="modSearch" hidden>
-						<ModSearch/>
+					<NavigationItem name={t('navigation.search')} icon={null} value="search" hidden>
+						<Search/>
 					</NavigationItem>
 					<NavigationItem name={t('navigation.developer')} icon={<IconBiWrenchAdjustableCircle/>} value="developer" hidden footer>
 						<Developer/>
@@ -85,4 +85,4 @@ const Container = styled('div', {
 	flexDirection: 'column'
 });
 
-export const SHOULD_HIDE_SIDE = ['import', 'create', 'modSearch'];
+export const SHOULD_HIDE_SIDE = ['import', 'create', 'search'];

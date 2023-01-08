@@ -17,11 +17,11 @@ export default function ImageWrapper({ src, ratio, shadow, canPreview, previewWi
             setPreview(v => !v);
     };
     return <React.Fragment>
-        <Image {...props} src={src ?? PLACEHOLDER_IMAGE} onClick={toggle} css={{
+        <Image {...props} src={src || PLACEHOLDER_IMAGE} onClick={toggle} css={{
             cursor: canPreview && 'zoom-in',
             boxShadow: shadow && '$buttonShadow',
             ...props.css
         }}/>
-        {preview && <ImagePreview src={src ?? PLACEHOLDER_IMAGE} ratio={ratio} width={previewWidth} onClose={toggle} pixelated={props.pixelated}/>}
+        {preview && <ImagePreview src={src || PLACEHOLDER_IMAGE} ratio={ratio} width={previewWidth} onClose={toggle} pixelated={props.pixelated}/>}
     </React.Fragment>;
 }

@@ -2,14 +2,14 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Grid, Typography } from 'voxeliface';
 
-import ModSearch from '../components/ModSearch';
 import ImageWrapper from '../components/ImageWrapper';
+import PlatformSearch from '../components/platform/search';
 
 import { setPage } from '../../store/slices/interface';
 import { useInstance } from '../../voxura';
 import { ComponentType, InstanceState } from '../../../voxura';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-export default function ModSearchPage() {
+export default function SearchPage() {
 	const { t } = useTranslation('interface');
 	const dispatch = useAppDispatch();
 	const instance = useInstance(useAppSelector(state => state.interface.currentInstance));
@@ -21,7 +21,7 @@ export default function ModSearchPage() {
 		<Grid justifyContent="space-between">
 			<Grid vertical>
 				<Typography size={20} noSelect>
-					{t('mod_search')}
+					{t('platform_search')}
 				</Typography>
 				<Link size={12} onClick={() => changePage('instances')}>
 					<IconBiArrowLeft/>
@@ -47,7 +47,7 @@ export default function ModSearchPage() {
 			</Grid>
 		</Grid>
 		<Grid width="100%" height="100%" margin="16px 0 0" spacing={16} css={{ overflow: 'hidden' }}>
-			<ModSearch instance={instance}/>
+			<PlatformSearch instance={instance}/>
 		</Grid>
 	</Grid>;
 }

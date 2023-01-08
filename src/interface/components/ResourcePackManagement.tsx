@@ -9,8 +9,9 @@ import { Link, Grid, Image, Button, Spinner, TextInput, Typography, BasicSpinner
 
 import ImagePreview from './ImagePreview';
 
-import type { Instance } from '../../../voxura';
-import { useAppSelector } from '../../store/hooks';
+import { Instance, ProjectType } from '../../../voxura';
+import { setPage, setSearchType } from '../../store/slices/interface';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { readTextFileInZip, readBinaryFileInZip } from '../../util';
 export interface ResourcePackManagementProps {
     instance: Instance
@@ -19,8 +20,13 @@ export default function ResourcePackManagement({ instance }: ResourcePackManagem
 	// TODO: rewrite
 	const path = instance.path + '/resourcepacks';
     const { t } = useTranslation('interface');
+	const dispatch = useAppDispatch();
     const [items, setItems] = useState<any[] | string | null>(null);
     const [filter, setFilter] = useState('');
+	const search = () => {
+		dispatch(setPage('search'));
+		dispatch(setSearchType(ProjectType.ResourcePack));
+	};
     const addResourcePack = async() => {
         const filePath = await open({
             title: 'Select Resource Pack',
@@ -110,6 +116,10 @@ export default function ResourcePackManagement({ instance }: ResourcePackManagem
 			{t('common.label.empty_dir')}
 		</Typography> : <Spinner/>}
 		<Grid margin="auto 0 0" spacing={8}>
+			<Button theme="accent" onClick={search}>
+				<IconBiSearch/>
+				{t('resource_packs.search')}
+			</Button>
 			<Button theme="accent" onClick={addResourcePack} disabled={instance?.store.gameComponent.id === 'bedrock'}>
 				<IconBiPlusLg/>
 				{t('resource_packs.add')}
@@ -140,7 +150,7 @@ export function ResourcePack({ item }: ResourcePackProps) {
     }}>
         <Image
             src={packIcon}
-            size={isCompact ? 38 : 48}
+            size={isCompact ? 38 : 40}
             onClick={() => setPreviewIcon(true)}
             background="$secondaryBackground"
             borderRadius={8}

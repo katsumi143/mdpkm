@@ -17,7 +17,7 @@ Object.defineProperty(Instance.prototype, 'defaultIcon', {
 })
 
 const voxura = new Voxura(APP_DIR);
-voxura.addPlatform(new mdpkmPlatform());
+voxura.addPlatform(mdpkmPlatform);
 
 const hiddenDownloads = ['', 'component_library'];
 voxura.downloader.listenForEvent('downloadStarted', (download: Download) => {
