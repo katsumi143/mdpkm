@@ -59,6 +59,8 @@
 	"component.minecraft-java-server-paper": "Paper",
 	"component.minecraft-java-server-paper.summary": "Paper is the next generation of Minecraft servers, offering uncompromising performance.",
 
+	"component.minecraft-java-client-extension-json": "Custom Component",
+
 	"platform.modrinth": "Modrinth",
 	"platform.curseforge": "CurseForge",
 	"platform.feedthebeast": "Feed the Beast",

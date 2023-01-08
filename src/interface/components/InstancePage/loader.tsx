@@ -1,3 +1,5 @@
+import { open } from '@tauri-apps/api/dialog';
+import { readJsonFile } from 'voxelified-commons/tauri';
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
 import { Link, Grid, Select, Button, Typography, TextHeader, InputLabel, BasicSpinner } from 'voxeliface';
@@ -42,7 +44,7 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 			{t('common.label.other_components')}
 		</Typography>}
 		<Grid spacing={8} vertical>
-			{otherComponents.map((component, key) =>
+			{otherComponents.map(component =>
 				<ComponentUI key={component.id} instance={instance} component={component}/>
 			)}
 		</Grid>
@@ -99,11 +101,16 @@ export function ComponentUI({ instance, component }: ComponentProps) {
 		border: 'transparent solid 1px',
 		background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
 	}}>
-		<ImageWrapper src={getImage(`component.${component.id}`)} size={40} smoothing={1} canPreview background="$secondaryBackground" borderRadius={8} />
+		<ImageWrapper src={component.icon ?? getImage(`component.${component.id}`)} size={40} smoothing={1} canPreview background="$secondaryBackground" borderRadius={8} />
 		<Grid spacing={2} vertical justifyContent="center">
-			<Typography noSelect lineheight={1}>
-				{t(`voxura:component.${component.id}`)}
-			</Typography>
+			<Grid spacing={8}>
+				<Typography noSelect lineheight={1}>
+					{component.name ?? t([`voxura:component.${component.id}`, 'missingno'])}
+				</Typography>
+				{component.name && <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
+					{t(`voxura:component.${component.id}`)}
+				</Typography>}
+			</Grid>
 			{isVersioned && <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
 				{t('component.version', [component.version])}
 			</Typography>}
@@ -131,13 +138,35 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 	const [saving, setSaving] = useState(false);
 	const [version, setVersion] = useState<ComponentVersion | null>(null);
 	const [component, setComponent] = useState<number | null>(null);
+	const [importError, setImportError] = useState<string | null>(null);
 	const components = COMPONENT_MAP.filter(c => c.instanceTypes.includes(instance.type) && c.type !== ComponentType.Game && !instance.store.components.some(s => s.id === c.id));
 	if (!components.length) {
 		onClose();
 		return null;
 	}
 
-	const versions = useComponentVersions(components[component!] as typeof VersionedComponent)
+	const versions = useComponentVersions(components[component!] as typeof VersionedComponent);
+	const importFile = async() => {
+		const path = await open({ filters: [{ name: 'JSON File', extensions: ['json'] }]});
+		if (typeof path !== 'string')
+			return;
+		
+		const json = await readJsonFile<any>(path);
+		for (const component of COMPONENT_MAP)
+			if (json.id === component.id) {
+				const data = await component.validateSchema(json).catch(err => {
+					setImportError(err.message);
+					throw err;
+				});
+				console.log(data);
+				instance.store.components.push(new (component as any)(instance, data));
+				instance.store.save().then(() => {
+					instance.emitEvent('changed');
+					toast('changes_saved', [component.id]);
+					onClose();
+				});
+			}
+	};
 	const saveChanges = () => {
 		setSaving(true);
 		if (!versions)
@@ -153,21 +182,21 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 		});
 	};
 	return <Modal width="60%">
-		<TextHeader noSelect>Component Adder</TextHeader>
-		<InputLabel>Component</InputLabel>
+		<TextHeader noSelect>{t('add_component')}</TextHeader>
+		<InputLabel>{t('common.label.component')}</InputLabel>
 		<Select.Minimal value={component} onChange={setComponent} loading={!versions && component !== null} disabled={(!versions || saving) && component !== null}>
-			<Select.Group name="Available Instance Components">
+			<Select.Group name={t('add_component.component.group')}>
 				{components.map((component, key) => <Select.Item key={component.id} value={key}>
 					{t(`voxura:component.${component.id}`)}
 				</Select.Item>)}
 			</Select.Group>
 			<Select.Item value={null} disabled>
-				Select a component
+				{t('add_component.component.none')}
 			</Select.Item>
 		</Select.Minimal>
 
 		{versions?.length !== 0 && <React.Fragment>
-			<InputLabel spacious>Component Version</InputLabel>
+			<InputLabel spacious>{t('add_component.version')}</InputLabel>
 			<Typography size={14} noSelect>
 				{version ? `${t(`voxura:component.${components[component]?.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
 			</Typography>
@@ -180,12 +209,21 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 		<Grid margin="16px 0 0" spacing={8}>
 			<Button theme="accent" onClick={saveChanges} disabled={!versions || saving}>
 				{saving ? <BasicSpinner size={16} /> : <IconBiPlusLg />}
-				Add Component
+				{t('common.action.add_component')}
 			</Button>
 			<Button theme="secondary" onClick={onClose} disabled={(!versions || saving) && component !== null}>
 				<IconBiXLg/>
 				{t(`common.action.cancel`)}
 			</Button>
+			<Grid margin="0 0 0 auto" spacing={16}>
+				{importError && <Typography size={14} weight={400} family="$secondary" textalign="right">
+					{importError}
+				</Typography>}
+				<Button theme="secondary" onClick={importFile}>
+					<IconBiFiletypeJson/>
+					{t('add_component.import')}
+				</Button>
+			</Grid>
 		</Grid>
 	</Modal>;
 }
@@ -213,7 +251,7 @@ export function ComponentEditor({ onClose, component }: ComponentEditorProps) {
 	};
 	return <Modal width="60%">
 		<TextHeader noSelect>Component Editor ({t(`voxura:component.${component.id}`)})</TextHeader>
-		<InputLabel>Component Version</InputLabel>
+		<InputLabel>{t('add_component.version')}</InputLabel>
 		<Typography size={14} noSelect>
 			{version ? `${t(`voxura:component.${component.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
 		</Typography>

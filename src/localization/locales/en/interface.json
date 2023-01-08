@@ -39,6 +39,7 @@
     "common.label.last_launched": "Last launched",
     "common.label.content_installed": "Content installed",
 
+	"common.label.component": "Component",
     "common.label.game_component": "Game Component",
     "common.label.other_components": "Additional Components",
     "common.label.instance_component_count": "{{0}} Instance Components",
@@ -268,6 +269,12 @@
 
 	"launch_error": "Unexpected Launch Error",
 	"launch_error.origin": "Originated from “{{0}}”",
+
+	"add_component": "Component Adder",
+	"add_component.component.group": "Available Instance Components",
+	"add_component.component.none": "Select a Component",
+	"add_component.version": "Component Version",
+	"add_component.import": "Import Component File",
 
 	"dialog.delete_instance": "Are you absolutely sure?",
 	"dialog.delete_instance.body": "This action cannot be undone.\n“{{0}}” will be lost forever! (A long time!)",
