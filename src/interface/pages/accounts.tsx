@@ -7,7 +7,7 @@ import { Grid, Image, Button, Portal, Typography, TextHeader, BasicSpinner, Drop
 
 import ImagePreview from '../components/ImagePreview';
 
-import { toast } from '../../util';
+import { i, toast } from '../../util';
 import { Account, AvatarType } from '../../../voxura';
 import voxura, { useAccounts, useCurrentAccount } from '../../voxura';
 export default function Accounts() {
@@ -36,7 +36,7 @@ export default function Accounts() {
     }}>
         <TextHeader noSelect>{t('accounts.header')}</TextHeader>
         <Grid spacing={8} padding="0 1rem" vertical>
-            <Image src="img/banners/microsoft.svg" width={112} height={24} margin="0 0 8px"/>
+            <Image src={i('auth_platform.microsoft')} width={112} height={24} margin="0 0 8px"/>
             {!current && <Typography size={14} color="$secondaryColor" noSelect whitespace="pre">
                 {t('accounts.select_account')}
             </Typography>}

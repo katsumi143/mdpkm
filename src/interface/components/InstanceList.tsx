@@ -1,10 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Grid, Button, Typography, BasicSpinner } from 'voxeliface';
 
 import Instance from './Instance';
 import { toast } from '../../util';
 import LoadingInstances from './LoadingInstances';
+import { useAppDispatch } from '../../store/hooks';
+import { setCurrentInstance } from '../../store/slices/interface';
 import voxura, { useInstances } from '../../voxura';
 import { InstanceState, Instance as VoxuraInstance } from '../../../voxura';
 
@@ -13,12 +15,16 @@ export interface InstanceListProps {
 }
 export default function InstanceList({ id }: InstanceListProps) {
     const { t } = useTranslation('interface');
+	const dispatch = useAppDispatch();
+	const container = useRef<HTMLDivElement>(null);
     const instances = useInstances();
     const [loading, setLoading] = useState(false);
     const refresh = () => {
 		if (voxura.instances.getAll().some(i => i.state !== InstanceState.None))
 			return toast('instance_refresh_none_idle');
+		dispatch(setCurrentInstance(''));
         setLoading(true);
+		container.current?.scrollTo(0, 0);
         voxura.instances.refreshInstances().then(() => setLoading(false));
     };
     return <React.Fragment>
@@ -36,7 +42,7 @@ export default function InstanceList({ id }: InstanceListProps) {
                 {t('common.action.refresh')}
             </Button>
         </Grid>
-        <Grid height="100%" spacing={8} padding="8px 8px" vertical css={{
+        <Grid ref={container} height="100%" spacing={8} padding="8px 8px" vertical css={{
 			position: 'relative',
             overflow: voxura.instances.loading ? 'hidden' : 'hidden auto'
         }}>

@@ -18,8 +18,9 @@ export function getImage(name?: string) {
         return IMAGES.placeholder;
     return IMAGES[name as keyof typeof IMAGES] ?? IMAGES.placeholder;
 }
+export const i = getImage;
 
-const DEFAULT_ICON_PATH = 'img/icons/instances/default#.svg';
+const DEFAULT_ICON_PATH = 'img/icon/instance/default#.svg';
 export function getDefaultInstanceIcon(name?: string) {
 	if (!name)
 		return IMAGES.placeholder;

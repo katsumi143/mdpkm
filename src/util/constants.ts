@@ -13,37 +13,44 @@ export const TAURI_VERSION = await getTauriVersion();
 
 export const TOTAL_SYSTEM_MEMORY = await invoke<number>('get_total_memory');
 
-export const PLACEHOLDER_ICON = 'img/icons/instances/default8.svg';
+export const PLACEHOLDER_IMAGE = 'img/icon/instance/default8.svg';
 export const INSTANCE_STATE_ICONS = [
     CheckSquare,
     Hourglass,
     CaretRightSquare
 ]
 export const IMAGES = {
-    'placeholder': 'img/icons/instances/default8.svg',
+	header: 'img/banner/brand_text.svg',
+	app_icon: 'img/icon/brand_default.svg',
+    placeholder: PLACEHOLDER_IMAGE,
 
-	'component.quilt': 'img/icons/loaders/quilt.svg',
-	'component.fabric': 'img/icons/loaders/fabric.png',
-	'component.java-agent': 'img/icons/java-agent.svg',
-	'component.java-temurin': 'img/icons/temurin.png',
-	'component.minecraft-java-server': 'img/icons/minecraft/java.png',
-    'component.minecraft-java-vanilla': 'img/icons/minecraft/java.png',
-    'component.minecraft-bedrock-vanilla': 'img/icons/minecraft/bedrock.png',
-	'component.minecraft-java-server-paper': 'img/icons/component/paper.svg',
+	'component.quilt': 'img/icon/component/minecraft-quilt.svg',
+	'component.fabric': 'img/icon/component/minecraft-fabric.svg',
+	'component.java-agent': 'img/icon/component/java-agent.svg',
+	'component.java-temurin': 'img/icon/component/java-temurin.png',
+	'component.minecraft-java-server': 'img/icon/minecraft/java.png',
+    'component.minecraft-java-vanilla': 'img/icon/minecraft/java.png',
+    'component.minecraft-bedrock-vanilla': 'img/icon/minecraft/bedrock.png',
+	'component.minecraft-java-server-paper': 'img/icon/component/minecraft-paper.svg',
 
-	'platform.modrinth': 'img/icons/platform/modrinth.svg',
-	'platform.curseforge': 'img/icons/platform/curseforge.svg',
-	'platform.feedthebeast': 'img/icons/platform/feedthebeast.png',
+	'platform.modrinth': 'img/icon/platform/modrinth.svg',
+	'platform.curseforge': 'img/icon/platform/curseforge.svg',
+	'platform.feedthebeast': 'img/icon/platform/feedthebeast.png',
 
-	'instance_banner.1': 'img/banners/instances/banner1_1.webp',
-	'instance_banner.2': 'img/banners/instances/banner2.webp',
-	'instance_banner.3': 'img/banners/instances/banner3.webp',
-	'instance_banner.4': 'img/banners/instances/banner4.webp',
-	'instance_banner.5': 'img/banners/instances/banner5.webp',
-	'instance_banner.6': 'img/banners/instances/banner6.webp',
-	'instance_banner.7': 'img/banners/instances/banner7.webp',
-	'instance_banner.8': 'img/banners/instances/banner8.webp',
+	'instance_banner.1': 'img/banner/instance/banner1_1.webp',
+	'instance_banner.2': 'img/banner/instance/banner2.webp',
+	'instance_banner.3': 'img/banner/instance/banner3.webp',
+	'instance_banner.4': 'img/banner/instance/banner4.webp',
+	'instance_banner.5': 'img/banner/instance/banner5.webp',
+	'instance_banner.6': 'img/banner/instance/banner6.webp',
+	'instance_banner.7': 'img/banner/instance/banner7.webp',
+	'instance_banner.8': 'img/banner/instance/banner8.webp',
 
-	'download.temurin': 'img/icons/temurin.png',
-	'download.minecraft_java': 'img/icons/minecraft/java.png'
+	'auth_platform.microsoft': 'img/banner/auth_platform/microsoft.svg',
+
+	'unknown_pack': 'img/icon/minecraft/unknown_pack.png',
+	'unknown_server': 'img/icon/minecraft/unknown_server.png',
+
+	'download.temurin': 'img/icon/temurin.png',
+	'download.minecraft_java': 'img/icon/minecraft/java.png'
 }

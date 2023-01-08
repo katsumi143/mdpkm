@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, Image, Typography } from 'voxeliface';
 import { TauriHeader, TauriHeaderProps } from 'voxeliface-tauri';
 
+import { i } from '../../util';
 import { setPage } from '../../store/slices/interface';
 import { AvatarType } from '../../../voxura';
 import { APP_VERSION } from '../../util/constants';
@@ -13,7 +14,7 @@ export default function DefaultHeader(props: HeaderProps) {
     const account = useCurrentAccount();
     const dispatch = useAppDispatch();
     const viewAccounts = () => dispatch(setPage('accounts'));
-    return <TauriHeader brand={<Image src="img/banners/brand_text.svg" width={148} height={48}/>} clickable={false} {...props}>
+    return <TauriHeader brand={<Image src={i('header')} width={148} height={48}/>} clickable={false} {...props}>
 		{APP_VERSION.includes('beta') && <Typography size={14} color="$secondaryColor" margin="2px 0 0" css={{
 			left: 172,
 			position: 'absolute',

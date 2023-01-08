@@ -2,10 +2,9 @@ import { open } from '@tauri-apps/api/shell';
 import { checkUpdate } from '@tauri-apps/api/updater';
 import { open as open2 } from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
-import type { GridDirection } from 'voxeliface/components/Grid';
 import React, { useState, ReactNode } from 'react';
 import { copyFile, createDir, removeFile } from '@tauri-apps/api/fs';
-import { Grid, Image, Select, Switch, Button, Tooltip, TextInput, TextHeader, Typography, InputLabel, BasicSpinner } from 'voxeliface';
+import { Grid, Image, Select, Switch, Button, Tooltip, GridProps, TextInput, TextHeader, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
 import BrowserLink from '../components/BrowserLink';
 
@@ -13,10 +12,9 @@ import { setPage } from '../../store/slices/interface';
 import PluginSystem from '../../plugins';
 import { VOXURA_VERSION } from '../../../voxura';
 import { set, saveSettings } from '../../store/slices/settings';
-import { toast, readTextFileInZip } from '../../util';
+import { i, toast, readTextFileInZip } from '../../util';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { APP_NAME, APP_VERSION, TAURI_VERSION, PLACEHOLDER_ICON } from '../../util/constants';
-
+import { APP_NAME, APP_VERSION, TAURI_VERSION, PLACEHOLDER_IMAGE } from '../../util/constants';
 export default function Settings() {
 	const { t, i18n } = useTranslation('interface');
 	const theme = useAppSelector(state => state.settings.theme);
@@ -224,7 +222,7 @@ export default function Settings() {
 					position: 'relative',
 					background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
 				}}>
-					<Image src={plugin.icon ?? PLACEHOLDER_ICON} size={48} borderRadius={8} />
+					<Image src={plugin.icon ?? PLACEHOLDER_IMAGE} size={48} borderRadius={8} />
 					<Grid spacing={2} vertical>
 						<Typography noSelect lineheight={1}>
 							{t(`mdpkm:plugin.${plugin.id}`)}
@@ -254,7 +252,7 @@ export default function Settings() {
 		<TextHeader spacious noSelect>{t('settings.about')}</TextHeader>
 		<Grid spacing={8} padding="0 1rem" vertical>
 			<Grid spacing={8} alignItems="center">
-				<Image src="img/icons/brand_default.svg" size={48} onClick={yippee} />
+				<Image src={i('app_icon')} size={48} onClick={yippee} />
 				<Grid spacing={2} vertical>
 					<Typography noSelect lineheight={1}>
 						{t('settings.about.version', [APP_NAME, APP_VERSION])}
@@ -286,7 +284,7 @@ export interface SettingProps {
 	name?: string
 	children?: ReactNode | ReactNode[]
 	noSummary?: boolean
-	direction?: GridDirection
+	direction?: GridProps["direction"]
 }
 export function Setting({ name, children, direction, noSummary }: SettingProps) {
 	const { t } = useTranslation('interface');

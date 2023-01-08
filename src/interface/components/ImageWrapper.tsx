@@ -2,13 +2,14 @@ import { Image, ImageProps } from 'voxeliface';
 import React, { useState, MouseEventHandler } from 'react';
 
 import ImagePreview from './ImagePreview';
+import { PLACEHOLDER_IMAGE } from '../../util/constants';
 export interface ImageWrapperProps extends ImageProps {
 	ratio?: number
     shadow?: boolean
     canPreview?: boolean
 	previewWidth?: number
 }
-export default function ImageWrapper({ ratio, shadow, canPreview, previewWidth, ...props }: ImageWrapperProps) {
+export default function ImageWrapper({ src, ratio, shadow, canPreview, previewWidth, ...props }: ImageWrapperProps) {
     const [preview, setPreview] = useState(false);
     const toggle: MouseEventHandler<HTMLDivElement> = event => {
 		event.stopPropagation();
@@ -16,11 +17,11 @@ export default function ImageWrapper({ ratio, shadow, canPreview, previewWidth, 
             setPreview(v => !v);
     };
     return <React.Fragment>
-        <Image {...props} onClick={toggle} css={{
+        <Image {...props} src={src ?? PLACEHOLDER_IMAGE} onClick={toggle} css={{
             cursor: canPreview && 'zoom-in',
             boxShadow: shadow && '$buttonShadow',
             ...props.css
         }}/>
-        {preview && <ImagePreview src={props.src} ratio={ratio} width={previewWidth} onClose={toggle} pixelated={props.pixelated}/>}
+        {preview && <ImagePreview src={src ?? PLACEHOLDER_IMAGE} ratio={ratio} width={previewWidth} onClose={toggle} pixelated={props.pixelated}/>}
     </React.Fragment>;
 }

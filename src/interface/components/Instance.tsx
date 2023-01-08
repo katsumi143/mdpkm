@@ -7,10 +7,10 @@ import { Link, Grid, Typography, ContextMenu } from 'voxeliface';
 import ImageWrapper from './ImageWrapper';
 
 import { toast } from '../../util';
-import voxura, { useInstance } from '../../voxura';
+import { useInstance } from '../../voxura';
 import { INSTANCE_STATE_ICONS } from '../../util/constants';
-import { setPage, setInstanceTab, setCurrentInstance } from '../../store/slices/interface';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { setPage, setInstanceTab, setCurrentInstance } from '../../store/slices/interface';
 const Animation = keyframes({
 	'0%': {
 		opacity: 0,

@@ -177,7 +177,7 @@ export const INTERNAL_PROJECTS: Record<string, ProjectData> = {
 		title: 'Essential',
 		author: 'Essential',
 		website: 'https://essential.gg',
-		icon_url: 'img/icons/essential_mod.svg',
+		icon_url: 'img/icon/project/essential.svg',
 		project_id: 'essential-container',
 		description: 'Essential is a quality of life mod that boosts Minecraft Java to the next level.'
 	}
