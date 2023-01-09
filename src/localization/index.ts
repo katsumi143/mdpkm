@@ -6,21 +6,25 @@ import enMdpkm from './locales/en/mdpkm.json';
 import enVoxura from './locales/en/voxura.json';
 import enInterface from './locales/en/interface.json';
 
+import ruMdpkm from './locales/ru/mdpkm.json';
+import ruVoxura from './locales/ru/voxura.json';
+import ruInterface from './locales/ru/interface.json';
+
 await i18n
 .use(initReactI18next)
 .init({
-    resources: {
-        en: {
+	resources: {
+		en: {
 			mdpkm: enMdpkm,
 			voxura: enVoxura,
-            interface: enInterface
-        }
-    },
-    lng: settingsSlice.getInitialState().language,
-    fallbackLng: 'en'
-});
-
-const { hot } = (import.meta as any);
-hot?.accept('./locales/en/interface.json', (data: any) => {
-    i18n.addResourceBundle('en', 'interface', data, true, true);
+			interface: enInterface
+		},
+		ru: {
+			mdpkm: ruMdpkm,
+			voxura: ruVoxura,
+			interface: ruInterface
+		}
+	},
+	lng: settingsSlice.getInitialState().language,
+	fallbackLng: 'en'
 });
