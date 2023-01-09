@@ -1,0 +1,17 @@
+{
+	"instance_category.default": "Ваши экземпляры",
+	"instance_category.favorites": "Ваше избранное",
+
+	"instance_creator.category.minecraft": "Minecraft: Java Edition (Клиент)",
+	"instance_creator.category.minecraft2": "Minecraft: Java Edition (Сервер)",
+
+	"download.temurin": "Eclipse Temurin Java Development Kit {{0}}",
+	"download.game_mod": "“{{0}}” из $t(voxura:platform.{{1}}) (Мод игры)",
+	"download.java_agent": "Java-агент",
+	"download.minecraft_java": "Minecraft: Java Edition {{0}}",
+	"download.component_manifest": "$t(voxura:component.{{0}}) {{1}} Манифест",
+	"download.component_libraries": "$t(voxura:component.{{0}}) {{1}} Библиотеки",
+	"download.minecraft_java_assets": "Minecraft: Java Edition {{0}} Ресурсы",
+	"download.minecraft_java_manifest": "Minecraft: Java Edition {{0}} Манифест",
+	"download.minecraft_java_asset_index": "Minecraft: Java Edition {{0}} Индекс ресурсы"
+}

@@ -1,0 +1,347 @@
+{
+	"common.action.use": "Использовать",
+	"common.action.edit": "Изменить",
+    "common.action.view": "Смотреть",
+	"common.action.back": "Назад",
+	"common.action.close": "Закрыть",
+	"common.action.search": "Поиск",
+    "common.action.select": "Выбрать",
+	"common.action.launch": "Запустить",
+	"common.action.delete": "Удалить",
+	"common.action.remove": "Убрать",
+	"common.action.cancel": "Отмена",
+	"common.action.confirm": "Подтвердить",
+	"common.action.install": "Установить",
+	"common.action.refresh": "Обновить",
+	"common.action.copy_id": "Копировать ID",
+    "common.action.view_all": "Смотреть все",
+	"common.action.continue": "Продолжить",
+	"common.action.copy_path": "Копировать путь к файлу",
+	"common.action.open_folder": "Открыть папку",
+	"common.action.save_changes": "Сохранить изменения",
+	"common.action.view_website": "Посетить сайт",
+	"common.action.kill_process": "Закрыть клиент {{0}}",
+    "common.action.add_component": "Добавить компонент",
+	"common.action.select_folder": "Выбрать папку",
+    "common.action.create_instance": "Создать экземпляр",
+	"common.action.import_instance": "Импорт экземпляра",
+	"common.action.check_for_updates": "Проверить обновления",
+    "common.action.return_to_instances": "Вернуться к своим экземплярам",
+
+    "common.header.instance_list": "Ваши экземпляры",
+
+    "common.label.instance_name": "Имя экземпляра",
+    "common.label.minecraft_version": "Версия Minecraft",
+    "common.label.val_version": "Версия {{val}}",
+
+	"common.label.play_time": "Время игры",
+    "common.label.instance_created": "Экземпляр создан",
+    "common.label.last_launched": "Последний запуск",
+    "common.label.content_installed": "Содержимое установлено",
+
+	"common.label.component": "Компонент",
+    "common.label.game_component": "Игровой компонент",
+    "common.label.other_components": "Дополнительные компоненты",
+    "common.label.instance_component_count": "Компонентов экземпляра: {{0}}",
+
+	"common.label.actions": "Действия",
+	"common.label.version": "Версия {{0}}",
+	"common.label.category": "Категория",
+	"common.label.platform": "Платформа",
+	"common.label.processes": "Процессы",
+	"common.label.installed": "Установлено",
+	"common.label.installing": "Установка",
+    "common.label.item_count": "Элементов: {{0}}",
+	"common.label.toggle_true": "Вкл",
+	"common.label.toggle_false": "Выкл",
+	"common.label.search_query": "Поисковый запрос",
+	"common.label.resolution_width": "Ширина",
+	"common.label.resolution_height": "Высота",
+
+	"common.label.loading": "Загрузка",
+
+	"common.label.empty_dir": "Этот каталог пуст",
+
+	"common.label.items_one": "{{count, number}} элемент",
+	"common.label.items_other": "Элементов: {{count, number}}",
+
+	"common.label.downloads_one": "{{count, number}} скачивания",
+	"common.label.downloads_other": "Скачиваний: {{count, number}}",
+
+    "common.select_group.minecraft_versions": "Версии Minecraft",
+    "common.select_group.component_versions": "Версии компонентов",
+
+    "common.input_placeholder.required": "Это поле обязательно к заполнению",
+
+    "common.date.today": "Сегодня",
+    "common.date.yesterday": "Вчера",
+    "common.date.never": "Ниразу",
+    "common.date.days_ago": "{{0}} д. наза",
+
+    "common.date.released_today": "Выпущено сегодня",
+    "common.date.released_yesterday": "Выпущено вчера",
+    "common.date.released_days": "Выпущено {{0}} д. назад",
+    "common.date.released_months": "Выпущено {{0}} мес. назад",
+    "common.date.released_years": "Выпущено {{0}} лет назад",
+
+	"common.time.hours_one": "{{count}} ч.",
+	"common.time.hours_other": "{{count}} ч.",
+
+	"common.time.minutes_one": "{{count}} мин.",
+	"common.time.minutes_other": "{{count}} мин.",
+
+	"common.time.seconds_one": "{{count}} сек.",
+	"common.time.seconds_other": "{{count}} сек.",
+
+	"common.locale.en": "English",
+	"common.locale.lv": "Latvian",
+	"common.locale.ru": "Русский",
+
+	"common.theme.default": "По умолчанию",
+	"common.theme.light": "Светлая",
+	"common.theme.dark": "Тёмная",
+	"common.theme.red": "Красная",
+	"common.theme.orange": "Оранжевая",
+	"common.theme.yellow": "Жёлтая",
+	"common.theme.green": "Зелёная",
+	"common.theme.blue": "Синяя",
+	"common.theme.purple": "Фиолетовая",
+	
+	"common.pages.servers": "Сервера",
+	"common.pages.resource_packs": "Текстурпаки",
+
+	"navigation.home": "Главная",
+	"navigation.instances": "Ваши экземпляры",
+	"navigation.skins": "Управление скинами",
+	"navigation.downloads": "Загрузки",
+	"navigation.accounts": "Аккаунты",
+	"navigation.settings": "Настройки",
+
+    "home.greeting.0": "Доброе утро,",
+    "home.greeting.1": "Добрый день,",
+    "home.greeting.2": "Добрый вечер,",
+
+    "home.news.title": "Что нового",
+    "home.recent_instances.title": "Недавние экземпляры",
+
+	"skin_management": "Управление скинами",
+	"skin_management.current": "Текущий скин",
+	"skin_management.library": "Библиотека",
+	"skin_management.ext_name": "Файл изображения PNG",
+	"skin_management.add": "Добавить новый скин",
+	"skin_management.add_modal.name": "Отображаемое имя",
+	"skin_management.add_modal.name.placeholder": "Стив",
+	"skin_management.add_modal.model": "Модель скина",
+	"skin_management.add_modal.model.category": "Модели скина",
+	"skin_management.add_modal.model.item.classic": "По умолчанию (Стив)",
+	"skin_management.add_modal.model.item.slim": "Утончённая (Алекс)",
+	"skin_management.add_modal.file": "Источник изображения",
+	"skin_management.add_modal.cape": "Плащ",
+	"skin_management.add_modal.cape.category": "Ваши плащи",
+	"skin_management.add_modal.cape.item.none": "Пусто",
+	"skin_management.add_modal.submit": "Добавить скин",
+
+	"import_file": "Импорт из файла",
+	"import_file.select": "Выберите архив экземпляров",
+	"import_file.ext_name": "Архив экземпляра mdpkm",
+
+	"downloads": "Загрузки",
+	"downloads.none": "Сейчас ничего не скачивается.",
+	"downloads.completed": "Завершено",
+
+	"download.additional_one": "(плюс {{count}} доп. скачивания)",
+	"download.additional_other": "(плюс {{count}} доп. скачиваний)",
+	"download.calculating": "Вычисление...",
+	"download.type.0": "Скачивание...",
+	"download.type.1": "Извлечение...",
+	"download.percentage": "{{0}}%",
+	"download.state.0": "Ожидание",
+	"download.state.1": "Завершено",
+	"download.state.2": "Извлечение",
+	"download.state.3": "Скачивание",
+
+	"settings.general": "Общие настройки",
+	"settings.general.theme": "Цвет темы",
+	"settings.general.theme.summary": "Измените цвет тему приложения.",
+	"settings.general.theme.category": "Темы",
+	"settings.general.startPage": "Начальная страница",
+	"settings.general.startPage.summary": "Измените начальную страницу приложения по умолчанию.",
+	"settings.general.startPage.category": "Страницы приложения",
+	"settings.general.language": "Язык",
+	"settings.general.language.category": "Языки",
+	"settings.general.showNews": "Новости на главной",
+	"settings.general.showNews.summary": "Показывает на главной странице что нового.",
+
+	"settings.instances": "Настройки экземпляра",
+	"settings.instances.resolution": "Разрешение игры по умолчанию",
+	"settings.instances.resolution.summary": "Разрешение для новых экземпляров по умолчанию.",
+
+	"settings.download": "Настройки скачивания",
+
+	"settings.plugins": "Настройки плагинов",
+	"settings.plugins.add": "Добавить плагин",
+
+	"settings.about": "Об этой сборке",
+	"settings.about.version": "{{0}} v{{1}}",
+	"settings.about.version2": "Tauri {{0}} и Voxura {{1}}",
+	"settings.about.report_bug": "Сообщить о проблеме",
+	"settings.about.github": "Открыть страницу GitHub",
+	
+	"mod_management": "Моды игры",
+	"mod_management.filter": "Фильтрация модов",
+	"mod_management.search": "Поиск модов",
+	"mod_management.warning": "Управлять модами следует только когда экземпляр не запущен.",
+
+	"platform_search": "Поиск модов",
+	"platform_search.results_one": "{{count}} результат",
+	"platform_search.results_other": "Результатов: {{count}}",
+
+	"project.author": "от {{project.author}}",
+	"project.featured": "Избранный",
+	"project.recommended": "Рекомендуемый",
+	"project.explict": "Определённый",
+	"project.side.0": "Клиент",
+	"project.side.1": "Сервер",
+	"project.side.2": "Клиент или сервер",
+	"project.side.3": "Клиент и сервер",
+	"project.followers_one": "Подписчика: {{count, number}}",
+	"project.followers_other": "Подписчиков: {{count, number}}",
+	"project.visit_site": "Посмотреть на сайте $t(voxura:platform.{{project.source.id}})",
+	"project.issue.incompatible": "Несовместимо",
+
+	"essential": "Essential",
+
+	"server_management": "Управление сервером",
+	"server_management.count_one": "Сервера: {{count}}",
+	"server_management.count_other": "Серверов: {{count}}",
+	"server_management.search": "Поиск серверов",
+	"server_management.add": "Добавить сервер",
+	"server_management.adding": "Добавление нового сервера",
+	"server_management.adding.name": "Название",
+	"server_management.adding.address": "IP-адрес",
+	"server_management.adding.address.placeholder": "funny.realserver.com",
+
+	"server.no_name": "Сервер Minecraft",
+	"server.players": "Игроков {{0}}/{{1}}",
+	"server.no_address": "Нет адреса",
+	"server.textures_accepted": "Тектсурпаки сервера включены",
+
+    "account.tag.active": "Активный",
+
+    "component.version": "Версия {{0}}",
+
+	"instance.state.0": "Готов к запуску",
+	"instance.state.1": "Запуск клиента",
+	"instance.state.2": "Клиент запущен",
+	"instance.action.view_options": "Параметры клиента",
+
+	"instance_page.tab.home": "Информация",
+	"instance_page.tab.game": "Настройки игры",
+	"instance_page.tab.game.tab.0": "Компоненты",
+	"instance_page.tab.export": "Экспорт",
+	"instance_page.tab.content": "Содержимое игры",
+
+	"instance_page.settings": "Настройки",
+	"instance_page.settings.name": "Название",
+	"instance_page.settings.memory": "Выделение памяти ({{0}} ГБ)",
+	"instance_page.settings.resolution": "Разрешение игрового окна",
+	"instance_page.settings.delete": "Удалить экземпляр",
+	"instance_page.settings.disabled": "Экземпляр можно редактировать только когда он не запущен.",
+
+	"loading_instances": "Загрузка экземпляров",
+
+	"resource_packs": "Текстурпаки",
+	"resource_packs.filter": "Фильтр текстурпаков",
+	"resource_packs.add": "Импорт текстурпака",
+	"resource_packs.search": "Поиск текстурпаков",
+
+	"accounts.header": "Управление аккаунтами",
+	"accounts.select_account": "Аккаунт не выбран.\nЧтобы играть в Minecraft, необходимо выбрать или добавить аккаунт.",
+	"accounts.action.add": "Добавить аккаунт Microsoft",
+
+	"user_account.selected": "Этот аккаунт активен",
+	"user_account.options.label": "Параметры аккаунта",
+	"user_account.options.view_namemc": "Посмотреть профиль NameMC",
+
+	"server_settings.pvp": "Битва игроков (PvP)",
+	"server_settings.gamemode": "Игровой режим",
+	"server_settings.gamemode.survival": "Выживание",
+	"server_settings.gamemode.creative": "Творческий",
+	"server_settings.gamemode.adventure": "Приключение",
+	"server_settings.world_name": "Название мира",
+
+	"select_file": "Выбрать файл",
+	"select_file.none": "Файл не выбран",
+
+	"launch_error": "Неожиданная ошибка при запуске",
+	"launch_error.origin": "Возникает из-за “{{0}}”",
+
+	"add_component": "Добавление компонентов",
+	"add_component.component.group": "Доступные компоненты экземпляра",
+	"add_component.component.none": "Выберите компонент",
+	"add_component.version": "Версия компонента",
+	"add_component.import": "Импорт файла компонента",
+
+	"dialog.delete_instance": "Вы абсолютно уверены?",
+	"dialog.delete_instance.body": "Это действие нельзя отменить.\n“{{0}}” будет навсегда утерян! (Долгое время!)",
+
+	"error.generic": "Что-то пошло не так!",
+
+	"toast.plugin_error": "Ошибка плагина",
+	"toast.plugin_loaded": "Плагин загружен",
+	"toast.plugin_loaded.body": "“{{0}}” успешно загружен.",
+	"toast.plugin_load_fail": "$t(interface:toast.plugin_error)",
+	"toast.plugin_load_fail.body": "Не удаётся загрузить “{{0}}”.",
+
+	"toast.download_started": "Скачивание началось",
+	"toast.download_started.body": "{{0}}",
+	"toast.download_finished": "Скачивание завершено",
+	"toast.download_finished.body": "{{0}}",
+
+	"toast.launch_error": "$t(interface:launch_error)",
+	"toast.launch_error.body": "Произошла неизвестная ошибка при запуске “{{0}}”.",
+	"toast.instance_launched": "Экземпляр клиента запущен",
+	"toast.instance_launched.body": "{{0}}",
+
+	"toast.changes_saved": "Изменения были сохранены",
+	"toast.changes_saved.body": "Сохранение изменений, внесенных в “{{0}}”.",
+
+	"toast.auth_success": "Аккаунт добавлен",
+	"toast.auth_success.body": "“{{0}}” был добавлен.",
+	"toast.account_removed": "Аккаунт удалён",
+	"toast.account_removed.body": "“{{0}}” был удалён.",
+	"toast.auth_check_browser": "Проверте браузер",
+	"toast.auth_check_browser.body": "В браузере по умолчанию открылась новая вкладка.",
+
+	"toast.skin_saved": "Скин сохранён",
+	"toast.skin_saved.body": "$t(interface:toast.auth_success.body, [\"{{0}}\"])",
+	"toast.skin_uploaded": "Скин загружен",
+	"toast.skin_uploaded.body": "“{{0}}” был загружен и применён.",
+
+	"toast.check_connection": "$t(interface:error.generic)",
+	"toast.check_connection.body": "Проверьте подключение к интернету.",
+
+	"toast.no_update": "Нет обновлений",
+	"toast.no_update.body": "mdpkm уже обновлён.",
+
+	"toast.copied": "Скопировано в буфер обмена",
+	"toast.copied_id": "$t(interface:toast.copied)",
+	"toast.copied_id.body": "ID “{{0}}” был скопирован.",
+
+	"toast.install_fail": "$t(interface:error.generic)",
+	"toast.install_fail.body": "Произошла неизвестная ошибка при установке “{{0}}”.",
+
+	"toast.download_fail": "$t(interface:error.generic)",
+	"toast.download_fail.body": "Произошла неизвестная ошибка при скачивании “{{0}}”.",
+
+	"toast.project_incompatible": "$t(interface:error.generic)",
+	"toast.project_incompatible.body": "Совместимых версий для экземпляра “{{0}}” не найдено.",
+
+	"toast.unknown_error": "$t(interface:error.generic)",
+	"toast.unknown_error.body": "Произошла неизвестная ошибка.",
+
+	"toast.action_fail": "Действие не может быть выполнено",
+
+	"toast.instance_refresh_none_idle": "$t(interface:toast.action_fail)",
+	"toast.instance_refresh_none_idle.body": "Для обновления списка экземпляров все экземпляры не должны быть запущены."
+}
