@@ -1,31 +1,33 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { readJsonFile, writeJsonFile } from 'voxelified-commons/tauri';
 
+import joi from '../../util/joi';
 import { APP_DIR } from '../../util/constants';
 export interface Settings {
     theme: string
-    uiStyle: string
-    account: string
     language: string
-	'download.useLinks': boolean
-    'instances.showBanner': boolean
-    'instances.defaultResolution': number[]
-    'instances.modSearchSummaries': boolean
-};
+	showNews: boolean
+    instances: {
+		resolution: [number, number]
+	}
+}
 const settingsPath = `${APP_DIR}/settings.json`;
 const settings = await readJsonFile<Settings>(settingsPath).catch(console.warn);
 export const settingsSlice = createSlice({
     name: 'settings',
-    initialState: {
-        theme: settings?.theme ?? 'default',
-        uiStyle: settings?.uiStyle ?? 'default',
-        account: settings?.account,
-        language: settings?.language ?? 'en',
-		'download.useLinks': settings?.['download.useLinks'] ?? true,
-        'instances.showBanner': settings?.['instances.showBanner'] ?? true,
-        'instances.defaultResolution': settings?.['instances.defaultResolution'] ?? [900, 500],
-        'instances.modSearchSummaries': settings?.['instances.modSearchSummaries'] ?? true
-    },
+	initialState: await joi.object({
+		theme: joi.string().default('dark'),
+		showNews: joi.bool().default(true),
+		language: joi.string().default('en'),
+		startPage: joi.string().valid('home', 'instances').default('home'),
+		instances: joi.object({
+			resolution: joi.array().items(joi.number()).default([800, 400])
+		}).default({
+			resolution: [800, 400]
+		})
+	}).validateAsync(settings, {
+		stripUnknown: true
+	}),
     reducers: {
         set: (state: any, { payload: [key, value] }: PayloadAction<[keyof Settings, any]>) => {
             state[key] = value;

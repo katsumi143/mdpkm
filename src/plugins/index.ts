@@ -6,6 +6,7 @@ import * as TauriAPI from '@tauri-apps/api';
 import * as Reacti18n from 'react-i18next';
 import { readDir, createDir, readTextFile } from '@tauri-apps/api/fs';
 
+import Store from '../store';
 import * as Util from '../util';
 import * as mdpkm from '../mdpkm';
 import { APP_DIR } from '../util/constants';
@@ -76,6 +77,7 @@ export default class PluginSystem {
 
 const global = globalThis as any;
 global.Util = Util;
+global.Store = Store;
 global.mdpkm = mdpkm;
 global.React = React;
 global.Voxura = Voxura;

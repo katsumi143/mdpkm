@@ -10,8 +10,8 @@ import LoadingInstances from '../components/LoadingInstances';
 import mdpkm from '../../mdpkm';
 import voxura from '../../voxura';
 import { setPage } from '../../store/slices/interface';
-import { useAppDispatch } from '../../store/hooks';
 import { AvatarType, AvatarStyle } from '../../../voxura';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useCurrentAccount, useRecentInstances } from '../../voxura';
 export default function Home() {
 	const { t } = useTranslation('interface');
@@ -19,10 +19,12 @@ export default function Home() {
 	const account = useCurrentAccount();
 	const dispatch = useAppDispatch();
 	const greeting = useMemo(() => getGreeting(), []);
+	const showNews = useAppSelector(state => state.settings.showNews);
 	const [news, setNews] = useState<any[] | null>(null);
 	useEffect(() => {
-		mdpkm.getNewsSource('minecraft')?.getNews().then(news => setNews(news.slice(0, 10)));
-	}, []);
+		if (showNews)
+			mdpkm.getNewsSource('minecraft')?.getNews().then(news => setNews(news.slice(0, 10)));
+	}, [showNews]);
 
 	const loadingInstances = voxura.instances.loading;
 	return <Grid width="100%" height="inherit" vertical css={{ overflow: 'hidden' }}>
@@ -58,7 +60,7 @@ export default function Home() {
 						</Typography>
 					</Grid>
 				</Grid>
-				<Grid spacing={8} vertical>
+				{showNews && <Grid spacing={8} vertical>
 					<Grid justifyContent="space-between" css={{
 						borderBottom: '1px solid $secondaryBorder2',
 						paddingBottom: 6
@@ -69,7 +71,7 @@ export default function Home() {
 					<Grid width="100%" spacing={8} borderRadius={8} css={{ overflow: 'hidden' }}>
 						{news?.map((item, key) => <NewsItem key={key} item={item}/>)}
 					</Grid>
-				</Grid>
+				</Grid>}
 			</Grid>
 			<Grid width="35%" height="100%" padding="12px 1rem 12px 0" vertical>
 				<Grid justifyContent="space-between" css={{

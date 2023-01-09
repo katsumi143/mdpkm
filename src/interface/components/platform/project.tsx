@@ -25,7 +25,6 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
     const { t } = useTranslation('interface');
 	const projects = useStoredValue<VoxuraStore["projects"]>('projects', {});
     const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
-    const showSummary = useAppSelector(state => state.settings['instances.modSearchSummaries']);
     const [project, setProject] = useState(data);
     const [loading, setLoading] = useState(!data);
     const installed = instance ? Object.entries(projects).filter(e => instance.modifications.some(m => m.md5 === e[0])).some(e => e[1].id === (id ?? data?.id)) : false;
@@ -134,9 +133,9 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
 							</Typography>
 						}
 					</Grid>
-					{showSummary && <Typography size={isCompact ? 12 : 14} color="$secondaryColor" weight={400} family="$secondary" noSelect textalign="left" whitespace="pre-wrap">
+					<Typography size={isCompact ? 12 : 14} color="$secondaryColor" weight={400} family="$secondary" noSelect textalign="left" whitespace="pre-wrap">
 						{project.summary}
-					</Typography>}
+					</Typography>
 					<Grid margin="2px 0 0" spacing={16}>
 						<EnvironmentLabel client={project.clientSide} server={project.serverSide}/>
 						{project.displayCategories.map(category =>

@@ -18,12 +18,11 @@ import { APP_NAME, APP_VERSION, TAURI_VERSION, PLACEHOLDER_IMAGE } from '../../u
 export default function Settings() {
 	const { t, i18n } = useTranslation('interface');
 	const theme = useAppSelector(state => state.settings.theme);
-	const uiStyle = useAppSelector(state => state.settings.uiStyle);
 	const dispatch = useAppDispatch();
 	const language = useAppSelector(state => state.settings.language);
-	const showInstanceBanner = useAppSelector(state => state.settings['instances.showBanner']);
-	const modSearchSummaries = useAppSelector(state => state.settings['instances.modSearchSummaries']);
-	const defaultInstanceResolution = useAppSelector(state => state.settings['instances.defaultResolution']);
+	const showNews = useAppSelector(state => state.settings.showNews);
+	const startPage = useAppSelector(state => state.settings.startPage);
+	const defaultInstanceResolution = useAppSelector(state => state.settings.instances.resolution);
 	const [_, setRerender] = useState(0);
 	const [updating, setUpdating] = useState(false);
 	const changeLanguage = (lang: string) => {
@@ -73,180 +72,154 @@ export default function Settings() {
 		overflow: 'auto'
 	}}>
 		<TextHeader noSelect>{t('settings.general')}</TextHeader>
-		<Grid width="30%" spacing={8} padding="0 1rem" vertical>
-			<Setting name="general.theme">
-				<Select.Minimal value={theme} onChange={changeTheme}>
-					<Select.Group name={t('app.mdpkm.settings.general.theme.category')}>
-						<Select.Item value="default">
-							{t('common.theme.default')}
-						</Select.Item>
-						<Select.Item value="light">
-							{t('common.theme.light')}
-						</Select.Item>
-						<Select.Item value="dark">
-							{t('common.theme.dark')}
-						</Select.Item>
-						<Select.Item value="red">
-							{t('common.theme.red')}
-						</Select.Item>
-						<Select.Item value="orange">
-							{t('common.theme.orange')}
-						</Select.Item>
-						<Select.Item value="yellow">
-							{t('common.theme.yellow')}
-						</Select.Item>
-						<Select.Item value="green">
-							{t('common.theme.green')}
-						</Select.Item>
-						<Select.Item value="blue">
-							{t('common.theme.blue')}
-						</Select.Item>
-						<Select.Item value="purple">
-							{t('common.theme.purple')}
-						</Select.Item>
-					</Select.Group>
-				</Select.Minimal>
-			</Setting>
-			<Setting name="general.uiStyle">
-				<Select.Minimal value={uiStyle} onChange={v => setSetting('uiStyle', v)}>
-					<Select.Group name={t('app.mdpkm.settings.general.uiStyle.category')}>
-						<Select.Item value="default">
-							{t('app.mdpkm.settings.general.uiStyle.items.default')}
-						</Select.Item>
-						<Select.Item value="compact">
-							{t('app.mdpkm.settings.general.uiStyle.items.compact')}
-						</Select.Item>
-					</Select.Group>
-				</Select.Minimal>
-			</Setting>
-			<Setting name="general.language" noSummary>
-				<Select.Minimal value={language} onChange={changeLanguage}>
-					<Select.Group name={t('app.mdpkm.settings.general.language.category')}>
-						<Select.Item value="en">
-							{t('common.locale.en')}
-						</Select.Item>
-						<Select.Item value="lv">
-							{t('common.locale.lv')}
-						</Select.Item>
-						<Select.Item value="ru">
-							{t('common.locale.ru')}
-						</Select.Item>
-					</Select.Group>
-				</Select.Minimal>
-			</Setting>
-		</Grid>
+		<Setting name="general.theme">
+			<Select.Minimal value={theme} onChange={changeTheme}>
+				<Select.Group name={t('settings.general.theme.category')}>
+					<Select.Item value="default">
+						{t('common.theme.default')}
+					</Select.Item>
+					<Select.Item value="light">
+						{t('common.theme.light')}
+					</Select.Item>
+					<Select.Item value="dark">
+						{t('common.theme.dark')}
+					</Select.Item>
+					<Select.Item value="red">
+						{t('common.theme.red')}
+					</Select.Item>
+					<Select.Item value="orange">
+						{t('common.theme.orange')}
+					</Select.Item>
+					<Select.Item value="yellow">
+						{t('common.theme.yellow')}
+					</Select.Item>
+					<Select.Item value="green">
+						{t('common.theme.green')}
+					</Select.Item>
+					<Select.Item value="blue">
+						{t('common.theme.blue')}
+					</Select.Item>
+					<Select.Item value="purple">
+						{t('common.theme.purple')}
+					</Select.Item>
+				</Select.Group>
+			</Select.Minimal>
+		</Setting>
+		<Setting name="general.startPage">
+			<Select.Minimal value={startPage} onChange={v => setSetting('startPage', v)}>
+				<Select.Group name={t('settings.general.startPage.category')}>
+					<Select.Item value="home">
+						{t('navigation.home')}
+					</Select.Item>
+					<Select.Item value="instances">
+						{t('navigation.instances')}
+					</Select.Item>
+				</Select.Group>
+			</Select.Minimal>
+		</Setting>
+		<Setting name="general.language" noSummary>
+			<Select.Minimal value={language} onChange={changeLanguage}>
+				<Select.Group name={t('settings.general.language.category')}>
+					<Select.Item value="en">
+						{t('common.locale.en')}
+					</Select.Item>
+					<Select.Item value="lv">
+						{t('common.locale.lv')}
+					</Select.Item>
+					<Select.Item value="ru">
+						{t('common.locale.ru')}
+					</Select.Item>
+				</Select.Group>
+			</Select.Minimal>
+		</Setting>
+		<Setting name="general.showNews">
+			<Grid spacing={8}>
+				<Switch
+					value={showNews}
+					onChange={v => setSetting('showNews', v)}
+				/>
+				<Typography size={14} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
+					{t(`common.label.toggle_${showNews}`)}
+				</Typography>
+			</Grid>
+		</Setting>
 
 		<TextHeader spacious noSelect>{t('settings.instances')}</TextHeader>
-		<Grid spacing={8} padding="0 1rem" vertical>
-			<Setting name="instances.pageBanner" direction="horizontal">
-				<Switch
-					value={showInstanceBanner}
-					onChange={v =>
-						setSetting('instances.showBanner', v)
+		<Setting name="instances.resolution" direction="horizontal">
+			<Grid vertical>
+				<InputLabel>
+					{t('common.label.resolution_width')}
+				</InputLabel>
+				<TextInput
+					width={80}
+					value={Math.max(0, defaultInstanceResolution[0] || 0).toString()}
+					onChange={value =>
+						setSetting('instances.defaultResolution',
+							[parseInt(value), defaultInstanceResolution[1]]
+						)
 					}
 				/>
-				<Typography size={13} color="$secondaryColor" noSelect>
-					{t(`common.label.toggle_${showInstanceBanner}`)}
-				</Typography>
-			</Setting>
-			<Setting name="instances.defaultResolution" direction="horizontal">
-				<Grid vertical>
-					<InputLabel>
-						{t('common.label.resolution_width')}
-					</InputLabel>
-					<TextInput
-						width={80}
-						value={Math.max(0, defaultInstanceResolution[0] || 0).toString()}
-						onChange={value =>
-							setSetting('instances.defaultResolution',
-								[parseInt(value), defaultInstanceResolution[1]]
-							)
-						}
-					/>
-				</Grid>
-				<Grid vertical>
-					<InputLabel>
-						{t('common.label.resolution_height')}
-					</InputLabel>
-					<TextInput
-						width={80}
-						value={Math.max(0, defaultInstanceResolution[1] || 0).toString()}
-						onChange={value =>
-							setSetting('instances.defaultResolution',
-								[defaultInstanceResolution[0], parseInt(value)]
-							)
-						}
-					/>
-				</Grid>
-			</Setting>
-			<Setting name="instances.modSearchSummaries" direction="horizontal">
-				<Switch
-					value={modSearchSummaries}
-					onChange={v =>
-						setSetting('instances.modSearchSummaries', v)
+			</Grid>
+			<Grid vertical>
+				<InputLabel>
+					{t('common.label.resolution_height')}
+				</InputLabel>
+				<TextInput
+					width={80}
+					value={Math.max(0, defaultInstanceResolution[1] || 0).toString()}
+					onChange={value =>
+						setSetting('instances.defaultResolution',
+							[defaultInstanceResolution[0], parseInt(value)]
+						)
 					}
 				/>
-				<Typography size={13} color="$secondaryColor" noSelect>
-					{t(`common.label.toggle_${modSearchSummaries}`)}
-				</Typography>
-			</Setting>
-		</Grid>
+			</Grid>
+		</Setting>
 
 		<TextHeader spacious noSelect>{t('settings.download')}</TextHeader>
-		<Grid spacing={8} padding="0 1rem" vertical>
-			
-		</Grid>
+		
 
-		<TextHeader spacious noSelect>{t('settings.plugins', {
-			val: Object.keys(PluginSystem.loaded).length
-		})}</TextHeader>
-		<Grid spacing={8} padding="0 1rem" vertical>
-			<Typography size={14} color="$secondaryColor" weight={400} family="$secondary" noSelect><span>
-				Not sure how to install a plugin? Check out the <BrowserLink href="https://docs.mdpkm.voxelified.com/docs/tutorials/install-plugin">
-					guide
-				</BrowserLink>!
-			</span></Typography>
-			<Grid spacing={8}>
-				<Button theme="accent" onClick={addPlugin}>
-					<IconBiPlusLg/>
-					{t('settings.plugins.add')}
-				</Button>
-				<Button theme="secondary" onClick={() => open(PluginSystem.path)}>
-					<IconBiFolder2Open/>
-					{t('common.action.open_folder')}
-				</Button>
-			</Grid>
-			{Object.values(PluginSystem.loaded).map(plugin =>
-				<Grid key={plugin.id} padding={8} spacing={8} smoothing={1} alignItems="center" borderRadius={16} css={{
-					border: 'transparent solid 1px',
-					position: 'relative',
-					background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
-				}}>
-					<Image src={plugin.icon ?? PLACEHOLDER_IMAGE} size={48} borderRadius={8} />
-					<Grid spacing={2} vertical>
-						<Typography noSelect lineheight={1}>
-							{t(`mdpkm:plugin.${plugin.id}`)}
-						</Typography>
-						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
-							{t('common.label.version', [plugin.version])}
-						</Typography>
-					</Grid>
-					<Grid spacing={8} css={{ right: 16, position: 'absolute' }}>
-						<Tooltip.Root delayDuration={250}>
-							<Tooltip.Trigger asChild>
-								<Button theme="secondary" disabled>
-									<IconBiTrash3Fill />
-									{t('common.action.remove')}
-								</Button>
-							</Tooltip.Trigger>
-							<Tooltip.Content side="top" sideOffset={4}>
-								<Tooltip.Arrow />
-								{t('app.mdpkm.common:tooltips.feature_unavailable')}
-							</Tooltip.Content>
-						</Tooltip.Root>
-					</Grid>
+		<TextHeader spacious noSelect>{t('settings.plugins')}</TextHeader>
+		{Object.values(PluginSystem.loaded).map(plugin =>
+			<Grid key={plugin.id} margin="0 0 8px" padding={8} spacing={8} smoothing={1} alignItems="center" borderRadius={16} css={{
+				border: 'transparent solid 1px',
+				position: 'relative',
+				background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
+			}}>
+				<Image src={plugin.icon ?? PLACEHOLDER_IMAGE} size={48} borderRadius={8} />
+				<Grid spacing={2} vertical>
+					<Typography noSelect lineheight={1}>
+						{t(`mdpkm:plugin.${plugin.id}`)}
+					</Typography>
+					<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
+						{t('common.label.version', [plugin.version])}
+					</Typography>
 				</Grid>
-			)}
+				<Grid spacing={8} css={{ right: 16, position: 'absolute' }}>
+					<Tooltip.Root delayDuration={250}>
+						<Tooltip.Trigger asChild>
+							<Button theme="secondary" disabled>
+								<IconBiTrash3Fill />
+								{t('common.action.remove')}
+							</Button>
+						</Tooltip.Trigger>
+						<Tooltip.Content side="top" sideOffset={4}>
+							<Tooltip.Arrow />
+							{t('app.mdpkm.common:tooltips.feature_unavailable')}
+						</Tooltip.Content>
+					</Tooltip.Root>
+				</Grid>
+			</Grid>
+		)}
+		<Grid margin="8px 0 0" spacing={8}>
+			<Button theme="accent" onClick={addPlugin}>
+				<IconBiPlusLg/>
+				{t('settings.plugins.add')}
+			</Button>
+			<Button theme="secondary" onClick={() => open(PluginSystem.path)}>
+				<IconBiFolder2Open/>
+				{t('common.action.open_folder')}
+			</Button>
 		</Grid>
 
 		<TextHeader spacious noSelect>{t('settings.about')}</TextHeader>
@@ -289,7 +262,7 @@ export interface SettingProps {
 export function Setting({ name, children, direction, noSummary }: SettingProps) {
 	const { t } = useTranslation('interface');
 	const stringBase = `settings.${name ?? 'placeholder'}`;
-	return <Grid width="100%" css={{ marginBottom: 16 }}>
+	return <Grid width="30%" padding="0 1rem 16px">
 		<Grid width="100%" spacing={4} padding={4} vertical>
 			<Typography noSelect lineheight={1}>
 				{t(stringBase)}

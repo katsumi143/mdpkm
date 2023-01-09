@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ProjectType } from '../../../voxura';
+import { settingsSlice } from './settings';
 export const interfaceSlice = createSlice({
     name: 'interface',
     initialState: {
-        page: 'home',
+        page: settingsSlice.getInitialState().startPage,
 		contentTab: 0,
 		searchType: ProjectType.Mod,
 		instanceTab: 0,

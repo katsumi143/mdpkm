@@ -161,14 +161,20 @@
 	"download.state.3": "Downloading",
 
 	"settings.general": "General Settings",
-	"settings.general.theme": "Theme",
-	"settings.general.uiStyle": "Interface Style",
+	"settings.general.theme": "Color Theme",
+	"settings.general.theme.summary": "Change the application color theme.",
+	"settings.general.theme.category": "Themes",
+	"settings.general.startPage": "Startup Page",
+	"settings.general.startPage.summary": "Change the default application start page.",
+	"settings.general.startPage.category": "Application Pages",
 	"settings.general.language": "Language",
+	"settings.general.language.category": "Languages",
+	"settings.general.showNews": "Home News",
+	"settings.general.showNews.summary": "Shows what's new on the home page.",
 
 	"settings.instances": "Instance Settings",
-	"settings.instances.pageBanner": "Page Banner",
-	"settings.instances.defaultResolution": "Default Game Resolution",
-	"settings.instances.modSearchSummaries": "Mod Search Summaries",
+	"settings.instances.resolution": "Default Game Resolution",
+	"settings.instances.resolution.summary": "Default resolution to use for new instances.",
 
 	"settings.download": "Download Settings",
 
