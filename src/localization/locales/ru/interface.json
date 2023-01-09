@@ -65,7 +65,7 @@
 	"common.label.items_one": "{{count, number}} элемент",
 	"common.label.items_other": "Элементов: {{count, number}}",
 
-	"common.label.downloads_one": "{{count, number}} скачивание",
+	"common.label.downloads_one": "{{count, number}} скачивания",
 	"common.label.downloads_other": "Скачиваний: {{count, number}}",
 
     "common.select_group.minecraft_versions": "Версии Minecraft",
@@ -108,7 +108,7 @@
 	"common.theme.purple": "Фиолетовая",
 	
 	"common.pages.servers": "Сервера",
-	"common.pages.resource_packs": "Пакеты ресурсов",
+	"common.pages.resource_packs": "Текстурпаки",
 
 	"navigation.home": "Главная",
 	"navigation.instances": "Ваши экземпляры",
@@ -291,7 +291,7 @@
 	"toast.plugin_loaded": "Плагин загружен",
 	"toast.plugin_loaded.body": "“{{0}}” успешно загружен.",
 	"toast.plugin_load_fail": "$t(interface:toast.plugin_error)",
-	"toast.plugin_load_fail.body": "Неудаётся загрузить “{{0}}”.",
+	"toast.plugin_load_fail.body": "Не удаётся загрузить “{{0}}”.",
 
 	"toast.download_started": "Скачивание началось",
 	"toast.download_started.body": "{{0}}",
