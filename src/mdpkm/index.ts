@@ -97,6 +97,8 @@ export const INSTANCE_CREATORS: InstanceCreator[] = [
 
 export { default as InstanceCreator } from './instance-creator';
 
+import IrisShaders from '../interface/components/IrisShaders';
+import PluginManagement from '../interface/components/PluginManagement';
 import ServerManagement from '../interface/components/ServerManagement';
 import JavaServerSettings from '../interface/components/JavaServerSettings';
 import ResourcePackManagement from '../interface/components/ResourcePackManagement';
@@ -106,6 +108,7 @@ export const COMPONENT_EXTRAS: Record<Component["id"], ComponentExtra> = {
 		enabledContentTabs: ['essential', 'modSearch', 'modManagement']
 	},
 	[MinecraftFabric.id]: {
+		contentTabs: [IrisShaders],
 		enabledContentTabs: ['essential', 'modSearch', 'modManagement']
 	},
 	[MinecraftJavaClient.id]: {
@@ -114,6 +117,9 @@ export const COMPONENT_EXTRAS: Record<Component["id"], ComponentExtra> = {
 	},
 	[MinecraftJavaServer.id]: {
 		settingsTabs: [JavaServerSettings]
+	},
+	[MinecraftPaper.id]: {
+		contentTabs: [PluginManagement]
 	}
 }
 

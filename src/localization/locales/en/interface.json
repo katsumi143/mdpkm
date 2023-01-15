@@ -192,6 +192,15 @@
 	"mod_management.search": "Search for Mods",
 	"mod_management.warning": "You should only manage mods when your Instance is idle.",
 
+	"plugins": "Server Plugins",
+	"plugins.filter": "Filter Plugins",
+	"plugins.search": "Search for Plugins",
+	"plugins.warning": "You should only manage plugins when your Instance is idle.",
+
+	"shaders": "Iris Shaders",
+	"shaders.filter": "Filter Shaders",
+	"shaders.search": "Search for Shaders",
+
 	"platform_search": "Modification Search",
 	"platform_search.results_one": "{{count}} Result",
 	"platform_search.results_other": "{{count}} Results",

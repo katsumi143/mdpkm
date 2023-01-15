@@ -8,11 +8,11 @@ import ImageWrapper from '../ImageWrapper';
 import EnvironmentLabel from './envLabel';
 
 import { toast } from '../../../util';
+import { useDownloads } from '../../../voxura';
 import { useAppSelector } from '../../../store/hooks';
 import { useStoredValue } from '../../../../voxura/src/storage';
-import { PLACEHOLDER_IMAGE } from '../../../util/constants';
 import { CompatibilityError } from '../../../../voxura/src/instance';
-import { Project, Platform, Instance, VoxuraStore } from '../../../../voxura';
+import { Project, Platform, Instance, VoxuraStore, DownloadState } from '../../../../voxura';
 export interface ProjectProps {
     id?: string
     data?: Project<any>
@@ -28,7 +28,7 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
     const [project, setProject] = useState(data);
     const [loading, setLoading] = useState(!data);
     const installed = instance ? Object.entries(projects).filter(e => instance.modifications.some(m => m.md5 === e[0])).some(e => e[1].id === (id ?? data?.id)) : false;
-    const installing = false;//downloading?.some(d => d.id === (mod?.id ?? mod?.project_id));
+    const installing = useDownloads().some(d => d.id === 'project' && d.extraData[0] === project?.displayName && !installed);
     const install = () => instance?.installProject(project!).catch(err => {
 		if (err instanceof CompatibilityError)
 			toast('project_incompatible', [project?.displayName]);

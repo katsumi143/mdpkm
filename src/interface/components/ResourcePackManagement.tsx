@@ -142,7 +142,7 @@ export function ResourcePack({ item }: ResourcePackProps) {
     const [previewIcon, setPreviewIcon] = useState(false);
 
 	const icon = useMemo(() => item.icon ? Buffer.from(item.icon).toString('base64') : null, [item.icon]);
-    const packIcon = icon ? `data:image/png;base64,${icon}` : 'img/icons/minecraft/unknown_pack.png';
+    const packIcon = icon ? `data:image/png;base64,${icon}` : 'img/icon/minecraft/unknown_pack.png';
     return <Grid padding={8} spacing={isCompact ? 10 : 12} alignItems="center" background="$secondaryBackground2" borderRadius={16} css={{
         border: 'transparent solid 1px',
         position: 'relative',

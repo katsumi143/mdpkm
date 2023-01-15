@@ -23,6 +23,8 @@ export default function Content({ instance }: ContentProps) {
 	const useEssential = extras.some(([e]) => e?.enabledContentTabs?.includes('essential'));
 	const useModManagement = extras.some(([e]) => e?.enabledContentTabs?.includes('modManagement'));
     const setTab = (value: number) => dispatch(setContentTab(value));
+
+	let tabCount = 0;
 	return <React.Fragment>
 		<Tabs
 			value={tab}
@@ -53,7 +55,7 @@ export default function Content({ instance }: ContentProps) {
 				<Project id="essential-container" platform={voxura.getPlatform('mdpkm')} instance={instance}/>
 			</TabItem>
 			{extras.map(extra => extra[0]?.contentTabs?.map((ContentTab, key) =>
-				<TabItem key={key} name={t(`voxura:component.${extra[1]}.content_tab.${key}`)} icon={<IconBiList fontSize={11}/>} value={3 + key}>
+				<TabItem key={key} name={t(`voxura:component.${extra[1]}.content_tab.${key}`)} icon={<IconBiList fontSize={11}/>} value={3 + tabCount++}>
 					<ContentTab instance={instance}/>
 				</TabItem>
 			)).flat().filter(x => x)}

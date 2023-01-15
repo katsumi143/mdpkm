@@ -19,7 +19,7 @@ Object.defineProperty(Instance.prototype, 'defaultIcon', {
 const voxura = new Voxura(APP_DIR);
 voxura.addPlatform(mdpkmPlatform);
 
-const hiddenDownloads = ['', 'component_library'];
+const hiddenDownloads = ['', 'project', 'component_library'];
 voxura.downloader.listenForEvent('downloadStarted', (download: Download) => {
 	if (hiddenDownloads.indexOf(download.id) === -1)
     	toast('download_started', [t(`mdpkm:download.${download.id}`, download.extraData)], DownloadIcon);

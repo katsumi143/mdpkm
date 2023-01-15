@@ -1,8 +1,8 @@
 <dl>
-  <img src="./public/img/banners/brand_text.svg#gh-dark-mode-only" alt="mdpkm Text" align="left" height="64"/>
-  <img src="./public/img/banners/brand_text_dark.svg#gh-light-mode-only" alt="mdpkm Text" align="left" height="64"/>
+  <img src="./public/img/banner/brand_text.svg#gh-dark-mode-only" alt="mdpkm Text" align="left" height="64"/>
+  <img src="./public/img/banner/brand_text_dark.svg#gh-light-mode-only" alt="mdpkm Text" align="left" height="64"/>
 </dl>
-<br/><br/><br/>
+<br/><br/>
 
 ### mdpkm is an all-in-one application for Minecraft!
 🦑 squid game</br>
@@ -20,29 +20,30 @@ You can also get it from:<br/>
 ## 🤯 Features
 | Feature           | Summary                                                           | Status                 |
 |-------------------|-------------------------------------------------------------------|------------------------|
-| Game Mods         | Vanilla not enough? Easily get more content with mods!            | ✅                    |
-| Modpacks          | Get community-made modpacks to play with!                         | ✅                    |
-| Bedrock Edition   | Basic support for Minecraft Bedrock Edition!                      | ✅ (Windows 10+ only) |
-| Exporting         | Your Instances can be exported to share with the world!           | ✅ (Custom Format)    |
-| Plugins           | Extend mdpkm's functionality with custom plugins!                 | ✅                    |
+| Game Mods         | Easily install mods via Mod Management.                           | ✅                    |
+| Modpacks          | placeholder                                                       | 🏗️                    |
+| Bedrock Edition   | Basic support for Minecraft Bedrock Edition!                      | 🏗️ (Windows 10+ only) |
+| Skin Library      | placeholder                                                       | ✅                    |
+| Exporting         | placeholder                                                       | 🏗️ (Custom Format)    |
+| Plugins           | Extend mdpkm's functionality with custom plugins!                 | 🏗️                    |
 <br/><br/>
 
 ## 🦑 Built-in Support
 | Component Name                                | Status             |
 |-----------------------------------------------|--------------------|
-| Java Edition (Vanilla)                        | ✅                 |
-| Bedrock Edition (Vanilla)                     | ✅ (Unstable)      |
+| Minecraft: Java Edition                       | ✅                 |
+| Minecraft: Bedrock Edition                    | 🏗️ (Unstable)      |
 | [Fabric Loader](https://fabricmc.net)         | ✅                 |
-| [Forge Modloader](https://minecraftforge.net) | ✅ (Unstable)      |
+| [Forge Modloader](https://minecraftforge.net) | 🏗️ (Unstable)      |
 | [Quilt Loader](https://quiltmc.org)           | ✅ (Beta Software) |
 <br/>
 
 ## 🌐 Localization
-| Language | Translators                                | Status  |
-|----------|--------------------------------------------|---------|
-| English  |                                            | ✅      |
-| Latvian  | [JanisNied](https://twitter.com/JanisNied) | Pending |
-| Russian  | [JanisNied](https://twitter.com/JanisNied) | Pending |
+| Language | Translators                                                                         | Status  |
+|----------|-------------------------------------------------------------------------------------|---------|
+| English  |                                                                                     | ✅      |
+| Latvian  | [JanisNied](https://github.com/JanisNied)                                           | Pending |
+| Russian  | [vanja-san](https://github.com/vanja-san) [JanisNied](https://github.com/JanisNied) | N/A     |
 <br/>
 
 ## 🔌 Plugins
@@ -60,10 +61,3 @@ Dedicated usage section coming soon!
 ## 🥰 Contributing
 Dedicated contribution section coming soon!
 <br/><br/>
-
-## 🔗 Links
-<dl>
-  <img src="https://img.icons8.com/fluency/48/000000/documents.png" align="left" width="24" height="24"/>
-  
-  [Documentation](https://docs.mdpkm.voxelified.com)
-</dl>

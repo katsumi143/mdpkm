@@ -47,6 +47,7 @@
     "component.fabric": "Fabric Loader",
     "component.fabric.summary": "Fabric is a lightweight, experimental modding toolchain.",
     "component.fabric.versions": "Fabric Loader Versions",
+	"component.fabric.content_tab.0": "$t(interface:shaders)",
     "component.fabric.release_category.0": "Versions",
     "component.fabric.release_category.0.singular": "Version",
     
@@ -58,6 +59,7 @@
 
 	"component.minecraft-java-server-paper": "Paper",
 	"component.minecraft-java-server-paper.summary": "Paper is the next generation of Minecraft servers, offering uncompromising performance.",
+	"component.minecraft-java-server-paper.content_tab.0": "Plugins",
 
 	"component.minecraft-java-client-extension-json": "Custom Component",
 

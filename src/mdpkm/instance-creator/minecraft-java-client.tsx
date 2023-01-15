@@ -13,7 +13,7 @@ export default class MinecraftJavaClientCreator extends InstanceCreator {
     public static id: string = 'minecraft-java-vanilla'
 	public static category: string = 'minecraft'
     public async create(data: any[], save: boolean = true) {
-        const instance = await voxura.instances.createInstance(data[0], InstanceType.Client);
+        const instance = await voxura.instances.createInstance(data[0], this.instanceType);
 
 		const manifests = await fetch<VersionManifestResponse>(MANIFESTS_URL);
 		const manifestData = manifests.data.versions.find(m => m.id === data[1]);
@@ -35,7 +35,8 @@ export default class MinecraftJavaClientCreator extends InstanceCreator {
         return instance;
     }
 
-	public readonly component: typeof VersionedComponent = MinecraftJavaClient
+	public component: typeof VersionedComponent = MinecraftJavaClient
+	public instanceType = InstanceType.Client
 	public ReactComponent = Component
 }
 
