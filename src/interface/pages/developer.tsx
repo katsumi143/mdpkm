@@ -5,6 +5,7 @@ import { Grid, Button, TextInput, Typography, TextHeader, InputLabel } from 'vox
 import ImageWrapper from '../components/ImageWrapper';
 
 import PluginSystem from '../../plugins';
+import { useTimeString } from '../../util';
 import voxura, { useCurrentAccount } from '../../voxura';
 import { InstanceType, COMPONENT_MAP } from '../../../voxura';
 import mdpkm, { COMPONENT_EXTRAS, INSTANCE_CREATORS } from '../../mdpkm';
@@ -13,6 +14,7 @@ import { getDefaultInstanceIcon, getDefaultInstanceBanner } from '../../util';
 export default function Developer() {
 	const { t } = useTranslation();
 	const account = useCurrentAccount();
+	const currentDate = Date.now();
 	const [crash, setCrash] = useState<any>(null);
 	const [iconTest, setIconTest] = useState('28839');
 	const [bannerTest, setBannerTest] = useState('billy is awesome');
@@ -58,18 +60,42 @@ export default function Developer() {
 		</Grid>
 
 		<InputLabel spaciouser>Current Account Information</InputLabel>
+		<Grid spacing={32}>
+			<Grid vertical>
+				<Typography size={14} weight={400} family="$secondary">
+					Name: {account?.name}
+				</Typography>
+				<Typography size={14} weight={400} family="$secondary">
+					Real Name: {account?.data.xboxProfile?.realName}
+				</Typography>
+			</Grid>
+			<Grid vertical>
+				<Typography size={14} weight={400} family="$secondary">
+					XUID: {account?.data.xsts2.xuid}
+				</Typography>
+				<Typography size={14} weight={400} family="$secondary">
+					Xbox Name: {account?.xboxName}
+				</Typography>
+				<Typography size={14} weight={400} family="$secondary">
+					Minecraft UUID: {account?.uuid}
+				</Typography>
+			</Grid>
+		</Grid>
 		<Grid vertical>
 			<Typography size={14} weight={400} family="$secondary">
-				Name: {account?.name}
+				Xbox expires in {useTimeString((account?.data.xbox?.expireDate ?? 0) - currentDate)}
 			</Typography>
 			<Typography size={14} weight={400} family="$secondary">
-				Real Name: {account?.data.xboxProfile?.realName}
+				XSTS expires in {useTimeString((account?.data.xsts?.expireDate ?? 0)  - currentDate)}
 			</Typography>
 			<Typography size={14} weight={400} family="$secondary">
-				Xbox Name: {account?.xboxName}
+				XSTS2 expires in {useTimeString((account?.data.xsts2?.expireDate ?? 0) - currentDate)}
 			</Typography>
 			<Typography size={14} weight={400} family="$secondary">
-				Minecraft UUID: {account?.uuid}
+				Microsoft expires in {useTimeString((account?.data.microsoft?.expireDate ?? 0) - currentDate)}
+			</Typography>
+			<Typography size={14} weight={400} family="$secondary">
+				Minecraft expires in {useTimeString((account?.data.minecraft?.expireDate ?? 0) - currentDate)}
 			</Typography>
 		</Grid>
 

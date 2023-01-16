@@ -7,12 +7,13 @@ import PlatformSearch from '../components/platform/search';
 
 import { setPage } from '../../store/slices/interface';
 import { useInstance } from '../../voxura';
-import { ComponentType, InstanceState } from '../../../voxura';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { ProjectType, ComponentType, InstanceState } from '../../../voxura';
 export default function SearchPage() {
 	const { t } = useTranslation('interface');
 	const dispatch = useAppDispatch();
 	const instance = useInstance(useAppSelector(state => state.interface.currentInstance));
+	const projectType = useAppSelector(state => state.interface.searchType);
 
 	if (!instance)
 		return null;
@@ -28,7 +29,7 @@ export default function SearchPage() {
 					{t('common.action.return_to_instances')}
 				</Link>
 			</Grid>
-			{instance.state !== InstanceState.None &&
+			{projectType === ProjectType.Mod && instance.state !== InstanceState.None &&
 				<Typography size={14} color="#ffba64" noSelect>
 					<IconBiExclamationTriangleFill/>
 					{t('mod_management.warning')}

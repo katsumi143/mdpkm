@@ -1,23 +1,20 @@
 import toast from 'react-hot-toast';
 import { open } from '@tauri-apps/api/dialog';
-import { Buffer } from 'buffer';
 import * as shell from '@tauri-apps/api/shell';
 import { useTranslation } from 'react-i18next';
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { exists, readDir, copyFile, createDir, readTextFile, readBinaryFile } from '@tauri-apps/api/fs';
-import { Link, Grid, Image, Button, Spinner, TextInput, Typography, BasicSpinner } from 'voxeliface';
+import { Grid, Button, Spinner, TextInput, Typography, BasicSpinner } from 'voxeliface';
 
-import ImagePreview from './ImagePreview';
-
-import { Instance, ProjectType } from '../../../voxura';
-import { setPage, setSearchType } from '../../store/slices/interface';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { readTextFileInZip, readBinaryFileInZip } from '../../util';
+import ResourcePackItem from './item';
+import { Instance, ProjectType } from '../../../../../voxura';
+import { setPage, setSearchType } from '../../../../store/slices/interface';
+import { useAppDispatch } from '../../../../store/hooks';
+import { readTextFileInZip, readBinaryFileInZip } from '../../../../util';
 export interface ResourcePackManagementProps {
     instance: Instance
 }
-export default function ResourcePackManagement({ instance }: ResourcePackManagementProps) {
-	// TODO: rewrite
+export default function ResourePacks({ instance }: ResourcePackManagementProps) {
 	const path = instance.path + '/resourcepacks';
     const { t } = useTranslation('interface');
 	const dispatch = useAppDispatch();
@@ -108,13 +105,15 @@ export default function ResourcePackManagement({ instance }: ResourcePackManagem
 				</Button>
 			</Grid>
         </Grid>
-        {Array.isArray(items) ? items.length ?
-			items?.filter(({ name }) =>
-				name.toLowerCase().includes(filter)
-			).map((item, key) => <ResourcePack key={key} item={item}/>)
-		: <Typography noSelect>
-			{t('common.label.empty_dir')}
-		</Typography> : <Spinner/>}
+		<Grid spacing={8} vertical borderRadius={16} css={{ overflow: 'hidden auto' }}>
+			{Array.isArray(items) ? items.length ?
+				items?.filter(({ name }) =>
+					name.toLowerCase().includes(filter)
+				).map((item, key) => <ResourcePackItem key={key} item={item}/>)
+			: <Typography noSelect>
+				{t('common.label.empty_dir')}
+			</Typography> : <Spinner/>}
+		</Grid>
 		<Grid margin="auto 0 0" spacing={8}>
 			<Button theme="accent" onClick={search}>
 				<IconBiSearch/>
@@ -126,56 +125,4 @@ export default function ResourcePackManagement({ instance }: ResourcePackManagem
 			</Button>
 		</Grid>
     </React.Fragment>;
-}
-
-// TODO: move this into a separate file
-export interface ResourcePackProps {
-    item: {
-		name: string,
-		icon: number[],
-		metadata: any
-	}
-}
-export function ResourcePack({ item }: ResourcePackProps) {
-    const { t } = useTranslation('interface');
-    const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
-    const [previewIcon, setPreviewIcon] = useState(false);
-
-	const icon = useMemo(() => item.icon ? Buffer.from(item.icon).toString('base64') : null, [item.icon]);
-    const packIcon = icon ? `data:image/png;base64,${icon}` : 'img/icon/minecraft/unknown_pack.png';
-    return <Grid padding={8} spacing={isCompact ? 10 : 12} alignItems="center" background="$secondaryBackground2" borderRadius={16} css={{
-        border: 'transparent solid 1px',
-        position: 'relative',
-        background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
-    }}>
-        <Image
-            src={packIcon}
-            size={isCompact ? 38 : 40}
-            onClick={() => setPreviewIcon(true)}
-            background="$secondaryBackground"
-            borderRadius={8}
-            css={{
-                cursor: 'zoom-in',
-                boxShadow: '$buttonShadow'
-            }}
-        />
-        {previewIcon && <ImagePreview src={packIcon} onClose={() => setPreviewIcon(false)} pixelated/>}
-        <Grid spacing={2} vertical>
-            <Typography size={isCompact ? 14 : 16} noSelect lineheight={1}>
-                {item.name}
-            </Typography>
-            <Typography size={isCompact ? 10 : 12} color="$secondaryColor" noSelect lineheight={1}>
-                {item.metadata.pack?.description}
-            </Typography>
-        </Grid>
-        <Grid height="100%" spacing={8} css={{
-            right: 0,
-            position: 'absolute'
-        }}>
-            <Link size={12} padding="0 16px">
-                <IconBiTrash3Fill/>
-                {t('common.action.delete')}
-            </Link>
-        </Grid>
-    </Grid>;
 }

@@ -6,6 +6,15 @@ import { APP_DIR } from '../../util/constants';
 
 const skinsPath = `${APP_DIR}/skins.json`;
 const skins = await readJsonFile<any>(skinsPath).catch(console.warn);
+export interface Skin {
+	name: string
+	cape?: string
+	image: string
+	variant: 'SLIM' | 'CLASSIC'
+}
+export interface SkinsState {
+	data: Skin[]
+}
 export const skinsSlice = createSlice({
     name: 'skins',
     initialState: {
@@ -18,7 +27,7 @@ export const skinsSlice = createSlice({
             image: await fetch('/img/skins/SLIM.png').then(r => r.arrayBuffer()).then(v => Buffer.from(v).toString('base64')),
             variant: 'SLIM'
         }]
-    },
+    } as SkinsState,
     reducers: {
         addSkin: (state, { payload }) => {
             state.data.push(payload);

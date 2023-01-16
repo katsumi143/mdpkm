@@ -201,7 +201,7 @@
 	"shaders.filter": "Filter Shaders",
 	"shaders.search": "Search for Shaders",
 
-	"platform_search": "Modification Search",
+	"platform_search": "Project Search",
 	"platform_search.results_one": "{{count}} Result",
 	"platform_search.results_other": "{{count}} Results",
 
@@ -220,15 +220,12 @@
 
 	"essential": "Essential",
 
-	"server_management": "Server Management",
-	"server_management.count_one": "{{count}} Server",
-	"server_management.count_other": "{{count}} Servers",
-	"server_management.search": "Search servers",
-	"server_management.add": "Add Server",
-	"server_management.adding": "Adding New Server",
-	"server_management.adding.name": "Display Name",
-	"server_management.adding.address": "IP Address",
-	"server_management.adding.address.placeholder": "funny.realserver.com",
+	"servers": "Server Management",
+	"servers.filter": "Filter Servers",
+	"servers.add": "Add Server",
+	"servers.add.name": "Display Name",
+	"servers.add.address": "IP Address",
+	"servers.add.address.placeholder": "funny.realserver.com",
 
 	"server.no_name": "Minecraft Server",
 	"server.players": "{{0}}/{{1}} Players",

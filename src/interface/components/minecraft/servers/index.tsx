@@ -1,4 +1,5 @@
 import * as nbt from 'nbt-ts';
+import { open } from '@tauri-apps/api/shell';
 import { fetch } from '@tauri-apps/api/http';
 import { Buffer } from 'buffer';
 import { useTranslation } from 'react-i18next';
@@ -6,14 +7,16 @@ import React, { useState, useEffect } from 'react';
 import { exists, readBinaryFile, writeBinaryFile } from '@tauri-apps/api/fs';
 import { Grid, Button, Spinner, TextInput, TextHeader, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
-import Modal from './Modal';
-import Server from './Server';
+import Modal from '../../Modal';
+import ServerItem from './item';
 
-import type { Instance } from '../../../voxura';
-export interface ServerManagementProps {
+import type { Instance } from '../../../../../voxura';
+export interface MinecraftServersProps {
     instance: Instance
 }
-export default function ServerManagement({ instance }: ServerManagementProps) {
+export default function MinecraftServers({ instance }: MinecraftServersProps) {
+	const path = instance.path + '/servers.dat';
+
     const { t } = useTranslation('interface');
     const [data, setData] = useState<any>();
     const [items, setItems] = useState<any>();
@@ -45,13 +48,12 @@ export default function ServerManagement({ instance }: ServerManagementProps) {
         });
         setData(data);
         setItems(data.value.servers.value.value);
-        writeBinaryFile(`${instance.path}/servers.dat`, [...new Uint8Array(nbt.encode('root', data))]);
+        writeBinaryFile(path, [...new Uint8Array(nbt.encode('root', data))]);
     };
     useEffect(() => {
         if(!items) {
             if(!instance?.path)
                 return;
-            const path = `${instance.path}/servers.dat`;
             setData({});
             setItems('loading');
             exists(path).then(exists => {
@@ -78,45 +80,40 @@ export default function ServerManagement({ instance }: ServerManagementProps) {
             setAddingInfo(null);
     }, [addingAddress2]);
     useEffect(() => setItems(null), [instance.id]);
-	console.log(items);
 
     return <React.Fragment>
-        <Grid spacing={8} padding="4px 0" justifyContent="space-between">
+        <Grid margin="4px 0" justifyContent="space-between">
             <Grid vertical>
                 <Typography size={14} noSelect lineheight={1}>
-                    {t('server_management')}
+                    {t('servers')}
                 </Typography>
                 <Typography size={12} color="$secondaryColor" weight={400} noSelect>
-                    {items === 'loading' || !items ?
-                        t('app.mdpkm.common:states.loading') :
-                        t('server_management.count', { count: items.length })
+					{items === 'loading' || !items ?
+                        t('common.label.loading') :
+                        t('common.label.items', { count: items.length })
                     }
                 </Typography>
             </Grid>
             <Grid spacing={8}>
                 <TextInput
-                    width={144}
+                    width={256}
                     value={filter}
                     onChange={setFilter}
-                    placeholder={t('server_management.search')}
+                    placeholder={t('servers.filter')}
                 />
                 <Button theme="secondary" onClick={() => setItems(null)} disabled={items === 'loading'}>
                     {items === 'loading' ? <BasicSpinner size={16}/> : <IconBiArrowClockwise/>}
                     {t('common.action.refresh')}
                 </Button>
-                <Button theme="accent" onClick={openAdding} disabled={!data}>
-                    <IconBiPlusLg/>
-                    {t('server_management.add')}
-                </Button>
             </Grid>
         </Grid>
-        <Grid spacing={8} vertical>
+        <Grid spacing={8} vertical borderRadius={16} css={{ overflow: 'hidden auto' }}>
             {Array.isArray(items) && items?.filter(({ ip, name, hidden }) =>
 				!hidden?.value &&
                 (ip?.toLowerCase().includes(filter) ||
                 name?.toLowerCase().includes(filter))
             ).map((item, index) =>
-                <Server
+                <ServerItem
                     key={index}
                     name={item.name}
                     icon={item.icon}
@@ -126,13 +123,19 @@ export default function ServerManagement({ instance }: ServerManagementProps) {
                 />
             )}
         </Grid>
+		<Grid margin="auto 0 0">
+			<Button theme="accent" onClick={openAdding} disabled={!data}>
+				<IconBiPlusLg/>
+				{t('servers.add')}
+			</Button>
+		</Grid>
         {addingServer && <Modal width="60%">
             <TextHeader noSelect>
-                {t('server_management.adding')}
+                {t('servers.add')}
             </TextHeader>
             <Grid spacing={32} justifyContent="space-between">
                 <Grid width="100%" vertical>
-                    <InputLabel>{t('server_management.adding.name')}</InputLabel>
+                    <InputLabel>{t('servers.add.name')}</InputLabel>
                     <TextInput
 						width="100%"
                         value={addingName}
@@ -140,18 +143,18 @@ export default function ServerManagement({ instance }: ServerManagementProps) {
                         placeholder={t('server.no_name')}
                     />
 
-                    <InputLabel spacious>{t('server_management.adding.address')}</InputLabel>
+                    <InputLabel spacious>{t('servers.add.address')}</InputLabel>
                     <TextInput
 						width="100%"
                         value={addingAddress}
                         onBlur={() => setAddingAddress2(() => addingAddress)}
                         onChange={setAddingAddress}
-                        placeholder={t('server_management.adding.address.placeholder')}
+                        placeholder={t('servers.add.address.placeholder')}
                     />
                     <Grid margin="2rem 0 0" spacing={8}>
                         <Button theme="accent" onClick={addServer} disabled={!addingAddress}>
                             <IconBiPlusLg/>
-                            {t('server_management.add')}
+                            {t('servers.add')}
                         </Button>
                         <Button theme="secondary" onClick={closeAdding}>
                             <IconBiXLg/>
@@ -161,7 +164,7 @@ export default function ServerManagement({ instance }: ServerManagementProps) {
                 </Grid>
                 <Grid height="fit-content" spacing={16} alignItems="center">
                     {addingInfo === 'loading' && <Spinner/>}
-                    <Server
+                    <ServerItem
                         name={addingName}
                         icon={addingInfo?.icon}
                         motd={addingInfo?.motd?.html?.join('</br>')}

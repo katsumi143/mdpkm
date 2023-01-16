@@ -1,4 +1,3 @@
-import { fetch } from '@tauri-apps/api/http';
 import { Buffer } from 'buffer';
 import { useTranslation } from 'react-i18next';
 import { readBinaryFile } from '@tauri-apps/api/fs';
@@ -11,9 +10,9 @@ import SkinFrame from '../components/SkinFrame';
 import FileSelect from '../components/FileSelect';
 
 import { useCurrentAccount } from '../../voxura';
-import { addSkin, saveSkins, writeSkin } from '../../store/slices/skins';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { toast, getSkinData, getCapeData } from '../../util';
+import { Skin, addSkin, saveSkins, writeSkin } from '../../store/slices/skins';
 import { ProfileType, MinecraftCape, MinecraftProfile } from '../../../voxura';
 
 // TODO: rewrite
@@ -26,15 +25,15 @@ export default function Skins() {
     const [capes, setCapes] = useState<any[]>([]);
     const [adding, setAdding] = useState(false);
     const [profile, setProfile] = useState<MinecraftProfile | null>(null);
-    const [current, setCurrent] = useState<any | null>(null);
+    const [current, setCurrent] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [setting, setSetting] = useState(false);
-    const [skinModel, setSkinModel] = useState();
+    const [skinModel, setSkinModel] = useState<'slim' | 'default'>();
     const [addingName, setAddingName] = useState('');
     const [addingPath, setAddingPath] = useState('');
     const [addingCape, setAddingCape] = useState<string | null>(null);
     const [editingSkin, setEditingSkin] = useState<number | null>();
-    const [addingModel, setAddingModel] = useState<'CLASSIC' | 'SLIM'>('CLASSIC');
+    const [addingModel, setAddingModel] = useState<'SLIM' | 'CLASSIC'>('CLASSIC');
     const startAdding = () => {
         setAdding(true);
         setAddingName('');
@@ -43,7 +42,7 @@ export default function Skins() {
         setAddingModel('CLASSIC');
     };
     const addNewSkin = async() => {
-        const data = addingPath ? await readBinaryFile(addingPath) : await fetch(
+        const data = addingPath ? await readBinaryFile(addingPath) : await window.fetch(
             `/img/skins/${addingModel}.png`
         ).then(r => r.arrayBuffer()).then(v => [...new Uint8Array(v)]);
         dispatch(addSkin({
@@ -83,7 +82,7 @@ export default function Skins() {
         const skin = skins[key];
         if (skin) {
             setAddingName(skin.name);
-            setAddingCape(skin.cape);
+            setAddingCape(skin.cape ?? null);
             setAddingPath(`data:image/png;base64,${skin.image}`);
             setEditingSkin(key);
             setAddingModel(skin.variant);
@@ -187,8 +186,8 @@ export default function Skins() {
                     overflow: 'hidden auto',
                     gridTemplateColumns: 'repeat(6, auto)'
                 }}>
-                    {skins.map((skin: any, key: number) =>
-                        <Skin key={key} data={skin} capes={capes} index={key} useSkin={useSkin} editSkin={editSkin} loading={loading || setting} current={current}/>
+                    {skins.map((skin, key) =>
+                        <LibraryItem key={skin.name} data={skin} capes={capes} index={key} useSkin={useSkin} editSkin={editSkin} loading={loading || setting}/>
                     )}
                 </Grid> : <React.Fragment>
                     <Typography size="1.2rem" family="$primarySans">
@@ -327,7 +326,7 @@ export default function Skins() {
                             <IconBiPlusLg/>
                             {t('app.mdpkm.common:actions.save_changes')}
                         </Button>
-                        <Button theme="secondary" onClick={() => setEditingSkin(false)}>
+                        <Button theme="secondary" onClick={() => setEditingSkin(null)}>
                             <IconBiXLg/>
                             {t('common.action.cancel')}
                         </Button>
@@ -338,16 +337,15 @@ export default function Skins() {
     </Grid>;
 }
 
-export interface SkinProps {
-    data: any
+export interface LibraryItemProps {
+    data: Skin
     capes: any[]
     index: number
-    current: boolean
     loading: boolean
     useSkin: (value: number) => void
     editSkin: (value: number) => void
 }
-export function Skin({ data, capes, index, current, loading, useSkin, editSkin }: SkinProps) {
+export function LibraryItem({ data, capes, index, loading, useSkin, editSkin }: LibraryItemProps) {
     const { t } = useTranslation('interface');
     return <Grid padding={8} spacing={4} vertical alignItems="center" background="$primaryBackground" borderRadius="8px" justifyContent="space-between" css={{
         border: '$secondaryBorder solid 1px'
@@ -368,7 +366,7 @@ export function Skin({ data, capes, index, current, loading, useSkin, editSkin }
             background="none"
         />}
         <Grid spacing={8}>
-            <Button size="smaller" theme="accent" onClick={() => useSkin(index)} disabled={loading || current === data.image}>
+            <Button size="smaller" theme="accent" onClick={() => useSkin(index)} disabled={loading}>
                 {t('common.action.use')}
             </Button>
             <Button size="smaller" theme="secondary" onClick={() => editSkin(index)} disabled={loading}>

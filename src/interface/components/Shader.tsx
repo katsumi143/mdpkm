@@ -1,9 +1,9 @@
 import { Buffer } from 'buffer';
 import { useTranslation } from 'react-i18next';
-import React, { useMemo, useState } from 'react';
-import { Link, Grid, Image, Typography } from 'voxeliface';
+import React, { useMemo } from 'react';
+import { Link, Grid, Typography } from 'voxeliface';
 
-import ImagePreview from './ImagePreview';
+import ImageWrapper from './ImageWrapper';
 
 export interface ShaderItem {
 	name?: string
@@ -16,8 +16,6 @@ export interface ShaderProps {
 }
 export default function Shader({ item }: ShaderProps) {
     const { t } = useTranslation('interface');
-    const [previewIcon, setPreviewIcon] = useState(false);
-
 	const icon = useMemo(() => item.icon ? Buffer.from(item.icon).toString('base64') : null, [item.icon]);
     const packIcon = icon ? `data:image/png;base64,${icon}` : 'img/icon/minecraft/unknown_pack.png';
     return <Grid padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" borderRadius={16} css={{
@@ -25,18 +23,13 @@ export default function Shader({ item }: ShaderProps) {
         position: 'relative',
         background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
     }}>
-        <Image
+        <ImageWrapper
             src={packIcon}
             size={40}
-            onClick={() => setPreviewIcon(true)}
+			canPreview
             background="$secondaryBackground"
             borderRadius={8}
-            css={{
-                cursor: 'zoom-in',
-                boxShadow: '$buttonShadow'
-            }}
         />
-        {previewIcon && <ImagePreview src={packIcon} onClose={() => setPreviewIcon(false)} pixelated/>}
         <Grid spacing={2} vertical>
             <Typography noSelect lineheight={1}>
                 {item.name}

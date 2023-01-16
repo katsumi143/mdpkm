@@ -39,10 +39,10 @@ export default function IrisShaders({ instance }: IrisShadersProps) {
 								await getMD5Hash(path).then(hash => {
 									const project = projects[hash];
 									shaders.push({
-										icon: project.cached_icon,
-										name: project.cached_name ?? name,
-										source: project.platform,
-										version: project.version
+										icon: project?.cached_icon,
+										name: project?.cached_name ?? name,
+										source: project?.platform,
+										version: project?.version
 									});
 								});
                         }

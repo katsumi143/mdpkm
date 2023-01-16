@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import React, { ReactNode } from 'react';
 import { Grid, Image, Button, Typography, BasicSpinner } from 'voxeliface';
 
-import { getImage } from '../../../util';
+import { getImage, useDayString, useTimeString } from '../../../util';
 import type { Instance } from '../../../../voxura';
 export interface InstanceHomeProps {
     setTab: (tab: number) => void,
@@ -43,33 +43,6 @@ export default function InstanceHome({ setTab, instance }: InstanceHomeProps) {
     </React.Fragment>
 }
 
-function useDayString(date?: number) {
-    const { t } = useTranslation('interface');
-    if (typeof(date) !== 'number')
-        return t('common.date.never');
-    
-    const difference = Date.now() - date;
-    const days = Math.floor(difference / (1000 * 3600 * 24));
-    if (days === 0)
-        return t('common.date.today');
-    if (days === 1)
-        return t('common.date.yesterday');
-    return t('common.date.days_ago', [days]);
-}
-function useTimeString(date: number) {
-    const { t } = useTranslation('interface');
-    if (typeof(date) !== 'number')
-        return t('common.date.never');
-    
-	const hours = Math.round(date / 3600000);
-	const minutes = Math.round(date / 60000);
-	const seconds = Math.round(date / 1000);
-	if (hours > 0)
-		return t('common.time.hours', { count: hours });
-	else if (minutes > 0)
-		return t('common.time.minutes', { count: minutes });
-    return t('common.time.seconds', { count: seconds });
-}
 export interface InformationProps {
     fill?: boolean
 	text?: ReactNode

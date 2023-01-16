@@ -192,7 +192,6 @@
 	"mod_management.search": "Поиск модов",
 	"mod_management.warning": "Управлять модами следует только когда экземпляр не запущен.",
 
-	"platform_search": "Поиск модов",
 	"platform_search.results_one": "{{count}} результат",
 	"platform_search.results_other": "Результатов: {{count}}",
 
@@ -209,17 +208,11 @@
 	"project.visit_site": "Посмотреть на сайте $t(voxura:platform.{{project.source.id}})",
 	"project.issue.incompatible": "Несовместимо",
 
-	"essential": "Essential",
-
-	"server_management": "Управление сервером",
-	"server_management.count_one": "Сервера: {{count}}",
-	"server_management.count_other": "Серверов: {{count}}",
-	"server_management.search": "Поиск серверов",
-	"server_management.add": "Добавить сервер",
-	"server_management.adding": "Добавление нового сервера",
-	"server_management.adding.name": "Название",
-	"server_management.adding.address": "IP-адрес",
-	"server_management.adding.address.placeholder": "funny.realserver.com",
+	"servers": "Управление сервером",
+	"servers.add": "Добавить сервер",
+	"servers.add.name": "Название",
+	"servers.add.address": "IP-адрес",
+	"servers.add.address.placeholder": "funny.realserver.com",
 
 	"server.no_name": "Сервер Minecraft",
 	"server.players": "Игроков {{0}}/{{1}}",

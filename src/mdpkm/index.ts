@@ -99,9 +99,9 @@ export { default as InstanceCreator } from './instance-creator';
 
 import IrisShaders from '../interface/components/IrisShaders';
 import PluginManagement from '../interface/components/PluginManagement';
-import ServerManagement from '../interface/components/ServerManagement';
+import MinecraftServers from '../interface/components/minecraft/servers';
 import JavaServerSettings from '../interface/components/JavaServerSettings';
-import ResourcePackManagement from '../interface/components/ResourcePackManagement';
+import MinecraftResourcePacks from '../interface/components/minecraft/resourcepacks';
 import { JSXElementConstructor } from 'react';
 export const COMPONENT_EXTRAS: Record<Component["id"], ComponentExtra> = {
 	[MinecraftQuilt.id]: {
@@ -112,8 +112,8 @@ export const COMPONENT_EXTRAS: Record<Component["id"], ComponentExtra> = {
 		enabledContentTabs: ['essential', 'modSearch', 'modManagement']
 	},
 	[MinecraftJavaClient.id]: {
-		contentTabs: [ResourcePackManagement],
-		settingsTabs: [ServerManagement]
+		contentTabs: [MinecraftResourcePacks],
+		settingsTabs: [MinecraftServers]
 	},
 	[MinecraftJavaServer.id]: {
 		settingsTabs: [JavaServerSettings]
