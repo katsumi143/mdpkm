@@ -1,6 +1,6 @@
 import { fetch } from '@tauri-apps/api/http';
 
-import { Project, Platform, Instance, ProjectType, GameComponent } from '../../voxura';
+import { Project, Platform, Instance, ProjectType, ComponentType, GameComponent } from '../../voxura';
 const mdpkmPlatform = new class mdpkmPlatform extends Platform<mdpkmProject> {
 	public id = 'mdpkm'
 	public search(query: string, type: ProjectType, options: {
@@ -29,9 +29,12 @@ const mdpkmPlatform = new class mdpkmPlatform extends Platform<mdpkmProject> {
 		const data = await this.getProjectData(id);
         return new mdpkmProject(id, ProjectType.Mod, data);
     }
+	public getVersion(id: string) {
+		return null as any;
+	}
 
     private getProjectData(id: string): Promise<ProjectData> {
-		return Promise.resolve(INTERNAL_PROJECTS[id])
+		return Promise.resolve(INTERNAL_PROJECTS[id]);
     }
 
 	public get baseUserURL() {
@@ -48,13 +51,15 @@ export class mdpkmProject extends Project<ProjectData> {
 	public source = mdpkmPlatform
 	public async getLatestVersion(instance: Instance) {
         const versions = await this.getVersions();
-		const { components } = instance.store;
-        return versions.find(({ loaders, game_versions }) =>
-            loaders.some((l: any) => components.some(c => c.getPlatformId(this.source) === l)) && game_versions.some((v: any) => components.some(c => c instanceof GameComponent && c.version === v))
+
+		const components = instance.store.components.filter(c => c.type === ComponentType.Loader).map(c => c.getIdForProject(this));
+        const { gameComponent } = instance;
+		return versions.find(({ loaders, game_versions }) =>
+            loaders.some(l => components.includes(l)) && game_versions.includes(gameComponent.version)
         );
     }
 
-    public getVersions(): Promise<any[]> {
+    public getVersions() {
 		return fetch<EssentialVersionsResponse>('https://downloads.essential.gg/v1/mods/essential/container').then(({ data }) => {
 			return Object.entries(data.stable).map(([id, version]) => ({
 				id,
@@ -63,7 +68,8 @@ export class mdpkmProject extends Project<ProjectData> {
 					primary: true,
 					filename: `essential-container.jar`
 				}],
-				loaders: [id.split('_')[0]],
+				loaders: [id.split('_')[0], id.includes('fabric') ? 'quilt' : undefined].filter(l => l) as string[],
+				dependencies: [],
 				game_versions: [id.split('_')[1].replace(/-/g, '.')]
 			}));
 		});
@@ -145,7 +151,7 @@ export const INTERNAL_PROJECTS: Record<string, ProjectData> = {
 		author: 'Essential',
 		website: 'https://essential.gg',
 		icon_url: 'img/icon/project/essential.svg',
-		categories: ['social', 'fabric', 'forge'],
+		categories: ['social', 'quilt', 'fabric', 'forge'],
 		description: 'Essential is a quality of life mod that boosts Minecraft Java to the next level.'
 	}
 }
