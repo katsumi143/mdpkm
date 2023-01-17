@@ -4,15 +4,14 @@ import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 import { Grid, Button, Spinner, Tooltip, Typography, ContextMenu, BasicSpinner } from 'voxeliface';
 
-import ImageWrapper from '../ImageWrapper';
+import Avatar from '../Avatar';
 import EnvironmentLabel from './envLabel';
 
 import { toast } from '../../../util';
 import { useDownloads } from '../../../voxura';
-import { useAppSelector } from '../../../store/hooks';
 import { useStoredValue } from '../../../../voxura/src/storage';
 import { CompatibilityError } from '../../../../voxura/src/instance';
-import { Project, Platform, Instance, VoxuraStore, DownloadState } from '../../../../voxura';
+import { Project, Platform, Instance, VoxuraStore } from '../../../../voxura';
 export interface ProjectProps {
     id?: string
     data?: Project<any>
@@ -24,7 +23,6 @@ export interface ProjectProps {
 export default function ProjectComponent({ id, data, featured, platform, instance, recommended }: ProjectProps) {
     const { t } = useTranslation('interface');
 	const projects = useStoredValue<VoxuraStore["projects"]>('projects', {});
-    const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
     const [project, setProject] = useState(data);
     const [loading, setLoading] = useState(!data);
     const installed = instance ? Object.entries(projects).filter(e => instance.modifications.some(m => m.md5 === e[0])).some(e => e[1].id === (id ?? data?.id)) : false;
@@ -72,23 +70,19 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
 			</Grid>
 		</Grid>
 
-    const iconSize = isCompact ? 32 : 48;
-	return <ContextMenu.Root>
+    return <ContextMenu.Root>
 		<ContextMenu.Trigger asChild>
 			<Grid padding={8} background="$secondaryBackground2" smoothing={1} borderRadius={16} css={{
 				border: 'transparent solid 1px',
 				position: 'relative',
 				background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box',
 			}}>
-				<ImageWrapper src={project.webIcon} size={iconSize} smoothing={1} canPreview background="$secondaryBackground" borderRadius={8} css={{
-					filter: project.isExplict && 'blur(2px)',
-					minWidth: iconSize
-				}}/>
-				<Grid margin={isCompact ? '4px 0 0 10px' : '4px 0 0 12px'} padding="2px 0" spacing={2} vertical>
+				<Avatar src={project.webIcon} size="md" blur={project.isExplict}/>
+				<Grid margin={'4px 0 0 12px'} padding="2px 0" spacing={2} vertical>
 					<Grid spacing={4}>
 						<Tooltip.Root delayDuration={50}>
 							<Tooltip.Trigger asChild>
-								<Typography size={isCompact ? 14 : 16} onClick={openWebsite} noSelect lineheight={1} css={{
+								<Typography onClick={openWebsite} noSelect lineheight={1} css={{
 									cursor: 'pointer'
 								}}>
 									{project.displayName}
@@ -103,7 +97,7 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
 						</Tooltip.Root>
 						{project.author && <Tooltip.Root delayDuration={50}>
 							<Tooltip.Trigger asChild>
-								<Typography size={isCompact ? 10 : 12} color="$secondaryColor" family="$secondary" onClick={openAuthor} noSelect lineheight={1} css={{
+								<Typography size={12} color="$secondaryColor" family="$secondary" onClick={openAuthor} noSelect lineheight={1} css={{
 									cursor: 'pointer',
 									'&:hover': { color: '$linkColor' }
 								}}>
@@ -133,7 +127,7 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
 							</Typography>
 						}
 					</Grid>
-					<Typography size={isCompact ? 12 : 14} color="$secondaryColor" weight={400} family="$secondary" noSelect textalign="left" whitespace="pre-wrap">
+					<Typography size={14} color="$secondaryColor" weight={400} family="$secondary" noSelect textalign="left" whitespace="pre-wrap">
 						{project.summary}
 					</Typography>
 					<Grid margin="2px 0 0" spacing={16}>
@@ -150,18 +144,18 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
 					position: 'absolute'
 				}}>
 					{project.followers &&
-						<Typography size={isCompact ? 11 : 12} color="$secondaryColor" weight={400} family="$secondary" margin="0 8px 0 0" spacing={6} noSelect>
+						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" margin="0 8px 0 0" spacing={6} noSelect>
 							<IconBiSuitHeartFill fontSize={10}/>
 							{t('project.followers', { count: project.followers })}
 						</Typography>
 					}
 					{project.downloads &&
-						<Typography size={isCompact ? 11 : 12} color="$secondaryColor" weight={400} family="$secondary" margin="0 8px 0 0" spacing={6} noSelect>
+						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" margin="0 8px 0 0" spacing={6} noSelect>
 							<IconBiDownload/>
 							{t('common.label.downloads', { count: project.downloads })}
 						</Typography>
 					}
-					<Button size={isCompact ? 'smaller' : 'small'} theme="accent" onClick={install} disabled={installing || installed}>
+					<Button theme="accent" onClick={install} disabled={installing || installed}>
 						{installing ?
 							<BasicSpinner size={16}/> : <IconBiDownload/>
 						}

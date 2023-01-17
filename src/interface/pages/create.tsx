@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Link, Grid, Button, Typography } from 'voxeliface';
 import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
 
-import ImageWrapper from '../components/ImageWrapper';
+import Avatar from '../components/Avatar';
 
 import { getImage } from '../../util';
 import InstanceCreator from '../../mdpkm/instance-creator';
@@ -61,7 +61,7 @@ export function Component({ id, selected, setSelected }: ComponentProps) {
     return <React.Fragment>
         <ComponentContainer layoutId={`component-${id}`}>
             <Grid height="fit-content" padding={8} spacing={12}>
-                <ImageWrapper src={getImage(`component.${id}`)} size={40} smoothing={1} canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
+				<Avatar src={getImage(`component.${id}`)} size="sm" layoutId={`component-img-${id}`}/>
                 <Grid spacing={4} vertical justifyContent="center">
                     <Typography noSelect layoutId={`component-title-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}`)}
@@ -116,8 +116,8 @@ export function Setup({ id, cancel }: SetupProps) {
             borderBottom: '1px solid $secondaryBorder2'
         }}>
             <Grid padding={8} spacing={12}>
-                <ImageWrapper src={getImage(`component.${id}`)} size={40} smoothing={1} canPreview layoutId={`component-img-${id}`} background="$secondaryBackground" borderRadius={8}/>
-                <Grid spacing={4} vertical justifyContent="center">
+				<Avatar src={getImage(`component.${id}`)} size="sm" layoutId={`component-img-${id}`}/>
+            	<Grid spacing={4} vertical justifyContent="center">
                     <Typography noSelect layoutId={`component-title-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}`)}
                     </Typography>

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
 import { Grid, Image, Button, Portal, Typography, TextHeader, BasicSpinner, DropdownMenu } from 'voxeliface';
 
-import ImagePreview from '../components/ImagePreview';
+import Avatar from '../components/Avatar';
 
 import { i, toast } from '../../util';
 import { Account, AvatarType } from '../../../voxura';
@@ -92,7 +92,6 @@ export function UserAccount({ account, current, changeAccount, deleteAccount }: 
     const { t } = useTranslation('interface');
     const isCurrent = account === current;
     const avatarUrl = account.getAvatarUrl(AvatarType.Xbox);
-    const [previewAvatar, setPreviewAvatar] = useState(false);
     const copyUUID = () => {
         if (!account.uuid)
             return toast('unknown_error');
@@ -103,10 +102,7 @@ export function UserAccount({ account, current, changeAccount, deleteAccount }: 
     return <Grid width="50%" border={`1px solid $secondaryBorder${isCurrent ? 2 : ''}`} padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" borderRadius={16} css={{
         position: 'relative'
     }}>
-        <Image src={avatarUrl} size={40} onClick={() => setPreviewAvatar(true)} borderRadius={24} css={{
-            cursor: 'zoom-in'
-        }}/>
-        {previewAvatar && <ImagePreview src={avatarUrl} onClose={() => setPreviewAvatar(false)}/>}
+        <Avatar src={avatarUrl} size="sm" circle/>
         <Grid spacing={2} vertical>
 			<Typography noSelect lineheight={1}>
 				{account.xboxName}

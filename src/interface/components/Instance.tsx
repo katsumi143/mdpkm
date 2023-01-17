@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useRef } from 'react';
 import { Link, Grid, Typography, ContextMenu } from 'voxeliface';
 
-import ImageWrapper from './ImageWrapper';
+import Avatar from './Avatar';
 
 import { toast } from '../../util';
 import { useInstance } from '../../voxura';
+import { useAppDispatch } from '../../store/hooks';
 import { INSTANCE_STATE_ICONS } from '../../util/constants';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setPage, setInstanceTab, setCurrentInstance } from '../../store/slices/interface';
 const Animation = keyframes({
 	'0%': {
@@ -39,7 +39,6 @@ export default memo(({ id, selected }: InstanceProps) => {
 	const { t } = useTranslation('interface');
 	const dispatch = useAppDispatch();
 	const instance = useInstance(id);
-	const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
 	useEffect(() => {
 		if (selected)
 			ref.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth'});
@@ -66,25 +65,20 @@ export default memo(({ id, selected }: InstanceProps) => {
 				animation: `${Animation} 500ms cubic-bezier(0.4, 0, 0.2, 1)`,
 				animationFillMode: 'forwards'
 			}}>
-				<Grid width="100%" height="100%" alignItems="center" borderRadius={isCompact ? 8 : 16} justifyContent="space-between" css={{
+				<Grid width="100%" height="100%" alignItems="center" borderRadius={16} justifyContent="space-between" css={{
 					border: selected ? 'transparent solid 1px' : '$secondaryBorder solid 1px',
 					overflow: 'hidden',
 					background: selected ? '$gradientBackground2 padding-box, $gradientBorder2 border-box' : '$primaryBackground'
 				}}>
-					<Grid padding={isCompact ? 6 : 8} spacing={isCompact ? 10 : 12} alignItems="center" css={{
+					<Grid padding={8} spacing={12} alignItems="center" css={{
 						overflow: 'hidden',
 						position: 'relative'
 					}}>
-						<ImageWrapper src={instance.webIcon} size={isCompact ? 36 : 48} smoothing={1} canPreview background="$secondaryBackground2" borderRadius={8} css={{
-							minWidth: isCompact ? 36 : 48,
-							backgroundSize: 'cover'
-						}}/>
-						<Grid spacing={isCompact ? 2 : 4} vertical alignItems="start" css={{ overflow: 'hidden' }}>
+						<Avatar src={instance.webIcon} size="md"/>
+						<Grid spacing={4} vertical alignItems="start" css={{ overflow: 'hidden' }}>
 							<Typography
-								size={isCompact ? 14 : 16}
 								width="100%"
 								noFlex
-								weight={isCompact ? 400 : 500}
 								noSelect
 								lineheight={1}
 								whitespace="nowrap"
@@ -94,7 +88,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 								{instance.name}
 							</Typography>
 							<Typography
-								size={isCompact ? 11 : 12}
+								size={12}
 								color="$secondaryColor"
 								weight={400}
 								family="$secondary"
@@ -102,12 +96,12 @@ export default memo(({ id, selected }: InstanceProps) => {
 								noSelect
 								lineheight={1}
 							>
-								<StateIcon fontSize={isCompact ? 8 : 10} />
+								<StateIcon fontSize={10} />
 								{t(`instance.state.${instance.state}`)}
 							</Typography>
 						</Grid>
 					</Grid>
-					<Link size={isCompact ? 11 : 12} height="100%" onClick={view} padding="0 16px" css={{
+					<Link size={12} height="100%" onClick={view} padding="0 16px" css={{
 						animation: selected ? `${viewAnimation} .25s ease-in` : undefined,
 						animationFillMode: 'forwards'
 					}}>

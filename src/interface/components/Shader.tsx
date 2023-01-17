@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next';
 import React, { useMemo } from 'react';
 import { Link, Grid, Typography } from 'voxeliface';
 
-import ImageWrapper from './ImageWrapper';
-
+import Avatar from './Avatar';
 export interface ShaderItem {
 	name?: string
 	icon?: number[]
@@ -23,13 +22,7 @@ export default function Shader({ item }: ShaderProps) {
         position: 'relative',
         background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
     }}>
-        <ImageWrapper
-            src={packIcon}
-            size={40}
-			canPreview
-            background="$secondaryBackground"
-            borderRadius={8}
-        />
+		<Avatar src={packIcon} size="sm"/>
         <Grid spacing={2} vertical>
             <Typography noSelect lineheight={1}>
                 {item.name}

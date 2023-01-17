@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Link, Grid, Select, Button, Typography, TextHeader, InputLabel, BasicSpinner } from 'voxeliface';
 
 import Modal from '../Modal';
-import ImageWrapper from '../ImageWrapper';
+import Avatar from '../Avatar';
 import VersionPicker from '../VersionPicker';
 
 import { LoaderIssue } from '../../../mdpkm';
@@ -101,7 +101,7 @@ export function ComponentUI({ instance, component }: ComponentProps) {
 		border: 'transparent solid 1px',
 		background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
 	}}>
-		<ImageWrapper src={component.icon ?? getImage(`component.${component.id}`)} size={40} smoothing={1} canPreview background="$secondaryBackground" borderRadius={8} />
+		<Avatar src={component.icon ?? getImage(`component.${component.id}`)} size="sm"/>
 		<Grid spacing={2} vertical justifyContent="center">
 			<Grid spacing={8}>
 				<Typography noSelect lineheight={1}>
@@ -158,7 +158,6 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 					setImportError(err.message);
 					throw err;
 				});
-				console.log(data);
 				instance.store.components.push(new (component as any)(instance, data));
 				instance.store.save().then(() => {
 					instance.emitEvent('changed');
@@ -172,7 +171,7 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 		if (!versions)
 			throw new Error();
 
-		instance.store.components.push(new components[component!](instance, {
+		instance.store.components.push(new (components[component!] as any)(instance, {
 			version: version?.id
 		}));
 		instance.store.save().then(() => {
@@ -198,11 +197,11 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 		{versions?.length !== 0 && <React.Fragment>
 			<InputLabel spacious>{t('add_component.version')}</InputLabel>
 			<Typography size={14} noSelect>
-				{version ? `${t(`voxura:component.${components[component]?.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
+				{version ? `${t(`voxura:component.${components[component!]?.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
 			</Typography>
 
 			<Grid height={256} margin="16px 0 0">
-				{versions && <VersionPicker id={components[component]?.id} value={version} versions={versions} onChange={setVersion} />}
+				{versions && <VersionPicker id={components[component!]?.id} value={version} versions={versions} onChange={setVersion} />}
 			</Grid>
 		</React.Fragment>}
 

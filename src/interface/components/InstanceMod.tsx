@@ -3,14 +3,13 @@ import { writeText } from '@tauri-apps/api/clipboard';
 import { Breakpoint } from 'react-socks';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import ImageWrapper from './ImageWrapper';
 import { Link, Grid, Button, Tooltip, Typography, ContextMenu } from 'voxeliface';
+
+import Avatar from './Avatar';
 
 import type Mod from '../../../voxura/src/util/mod';
 import { IMAGES } from '../../util/constants';
 import type { Instance } from '../../../voxura';
-import { useAppSelector } from '../../store/hooks';
 export interface InstanceModProps {
     mod: Mod
 	instance: Instance
@@ -18,11 +17,9 @@ export interface InstanceModProps {
 export default function InstanceMod({ mod, instance }: InstanceModProps) {
 	const icon = useMemo(() => mod.webIcon ?? IMAGES.placeholder, [mod.id]);
     const { t } = useTranslation('interface');
-    const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
 	const satisfied = mod.dependencies.every(d => instance.store.components.some(c => d.id.includes(c.id)));
 	
 	const update = null;
-    const iconSize = isCompact ? 32 : 40;
 	const removeMod = () => instance.removeMod(mod);
 	const openWebsite = () => open(mod.source?.baseProjectURL + mod.id);
     return <ContextMenu.Root>
@@ -32,13 +29,13 @@ export default function InstanceMod({ mod, instance }: InstanceModProps) {
 				position: 'relative',
 				background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
 			}}>
-				<Grid width="100%" spacing={isCompact ? 4 : 8} alignItems="center">
-					<ImageWrapper src={icon} size={iconSize} margin="8px 0 8px 8px" pixelated smoothing={1} canPreview background="$secondaryBackground" borderRadius={8}/>
+				<Grid width="100%" spacing={8} alignItems="center">
+					<Avatar src={icon} size="sm" margin="8px 0 8px 8px"/>
 					<Grid margin="0 0 0 4px" spacing={2} vertical>
-						<Typography size={isCompact ? 14 : 16} weight={400} family="$secondary" noSelect lineheight={1}>
+						<Typography weight={400} family="$secondary" noSelect lineheight={1}>
 							{mod.name ?? mod.id}
 						</Typography>
-						<Typography size={isCompact ? 10 : 12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
+						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
 							{t('common.label.version', [mod.version])}
 						</Typography>
 					</Grid>
@@ -87,11 +84,11 @@ export default function InstanceMod({ mod, instance }: InstanceModProps) {
 								</Typography>}
 							</Breakpoint>
 						</Grid>
-						{update && <Button size={isCompact ? 'smaller' : 'small'} theme="accent" disabled>
+						{update && <Button theme="accent" disabled>
 							<IconBiCloudArrowDown/>
 							Update
 						</Button>}
-						<Link size={isCompact ? 11 : 12} padding="0 16px" onClick={removeMod}>
+						<Link size={12} padding="0 16px" onClick={removeMod}>
 							<IconBiTrash3Fill/>
 							<Breakpoint customQuery="(min-width: 580px)">
 								{t('common.action.delete')}

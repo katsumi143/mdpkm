@@ -2,8 +2,8 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Grid, Typography, TextHeader } from 'voxeliface';
 
+import Avatar from '../components/Avatar';
 import { getImage } from '../../util';
-import ImageWrapper from '../components/ImageWrapper';
 import { useDownloads } from '../../voxura';
 import { Download, DownloadState } from '../../../voxura/src/downloader';
 export default function Downloads() {
@@ -54,8 +54,8 @@ export function DownloadComponent({ download }: DownloadComponentProps) {
 		border: 'transparent solid 1px',
         background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box',
 	}}>
-        <ImageWrapper src={getImage(`download.${download.id}`)} size={48} smoothing={1} canPreview borderRadius={8}/>
-        <Grid vertical>
+        <Avatar src={getImage(`download.${download.id}`)} size="md"/>
+		<Grid vertical>
             <Typography noFlex noSelect>
 				<Trans values={download.extraData} i18nKey={`mdpkm:download.${download.id}`}/>
                 {download.tasks.length > 0 && <Typography size={12} color="$secondaryColor" weight={400} margin="0 6px" noSelect css={{ display: 'inline-block' }}>

@@ -1,12 +1,11 @@
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import React, { useState } from 'react';
-import { Link, Grid, Image, Typography } from 'voxeliface';
+import { Link, Grid, Typography } from 'voxeliface';
 
-import ImagePreview from '../../ImagePreview';
+import Avatar from '../../Avatar';
 
 import { i } from '../../../../util';
 import type { Instance } from '../../../../../voxura';
-import { useAppSelector } from '../../../../store/hooks';
 export interface ServerItemProps {
 	name: string
 	icon?: string
@@ -19,10 +18,6 @@ export interface ServerItemProps {
 }
 export default function ServerItem({ name, icon, motd, type, players, address, instance, acceptTextures }: ServerItemProps) {
     const { t } = useTranslation('interface');
-    const isCompact = useAppSelector(state => state.settings.uiStyle) === 'compact';
-    const [previewIcon, setPreviewIcon] = useState(false);
-    
-    const iconSize = isCompact ? 32 : 40;
     const serverIcon = icon ? icon.startsWith('data:') ? icon : `data:image/png;base64,${icon}` : i('unknown_server');
     return <Grid height="fit-content" spacing={12} smoothing={1} borderRadius={16} css={{
 		border: 'transparent solid 1px',
@@ -30,24 +25,13 @@ export default function ServerItem({ name, icon, motd, type, players, address, i
 		position: 'relative',
 		background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
     }}>
-        <Grid spacing={isCompact ? 10 : 12}>
-            <Image
-                src={serverIcon}
-                size={iconSize}
-				margin="8px 0 8px 8px"
-                onClick={() => setPreviewIcon(true)}
-				smoothing={1}
-				borderRadius={8}
-                css={{
-                    cursor: 'zoom-in'
-                }}
-            />
-            {previewIcon && <ImagePreview src={serverIcon} onClose={() => setPreviewIcon(false)} pixelated/>}
+        <Grid spacing={12}>
+			<Avatar src={serverIcon} size="sm" margin="8px 0 8px 8px"/>
             <Grid height="100%" spacing={2} vertical justifyContent="center">
-                <Typography size={isCompact ? 14 : 16} noSelect lineheight={1} whitespace="nowrap">
+                <Typography noSelect lineheight={1} whitespace="nowrap">
                     {name || t('server.no_name')}
                     {acceptTextures &&
-                        <Typography size={isCompact ? 10 : 12} color="$secondaryColor" weight={400} family="$secondary" margin="2px 0 0" noSelect lineheight={1}>
+                        <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" margin="2px 0 0" noSelect lineheight={1}>
                             {t('server.textures_accepted')}
                         </Typography>
                     }
@@ -59,7 +43,7 @@ export default function ServerItem({ name, icon, motd, type, players, address, i
                         fontFamily: 'Nunito'
                     }}/>
                 :
-                    <Typography size={isCompact ? 10 : 12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
+                    <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
                         {address || t('server.no_address')}
                     </Typography>
                 }
@@ -78,11 +62,11 @@ export default function ServerItem({ name, icon, motd, type, players, address, i
                 </Typography>}
             </Grid>
 			{instance && <>
-				<Link size={isCompact ? 11 : 12} height="100%" padding="0 16px" disabled>
+				<Link size={12} height="100%" padding="0 16px" disabled>
 					<IconBiPencilFill/>
 					{t('common.action.edit')}
 				</Link>
-				<Link size={isCompact ? 11 : 12} height="100%" padding="0 16px" disabled>
+				<Link size={12} height="100%" padding="0 16px" disabled>
 					<IconBiTrash3Fill/>
 					{t('common.action.delete')}
 				</Link>

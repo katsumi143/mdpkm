@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Grid, Typography } from 'voxeliface';
 
-import ImageWrapper from '../components/ImageWrapper';
+import Avatar from '../components/Avatar';
 import PlatformSearch from '../components/platform/search';
 
 import { setPage } from '../../store/slices/interface';
@@ -35,8 +35,8 @@ export default function SearchPage() {
 					{t('mod_management.warning')}
 				</Typography>
 			}
-			<Grid margin="0 16px" spacing={16} alignItems="center">
-				<ImageWrapper src={instance.webIcon} size={40} canPreview borderRadius={4}/>
+			<Grid margin="0 16px" spacing={12} alignItems="center">
+				<Avatar src={instance.webIcon} size="sm"/>
 				<Grid spacing={2} vertical>
 					<Typography noSelect lineheight={1}>
 						{instance.name}
