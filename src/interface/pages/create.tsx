@@ -18,7 +18,7 @@ export default function Create() {
     const changePage = (page: string) => dispatch(setPage(page));
     return <Grid width="100%" height="inherit" padding=".75rem 1rem" vertical>
         <Typography size={20} noSelect>
-            Create Instance
+            {t('create_instance')}
         </Typography>
         <Link size={12} onClick={() => changePage('instances')}>
             <IconBiArrowLeft/>

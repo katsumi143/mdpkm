@@ -32,7 +32,6 @@
 
     "common.label.instance_name": "Instance Name",
     "common.label.minecraft_version": "Minecraft Version",
-    "common.label.val_version": "{{val}} Version",
 
 	"common.label.play_time": "Play Time",
     "common.label.instance_created": "Instance created",
@@ -51,10 +50,8 @@
 	"common.label.processes": "Processes",
 	"common.label.installed": "Installed",
 	"common.label.installing": "Installing",
-    "common.label.item_count": "{{0}} Items",
 	"common.label.toggle_true": "On",
 	"common.label.toggle_false": "Off",
-	"common.label.search_query": "Search Query",
 	"common.label.resolution_width": "Width",
 	"common.label.resolution_height": "Height",
 
@@ -67,6 +64,11 @@
 
 	"common.label.downloads_one": "{{count, number}} Download",
 	"common.label.downloads_other": "{{count, number}} Downloads",
+
+	"common.label.platforms": "Platforms",
+
+	"common.label.search_query": "Search Query",
+	"common.label.search_no_results": "No results found for your query!",
 
     "common.select_group.minecraft_versions": "Minecraft Versions",
     "common.select_group.component_versions": "Component Versions",
@@ -93,9 +95,10 @@
 	"common.time.seconds_one": "{{count}} second",
 	"common.time.seconds_other": "{{count}} seconds",
 
-	"common.locale.en": "English",
-	"common.locale.lv": "Latvian",
-	"common.locale.ru": "Russian",
+	"common.locale.en-AU": "English - Australia",
+	"common.locale.lv": "Latviešu - Latvija",
+	"common.locale.ru": "Русский - Россия",
+	"common.locale.en-LOL": "LOLCAT - Kingdom of Cats",
 
 	"common.theme.default": "Default",
 	"common.theme.light": "Light",
@@ -116,6 +119,8 @@
 	"navigation.downloads": "Downloads",
 	"navigation.accounts": "Accounts",
 	"navigation.settings": "Settings",
+
+	"header.account": "Logged-in as:",
 
     "home.greeting.0": "Good morning,",
     "home.greeting.1": "Good afternoon,",
@@ -161,8 +166,8 @@
 	"download.state.3": "Downloading",
 
 	"settings.general": "General Settings",
-	"settings.general.theme": "Color Theme",
-	"settings.general.theme.summary": "Change the application color theme.",
+	"settings.general.theme": "Colour Theme",
+	"settings.general.theme.summary": "Change the application colour theme.",
 	"settings.general.theme.category": "Themes",
 	"settings.general.startPage": "Startup Page",
 	"settings.general.startPage.summary": "Change the default application start page.",
@@ -232,10 +237,6 @@
 	"server.no_address": "No Address",
 	"server.textures_accepted": "Server Resource Packs Enabled",
 
-    "account.tag.active": "Active",
-
-    "component.version": "Version {{0}}",
-
 	"instance.state.0": "Ready to launch",
 	"instance.state.1": "Launching client",
 	"instance.state.2": "Client is running",
@@ -287,6 +288,8 @@
 	"add_component.component.none": "Select a Component",
 	"add_component.version": "Component Version",
 	"add_component.import": "Import Component File",
+
+	"create_instance": "Create Instance",
 
 	"dialog.delete_instance": "Are you absolutely sure?",
 	"dialog.delete_instance.body": "This action cannot be undone.\n“{{0}}” will be lost forever! (A long time!)",

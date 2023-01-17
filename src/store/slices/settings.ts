@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { readJsonFile, writeJsonFile } from 'voxelified-commons/tauri';
 
 import joi from '../../util/joi';
-import { APP_DIR } from '../../util/constants';
+import { APP_DIR, LANGUAGES } from '../../util/constants';
 export interface Settings {
     theme: string
     language: string
@@ -18,7 +18,7 @@ export const settingsSlice = createSlice({
 	initialState: await joi.object({
 		theme: joi.string().default('dark'),
 		showNews: joi.bool().default(true),
-		language: joi.string().default('en'),
+		language: joi.string().valid(...LANGUAGES).default('en-AU').failover('en-AU'),
 		startPage: joi.string().valid('home', 'instances').default('home'),
 		instances: joi.object({
 			resolution: joi.array().items(joi.number()).default([800, 400])

@@ -1,9 +1,9 @@
+import React from 'react';
 import { open } from '@tauri-apps/api/shell';
 import { appWindow } from '@tauri-apps/api/window';
 import { writeText } from '@tauri-apps/api/clipboard';
 import { useTranslation } from 'react-i18next';
-import React, { useState } from 'react';
-import { Grid, Image, Button, Portal, Typography, TextHeader, BasicSpinner, DropdownMenu } from 'voxeliface';
+import { Grid, Image, Button, Typography, TextHeader, BasicSpinner, DropdownMenu } from 'voxeliface';
 
 import Avatar from '../components/Avatar';
 
@@ -14,8 +14,6 @@ export default function Accounts() {
     const { t } = useTranslation('interface');
     const current = useCurrentAccount();
     const accounts = useAccounts();
-    const addingAccount = false;
-    const [error, setError] = useState<string | null>(null);
     const changeAccount = (account: Account) => voxura.auth.selectAccount(account);
     const deleteAccount = async(account: Account) => {
         await account.remove();
@@ -45,39 +43,11 @@ export default function Accounts() {
                     <UserAccount key={key} account={account} current={current} changeAccount={changeAccount} deleteAccount={deleteAccount}/>
                 )}
             </Grid>
-            <Button theme="accent" onClick={addNewAccount} disabled={addingAccount}>
-                {addingAccount ? <BasicSpinner size={16}/> : <IconBiPlusLg/>}
+            <Button theme="accent" onClick={addNewAccount}>
+                <IconBiPlusLg/>
                 {t('accounts.action.add')}
             </Button>
         </Grid>
-        {error && <Portal>
-            <Grid width="100vw" height="100vh" background="#00000099" alignItems="center" justifyContent="center">
-                <Grid width="45%" padding={12} vertical background="$secondaryBackground" borderRadius={8} css={{
-                    border: '1px solid $secondaryBorder2',
-                    position: 'relative'
-                }}>
-                    <TextHeader>Account Error</TextHeader>
-                    {error == 'NOT_OWNED' && <Typography>
-                        You do not own Minecraft: Java Edition.<br/>
-                        <Typography size=".9rem" color="$secondaryColor">
-                            Xbox Game Pass is unsupported.
-                        </Typography>
-                    </Typography>}
-                    {error == 'NETWORK_ERR' && <Typography>
-                        A network error occured.<br/>
-                        <Typography size=".9rem" color="$secondaryColor">
-                            Check your internet connection, you might be offline.
-                        </Typography>
-                    </Typography>}
-                    <Grid margin="2rem 0 0" spacing={8}>
-                        <Button theme="secondary" onClick={() => setError(null)} >
-                            <IconBiXLg/>
-                            Close
-                        </Button>
-                    </Grid>
-                </Grid>
-            </Grid>
-        </Portal>}
     </Grid>;
 }
 
@@ -133,11 +103,15 @@ export function UserAccount({ account, current, changeAccount, deleteAccount }: 
 							{t('user_account.options.view_namemc')}
 							<IconBiBoxArrowUpRight/>
 						</DropdownMenu.Item>
+						<DropdownMenu.Seperator/>
 						<DropdownMenu.Item onClick={() => deleteAccount(account)}>
-							{t('app.mdpkm.accounts.account.actions.remove')}
+							<IconBiTrash3/>
+							{t('common.action.remove')}
 						</DropdownMenu.Item>
+						<DropdownMenu.Seperator/>
 						<DropdownMenu.Item onClick={copyUUID}>
-							{t('app.mdpkm.accounts.account.actions.copy_uuid')}
+							<IconBiClipboardPlus/>
+							{t('common.action.copy_id')}
 						</DropdownMenu.Item>
 						<DropdownMenu.Arrow/>
 					</DropdownMenu.Content>

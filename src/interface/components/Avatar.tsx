@@ -9,6 +9,7 @@ const StyledAvatar = styled(motion.img, {
 	height: '$$size',
 	cursor: 'zoom-in',
 	objectFit: 'fill',
+	userSelect: 'none',
 	background: '$secondaryBackground',
 	'--squircle-smooth': 1,
 	'-webkit-mask-image': 'paint(squircle)',

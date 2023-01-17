@@ -181,7 +181,7 @@ export default function Skins() {
                 <Typography size={18} margin="0 0 1rem" noSelect>
                     {t('skin_management.library')}
                 </Typography>
-                {skins.length > 0 ? <Grid spacing={8} css={{
+                <Grid spacing={8} css={{
                     display: 'grid',
                     overflow: 'hidden auto',
                     gridTemplateColumns: 'repeat(6, auto)'
@@ -189,14 +189,7 @@ export default function Skins() {
                     {skins.map((skin, key) =>
                         <LibraryItem key={skin.name} data={skin} capes={capes} index={key} useSkin={useSkin} editSkin={editSkin} loading={loading || setting}/>
                     )}
-                </Grid> : <React.Fragment>
-                    <Typography size="1.2rem" family="$primarySans">
-                        {t('app.mdpkm.common:headers.empty_list')}
-                    </Typography>
-                    <Markdown text={t('app.mdpkm.skin_management.library.empty')} css={{
-                        '& > :first-child': { color: '$secondaryColor' }
-                    }}/>
-                </React.Fragment>}
+                </Grid>
             </Grid>
         </Grid>
         {adding && <Modal>
@@ -280,35 +273,34 @@ export default function Skins() {
                     background="none"
                 />
                 <Grid vertical>
-                    <InputLabel>{t('app.mdpkm.skin_management.skin_name.label')}</InputLabel>
+                    <InputLabel>{t('skin_management.add_modal.name')}</InputLabel>
                     <TextInput
                         width="100%"
                         value={addingName}
                         onChange={setAddingName}
-                        placeholder={t('app.mdpkm.skin_management.skin_name.placeholder')}
+                        placeholder={t('skin_management.add_modal.name.placeholder')}
                     />
 
-                    <InputLabel spacious>{t('app.mdpkm.skin_management.skin_model.label')}</InputLabel>
+					<InputLabel spacious>{t('skin_management.add_modal.model')}</InputLabel>
                     <Select.Minimal value={addingModel} onChange={setAddingModel}>
-                        <Select.Group name={t('app.mdpkm.skin_management.skin_model.category')}>
+                        <Select.Group name={t('skin_management.add_modal.model.category')}>
                             <Select.Item value="CLASSIC">
-                                {t('app.mdpkm.skin_management.skin_model.items.classic')}
+                                {t('skin_management.add_modal.model.item.classic')}
                             </Select.Item>
                             <Select.Item value="SLIM">
-                                {t('app.mdpkm.skin_management.skin_model.items.slim')}
+                                {t('skin_management.add_modal.model.item.slim')}
                             </Select.Item>
                         </Select.Group>
                     </Select.Minimal>
 
-                    <InputLabel spacious>{t('app.mdpkm.skin_management.skin_file.label')}</InputLabel>
+                    <InputLabel spacious>{t('skin_management.add_modal.file')}</InputLabel>
 					<FileSelect name={t('skin_management.ext_name')} path={addingPath} setPath={setAddingPath} extensions={['png']}/>
 
-                    <InputLabel spacious>{t('app.mdpkm.skin_management.cape.label')}</InputLabel>
+                    <InputLabel spacious>{t('skin_management.add_modal.cape')}</InputLabel>
                     <Select.Minimal value={addingCape} onChange={setAddingCape}>
-                        <Select.Group name={t('app.mdpkm.skin_management.cape.category')}>
+                        <Select.Group name={t('skin_management.add_modal.cape.category')}>
                             {capes.map((cape, key) => <Select.Item key={key} value={cape.id}>
                                 <Image src={cape.url} size={24} height={32} css={{
-									background: '#fff',
                                     backgroundSize: '128px 66px',
                                     imageRendering: 'pixelated',
                                     backgroundPosition: '0 7%'
@@ -317,14 +309,14 @@ export default function Skins() {
                             </Select.Item>)}
                         </Select.Group>
                         <Select.Item value={null}>
-                            {t('app.mdpkm.skin_management.cape.items.none')}
+                            {t('skin_management.add_modal.cape.item.none')}
                         </Select.Item>
                     </Select.Minimal>
 
                     <Grid margin="2rem 0 0" spacing={8}>
                         <Button theme="accent" onClick={saveSkin} disabled={!addingName}>
                             <IconBiPlusLg/>
-                            {t('app.mdpkm.common:actions.save_changes')}
+                            {t('common.action.save_changes')}
                         </Button>
                         <Button theme="secondary" onClick={() => setEditingSkin(null)}>
                             <IconBiXLg/>

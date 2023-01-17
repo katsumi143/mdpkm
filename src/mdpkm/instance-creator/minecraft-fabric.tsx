@@ -54,7 +54,7 @@ function Component({ setData, creator, setSatisfied }: ComponentProps) {
                 {version ? `${t(`voxura:component.${MinecraftJavaClient.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
             </Typography>
 
-            <InputLabel spacious>{t('common.label.val_version', {
+            <InputLabel spacious>{t('common.label.version', {
                 val: t(`voxura:component.${creator.component.id}`)
             })}</InputLabel>
             <Select.Minimal value={version2} loading={!versions2} onChange={setVersion2}>

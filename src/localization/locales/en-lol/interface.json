@@ -1,0 +1,345 @@
+{
+	"common.action.use": "Uze",
+	"common.action.edit": "Chaenj",
+    "common.action.view": "hav luk",
+	"common.action.back": "GO BACC",
+	"common.action.close": "Clawz",
+	"common.action.search": "Sorch",
+    "common.action.select": "Select",
+	"common.action.launch": "Launch",
+	"common.action.delete": "Deleet",
+	"common.action.remove": "get raid ov",
+	"common.action.cancel": "Nu",
+	"common.action.confirm": "Konvimr",
+	"common.action.install": "instal",
+	"common.action.refresh": "Refresh",
+	"common.action.copy_id": "Copy ID",
+    "common.action.view_all": "View all",
+	"common.action.continue": "Kontiniue",
+	"common.action.copy_path": "Copy File Path",
+	"common.action.open_folder": "Open Folder",
+	"common.action.save_changes": "Save Changes",
+	"common.action.view_website": "Visit Website",
+	"common.action.kill_process": "Close Client {{0}}",
+    "common.action.add_component": "Add Component",
+	"common.action.select_folder": "Select Folder",
+    "common.action.create_instance": "Create Instance",
+	"common.action.import_instance": "Import Instance",
+	"common.action.check_for_updates": "Check for Updates",
+    "common.action.return_to_instances": "Return to your Instances",
+
+    "common.header.instance_list": "Your Instances",
+
+    "common.label.instance_name": "Instance Name",
+    "common.label.minecraft_version": "Minceraft Vershun",
+
+	"common.label.play_time": "Play Time",
+    "common.label.instance_created": "Instance created",
+    "common.label.last_launched": "Last launched",
+    "common.label.content_installed": "Content installed",
+
+	"common.label.component": "Component",
+    "common.label.game_component": "Game Component",
+    "common.label.other_components": "Additional Components",
+    "common.label.instance_component_count": "{{0}} Instance Components",
+
+	"common.label.actions": "Actions",
+	"common.label.version": "Vershun {{0}}",
+	"common.label.category": "Category",
+	"common.label.platform": "Pwatfolm",
+	"common.label.processes": "Processes",
+	"common.label.installed": "Installd",
+	"common.label.installing": "Installing",
+	"common.label.toggle_true": "On",
+	"common.label.toggle_false": "Off",
+	"common.label.search_query": "Search Query",
+	"common.label.resolution_width": "Wdth",
+	"common.label.resolution_height": "Heght",
+
+	"common.label.loading": "Meowing",
+
+	"common.label.empty_dir": "This directory is empty",
+
+	"common.label.items_one": "{{count, number}} Item",
+	"common.label.items_other": "{{count, number}} Items",
+
+	"common.label.downloads_one": "{{count, number}} Download",
+	"common.label.downloads_other": "{{count, number}} Downloads",
+
+    "common.select_group.minecraft_versions": "Minecraft Versions",
+    "common.select_group.component_versions": "Component Versions",
+
+    "common.input_placeholder.required": "This field is required",
+
+    "common.date.today": "Today",
+    "common.date.yesterday": "Yesterday",
+    "common.date.never": "Never",
+    "common.date.days_ago": "{{0}} days ago",
+
+    "common.date.released_today": "Released today",
+    "common.date.released_yesterday": "Released yesterday",
+    "common.date.released_days": "Released {{0}} days ago",
+    "common.date.released_months": "Released {{0}} months ago",
+    "common.date.released_years": "Released {{0}} years ago",
+
+	"common.time.hours_one": "{{count}} hour",
+	"common.time.hours_other": "{{count}} hours",
+
+	"common.time.minutes_one": "{{count}} minute",
+	"common.time.minutes_other": "{{count}} minutes",
+
+	"common.time.seconds_one": "{{count}} second",
+	"common.time.seconds_other": "{{count}} seconds",
+
+	"common.theme.default": "Default",
+	"common.theme.light": "Light",
+	"common.theme.dark": "Dark",
+	"common.theme.red": "Red",
+	"common.theme.orange": "Orange",
+	"common.theme.yellow": "Yellow",
+	"common.theme.green": "Green",
+	"common.theme.blue": "Blue",
+	"common.theme.purple": "Purple",
+	
+	"common.pages.servers": "Servers",
+	"common.pages.resource_packs": "Resource Packs",
+
+	"navigation.home": "Home",
+	"navigation.instances": "Your Instances",
+	"navigation.skins": "Skin Management",
+	"navigation.downloads": "Downloads",
+	"navigation.accounts": "Acuwntz",
+	"navigation.settings": "Settinz",
+
+	"header.account": "Logged-in as:",
+
+    "home.greeting.0": "Good morning,",
+    "home.greeting.1": "Good afternoon,",
+    "home.greeting.2": "Good evening,",
+
+    "home.news.title": "Wayz nyuw",
+    "home.recent_instances.title": "Recent Instances",
+
+	"skin_management": "Skin Management",
+	"skin_management.current": "Current Skin",
+	"skin_management.library": "Librerry",
+	"skin_management.ext_name": "PNG Image File",
+	"skin_management.add": "Add New Skin",
+	"skin_management.add_modal.name": "Display Name",
+	"skin_management.add_modal.name.placeholder": "Steve",
+	"skin_management.add_modal.model": "Skin Model",
+	"skin_management.add_modal.model.category": "Skin Models",
+	"skin_management.add_modal.model.item.classic": "Default (Steve)",
+	"skin_management.add_modal.model.item.slim": "Slim (Alex)",
+	"skin_management.add_modal.file": "Source Image",
+	"skin_management.add_modal.cape": "Cape",
+	"skin_management.add_modal.cape.category": "Your Capes",
+	"skin_management.add_modal.cape.item.none": "None",
+	"skin_management.add_modal.submit": "Add Skin",
+
+	"import_file": "Import from File",
+	"import_file.select": "Select Instance Archive",
+	"import_file.ext_name": "mdpkm Instance Archive",
+
+	"downloads": "Downloads",
+	"downloads.none": "There's nothing downloading right now.",
+	"downloads.completed": "Completed",
+
+	"download.additional_one": "(plus {{count}} additional download)",
+	"download.additional_other": "(plus {{count}} additional downloads)",
+	"download.calculating": "Calculating...",
+	"download.type.0": "Dwnlodin...",
+	"download.type.1": "Extracting...",
+	"download.percentage": "{{0}}%",
+	"download.state.0": "Pending",
+	"download.state.1": "Completed",
+	"download.state.2": "Extracting",
+	"download.state.3": "Dwnlodin",
+
+	"settings.general": "Generul Settinz",
+	"settings.general.theme": "Colour Theme",
+	"settings.general.theme.summary": "Change the application colour theme.",
+	"settings.general.theme.category": "Themes",
+	"settings.general.startPage": "Startup Page",
+	"settings.general.startPage.summary": "Change the default application start page.",
+	"settings.general.startPage.category": "Application Pages",
+	"settings.general.language": "Wat u re speek",
+	"settings.general.language.category": "Languages",
+	"settings.general.showNews": "Home News",
+	"settings.general.showNews.summary": "Shows what's new on the home page.",
+
+	"settings.instances": "Instance Settings",
+	"settings.instances.resolution": "Default Game Resolution",
+	"settings.instances.resolution.summary": "Default resolution to use for new instances.",
+
+	"settings.download": "Download Settings",
+
+	"settings.plugins": "Plugin Settings",
+	"settings.plugins.add": "Add Plugin",
+
+	"settings.about": "About this build",
+	"settings.about.version": "{{0}} v{{1}}",
+	"settings.about.version2": "Tauri {{0}} & Voxura {{1}}",
+	"settings.about.report_bug": "Report Issue",
+	"settings.about.github": "Open GitHub Page",
+	
+	"mod_management": "Game Modifications",
+	"mod_management.filter": "Filter Modifications",
+	"mod_management.search": "Saerhc 4 Modz",
+	"mod_management.warning": "You should only manage mods when your Instance is idle.",
+
+	"plugins": "Server Plugins",
+	"plugins.filter": "Filter Plugins",
+	"plugins.search": "Search for Plugins",
+	"plugins.warning": "You should only manage plugins when your Instance is idle.",
+
+	"shaders": "Iris Shaders",
+	"shaders.filter": "Filter Shaders",
+	"shaders.search": "Search for Shaders",
+
+	"platform_search": "Project Search",
+	"platform_search.results_one": "{{count}} Result",
+	"platform_search.results_other": "{{count}} Results",
+
+	"project.author": "by {{project.author}}",
+	"project.featured": "Featured",
+	"project.recommended": "Recommended",
+	"project.explict": "Explict",
+	"project.side.0": "Client",
+	"project.side.1": "Server",
+	"project.side.2": "Client or server",
+	"project.side.3": "Client and server",
+	"project.followers_one": "{{count, number}} Follower",
+	"project.followers_other": "{{count, number}} Followers",
+	"project.visit_site": "View on $t(voxura:platform.{{project.source.id}}) Website",
+	"project.issue.incompatible": "Incompatible",
+
+	"essential": "Essential",
+
+	"servers": "Server Management",
+	"servers.filter": "Filter Servers",
+	"servers.add": "Add Server",
+	"servers.add.name": "Display Name",
+	"servers.add.address": "IP Address",
+	"servers.add.address.placeholder": "funny.realserver.com",
+
+	"server.no_name": "Minecraft Server",
+	"server.players": "{{0}}/{{1}} Players",
+	"server.no_address": "No Address",
+	"server.textures_accepted": "Server Resource Packs Enabled",
+
+	"instance.state.0": "Ready to launch",
+	"instance.state.1": "Launching client",
+	"instance.state.2": "Client is running",
+	"instance.action.view_options": "Client Options",
+
+	"instance_page.tab.home": "Information",
+	"instance_page.tab.game": "Gaem Settinz",
+	"instance_page.tab.game.tab.0": "Components",
+	"instance_page.tab.export": "Export",
+	"instance_page.tab.content": "Gaem Contenewnt",
+
+	"instance_page.settings": "Settinz",
+	"instance_page.settings.name": "Display Name",
+	"instance_page.settings.memory": "Memory Allocation ({{0}} GB)",
+	"instance_page.settings.resolution": "Game Window Resolution",
+	"instance_page.settings.delete": "Delete Instance",
+	"instance_page.settings.disabled": "You can only edit the Instance when it's idle.",
+
+	"loading_instances": "Loading Instances",
+
+	"resource_packs": "Resource Packs",
+	"resource_packs.filter": "Filter Resource Packs",
+	"resource_packs.add": "Import Resource Pack",
+	"resource_packs.search": "Search for Resource Packs",
+
+	"accounts.header": "Account Management",
+	"accounts.select_account": "You don't have an account selected.\nYou must select or add an account to play Minecraft.",
+	"accounts.action.add": "ad Microwosoft profilez",
+
+	"user_account.selected": "This account is active",
+	"user_account.options.label": "Account Options",
+	"user_account.options.view_namemc": "View NameMC Profile",
+
+	"server_settings.pvp": "Player Combat (PvP)",
+	"server_settings.gamemode": "Gamemode",
+	"server_settings.gamemode.survival": "Survival",
+	"server_settings.gamemode.creative": "Creative",
+	"server_settings.gamemode.adventure": "Adventure",
+	"server_settings.world_name": "World Name",
+
+	"select_file": "Select File",
+	"select_file.none": "No file selected",
+
+	"launch_error": "Gam launch failed :(",
+	"launch_error.origin": "Originated from “{{0}}”",
+
+	"add_component": "Component Adder",
+	"add_component.component.group": "Available Instance Components",
+	"add_component.component.none": "Select a Component",
+	"add_component.version": "Component Version",
+	"add_component.import": "Import Component File",
+
+	"dialog.delete_instance": "Are you absolutely sure?",
+	"dialog.delete_instance.body": "This action cannot be undone.\n“{{0}}” will be lost forever! (A long time!)",
+
+	"error.generic": "Dis iz nut gud!",
+
+	"toast.plugin_error": "Plugin Error",
+	"toast.plugin_loaded": "Plugin Loaded",
+	"toast.plugin_loaded.body": "“{{0}}” loaded successfully.",
+	"toast.plugin_load_fail": "$t(interface:toast.plugin_error)",
+	"toast.plugin_load_fail.body": "“{{0}}” failed to load.",
+
+	"toast.download_started": "Download Started",
+	"toast.download_started.body": "{{0}}",
+	"toast.download_finished": "Download Finished",
+	"toast.download_finished.body": "{{0}}",
+
+	"toast.launch_error": "$t(interface:launch_error)",
+	"toast.launch_error.body": "An unknown error occurred while launching “{{0}}”.",
+	"toast.instance_launched": "Instance Client has launched",
+	"toast.instance_launched.body": "{{0}}",
+
+	"toast.changes_saved": "Your changes have been saved",
+	"toast.changes_saved.body": "Saved changes made to “{{0}}”.",
+
+	"toast.auth_success": "Account Added",
+	"toast.auth_success.body": "“{{0}}” has been added.",
+	"toast.account_removed": "Account Removed",
+	"toast.account_removed.body": "“{{0}}” has been removed.",
+	"toast.auth_check_browser": "Check your browser",
+	"toast.auth_check_browser.body": "A new tab opened in your default browser.",
+
+	"toast.skin_saved": "Yay! Fur savd",
+	"toast.skin_saved.body": "$t(interface:toast.auth_success.body, [\"{{0}}\"])",
+	"toast.skin_uploaded": "Skin Uploaded",
+	"toast.skin_uploaded.body": "“{{0}}” has been uploaded and applied.",
+
+	"toast.check_connection": "$t(interface:error.generic)",
+	"toast.check_connection.body": "Check your internet connection.",
+
+	"toast.no_update": "No updates available",
+	"toast.no_update.body": "mdpkm is already up-to-date.",
+
+	"toast.copied": "Copied to clipboard",
+	"toast.copied_id": "$t(interface:toast.copied)",
+	"toast.copied_id.body": "The ID of “{{0}}” has been copied.",
+
+	"toast.install_fail": "$t(interface:error.generic)",
+	"toast.install_fail.body": "An unknown error occurred while installing “{{0}}”.",
+
+	"toast.download_fail": "$t(interface:error.generic)",
+	"toast.download_fail.body": "An unknown error occurred while downloading “{{0}}”.",
+
+	"toast.project_incompatible": "$t(interface:error.generic)",
+	"toast.project_incompatible.body": "No compatible versions of “{{0}}” were found for your Instance.",
+
+	"toast.unknown_error": "$t(interface:error.generic)",
+	"toast.unknown_error.body": "An unknown error occurred.",
+
+	"toast.action_fail": "This action could not be completed",
+
+	"toast.instance_refresh_none_idle": "$t(interface:toast.action_fail)",
+	"toast.instance_refresh_none_idle.body": "All Instances must be idle to refresh the Instance List."
+}

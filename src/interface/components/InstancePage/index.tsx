@@ -31,10 +31,8 @@ export default function InstancePage({ id }: InstancePageProps) {
 	const tab = useAppSelector(state => state.interface.instanceTab);
 	const { t } = useTranslation('interface');
 	const account = useCurrentAccount();
-	const uiStyle = useAppSelector(state => state.settings.uiStyle);
 	const dispatch = useDispatch();
 	const instance = useInstance(id);
-	const isCompact = uiStyle === 'compact';
 	const banner = useMemo(() => {
 		if (!instance)
 			return '';
@@ -80,7 +78,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 		});
 	};
 	return <Grid height="100%" vertical background="$primaryBackground" css={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
-		<Image src={banner} width="100%" height={isCompact ? 128 : 144} css={{
+		<Image src={banner} width="100%" height={144} css={{
 			opacity: 0.5,
 			position: 'absolute',
 			backgroundSize: 'cover',
@@ -91,13 +89,13 @@ export default function InstancePage({ id }: InstancePageProps) {
 		<Grid alignItems="end" justifyContent="space-between" css={{
 			zIndex: 1,
 			position: 'relative',
-			minHeight: isCompact ? 128 : 144
+			minHeight: 144
 		}}>
 			<Grid padding={16} spacing={24}>
 				<Grid borderRadius={8} css={{
 					boxShadow: '0 8px 16px 2px #00000040'
 				}}>
-					<ImageWrapper src={instance.webIcon} size={isCompact ? 64 : 80} smoothing={1} canPreview background="$secondaryBackground2" borderRadius={8} css={{
+					<ImageWrapper src={instance.webIcon} size={80} smoothing={1} canPreview background="$secondaryBackground2" borderRadius={8} css={{
 						alignItems: 'end',
 						justifyContent: 'end',
 						backgroundSize: 'cover',
@@ -106,12 +104,12 @@ export default function InstancePage({ id }: InstancePageProps) {
 						<ImageOptions img={instance.icon} onEdit={e => changeImage('icon', e)} onRemove={e => removeImage('icon', e)}/>
 					</ImageWrapper>
 				</Grid>
-				<Grid spacing={isCompact ? 4 : 4} vertical justifyContent="center">
-					<Typography size={isCompact ? 20 : 22} family="$tertiary" noSelect lineheight={1} css={{ alignItems: 'start' }}>
+				<Grid spacing={4} vertical justifyContent="center">
+					<Typography size={22} family="$tertiary" noSelect lineheight={1} css={{ alignItems: 'start' }}>
 						{instance.isFavourite && <IconBiStarFill fontSize={16}/>}
 						{instance.name}
 					</Typography>
-					<Typography size={isCompact ? 14 : 16} color="$secondaryColor" weight={400} family="$secondary" spacing={6} noSelect lineheight={1}>
+					<Typography color="$secondaryColor" weight={400} family="$secondary" spacing={6} noSelect lineheight={1}>
 						<StateIcon fontSize={12}/>
 						{t(`instance.state.${instance.state}`)}
 					</Typography>

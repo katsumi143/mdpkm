@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Grid, Image, Typography } from 'voxeliface';
 import { TauriHeader, TauriHeaderProps } from 'voxeliface-tauri';
 
@@ -11,6 +12,7 @@ import { useCurrentAccount } from '../../voxura';
 
 export type HeaderProps = TauriHeaderProps;
 export default function DefaultHeader(props: HeaderProps) {
+	const { t } = useTranslation('interface');
     const account = useCurrentAccount();
     const dispatch = useAppDispatch();
     const viewAccounts = () => dispatch(setPage('accounts'));
@@ -29,7 +31,7 @@ export default function DefaultHeader(props: HeaderProps) {
 			<Image src={account.getAvatarUrl(AvatarType.Minecraft)} size={32}/>
 			<Grid spacing={2} vertical justifyContent="center">
 				<Typography size={12} color="$secondaryColor" lineheight={1}>
-					Logged-in as:
+					{t('header.account')}
 				</Typography>
 				<Typography size={14} color="$linkColor" weight={400} family="$secondary" lineheight={1}>
 					{account.name}

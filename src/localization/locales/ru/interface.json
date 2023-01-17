@@ -32,7 +32,6 @@
 
     "common.label.instance_name": "Имя экземпляра",
     "common.label.minecraft_version": "Версия Minecraft",
-    "common.label.val_version": "Версия {{val}}",
 
 	"common.label.play_time": "Время игры",
     "common.label.instance_created": "Экземпляр создан",
@@ -51,7 +50,6 @@
 	"common.label.processes": "Процессы",
 	"common.label.installed": "Установлено",
 	"common.label.installing": "Установка",
-    "common.label.item_count": "Элементов: {{0}}",
 	"common.label.toggle_true": "Вкл",
 	"common.label.toggle_false": "Выкл",
 	"common.label.search_query": "Поисковый запрос",
@@ -92,10 +90,6 @@
 
 	"common.time.seconds_one": "{{count}} сек.",
 	"common.time.seconds_other": "{{count}} сек.",
-
-	"common.locale.en": "English",
-	"common.locale.lv": "Latvian",
-	"common.locale.ru": "Русский",
 
 	"common.theme.default": "По умолчанию",
 	"common.theme.light": "Светлая",
@@ -218,10 +212,6 @@
 	"server.players": "Игроков {{0}}/{{1}}",
 	"server.no_address": "Нет адреса",
 	"server.textures_accepted": "Тектсурпаки сервера включены",
-
-    "account.tag.active": "Активный",
-
-    "component.version": "Версия {{0}}",
 
 	"instance.state.0": "Готов к запуску",
 	"instance.state.1": "Запуск клиента",

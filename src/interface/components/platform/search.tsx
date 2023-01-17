@@ -98,7 +98,7 @@ export default function PlatformSearch({ instance }: PlatformSearchProps) {
 			<Grid width="40%" vertical>
 				<InputLabel>{t('common.label.platform')}</InputLabel>
 				<Select.Minimal value={api} onChange={setApi} disabled={searching}>
-					<Select.Group name="Mod Platforms">
+					<Select.Group name={t('common.label.platforms')}>
 						{Object.values(voxura.platforms).map(({ id }) =>
 							<Select.Item key={id} value={id}>
 								<Image src={i(`platform.${id}`)} size={16}/>
@@ -112,11 +112,8 @@ export default function PlatformSearch({ instance }: PlatformSearchProps) {
 		<Grid ref={container} height="100%" spacing={8} vertical borderRadius={16} css={{ overflow: 'hidden auto' }}>
 			{items.map(item => <ListItem key={item.id} data={item} instance={instance}/>)}
 			{items.length === 0 && <Grid vertical>
-				<Typography size={18}>
-					{t('app.mdpkm.common:headers.empty_list')}
-				</Typography>
-				<Typography size={14} color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
-					{t('app.mdpkm.common:headers.search_retry')}
+				<Typography color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
+					{t('common.label.search_no_results')}
 				</Typography>
 			</Grid>}
 		</Grid>

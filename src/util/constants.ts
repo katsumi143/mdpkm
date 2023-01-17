@@ -54,3 +54,5 @@ export const IMAGES = {
 	'download.temurin': 'img/icon/temurin.png',
 	'download.minecraft_java': 'img/icon/minecraft/java.png'
 }
+
+export const LANGUAGES = ['en-AU', 'lv', 'ru', 'en-LOL']

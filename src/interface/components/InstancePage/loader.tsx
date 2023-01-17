@@ -112,7 +112,7 @@ export function ComponentUI({ instance, component }: ComponentProps) {
 				</Typography>}
 			</Grid>
 			{isVersioned && <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
-				{t('component.version', [component.version])}
+				{t('common.label.version', [component.version])}
 			</Typography>}
 		</Grid>
 		<Grid height="100%" css={{ marginLeft: 'auto' }}>

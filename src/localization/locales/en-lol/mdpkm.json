@@ -1,0 +1,17 @@
+{
+	"instance_category.default": "Your Instances",
+	"instance_category.favorites": "Your Favourites",
+
+	"instance_creator.category.minecraft": "Minceraft: Jawa Edition (Client)",
+	"instance_creator.category.minecraft2": "Minceraft: Jawa Edition (Server)",
+
+	"download.temurin": "Eclipse Temurin Java Development Kit {{0}}",
+	"download.project": "“{{0}}” from $t(voxura:platform.{{1}}) (Game Modification)",
+	"download.java_agent": "Java Agent",
+	"download.minecraft_java": "Minceraft: Jawa Edition {{0}}",
+	"download.component_manifest": "$t(voxura:component.{{0}}) {{1}} Manifest",
+	"download.component_libraries": "$t(voxura:component.{{0}}) {{1}} Libraries",
+	"download.minecraft_java_assets": "Minceraft: Jawa Edition {{0}} Assets",
+	"download.minecraft_java_manifest": "Minceraft: Jawa Edition {{0}} Manifest",
+	"download.minecraft_java_asset_index": "Minceraft: Jawa Edition {{0}} Asset Index"
+}

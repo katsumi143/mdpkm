@@ -6,15 +6,13 @@ import React, { useState, ReactNode } from 'react';
 import { copyFile, createDir, removeFile } from '@tauri-apps/api/fs';
 import { Grid, Image, Select, Switch, Button, Tooltip, GridProps, TextInput, TextHeader, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
-import BrowserLink from '../components/BrowserLink';
-
 import { setPage } from '../../store/slices/interface';
 import PluginSystem from '../../plugins';
 import { VOXURA_VERSION } from '../../../voxura';
 import { set, saveSettings } from '../../store/slices/settings';
 import { i, toast, readTextFileInZip } from '../../util';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { APP_NAME, APP_VERSION, TAURI_VERSION, PLACEHOLDER_IMAGE } from '../../util/constants';
+import { APP_NAME, LANGUAGES, APP_VERSION, TAURI_VERSION, PLACEHOLDER_IMAGE } from '../../util/constants';
 export default function Settings() {
 	const { t, i18n } = useTranslation('interface');
 	const theme = useAppSelector(state => state.settings.theme);
@@ -120,15 +118,9 @@ export default function Settings() {
 		<Setting name="general.language" noSummary>
 			<Select.Minimal value={language} onChange={changeLanguage}>
 				<Select.Group name={t('settings.general.language.category')}>
-					<Select.Item value="en">
-						{t('common.locale.en')}
-					</Select.Item>
-					<Select.Item value="lv">
-						{t('common.locale.lv')}
-					</Select.Item>
-					<Select.Item value="ru">
-						{t('common.locale.ru')}
-					</Select.Item>
+					{LANGUAGES.map(lang => <Select.Item key={lang} value={lang}>
+						{t(`common.locale.${lang}`)}
+					</Select.Item>)}
 				</Select.Group>
 			</Select.Minimal>
 		</Setting>

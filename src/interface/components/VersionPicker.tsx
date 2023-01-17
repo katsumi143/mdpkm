@@ -37,7 +37,7 @@ export default function VersionPicker({ id, value, versions, onChange }: Version
                         {t(`voxura:component.${id}.release_category.${key}`)}
                     </Typography>
                     <Typography size={12} color={category === key ? undefined : '$secondaryColor'} family="$secondary" noSelect>
-                        {t('common.label.item_count', [items.length])}
+                        {t('common.label.items', { count: items.length })}
                     </Typography>
                 </Grid>
             )}
