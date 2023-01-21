@@ -8,7 +8,6 @@ import Modal from '../Modal';
 import Avatar from '../Avatar';
 import VersionPicker from '../VersionPicker';
 
-import { LoaderIssue } from '../../../mdpkm';
 import { toast, getImage } from '../../../util';
 import { useComponentVersions } from '../../../voxura';
 import { Instance, Component, InstanceState, COMPONENT_MAP, ComponentType, GameComponent, ComponentVersion, VersionedComponent } from '../../../../voxura';
@@ -49,38 +48,12 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 			)}
 		</Grid>
 		<Button theme="accent" onClick={() => setAdding(true)}>
-			<IconBiPlusLg />
+			<IconBiPlusLg/>
 			{t('common.action.add_component')}
 		</Button>
 
 		{adding && <ComponentAdder onClose={() => setAdding(false)} instance={instance} />}
 	</React.Fragment>
-}
-
-import ExclamationOctagonFill from '~icons/bi/exclamation-octagon-fill';
-import ExclamationTriangleFill from '~icons/bi/exclamation-triangle-fill';
-const ISSUE_ICONS = [ExclamationTriangleFill, ExclamationOctagonFill];
-
-export interface IssueProps {
-	issue: LoaderIssue
-}
-export function Issue({ issue }: IssueProps) {
-	const { t } = useTranslation();
-	const Icon = ISSUE_ICONS[issue.type];
-	return <Grid padding="12px 16px" spacing={16} background="$secondaryBackground2" borderRadius={16}>
-		<Typography><Icon /></Typography>
-		<Grid spacing={2} vertical>
-			<Typography size={14} spacing={6} lineheight={1}>
-				{t(`app.mdpkm.common:loader_issue.${issue.id}`, issue.extra)}
-				<Typography size={10} color="$secondaryColor" weight={400} margin="2px 0 0" lineheight={1}>
-					({t(`app.mdpkm.common:loader_issue.type.${issue.type}`)})
-				</Typography>
-			</Typography>
-			<Typography size={12} color="$secondaryColor" lineheight={1}>
-				{t(`app.mdpkm.common:loader_issue.${issue.id}.body`, issue.extra)}
-			</Typography>
-		</Grid>
-	</Grid>;
 }
 
 export interface ComponentProps {
