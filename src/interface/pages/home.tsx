@@ -10,13 +10,12 @@ import LoadingInstances from '../components/LoadingInstances';
 import mdpkm from '../../mdpkm';
 import voxura from '../../voxura';
 import { setPage } from '../../store/slices/interface';
-import { AvatarType, AvatarStyle } from '../../../voxura';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { useCurrentAccount, useRecentInstances } from '../../voxura';
+import { useMinecraftAccount, useRecentInstances } from '../../voxura';
 export default function Home() {
 	const { t } = useTranslation('interface');
 	const recent = useRecentInstances();
-	const account = useCurrentAccount();
+	const account = useMinecraftAccount();
 	const dispatch = useAppDispatch();
 	const greeting = useMemo(() => getGreeting(), []);
 	const showNews = useAppSelector(state => state.settings.showNews);
@@ -40,7 +39,7 @@ export default function Home() {
 			</Grid>
 			<Grid width="65%" padding="12px 0 12px 1rem" vertical justifyContent="space-between">
 				<Grid height="fit-content" margin="24px 0 0" spacing={24} alignItems="center">
-					<ImageWrapper src={account?.getAvatarUrl(AvatarType.Minecraft, AvatarStyle.Bust, 128)} size={128} border="2px solid $secondaryBorder" pixelated canPreview borderRadius={64} css={{
+					<ImageWrapper src={account?.avatarUrl} size={128} border="2px solid $secondaryBorder" pixelated canPreview borderRadius={64} css={{
 						'&:before': {
 							width: '100%',
 							height: '100%',
@@ -56,7 +55,7 @@ export default function Home() {
 							{t(`home.greeting.${greeting}`)}
 						</Typography>
 						<Typography size={18} color="$secondaryColor" noSelect>
-							{account?.name}!
+							{account?.primaryName}!
 						</Typography>
 					</Grid>
 				</Grid>

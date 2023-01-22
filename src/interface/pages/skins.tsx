@@ -3,24 +3,24 @@ import { useTranslation } from 'react-i18next';
 import { readBinaryFile } from '@tauri-apps/api/fs';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 import React, { useState, useEffect } from 'react';
-import { Grid, Image, Select, Button, Divider, Spinner, Markdown, TextInput, Typography, InputLabel, TextHeader } from 'voxeliface';
+import { Grid, Image, Select, Button, Divider, Spinner, TextInput, Typography, InputLabel, TextHeader } from 'voxeliface';
 
 import Modal from '../components/Modal';
 import SkinFrame from '../components/SkinFrame';
 import FileSelect from '../components/FileSelect';
 
-import { useCurrentAccount } from '../../voxura';
+import { useMinecraftAccount } from '../../voxura';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { toast, getSkinData, getCapeData } from '../../util';
 import { Skin, addSkin, saveSkins, writeSkin } from '../../store/slices/skins';
-import { ProfileType, MinecraftCape, MinecraftProfile } from '../../../voxura';
+import { MinecraftCape, MinecraftProfile } from '../../../voxura';
 
 // TODO: rewrite
 const SKIN_MODEL = { CLASSIC: 'default', SLIM: 'slim' } as const;
 export default function Skins() {
     const { t } = useTranslation('interface');
     const skins = useAppSelector(state => state.skins.data);
-    const account = useCurrentAccount();
+    const account = useMinecraftAccount();
     const dispatch = useAppDispatch();
     const [capes, setCapes] = useState<any[]>([]);
     const [adding, setAdding] = useState(false);
@@ -120,7 +120,7 @@ export default function Skins() {
         if (account && !profile && !loading) {
             setLoading(true);
             account.refresh().then(async() => {
-                const profile: MinecraftProfile = await account.getProfile(ProfileType.Minecraft);
+                const profile: MinecraftProfile = await account.getProfile();
                 const skin = profile.skins.find(s => s.state === 'ACTIVE')!;
                 const capes: MinecraftCape[] = [];
                 for (const cape of profile.capes)

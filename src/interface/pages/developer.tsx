@@ -1,23 +1,32 @@
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
-import { Grid, Button, TextInput, Typography, TextHeader, InputLabel } from 'voxeliface';
+import { Grid, Switch, Button, TextInput, Typography, TextHeader, InputLabel } from 'voxeliface';
 
 import ImageWrapper from '../components/ImageWrapper';
 
 import PluginSystem from '../../plugins';
 import { useTimeString } from '../../util';
-import voxura, { useCurrentAccount } from '../../voxura';
+import { set, saveSettings } from '../../store/slices/settings';
+import voxura, { useMinecraftAccount } from '../../voxura';
 import { InstanceType, COMPONENT_MAP } from '../../../voxura';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import mdpkm, { COMPONENT_EXTRAS, INSTANCE_CREATORS } from '../../mdpkm';
 import { APP_DIR, APP_NAME, APP_VERSION, TAURI_VERSION } from '../../util/constants';
 import { getDefaultInstanceIcon, getDefaultInstanceBanner } from '../../util';
 export default function Developer() {
 	const { t } = useTranslation();
-	const account = useCurrentAccount();
-	const currentDate = Date.now();
+	const account = useMinecraftAccount();
+	const dispatch = useAppDispatch();
 	const [crash, setCrash] = useState<any>(null);
 	const [iconTest, setIconTest] = useState('28839');
 	const [bannerTest, setBannerTest] = useState('billy is awesome');
+
+	const currentDate = Date.now();
+	const showHiddenAuths = useAppSelector(state => state.settings.developer.showHiddenAuthProviders);
+	const setSetting = (key: any, value: any) => {
+		dispatch(set([key, value]));
+		dispatch(saveSettings());
+	};
 	return <Grid width="100%" height="inherit" padding="12px 1rem" vertical>
 		<TextHeader>Developer Stuff</TextHeader>
 		<Grid spacing={8}>
@@ -33,12 +42,14 @@ export default function Developer() {
 			<Button theme="accent" onClick={() => voxura.instances.loadInstances()}>
 				Reload voxura instances
 			</Button>
-			<Button theme="accent" onClick={() => voxura.auth.loadFromFile()}>
-				Reload voxura accounts
+			<Button theme="accent" onClick={() => voxura.auth.refreshProviders()}>
+				Refresh voxura auth providers
 			</Button>
-			<Button theme="accent" onClick={() => voxura.auth.refreshAccounts()}>
-				Refresh voxura accounts (tokens, etc)
-			</Button>
+		</Grid>
+
+		<InputLabel spaciouser>Show Hidden Auth Providers</InputLabel>
+		<Grid>
+			<Switch value={showHiddenAuths} onChange={v => setSetting('developer.showHiddenAuthProviders', v)}/>
 		</Grid>
 
 		<InputLabel spaciouser>Default Instance Icon Tester</InputLabel>
@@ -63,39 +74,39 @@ export default function Developer() {
 		<Grid spacing={32}>
 			<Grid vertical>
 				<Typography size={14} weight={400} family="$secondary">
-					Name: {account?.name}
+					Primary Name: {account?.primaryName}
 				</Typography>
 				<Typography size={14} weight={400} family="$secondary">
-					Real Name: {account?.data.xboxProfile?.realName}
+					Secondary Name: {account?.secondaryName}
 				</Typography>
 			</Grid>
 			<Grid vertical>
 				<Typography size={14} weight={400} family="$secondary">
-					XUID: {account?.data.xsts2.xuid}
+					XUID: {account?.xboxAccount.data.xsts.xuid}
 				</Typography>
 				<Typography size={14} weight={400} family="$secondary">
-					Xbox Name: {account?.xboxName}
+					Xbox Name: {account?.primaryName}
 				</Typography>
 				<Typography size={14} weight={400} family="$secondary">
-					Minecraft UUID: {account?.uuid}
+					Minecraft UUID: {account?.data.cachedProfile?.id}
 				</Typography>
 			</Grid>
 		</Grid>
 		<Grid vertical>
 			<Typography size={14} weight={400} family="$secondary">
-				Xbox expires in {useTimeString((account?.data.xbox?.expireDate ?? 0) - currentDate)}
+				Xbox expires in {useTimeString((account?.xboxAccount.expireDate ?? 0) - currentDate)}
 			</Typography>
 			<Typography size={14} weight={400} family="$secondary">
-				XSTS expires in {useTimeString((account?.data.xsts?.expireDate ?? 0)  - currentDate)}
+				Xbox XSTS expires in {useTimeString((account?.xboxAccount.data.xsts.expireDate ?? 0)  - currentDate)}
 			</Typography>
 			<Typography size={14} weight={400} family="$secondary">
-				XSTS2 expires in {useTimeString((account?.data.xsts2?.expireDate ?? 0) - currentDate)}
+				Microsoft expires in {useTimeString((account?.msAccount.expireDate ?? 0) - currentDate)}
 			</Typography>
 			<Typography size={14} weight={400} family="$secondary">
-				Microsoft expires in {useTimeString((account?.data.microsoft?.expireDate ?? 0) - currentDate)}
+				Minecraft expires in {useTimeString((account?.expireDate ?? 0) - currentDate)}
 			</Typography>
 			<Typography size={14} weight={400} family="$secondary">
-				Minecraft expires in {useTimeString((account?.data.minecraft?.expireDate ?? 0) - currentDate)}
+				Minecraft XSTS expires in {useTimeString((account?.data.xsts.expireDate ?? 0) - currentDate)}
 			</Typography>
 		</Grid>
 
@@ -126,6 +137,18 @@ export default function Developer() {
 			<Typography size={14} weight={400} family="$secondary">
 				Root Path: {voxura.rootPath}
 			</Typography>
+		</Grid>
+
+		<InputLabel spaciouser>Authentication Providers</InputLabel>
+		<Grid spacing={16} vertical>
+			{voxura.auth.providers.map(({ id, accounts, activeAccount }) =>
+				<Typography key={id} size={14} weight={400} family="$secondary">
+					[{id}]<br/>
+					Active: {activeAccount?.primaryName} ({activeAccount?.id})<br/>
+					Accounts: {accounts.length}<br/>
+					Translation: {t(`voxura:auth_provider.${id}`)}
+				</Typography>
+			)}
 		</Grid>
 
 		<InputLabel spaciouser>PluginSystem Information</InputLabel>

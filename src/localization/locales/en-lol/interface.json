@@ -254,8 +254,7 @@
 	"resource_packs.search": "Search for Resource Packs",
 
 	"accounts.header": "Account Management",
-	"accounts.select_account": "You don't have an account selected.\nYou must select or add an account to play Minecraft.",
-	"accounts.action.add": "ad Microwosoft profilez",
+	"accounts.action.add": "ad $t(voxura:auth_provider.{{0}}) profilez",
 
 	"user_account.selected": "This account is active",
 	"user_account.options.label": "Account Options",

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ProjectType } from '../../../voxura';
-import { settingsSlice } from './settings';
+import { Settings, settingsSlice } from './settings';
 export const interfaceSlice = createSlice({
     name: 'interface',
     initialState: {
@@ -13,7 +13,7 @@ export const interfaceSlice = createSlice({
         currentInstance: ''
     },
     reducers: {
-        setPage: (state, { payload }: PayloadAction<string>) => {
+        setPage: (state, { payload }: PayloadAction<Settings["startPage"]>) => {
             state.page = payload;
         },
 		setContentTab: (state, { payload }: PayloadAction<number>) => {

@@ -146,7 +146,7 @@ export default function Settings() {
 					width={80}
 					value={Math.max(0, defaultInstanceResolution[0] || 0).toString()}
 					onChange={value =>
-						setSetting('instances.defaultResolution',
+						setSetting('instances.resolution',
 							[parseInt(value), defaultInstanceResolution[1]]
 						)
 					}

@@ -46,10 +46,10 @@ export const IMAGES = {
 	'instance_banner.7': 'img/banner/instance/banner7.webp',
 	'instance_banner.8': 'img/banner/instance/banner8.webp',
 
-	'auth_platform.microsoft': 'img/banner/auth_platform/microsoft.svg',
+	'auth_provider.minecraft': 'img/banner/auth_platform/microsoft.svg',
 
-	'unknown_pack': 'img/icon/minecraft/unknown_pack.png',
-	'unknown_server': 'img/icon/minecraft/unknown_server.png',
+	unknown_pack: 'img/icon/minecraft/unknown_pack.png',
+	unknown_server: 'img/icon/minecraft/unknown_server.png',
 
 	'download.temurin': 'img/icon/temurin.png',
 	'download.minecraft_java': 'img/icon/minecraft/java.png'

@@ -43,7 +43,7 @@ export default function Navigation() {
 					<NavigationItem name={t('navigation.home')} icon={<IconBiHouse/>} value="home" direction="horizontal">
 						<Home/>
 					</NavigationItem>
-					<NavigationItem name={t('navigation.instances')} icon={<IconBiListUl/>} value="instances" direction="horizontal">
+					<NavigationItem name={t('instance_list')} icon={<IconBiListUl/>} value="instances" direction="horizontal">
 						<Instances/>
 					</NavigationItem>
 					<NavigationItem name={t('navigation.skins')} icon={<IconBiPersonBadge/>} value="skins">

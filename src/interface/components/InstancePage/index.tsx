@@ -21,8 +21,8 @@ import { useAppSelector } from '../../../store/hooks';
 import { COMPONENT_EXTRAS } from '../../../mdpkm';
 import { INSTANCE_STATE_ICONS } from '../../../util/constants';
 import { setInstanceTab, setLaunchError } from '../../../store/slices/interface';
-import { useInstance, useCurrentAccount } from '../../../voxura';
 import { toast, getDefaultInstanceBanner } from '../../../util';
+import { useInstance, useMinecraftAccount } from '../../../voxura';
 
 export interface InstancePageProps {
 	id: string
@@ -30,7 +30,7 @@ export interface InstancePageProps {
 export default function InstancePage({ id }: InstancePageProps) {
 	const tab = useAppSelector(state => state.interface.instanceTab);
 	const { t } = useTranslation('interface');
-	const account = useCurrentAccount();
+	const account = useMinecraftAccount();
 	const dispatch = useDispatch();
 	const instance = useInstance(id);
 	const banner = useMemo(() => {
@@ -185,65 +185,6 @@ export default function InstancePage({ id }: InstancePageProps) {
 				<Settings instance={instance}/>
 			</TabItem>
 		</Tabs>
-		{/*instance.launchLogs &&
-			<Grid width="auto" height={consoleOpen ? '70%' : 'auto'} margin="0 8px 8px" vertical background="$secondaryBackground2" borderRadius={8} css={{
-				overflow: 'hidden',
-				position: 'relative',
-				flexShrink: 0
-			}}>
-				<Grid padding="14px 10px" css={{
-					borderBottom: consoleOpen ? '1px solid $secondaryBorder2' : null
-				}}>
-					<Typography lineheight={1}>
-						Instance Console {logErrors.length ? `(${logErrors.length} Errors!)` : ''}
-					</Typography>
-				</Grid>
-				<Button theme="secondary" onClick={() => setConsoleOpen(!consoleOpen)} css={{
-					top: 8,
-					right: 8,
-					position: 'absolute'
-				}}>
-					{consoleOpen ? 'Hide' : 'Show'} Console
-				</Button>
-				{consoleOpen && <Grid width="100%" vertical css={{
-					overflow: 'auto'
-				}}>
-					{instance.launchLogs.map(({ text, type, thread, timestamp }, key) => {
-						const date = new Date(parseInt(timestamp));
-						return <Grid key={key} padding="4px 8px" spacing={8}>
-							<Grid spacing={2} vertical>
-								<Typography size=".8rem" color="$secondaryColor" textalign="start" lineheight={1}>
-									[{thread ?? 'main'}/{type}]
-								</Typography>
-								<Typography size=".8rem" color="$secondaryColor" textalign="start" lineheight={1}>
-									{date.toLocaleTimeString()}
-								</Typography>
-							</Grid>
-							<Typography color={{
-								ERROR: '#d39a9a'
-							}[type] ?? '$primaryColor'} textalign="start" lineheight={1} css={{
-								height: 'fit-content'
-							}}>
-								{text}
-							</Typography>
-						</Grid>
-					})}
-				</Grid>}
-			</Grid>
-		*/}
-		{!account && <InstanceInfo animate>
-			<Typography>
-				<IconBiExclamationCircle/>
-			</Typography>
-			<Grid spacing={4} vertical>
-				<Typography size=".9rem" lineheight={1}>
-					No Minecraft Account selected
-				</Typography>
-				<Typography size=".8rem" color="$secondaryColor" weight={400} textalign="start" lineheight={1.2} css={{ display: 'block' }}>
-					Add a new account or choose one in <b>Accounts</b>.
-				</Typography>
-			</Grid>
-		</InstanceInfo>}
 	</Grid>;
 }
 

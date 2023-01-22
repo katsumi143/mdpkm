@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next';
 import React, { ReactNode } from 'react';
 import { Grid, Image, Button, Typography, BasicSpinner } from 'voxeliface';
 
-import { getImage, useDayString, useTimeString } from '../../../util';
 import type { Instance } from '../../../../voxura';
+import { getImage, useDayString, useTimeString } from '../../../util';
 export interface InstanceHomeProps {
     setTab: (tab: number) => void,
     instance: Instance

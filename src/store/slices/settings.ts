@@ -7,8 +7,12 @@ export interface Settings {
     theme: string
     language: string
 	showNews: boolean
+	startPage: 'home' | 'instances'
     instances: {
 		resolution: [number, number]
+	}
+	developer: {
+		showHiddenAuthProviders: boolean
 	}
 }
 const settingsPath = `${APP_DIR}/settings.json`;
@@ -22,21 +26,27 @@ export const settingsSlice = createSlice({
 		startPage: joi.string().valid('home', 'instances').default('home'),
 		instances: joi.object({
 			resolution: joi.array().items(joi.number()).default([800, 400])
-		}).default({
-			resolution: [800, 400]
-		})
+		}).default(),
+		developer: joi.object({
+			showHiddenAuthProviders: joi.boolean().default(false)
+		}).default()
 	}).validateAsync(settings, {
 		stripUnknown: true
-	}),
+	}) as Settings,
     reducers: {
         set: (state: any, { payload: [key, value] }: PayloadAction<[keyof Settings, any]>) => {
-            state[key] = value;
+			setValue(state, value, key);
         },
         saveSettings: state => {
             writeJsonFile(settingsPath, state);
         }
     }
 });
+
+function setValue(obj: any, value: any, propPath: string) {
+    const [head, ...rest] = propPath.split('.');
+    !rest.length ? obj[head] = value : setValue(obj[head], value, rest.join('.'));
+}
 
 export const { set, saveSettings } = settingsSlice.actions;
 export default settingsSlice.reducer;

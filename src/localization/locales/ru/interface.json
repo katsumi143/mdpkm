@@ -239,8 +239,6 @@
 	"resource_packs.search": "Поиск текстурпаков",
 
 	"accounts.header": "Управление аккаунтами",
-	"accounts.select_account": "Аккаунт не выбран.\nЧтобы играть в Minecraft, необходимо выбрать или добавить аккаунт.",
-	"accounts.action.add": "Добавить аккаунт Microsoft",
 
 	"user_account.selected": "Этот аккаунт активен",
 	"user_account.options.label": "Параметры аккаунта",

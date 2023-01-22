@@ -5,10 +5,9 @@ import { useMemo, useState, useEffect } from 'react';
 
 import { APP_DIR } from './util/constants';
 import { Download } from '../voxura/src/downloader';
-import type Account from '../voxura/src/auth/account';
 import mdpkmPlatform from './mdpkm/platform';
 import { toast, getDefaultInstanceIcon } from './util';
-import { Voxura, Instance, ComponentVersions, VersionedComponent } from '../voxura';
+import { Voxura, Account, Instance, AuthProvider, MinecraftAccount, ComponentVersions, VersionedComponent } from '../voxura';
 
 Object.defineProperty(Instance.prototype, 'defaultIcon', {
 	get: function() {
@@ -29,19 +28,22 @@ voxura.downloader.listenForEvent('downloadFinished', (download: Download) => {
 		toast('download_finished', [t(`mdpkm:download.${download.id}`, download.extraData)], CheckCircle);
 });
 
-export function useAccounts(): Account[] {
+export function useAccounts(provider: AuthProvider<any>): Account[] {
     const subscription = useMemo(() => ({
-        subscribe: (callback: any) => voxura.auth.listenForEvent('accountsChanged', callback),
-        getCurrentValue: () => voxura.auth.accounts
+        subscribe: (callback: any) => provider.listenForEvent('changed', callback),
+        getCurrentValue: () => provider.accounts
     }), []);
     return useSubscription(subscription);
 }
-export function useCurrentAccount(): Account | undefined {
+export function useActiveAccount(provider: AuthProvider<any>): Account | undefined {
     const subscription = useMemo(() => ({
-        subscribe: (callback: any) => voxura.auth.listenForEvent('selectedChanged', callback),
-        getCurrentValue: () => voxura.auth.getCurrent()
+        subscribe: (callback: any) => provider.listenForEvent('changed', callback),
+        getCurrentValue: () => provider.activeAccount
     }), []);
     return useSubscription(subscription);
+}
+export function useMinecraftAccount(): MinecraftAccount | undefined {
+	return useActiveAccount(voxura.auth.getProvider('minecraft')!) as any;
 }
 
 export function useInstance(id: string) {

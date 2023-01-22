@@ -4,16 +4,16 @@ import { Grid, Image, Typography } from 'voxeliface';
 import { TauriHeader, TauriHeaderProps } from 'voxeliface-tauri';
 
 import { i } from '../../util';
+import Avatar from './Avatar';
 import { setPage } from '../../store/slices/interface';
-import { AvatarType } from '../../../voxura';
 import { APP_VERSION } from '../../util/constants';
 import { useAppDispatch } from '../../store/hooks';
-import { useCurrentAccount } from '../../voxura';
+import { useMinecraftAccount } from '../../voxura';
 
 export type HeaderProps = TauriHeaderProps;
 export default function DefaultHeader(props: HeaderProps) {
 	const { t } = useTranslation('interface');
-    const account = useCurrentAccount();
+    const account = useMinecraftAccount();
     const dispatch = useAppDispatch();
     const viewAccounts = () => dispatch(setPage('accounts'));
     return <TauriHeader brand={<Image src={i('header')} width={148} height={48}/>} clickable={false} {...props}>
@@ -28,13 +28,13 @@ export default function DefaultHeader(props: HeaderProps) {
 			cursor: 'pointer',
 			position: 'absolute'
 		}}>
-			<Image src={account.getAvatarUrl(AvatarType.Minecraft)} size={32}/>
+			<Avatar src={account.getAvatarUrl()} size="xs" transparent/>
 			<Grid spacing={2} vertical justifyContent="center">
 				<Typography size={12} color="$secondaryColor" lineheight={1}>
 					{t('header.account')}
 				</Typography>
 				<Typography size={14} color="$linkColor" weight={400} family="$secondary" lineheight={1}>
-					{account.name}
+					{account.primaryName}
 				</Typography>
 			</Grid>
 		</Grid>}

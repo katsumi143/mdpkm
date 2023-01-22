@@ -28,8 +28,6 @@
 	"common.action.check_for_updates": "Check for Updates",
     "common.action.return_to_instances": "Return to your Instances",
 
-    "common.header.instance_list": "Your Instances",
-
     "common.label.instance_name": "Instance Name",
     "common.label.minecraft_version": "Minecraft Version",
 
@@ -114,7 +112,6 @@
 	"common.pages.resource_packs": "Resource Packs",
 
 	"navigation.home": "Home",
-	"navigation.instances": "Your Instances",
 	"navigation.skins": "Skin Management",
 	"navigation.downloads": "Downloads",
 	"navigation.accounts": "Accounts",
@@ -242,6 +239,9 @@
 	"instance.state.2": "Client is running",
 	"instance.action.view_options": "Client Options",
 
+	"instance_list": "Your Instances",
+	"instance_list.empty": "You don't have any instances.",
+
 	"instance_page.tab.home": "Information",
 	"instance_page.tab.game": "Game Settings",
 	"instance_page.tab.game.tab.0": "Components",
@@ -263,8 +263,7 @@
 	"resource_packs.search": "Search for Resource Packs",
 
 	"accounts.header": "Account Management",
-	"accounts.select_account": "You don't have an account selected.\nYou must select or add an account to play Minecraft.",
-	"accounts.action.add": "Add Microsoft Account",
+	"accounts.action.add": "Add $t(voxura:auth_provider.{{0}}) Account",
 
 	"user_account.selected": "This account is active",
 	"user_account.options.label": "Account Options",

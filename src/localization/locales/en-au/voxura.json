@@ -67,6 +67,8 @@
 	"platform.curseforge": "CurseForge",
 	"platform.feedthebeast": "Feed the Beast",
 
+	"auth_provider.minecraft": "Microsoft",
+
 	"platform_category.gui": "GUI",
 	"platform_category.low": "Low",
 	"platform_category.pbr": "PBR",
