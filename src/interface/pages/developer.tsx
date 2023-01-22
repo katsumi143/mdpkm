@@ -47,11 +47,6 @@ export default function Developer() {
 			</Button>
 		</Grid>
 
-		<InputLabel spaciouser>Show Hidden Auth Providers</InputLabel>
-		<Grid>
-			<Switch value={showHiddenAuths} onChange={v => setSetting('developer.showHiddenAuthProviders', v)}/>
-		</Grid>
-
 		<InputLabel spaciouser>Default Instance Icon Tester</InputLabel>
 		<Grid spacing={8}>
 			<ImageWrapper src={getDefaultInstanceIcon(iconTest)} size={32} canPreview/>
@@ -68,6 +63,11 @@ export default function Developer() {
 				value={bannerTest}
 				onChange={setBannerTest}
 			/>
+		</Grid>
+
+		<InputLabel spaciouser>Show Hidden Auth Providers</InputLabel>
+		<Grid>
+			<Switch value={showHiddenAuths} onChange={v => setSetting('developer.showHiddenAuthProviders', v)}/>
 		</Grid>
 
 		<InputLabel spaciouser>Current Account Information</InputLabel>
@@ -130,9 +130,6 @@ export default function Developer() {
 			</Typography>
 			<Typography size={14} weight={400} family="$secondary">
 				Loaded Instances: {voxura.instances.getAll().length}
-			</Typography>
-			<Typography size={14} weight={400} family="$secondary">
-				Available Accounts: {voxura.auth.accounts.length}
 			</Typography>
 			<Typography size={14} weight={400} family="$secondary">
 				Root Path: {voxura.rootPath}
