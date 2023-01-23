@@ -41,6 +41,7 @@
     "common.label.game_component": "Game Component",
     "common.label.other_components": "Additional Components",
 
+	"common.label.auto": "Auto",
 	"common.label.actions": "Actions",
 	"common.label.version": "Version {{0}}",
 	"common.label.category": "Category",
@@ -248,7 +249,7 @@
 
 	"instance_page.settings": "Settings",
 	"instance_page.settings.memory": "Memory Allocation ({{0}} GB)",
-	"instance_page.settings.resolution": "Game Window Resolution",
+	"instance_page.settings.resolution": "Game Resolution",
 	"instance_page.settings.delete": "Delete Instance",
 	"instance_page.settings.disabled": "You can only edit the instance when it's idle.",
 

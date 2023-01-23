@@ -20,16 +20,15 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 	const component = instance.gameComponent;
 	const [adding, setAdding] = useState(false);
 
-	if (instance.state !== InstanceState.None)
-		return <Typography size={12} color="#ffba64" margin="8px 16px" noSelect>
-			<IconBiExclamationTriangleFill/>
-			{t('instance_page.settings.disabled')}
-		</Typography>;
-
+	const disabled = instance.state !== InstanceState.None;
 	const { components } = store;
 	const otherComponents = components.filter(c => c.type !== ComponentType.Game);
 	return <React.Fragment>
-		<Link size={12} padding="4px 8px">
+		{disabled && <Typography size={12} color="#ffba64" margin="8px 16px" noSelect>
+			<IconBiExclamationTriangleFill/>
+			{t('instance_page.settings.disabled')}
+		</Typography>}
+		<Link size={12} padding="4px 16px">
 			<IconBiQuestionLg/>
 			You may find this page confusing at first, click here for more information!
 		</Link>
@@ -37,17 +36,17 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 		<Typography size={12} color="$secondaryColor" margin="8px 0 0" noSelect>
 			{t('common.label.game_component')}
 		</Typography>
-		<ComponentUI instance={instance} component={component}/>
+		<ComponentUI disabled={disabled} instance={instance} component={component}/>
 
 		{!!otherComponents.length && <Typography size={12} color="$secondaryColor" margin="16px 0 0" noSelect>
 			{t('common.label.other_components')}
 		</Typography>}
 		<Grid spacing={8} vertical>
 			{otherComponents.map(component =>
-				<ComponentUI key={component.id} instance={instance} component={component}/>
+				<ComponentUI key={component.id} disabled={disabled} instance={instance} component={component}/>
 			)}
 		</Grid>
-		<Button theme="accent" onClick={() => setAdding(true)}>
+		<Button theme="accent" onClick={() => setAdding(true)} disabled={disabled}>
 			<IconBiPlusLg/>
 			{t('common.action.add_component')}
 		</Button>
@@ -57,10 +56,11 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 }
 
 export interface ComponentProps {
+	disabled: boolean
 	instance: Instance
 	component: Component
 }
-export function ComponentUI({ instance, component }: ComponentProps) {
+export function ComponentUI({ disabled, instance, component }: ComponentProps) {
 	const { t } = useTranslation('interface');
 	const [editing, setEditing] = useState(false);
 	const isGame = component instanceof GameComponent;
@@ -89,11 +89,11 @@ export function ComponentUI({ instance, component }: ComponentProps) {
 			</Typography>}
 		</Grid>
 		<Grid height="100%" css={{ marginLeft: 'auto' }}>
-			{isVersioned && <Link size={12} padding="0 16px" onClick={() => setEditing(true)}>
+			{isVersioned && <Link size={12} padding="0 16px" onClick={() => setEditing(true)} disabled={disabled}>
 				<IconBiPencilFill/>
 				{t('common.action.edit')}
 			</Link>}
-			{!isGame && <Link size={12} padding="0 16px" onClick={remove}>
+			{!isGame && <Link size={12} padding="0 16px" onClick={remove} disabled={disabled}>
 				<IconBiTrash3Fill/>
 				{t('common.action.remove')}
 			</Link>}

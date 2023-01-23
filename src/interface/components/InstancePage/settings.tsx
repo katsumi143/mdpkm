@@ -1,56 +1,44 @@
 import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
-import { Grid, Slider, Dialog, Button, TabItem, TextInput, Typography, InputLabel, BasicSpinner } from 'voxeliface';
+import { Grid, Switch, Slider, Dialog, Button, TabItem, TextInput, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
 import Tabs from '../Tabs';
 import JsonEditor from '../JsonEditor';
 
 import { toast } from '../../../util';
+import { useBind } from '../../../util/hooks';
 import { TOTAL_SYSTEM_MEMORY } from '../../../util/constants';
 import { Instance, InstanceState } from '../../../../voxura';
 export interface InstanceSettingsProps {
-    instance: Instance
+	instance: Instance
 }
 export default function InstanceSettings({ instance }: InstanceSettingsProps) {
-    const { t } = useTranslation('interface');
+	const { t } = useTranslation('interface');
+	const name = useBind(instance.name);
+	const memory = useBind([instance.store.memoryAllocation]);
+	const resolution = useBind(instance.store.gameResolution.size);
 	const [tab, setTab] = useState(0);
-    const [name, setName] = useState(instance.name);
-    const [saving, setSaving] = useState(false);
-    const [memory, setMemory] = useState([instance.store.memoryAllocation]);
-    const [advanced, setAdvanced] = useState(false);
-    const [resolution, setResolution] = useState(instance.store.gameResolution);
-    const deleteInstance = () => {
-        instance.delete();
-    };
-    const saveSettings = () => {
-        setSaving(true);
+	const [advanced, setAdvanced] = useState(false);
 
-        instance.store.memoryAllocation = memory[0];
-        instance.store.save().then(() => {
-			toast('changes_saved', [instance.name]);
-            setSaving(false);
-        });
-    };
-    useEffect(() => {
-        setName(instance.name);
-        setMemory([instance.store.memoryAllocation]);
-        setResolution(instance.store.gameResolution);
-    }, [instance.name, instance.store.memoryAllocation, instance.store.gameResolution]);
+	const disabled = instance.state !== InstanceState.None;
+	const deleteInstance = () => {
+		instance.delete();
+	};
+	useEffect(() => {
+		instance.store.gameResolution = { size: resolution.value };
+		instance.store.memoryAllocation = memory.value[0];
+		instance.store.save();
+	}, [name.value, memory.value, resolution.value]);
 
-	if (instance.state !== InstanceState.None)
-		return <Typography size={12} color="#ffba64" margin="8px 16px" noSelect>
-			<IconBiExclamationTriangleFill/>
-			{t('instance_page.settings.disabled')}
-		</Typography>;
-    if (advanced)
-        return <JsonEditor value={instance.store.data}/>;
-    return <Grid height="100%" vertical>
-        <Tabs value={tab} onChange={setTab} css={{ height: '100%' }}>
+	if (advanced)
+		return <JsonEditor value={instance.store.data}/>;
+	return <>
+		<Tabs value={tab} onChange={setTab} css={{ height: '100%' }}>
 			<TabItem name="General" icon={<IconBiGear/>} value={0} spacing={0} padding="0 8px !important">
 				<InputLabel>
 					{t('common.label.display_name')}
 				</InputLabel>
-				<TextInput value={name} onChange={setName}/>
+				<TextInput {...name} disabled/>
 
 				<InputLabel spaciouser>
 					{t('instance_page.settings.resolution')}
@@ -60,32 +48,34 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 						<InputLabel>{t('common.label.resolution_width')}</InputLabel>
 						<TextInput
 							width={80}
-							value={Math.max(0, resolution[0] || 0).toString()}
+							value={Math.max(0, resolution.value[0] || 0).toString()}
 							onChange={value => {
 								const number = parseInt(value);
-								setResolution(val => [number, val[1]]);
+								resolution.onChange(val => [number, val[1]]);
 							}}
+							disabled={disabled}
 						/>
 					</Grid>
 					<Grid vertical>
 						<InputLabel>{t('common.label.resolution_height')}</InputLabel>
 						<TextInput
 							width={80}
-							value={Math.max(0, resolution[1] || 0).toString()}
+							value={Math.max(0, resolution.value[1] || 0).toString()}
 							onChange={value => {
 								const number = parseInt(value);
-								setResolution(val => [val[0], number]);
+								resolution.onChange(val => [val[0], number]);
 							}}
+							disabled={disabled}
 						/>
 					</Grid>
 				</Grid>
 				
-				<InputLabel spaciouser>
+				<InputLabel spaciouser css={{ marginTop: 'auto' }}>
 					{t('instance_page.settings.delete')}
 				</InputLabel>
 				<Dialog.Root>
 					<Dialog.Trigger asChild>
-						<Button theme="secondary" disabled={saving}>
+						<Button theme="secondary" disabled={disabled}>
 							<IconBiTrash3Fill fontSize={12}/>
 							{t('common.action.delete')}
 						</Button>
@@ -112,16 +102,15 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 					</Dialog.Content>
 				</Dialog.Root>
 			</TabItem>
-			<TabItem name="Advanced" icon={<IconBiGear/>} value={1} spacing={0} padding="0 8px !important">
+			<TabItem name="Advanced" icon={<IconBiGear/>} value={1} spacing={0} padding="0 8px !important" disabled>
 				<InputLabel>
-					{t('instance_page.settings.memory', [memory[0].toLocaleString('en', { minimumFractionDigits: 1 })])}
+					{t('instance_page.settings.memory', [memory.value[0].toLocaleString('en', { minimumFractionDigits: 1 })])}
 				</InputLabel>
 				<Slider
 					min={.5}
 					max={Math.floor((TOTAL_SYSTEM_MEMORY / 1000000000) / 1.4)}
 					step={.5}
-					value={memory}
-					onChange={setMemory}
+					{...memory}
 				/>
 
 				<Typography size={14} color="$linkColor" margin="32px 0 0" onClick={() => setAdvanced(true)} css={{
@@ -130,10 +119,10 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 					Edit Store File
 				</Typography>
 			</TabItem>
-        </Tabs>
-		<Button theme="accent" onClick={saveSettings} disabled={saving}>
-			{saving ? <BasicSpinner size={16}/> : <IconBiPencilFill fontSize={11}/>}
-			{t('common.action.save_changes')}
-		</Button>
-    </Grid>;
+		</Tabs>
+		{disabled && <Typography size={12} color="#ffba64" margin="8px 16px" noSelect>
+			<IconBiExclamationTriangleFill/>
+			{t('instance_page.settings.disabled')}
+		</Typography>}
+	</>;
 }

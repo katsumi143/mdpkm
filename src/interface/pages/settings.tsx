@@ -20,7 +20,7 @@ export default function Settings() {
 	const language = useAppSelector(state => state.settings.language);
 	const showNews = useAppSelector(state => state.settings.showNews);
 	const startPage = useAppSelector(state => state.settings.startPage);
-	const defaultInstanceResolution = useAppSelector(state => state.settings.instances.resolution);
+	const instanceResolution = useAppSelector(state => state.settings.instances.resolution.size);
 	const [_, setRerender] = useState(0);
 	const [updating, setUpdating] = useState(false);
 	const changeLanguage = (lang: string) => {
@@ -144,10 +144,10 @@ export default function Settings() {
 				</InputLabel>
 				<TextInput
 					width={80}
-					value={Math.max(0, defaultInstanceResolution[0] || 0).toString()}
+					value={Math.max(0, instanceResolution[0] || 0).toString()}
 					onChange={value =>
-						setSetting('instances.resolution',
-							[parseInt(value), defaultInstanceResolution[1]]
+						setSetting('instances.resolution.size',
+							[parseInt(value), instanceResolution[1]]
 						)
 					}
 				/>
@@ -158,18 +158,15 @@ export default function Settings() {
 				</InputLabel>
 				<TextInput
 					width={80}
-					value={Math.max(0, defaultInstanceResolution[1] || 0).toString()}
+					value={Math.max(0, instanceResolution[1] || 0).toString()}
 					onChange={value =>
-						setSetting('instances.defaultResolution',
-							[defaultInstanceResolution[0], parseInt(value)]
+						setSetting('instances.resolution.size',
+							[instanceResolution[0], parseInt(value)]
 						)
 					}
 				/>
 			</Grid>
 		</Setting>
-
-		<TextHeader spacious noSelect>{t('settings.download')}</TextHeader>
-		
 
 		<TextHeader spacious noSelect>{t('settings.plugins')}</TextHeader>
 		{Object.values(PluginSystem.loaded).map(plugin =>

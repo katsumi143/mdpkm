@@ -13,8 +13,9 @@ import type { Instance } from '../../../voxura';
 export interface InstanceModProps {
     mod: Mod
 	instance: Instance
+	disabled?: boolean
 }
-export default function InstanceMod({ mod, instance }: InstanceModProps) {
+export default function InstanceMod({ mod, disabled, instance }: InstanceModProps) {
 	const icon = useMemo(() => mod.webIcon ?? IMAGES.placeholder, [mod.id]);
     const { t } = useTranslation('interface');
 	const satisfied = mod.dependencies.every(d => instance.store.components.some(c => d.id.includes(c.id)));
@@ -88,7 +89,7 @@ export default function InstanceMod({ mod, instance }: InstanceModProps) {
 							<IconBiCloudArrowDown/>
 							Update
 						</Button>}
-						<Link size={12} padding="0 16px" onClick={removeMod}>
+						<Link size={12} padding="0 16px" onClick={removeMod} disabled={disabled}>
 							<IconBiTrash3Fill/>
 							<Breakpoint customQuery="(min-width: 580px)">
 								{t('common.action.delete')}

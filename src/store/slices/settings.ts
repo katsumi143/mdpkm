@@ -9,7 +9,9 @@ export interface Settings {
 	showNews: boolean
 	startPage: 'home' | 'instances'
     instances: {
-		resolution: [number, number]
+		resolution: {
+			size: [number, number]
+		}
 	}
 	developer: {
 		showHiddenAuthProviders: boolean
@@ -17,21 +19,27 @@ export interface Settings {
 }
 const settingsPath = `${APP_DIR}/settings.json`;
 const settings = await readJsonFile<Settings>(settingsPath).catch(console.warn);
+export const settingsSchema = joi.object({
+	theme: joi.string().default('dark'),
+	showNews: joi.bool().default(true),
+	language: joi.string().valid(...LANGUAGES).default('en-AU').failover('en-AU'),
+	startPage: joi.string().valid('home', 'instances').default('home'),
+	instances: joi.object({
+		resolution: joi.object({
+			size: joi.array().items(joi.number()).default([800, 400])
+		}).default()
+	}).default(),
+	developer: joi.object({
+		showHiddenAuthProviders: joi.boolean().default(false)
+	}).default()
+});
 export const settingsSlice = createSlice({
     name: 'settings',
-	initialState: await joi.object({
-		theme: joi.string().default('dark'),
-		showNews: joi.bool().default(true),
-		language: joi.string().valid(...LANGUAGES).default('en-AU').failover('en-AU'),
-		startPage: joi.string().valid('home', 'instances').default('home'),
-		instances: joi.object({
-			resolution: joi.array().items(joi.number()).default([800, 400])
-		}).default(),
-		developer: joi.object({
-			showHiddenAuthProviders: joi.boolean().default(false)
-		}).default()
-	}).validateAsync(settings, {
+	initialState: await settingsSchema.validateAsync(settings, {
 		stripUnknown: true
+	}).catch(err => {
+		console.error(err);
+		return settingsSchema.validateAsync({});
 	}) as Settings,
     reducers: {
         set: (state: any, { payload: [key, value] }: PayloadAction<[keyof Settings, any]>) => {

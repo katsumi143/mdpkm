@@ -17,6 +17,7 @@ export default function ModManagement({ instance }: ModManagementProps) {
 	const [filter, setFilter] = useState('');
 	const items = instance.modifications;
 	const loading = instance.readingMods;
+	const disabled = instance.state !== InstanceState.None;
 	const search = () => {
 		dispatch(setPage('search'));
 		dispatch(setSearchType(ProjectType.Mod));
@@ -63,7 +64,7 @@ export default function ModManagement({ instance }: ModManagementProps) {
 					id?.toLowerCase().includes(filter) ||
 					name?.toLowerCase().includes(filter)
 				).sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id)).map(mod =>
-					<InstanceMod key={mod.id} mod={mod} instance={instance}/>
+					<InstanceMod key={mod.id} mod={mod} instance={instance} disabled={disabled}/>
 				)
 			: <Typography noSelect>
 				{t('common.label.empty_dir')}
