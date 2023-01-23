@@ -6,6 +6,7 @@ import React, { useState, ReactNode } from 'react';
 import { copyFile, createDir, removeFile } from '@tauri-apps/api/fs';
 import { Grid, Image, Select, Switch, Button, Tooltip, GridProps, TextInput, TextHeader, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
+import Avatar from '../components/Avatar';
 import { setPage } from '../../store/slices/interface';
 import PluginSystem from '../../plugins';
 import { VOXURA_VERSION } from '../../../voxura';
@@ -170,12 +171,12 @@ export default function Settings() {
 
 		<TextHeader spacious noSelect>{t('settings.plugins')}</TextHeader>
 		{Object.values(PluginSystem.loaded).map(plugin =>
-			<Grid key={plugin.id} margin="0 0 8px" padding={8} spacing={8} smoothing={1} alignItems="center" borderRadius={16} css={{
+			<Grid key={plugin.id} margin="0 0 8px" padding={8} spacing={12} smoothing={1} alignItems="center" borderRadius={16} css={{
 				border: 'transparent solid 1px',
 				position: 'relative',
 				background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
 			}}>
-				<Image src={plugin.icon ?? PLACEHOLDER_IMAGE} size={48} borderRadius={8} />
+				<Avatar src={plugin.icon ?? PLACEHOLDER_IMAGE} size="md"/>
 				<Grid spacing={2} vertical>
 					<Typography noSelect lineheight={1}>
 						{t(`mdpkm:plugin.${plugin.id}`)}
@@ -184,18 +185,20 @@ export default function Settings() {
 						{t('common.label.version', [plugin.version])}
 					</Typography>
 				</Grid>
-				<Grid spacing={8} css={{ right: 16, position: 'absolute' }}>
+				<Grid margin="0 8px 0 auto" spacing={8}>
 					<Tooltip.Root delayDuration={250}>
 						<Tooltip.Trigger asChild>
 							<Button theme="secondary" disabled>
-								<IconBiTrash3Fill />
+								<IconBiTrash3Fill/>
 								{t('common.action.remove')}
 							</Button>
 						</Tooltip.Trigger>
-						<Tooltip.Content side="top" sideOffset={4}>
-							<Tooltip.Arrow />
-							{t('app.mdpkm.common:tooltips.feature_unavailable')}
-						</Tooltip.Content>
+						<Tooltip.Portal>
+							<Tooltip.Content sideOffset={4}>
+								<Tooltip.Arrow/>
+								this feature is unavailable
+							</Tooltip.Content>
+						</Tooltip.Portal>
 					</Tooltip.Root>
 				</Grid>
 			</Grid>
