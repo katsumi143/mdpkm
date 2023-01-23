@@ -8,10 +8,10 @@ import ImageWrapper from '../components/ImageWrapper';
 import LoadingInstances from '../components/LoadingInstances';
 
 import mdpkm from '../../mdpkm';
-import voxura from '../../voxura';
 import { setPage } from '../../store/slices/interface';
+import { MinecraftAvatarStyle } from '../../../voxura';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { useMinecraftAccount, useRecentInstances } from '../../voxura';
+import voxura, { useMinecraftAccount, useRecentInstances } from '../../voxura';
 export default function Home() {
 	const { t } = useTranslation('interface');
 	const recent = useRecentInstances();
@@ -39,7 +39,7 @@ export default function Home() {
 			</Grid>
 			<Grid width="65%" padding="12px 0 12px 1rem" vertical justifyContent="space-between">
 				<Grid height="fit-content" margin="24px 0 0" spacing={24} alignItems="center">
-					<ImageWrapper src={account?.avatarUrl} size={128} border="2px solid $secondaryBorder" pixelated canPreview borderRadius={64} css={{
+					<ImageWrapper src={account?.getAvatarUrl(MinecraftAvatarStyle.Bust, 128)} size={128} border="2px solid $secondaryBorder" pixelated canPreview borderRadius={64} css={{
 						'&:before': {
 							width: '100%',
 							height: '100%',
