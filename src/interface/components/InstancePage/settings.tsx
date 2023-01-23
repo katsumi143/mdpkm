@@ -48,7 +48,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
         <Tabs value={tab} onChange={setTab} css={{ height: '100%' }}>
 			<TabItem name="General" icon={<IconBiGear/>} value={0} spacing={0} padding="0 8px !important">
 				<InputLabel>
-					{t('instance_page.settings.name')}
+					{t('common.label.display_name')}
 				</InputLabel>
 				<TextInput value={name} onChange={setName}/>
 

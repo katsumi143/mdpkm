@@ -26,12 +26,13 @@
     "common.action.create_instance": "Create Instance",
 	"common.action.import_instance": "Import Instance",
 	"common.action.check_for_updates": "Check for Updates",
-    "common.action.return_to_instances": "Return to your Instances",
+    "common.action.return_to_instances": "Return to your instances",
 
+	"common.label.display_name": "Display Name",
     "common.label.instance_name": "Instance Name",
     "common.label.minecraft_version": "Minecraft Version",
 
-	"common.label.play_time": "Play Time",
+	"common.label.play_time": "Play time",
     "common.label.instance_created": "Instance created",
     "common.label.last_launched": "Last launched",
     "common.label.content_installed": "Content installed",
@@ -39,7 +40,6 @@
 	"common.label.component": "Component",
     "common.label.game_component": "Game Component",
     "common.label.other_components": "Additional Components",
-    "common.label.instance_component_count": "{{0}} Instance Components",
 
 	"common.label.actions": "Actions",
 	"common.label.version": "Version {{0}}",
@@ -65,7 +65,7 @@
 
 	"common.label.platforms": "Platforms",
 
-	"common.label.search_query": "Search Query",
+	"common.label.search_query": "Search query",
 	"common.label.search_no_results": "No results found for your query!",
 
     "common.select_group.minecraft_versions": "Minecraft Versions",
@@ -124,20 +124,19 @@
     "home.greeting.2": "Good evening,",
 
     "home.news.title": "What's new",
-    "home.recent_instances.title": "Recent Instances",
+    "home.recent_instances.title": "Recent instances",
 
 	"skin_management": "Skin Management",
 	"skin_management.current": "Current Skin",
 	"skin_management.library": "Library",
 	"skin_management.ext_name": "PNG Image File",
 	"skin_management.add": "Add New Skin",
-	"skin_management.add_modal.name": "Display Name",
 	"skin_management.add_modal.name.placeholder": "Steve",
 	"skin_management.add_modal.model": "Skin Model",
 	"skin_management.add_modal.model.category": "Skin Models",
 	"skin_management.add_modal.model.item.classic": "Default (Steve)",
 	"skin_management.add_modal.model.item.slim": "Slim (Alex)",
-	"skin_management.add_modal.file": "Source Image",
+	"skin_management.add_modal.file": "Skin Image",
 	"skin_management.add_modal.cape": "Cape",
 	"skin_management.add_modal.cape.category": "Your Capes",
 	"skin_management.add_modal.cape.item.none": "None",
@@ -192,14 +191,14 @@
 	"mod_management": "Game Modifications",
 	"mod_management.filter": "Filter Modifications",
 	"mod_management.search": "Search for Mods",
-	"mod_management.warning": "You should only manage mods when your Instance is idle.",
+	"mod_management.warning": "You should only manage mods when your instance is idle.",
 
 	"plugins": "Server Plugins",
 	"plugins.filter": "Filter Plugins",
 	"plugins.search": "Search for Plugins",
-	"plugins.warning": "You should only manage plugins when your Instance is idle.",
+	"plugins.warning": "You should only manage plugins when your instance is idle.",
 
-	"shaders": "Iris Shaders",
+	"shaders": "Shaders",
 	"shaders.filter": "Filter Shaders",
 	"shaders.search": "Search for Shaders",
 
@@ -225,7 +224,6 @@
 	"servers": "Server Management",
 	"servers.filter": "Filter Servers",
 	"servers.add": "Add Server",
-	"servers.add.name": "Display Name",
 	"servers.add.address": "IP Address",
 	"servers.add.address.placeholder": "funny.realserver.com",
 
@@ -249,11 +247,10 @@
 	"instance_page.tab.content": "Game Content",
 
 	"instance_page.settings": "Settings",
-	"instance_page.settings.name": "Display Name",
 	"instance_page.settings.memory": "Memory Allocation ({{0}} GB)",
 	"instance_page.settings.resolution": "Game Window Resolution",
 	"instance_page.settings.delete": "Delete Instance",
-	"instance_page.settings.disabled": "You can only edit the Instance when it's idle.",
+	"instance_page.settings.disabled": "You can only edit the instance when it's idle.",
 
 	"loading_instances": "Loading Instances",
 
@@ -267,7 +264,6 @@
 
 	"user_account.selected": "This account is active",
 	"user_account.options.label": "Account Options",
-	"user_account.options.view_namemc": "View NameMC Profile",
 
 	"server_settings.pvp": "Player Combat (PvP)",
 	"server_settings.gamemode": "Gamemode",
@@ -308,7 +304,7 @@
 
 	"toast.launch_error": "$t(interface:launch_error)",
 	"toast.launch_error.body": "An unknown error occurred while launching “{{0}}”.",
-	"toast.instance_launched": "Instance Client has launched",
+	"toast.instance_launched": "Instance client has launched",
 	"toast.instance_launched.body": "{{0}}",
 
 	"toast.changes_saved": "Your changes have been saved",
@@ -343,7 +339,7 @@
 	"toast.download_fail.body": "An unknown error occurred while downloading “{{0}}”.",
 
 	"toast.project_incompatible": "$t(interface:error.generic)",
-	"toast.project_incompatible.body": "No compatible versions of “{{0}}” were found for your Instance.",
+	"toast.project_incompatible.body": "No compatible versions of “{{0}}” were found for your instance.",
 
 	"toast.unknown_error": "$t(interface:error.generic)",
 	"toast.unknown_error.body": "An unknown error occurred.",
@@ -351,5 +347,5 @@
 	"toast.action_fail": "This action could not be completed",
 
 	"toast.instance_refresh_none_idle": "$t(interface:toast.action_fail)",
-	"toast.instance_refresh_none_idle.body": "All Instances must be idle to refresh the Instance List."
+	"toast.instance_refresh_none_idle.body": "All instances must be idle to refresh the instance list."
 }

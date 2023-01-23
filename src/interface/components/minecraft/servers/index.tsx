@@ -135,7 +135,7 @@ export default function MinecraftServers({ instance }: MinecraftServersProps) {
             </TextHeader>
             <Grid spacing={32} justifyContent="space-between">
                 <Grid width="100%" vertical>
-                    <InputLabel>{t('servers.add.name')}</InputLabel>
+                    <InputLabel>{t('common.label.display_name')}</InputLabel>
                     <TextInput
 						width="100%"
                         value={addingName}

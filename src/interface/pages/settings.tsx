@@ -110,7 +110,7 @@ export default function Settings() {
 						{t('navigation.home')}
 					</Select.Item>
 					<Select.Item value="instances">
-						{t('navigation.instances')}
+						{t('instance_list')}
 					</Select.Item>
 				</Select.Group>
 			</Select.Minimal>

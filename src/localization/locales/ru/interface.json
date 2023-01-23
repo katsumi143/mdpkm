@@ -30,6 +30,7 @@
 
     "common.header.instance_list": "Ваши экземпляры",
 
+	"common.label.display_name": "Название",
     "common.label.instance_name": "Имя экземпляра",
     "common.label.minecraft_version": "Версия Minecraft",
 
@@ -41,7 +42,6 @@
 	"common.label.component": "Компонент",
     "common.label.game_component": "Игровой компонент",
     "common.label.other_components": "Дополнительные компоненты",
-    "common.label.instance_component_count": "Компонентов экземпляра: {{0}}",
 
 	"common.label.actions": "Действия",
 	"common.label.version": "Версия {{0}}",
@@ -204,7 +204,6 @@
 
 	"servers": "Управление сервером",
 	"servers.add": "Добавить сервер",
-	"servers.add.name": "Название",
 	"servers.add.address": "IP-адрес",
 	"servers.add.address.placeholder": "funny.realserver.com",
 
@@ -225,7 +224,6 @@
 	"instance_page.tab.content": "Содержимое игры",
 
 	"instance_page.settings": "Настройки",
-	"instance_page.settings.name": "Название",
 	"instance_page.settings.memory": "Выделение памяти ({{0}} ГБ)",
 	"instance_page.settings.resolution": "Разрешение игрового окна",
 	"instance_page.settings.delete": "Удалить экземпляр",
@@ -242,7 +240,6 @@
 
 	"user_account.selected": "Этот аккаунт активен",
 	"user_account.options.label": "Параметры аккаунта",
-	"user_account.options.view_namemc": "Посмотреть профиль NameMC",
 
 	"server_settings.pvp": "Битва игроков (PvP)",
 	"server_settings.gamemode": "Игровой режим",

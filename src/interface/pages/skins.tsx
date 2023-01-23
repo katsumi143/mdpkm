@@ -117,7 +117,7 @@ export default function Skins() {
         }
     };
     useEffect(() => {
-        if (account && !profile && !loading) {
+        /*if (account && !profile && !loading) {
             setLoading(true);
             account.refresh().then(async() => {
                 const profile: MinecraftProfile = await account.getProfile();
@@ -141,7 +141,7 @@ export default function Skins() {
 
 				throw err;
             });
-        }
+        }*/
     }, [profile, account]);
     return <Grid height="100%" spacing={8} padding=".75rem 1rem" vertical>
         <TextHeader noSelect>
@@ -206,7 +206,7 @@ export default function Skins() {
                     background="none"
                 />
                 <Grid vertical>
-                    <InputLabel>{t('skin_management.add_modal.name')}</InputLabel>
+                    <InputLabel>{t('common.label.display_name')}</InputLabel>
                     <TextInput
                         width="100%"
                         value={addingName}
@@ -273,7 +273,7 @@ export default function Skins() {
                     background="none"
                 />
                 <Grid vertical>
-                    <InputLabel>{t('skin_management.add_modal.name')}</InputLabel>
+                    <InputLabel>{t('common.label.display_name')}</InputLabel>
                     <TextInput
                         width="100%"
                         value={addingName}

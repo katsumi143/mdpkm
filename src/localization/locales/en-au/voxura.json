@@ -139,15 +139,15 @@
 	"platform_category.reflections": "Reflections",
 	"platform_category.core-shaders": "Core Shaders",
 	"platform_category.kitchen-sink": "Kitchen Sink",
-	"platform_category.optimization": "Optimization",
+	"platform_category.optimization": "Optimisation",
 	"platform_category.path-tracing": "Path Tracing",
 	"platform_category.vanilla-like": "Vanilla-like",
 	"platform_category.semi-realistic": "Semi-realistic",
 	"platform_category.game-mechanics": "Game Mechanics",
 	"platform_category.transportation": "Transportation",
-	"platform_category.colored-lighting": "Colored Lighting",
+	"platform_category.colored-lighting": "Coloured Lighting",
 
-	"launch_error.missing_game": "Your instance is missing a valid game component.",
+	"launch_error.missing_game": "Your Instance is missing a valid game component.",
 	"launch_error.missing_dependency": "$t(voxura:component.{{0}}) requires $t(voxura:component.{{1}}) version {{2}}.",
 	"launch_error.manifest_download_failed": "Failed to download manifest for $t(voxura:component.{{0}}) v{{1}}",
 	"launch_error.dependency_version_unsatisfied": "$t(voxura:component.{{0}}) requires $t(voxura:component.{{1}}) version {{2}}, but only version {{3}} was found."

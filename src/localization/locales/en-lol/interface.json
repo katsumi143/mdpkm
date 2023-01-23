@@ -41,7 +41,6 @@
 	"common.label.component": "Component",
     "common.label.game_component": "Game Component",
     "common.label.other_components": "Additional Components",
-    "common.label.instance_component_count": "{{0}} Instance Components",
 
 	"common.label.actions": "Actions",
 	"common.label.version": "Vershun {{0}}",
@@ -258,7 +257,6 @@
 
 	"user_account.selected": "This account is active",
 	"user_account.options.label": "Account Options",
-	"user_account.options.view_namemc": "View NameMC Profile",
 
 	"server_settings.pvp": "Player Combat (PvP)",
 	"server_settings.gamemode": "Gamemode",
