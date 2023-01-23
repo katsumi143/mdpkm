@@ -169,7 +169,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 			css={{
 				width: 'auto',
 				height: '100%',
-				margin: '8px 16px 16px 16px'
+				margin: '8px 16px 0'
 			}}
 		>
 			<TabItem name={t('instance_page.tab.home')} icon={<IconBiInfoCircle/>} value={0}>

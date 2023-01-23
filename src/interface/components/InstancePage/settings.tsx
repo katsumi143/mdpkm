@@ -70,37 +70,39 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 					</Grid>
 				</Grid>
 				
-				<InputLabel spaciouser css={{ marginTop: 'auto' }}>
-					{t('instance_page.settings.delete')}
-				</InputLabel>
-				<Dialog.Root>
-					<Dialog.Trigger asChild>
-						<Button theme="secondary" disabled={disabled}>
-							<IconBiTrash3Fill fontSize={12}/>
-							{t('common.action.delete')}
-						</Button>
-					</Dialog.Trigger>
-					<Dialog.Content>
-						<Dialog.Title>{t('dialog.delete_instance')}</Dialog.Title>
-						<Dialog.Description css={{ whiteSpace: 'pre' }}>
-							{t('dialog.delete_instance.body', [instance.name])}
-						</Dialog.Description>
-						<Grid spacing={16} justifyContent="end">
-							<Dialog.Close asChild>
-								<Button theme="accent" onClick={deleteInstance}>
-									<IconBiCheckLg/>
-									{t('common.action.confirm')}
-								</Button>
-							</Dialog.Close>
-							<Dialog.Close asChild>
-								<Button theme="secondary">
-									<IconBiXLg/>
-									{t('common.action.cancel')}
-								</Button>
-							</Dialog.Close>
-						</Grid>
-					</Dialog.Content>
-				</Dialog.Root>
+				<Grid margin="auto 0 16px" vertical>
+					<InputLabel spaciouser>
+						{t('instance_page.settings.delete')}
+					</InputLabel>
+					<Dialog.Root>
+						<Dialog.Trigger asChild>
+							<Button theme="secondary" disabled={disabled}>
+								<IconBiTrash3Fill fontSize={12}/>
+								{t('common.action.delete')}
+							</Button>
+						</Dialog.Trigger>
+						<Dialog.Content>
+							<Dialog.Title>{t('dialog.delete_instance')}</Dialog.Title>
+							<Dialog.Description css={{ whiteSpace: 'pre' }}>
+								{t('dialog.delete_instance.body', [instance.name])}
+							</Dialog.Description>
+							<Grid spacing={16} justifyContent="end">
+								<Dialog.Close asChild>
+									<Button theme="accent" onClick={deleteInstance}>
+										<IconBiCheckLg/>
+										{t('common.action.confirm')}
+									</Button>
+								</Dialog.Close>
+								<Dialog.Close asChild>
+									<Button theme="secondary">
+										<IconBiXLg/>
+										{t('common.action.cancel')}
+									</Button>
+								</Dialog.Close>
+							</Grid>
+						</Dialog.Content>
+					</Dialog.Root>
+				</Grid>
 			</TabItem>
 			<TabItem name="Advanced" icon={<IconBiGear/>} value={1} spacing={0} padding="0 8px !important" disabled>
 				<InputLabel>

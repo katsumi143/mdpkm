@@ -123,7 +123,7 @@ export default function MinecraftServers({ instance }: MinecraftServersProps) {
                 />
             )}
         </Grid>
-		<Grid margin="auto 0 0">
+		<Grid margin="auto 0 16px">
 			<Button theme="accent" onClick={openAdding} disabled={!data}>
 				<IconBiPlusLg/>
 				{t('servers.add')}

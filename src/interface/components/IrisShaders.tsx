@@ -91,7 +91,7 @@ export default function IrisShaders({ instance }: IrisShadersProps) {
 		: <Typography noSelect>
 			{t('common.label.empty_dir')}
 		</Typography> : <Spinner/>}
-		<Grid margin="auto 0 0" spacing={8}>
+		<Grid margin="auto 0 16px" spacing={8}>
 			<Button theme="accent" onClick={search}>
 				<IconBiSearch/>
 				{t('shaders.search')}
