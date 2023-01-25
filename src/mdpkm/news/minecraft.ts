@@ -3,17 +3,13 @@ import { fetch } from '@tauri-apps/api/http';
 import NewsItem from './item';
 import NewsSource from './source';
 export default class MinecraftNews extends NewsSource<NewsEntry> {
-    public readonly id = 'minecraft';
+    public readonly id: string = 'minecraft';
     public async getNews(useCache = true): Promise<NewsItem<NewsEntry>[]> {
         if (useCache && this.news)
             return this.news;
 
         const { data } = await fetch<NewsResponse>(`${API_BASE}/news.json`);
         return this.news = data.entries.map(data => new MinecraftNewsItem(this, data));
-    }
-
-    public get displayName() {
-        return 'minecraft.net';
     }
 }
 
@@ -53,6 +49,10 @@ export class MinecraftNewsItem extends NewsItem<NewsEntry> {
     public get image() {
         return `${API_BASE}${this.data.playPageImage.url}`;
     }
+
+	public get tags() {
+		return [this.data.tag];
+	}
 
 	public get url() {
 		return this.data.readMoreLink;

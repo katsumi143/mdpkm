@@ -43,6 +43,7 @@
     "common.label.game_component": "Игровой компонент",
     "common.label.other_components": "Дополнительные компоненты",
 
+	"common.label.author": "от {{0, list}}",
 	"common.label.actions": "Действия",
 	"common.label.version": "Версия {{0}}",
 	"common.label.category": "Категория",
@@ -189,7 +190,6 @@
 	"platform_search.results_one": "{{count}} результат",
 	"platform_search.results_other": "Результатов: {{count}}",
 
-	"project.author": "от {{project.author}}",
 	"project.featured": "Избранный",
 	"project.recommended": "Рекомендуемый",
 	"project.explict": "Определённый",

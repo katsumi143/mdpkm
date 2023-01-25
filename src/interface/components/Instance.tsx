@@ -76,17 +76,20 @@ export default memo(({ id, selected }: InstanceProps) => {
 					}}>
 						<Avatar src={instance.webIcon} size="md"/>
 						<Grid spacing={4} vertical alignItems="start" css={{ overflow: 'hidden' }}>
-							<Typography
-								width="100%"
-								noFlex
-								noSelect
-								lineheight={1}
-								whitespace="nowrap"
-								css={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-							>
-								{instance.isFavourite && <IconBiStarFill fontSize={12} style={{ marginRight: 4 }}/>}
-								{instance.name}
-							</Typography>
+							<Grid spacing={4} alignItems="center">
+								{instance.isFavourite && <IconBiStarFill fontSize={14}/>}
+								<Typography
+									width="100%"
+									noFlex
+									family="$tertiary"
+									noSelect
+									lineheight={1}
+									whitespace="nowrap"
+									css={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+								>
+									{instance.name}
+								</Typography>
+							</Grid>
 							<Typography
 								size={12}
 								color="$secondaryColor"

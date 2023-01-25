@@ -2,12 +2,14 @@ import { useTranslation } from 'react-i18next';
 import { Grid, Typography } from 'voxeliface';
 import React, { useMemo, useState, useEffect, MouseEventHandler } from 'react';
 
+import Avatar from '../components/Avatar';
 import Instance from '../components/Instance';
-import NewsItem from '../components/News/item';
-import ImageWrapper from '../components/ImageWrapper';
+import HomePost from '../components/HomePost';
+import NewsListItem from '../components/News/item';
 import LoadingInstances from '../components/LoadingInstances';
 
 import mdpkm from '../../mdpkm';
+import NewsItem from '../../mdpkm/news/item';
 import { setPage } from '../../store/slices/interface';
 import { MinecraftAvatarStyle } from '../../../voxura';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -20,9 +22,13 @@ export default function Home() {
 	const greeting = useMemo(() => getGreeting(), []);
 	const showNews = useAppSelector(state => state.settings.showNews);
 	const [news, setNews] = useState<any[] | null>(null);
+	const [mdpkmPost, setMdpkmPost] = useState<NewsItem<any> | null>(null);
+	useEffect(() => {
+		mdpkm.getNewsSource('mdpkm')?.getNews().then(news => setMdpkmPost(news[0]));
+	}, []);
 	useEffect(() => {
 		if (showNews)
-			mdpkm.getNewsSource('minecraft')?.getNews().then(news => setNews(news.slice(0, 10)));
+			mdpkm.getNewsSource('minecraft')?.getNews().then(news => setNews(news.slice(0, 5)));
 	}, [showNews]);
 
 	const loadingInstances = voxura.instances.loading;
@@ -37,47 +43,34 @@ export default function Home() {
 			}}>
 				<Grid width="100%" height="100%" background="linear-gradient(transparent, $primaryBackground)"/>
 			</Grid>
-			<Grid width="65%" padding="12px 0 12px 1rem" vertical justifyContent="space-between">
+			<Grid width="65%" padding="12px 0 12px 1rem" vertical>
 				<Grid height="fit-content" margin="24px 0 0" spacing={24} alignItems="center">
-					<ImageWrapper src={account?.getAvatarUrl(MinecraftAvatarStyle.Bust, 128)} size={128} border="2px solid $secondaryBorder" pixelated canPreview borderRadius={64} css={{
-						'&:before': {
-							width: '100%',
-							height: '100%',
-							zIndex: -1,
-							content: '',
-							opacity: 0.5,
-							background: '$primaryBackground',
-							borderRadius: '50%'
-						}
+					<Avatar src={account?.getAvatarUrl(MinecraftAvatarStyle.Bust, 128)} size="xl" circle transparent css={{
+						backdropFilter: 'brightness(1.25)'
 					}}/>
-					<Grid vertical>
-						<Typography size={20} noSelect>
+					<Grid vertical spacing={4}>
+						<Typography size={24} family="$tertiary" weight={600} noSelect lineheight={1}>
 							{t(`home.greeting.${greeting}`)}
 						</Typography>
-						<Typography size={18} color="$secondaryColor" noSelect>
+						<Typography size={20} color="$secondaryColor" family="$secondary" noSelect lineheight={1}>
 							{account?.primaryName}!
 						</Typography>
 					</Grid>
 				</Grid>
-				{showNews && <Grid spacing={8} vertical>
-					<Grid justifyContent="space-between" css={{
-						borderBottom: '1px solid $secondaryBorder2',
-						paddingBottom: 6
-					}}>
-						<Typography noSelect>{t('home.news.title')}</Typography>
+				{mdpkmPost && <HomePost item={mdpkmPost}/>}
+				{showNews && news && <>
+					<Grid margin="auto 0 0" padding={8} justifyContent="space-between">
+						<Typography family="$tertiary" noSelect>{t('home.news.title')}</Typography>
 						<ViewAll/>
 					</Grid>
-					<Grid width="100%" spacing={8} borderRadius={8} css={{ overflow: 'hidden' }}>
-						{news?.map((item, key) => <NewsItem key={key} item={item}/>)}
+					<Grid width="100%" spacing={8} smoothing={1} borderRadius={16} css={{ overflow: 'hidden' }}>
+						{news?.map((item, key) => <NewsListItem key={key} item={item}/>)}
 					</Grid>
-				</Grid>}
+				</>}
 			</Grid>
 			<Grid width="35%" height="100%" padding="12px 1rem 12px 0" vertical>
-				<Grid justifyContent="space-between" css={{
-					borderBottom: '1px solid $secondaryBorder2',
-					paddingBottom: 6
-				}}>
-					<Typography noSelect>{t('home.recent_instances.title')}</Typography>
+				<Grid padding="0 8px" justifyContent="space-between">
+					<Typography family="$tertiary" noSelect>{t('home.recent_instances.title')}</Typography>
 					<ViewAll onClick={() => dispatch(setPage('instances'))}/>
 				</Grid>
 				<Grid height="100%" spacing={8} padding="16px 0 0" vertical css={{ overflowY: 'auto' }}>

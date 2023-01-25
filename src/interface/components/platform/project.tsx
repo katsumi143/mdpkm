@@ -101,7 +101,7 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
 									cursor: 'pointer',
 									'&:hover': { color: '$linkColor' }
 								}}>
-									{t('project.author', {project})}
+									{t('common.label.author', [[project.author]])}
 								</Typography>
 							</Tooltip.Trigger>
 							<Tooltip.Portal>

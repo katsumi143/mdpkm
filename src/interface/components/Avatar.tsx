@@ -31,6 +31,10 @@ const StyledAvatar = styled(motion.img, {
 			lg: {
 				$$size: '64px',
 				'--squircle-radius': 8
+			},
+			xl: {
+				$$size: '128px',
+				'--squircle-radius': 8
 			}
 		},
 		blur: { true: {
@@ -49,14 +53,14 @@ const StyledAvatar = styled(motion.img, {
 export interface AvatarProps {
 	css?: CSS
 	src?: string | null
-	size: 'xs' | 'sm' | 'md' | 'lg'
+	size: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 	blur?: boolean
 	margin?: string
 	circle?: boolean
 	layoutId?: string
 	transparent?: boolean
 }
-export default function Avatar({ src, size, blur, margin, circle, layoutId, transparent }: AvatarProps) {
+export default function Avatar({ css, src, size, blur, margin, circle, layoutId, transparent }: AvatarProps) {
 	const img = useRef<HTMLImageElement>(null);
 	const imgSrc = src || PLACEHOLDER_IMAGE;
 	const [preview, setPreview] = useState(false);
@@ -78,7 +82,8 @@ export default function Avatar({ src, size, blur, margin, circle, layoutId, tran
 	return <React.Fragment>
 		{preview && <ImagePreview src={imgSrc} onClose={togglePreview}/>}
 		<StyledAvatar src={imgSrc} ref={img} size={size} blur={blur} circle={circle} onClick={togglePreview} layoutId={layoutId} transparent={transparent} css={{
-			margin
+			margin,
+			...css
 		}}/>
 	</React.Fragment>;
 }

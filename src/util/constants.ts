@@ -56,3 +56,6 @@ export const IMAGES = {
 }
 
 export const LANGUAGES = ['en-AU', 'lv', 'ru', 'en-LOL']
+
+export const SITE_BASE = 'https://mdpkm-site.vercel.app';
+export const PUBLIC_SITE_BASE = 'https://mdpkm.voxelified.com';

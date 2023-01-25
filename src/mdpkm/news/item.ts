@@ -9,5 +9,11 @@ export default abstract class NewsItem<T> {
 
     public abstract get title(): string
     public abstract get image(): string
+	public get authors(): string[] {
+		return [];
+	}
+	public get tags(): string[] {
+		return [];
+	}
 	public abstract get url(): string
 }

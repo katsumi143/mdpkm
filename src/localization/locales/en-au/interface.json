@@ -42,6 +42,7 @@
     "common.label.other_components": "Additional Components",
 
 	"common.label.auto": "Auto",
+	"common.label.author": "by {{0, list}}",
 	"common.label.actions": "Actions",
 	"common.label.version": "Version {{0}}",
 	"common.label.category": "Category",
@@ -207,7 +208,6 @@
 	"platform_search.results_one": "{{count}} Result",
 	"platform_search.results_other": "{{count}} Results",
 
-	"project.author": "by {{project.author}}",
 	"project.featured": "Featured",
 	"project.recommended": "Recommended",
 	"project.explict": "Explict",
@@ -286,6 +286,8 @@
 	"add_component.import": "Import Component File",
 
 	"create_instance": "Create Instance",
+
+	"news.item.tag": "$t(mdpkm:news_source.{{item.source.id}}) • {{item.tags}}",
 
 	"dialog.delete_instance": "Are you absolutely sure?",
 	"dialog.delete_instance.body": "This action cannot be undone.\n“{{0}}” will be lost forever! (A long time!)",

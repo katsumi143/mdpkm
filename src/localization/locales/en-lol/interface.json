@@ -200,7 +200,6 @@
 	"platform_search.results_one": "{{count}} Result",
 	"platform_search.results_other": "{{count}} Results",
 
-	"project.author": "by {{project.author}}",
 	"project.featured": "Featured",
 	"project.recommended": "Recommended",
 	"project.explict": "Explict",
