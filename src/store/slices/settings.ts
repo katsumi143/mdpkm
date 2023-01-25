@@ -27,12 +27,14 @@ export const settingsSchema = joi.object({
 	instances: joi.object({
 		resolution: joi.object({
 			size: joi.array().items(joi.number()).default([800, 400])
-		}).default()
+		}).default().failover({
+			size: [800, 400]
+		})
 	}).default(),
 	developer: joi.object({
 		showHiddenAuthProviders: joi.boolean().default(false)
 	}).default()
-});
+}).default();
 export const settingsSlice = createSlice({
     name: 'settings',
 	initialState: await settingsSchema.validateAsync(settings, {
