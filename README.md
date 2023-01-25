@@ -6,6 +6,7 @@
 
 ### mdpkm is an all-in-one application for Minecraft!
 🦑 squid game</br>
+![image](https://user-images.githubusercontent.com/32640219/214085668-779b0faf-d10c-4250-9ccb-50a5fb4017cd.png)
 
 hey look, a [discord server](https://discord.gg/YHDW77CMUw)
 <br/><br/>
