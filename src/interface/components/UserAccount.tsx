@@ -11,6 +11,7 @@ export interface UserAccountProps {
 export function UserAccount({ active, account }: UserAccountProps) {
 	const { t } = useTranslation('interface');
 	const { secondaryName } = account;
+	const refresh = () => account.refresh();
 	const select = () => account.setActive();
 	const remove = () => account.remove();
 	return <Grid width="50%" border={`1px solid $secondaryBorder${active ? 2 : ''}`} padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" borderRadius={16} css={{
@@ -43,6 +44,10 @@ export function UserAccount({ active, account }: UserAccountProps) {
 				<DropdownMenu.Portal>
 					<DropdownMenu.Content sideOffset={8}>
 						<DropdownMenu.Label>{t('user_account.options.label')}</DropdownMenu.Label>
+						<DropdownMenu.Item onClick={refresh}>
+							<IconBiArrowClockwise/>
+							{t('common.action.refresh')}
+						</DropdownMenu.Item>
 						<DropdownMenu.Item onClick={remove}>
 							<IconBiTrash3/>
 							{t('common.action.remove')}
