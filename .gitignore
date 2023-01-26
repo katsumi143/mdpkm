@@ -1,8 +1,9 @@
-node_modules/
-src-tauri/target/
-src-tauri/WixTools/
+node_modules
+src-tauri/target
+src-tauri/WixTools
 build
-.tauri/
-yarn-error.*
+.tauri
+yarn-error*
 auto-imports.*
-.env.*
+.env*
+vite*.timestamp*

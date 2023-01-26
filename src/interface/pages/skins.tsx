@@ -117,7 +117,7 @@ export default function Skins() {
         }
     };
     useEffect(() => {
-        /*if (account && !profile && !loading) {
+        if (account && !profile && !loading) {
             setLoading(true);
             account.refresh().then(async() => {
                 const profile: MinecraftProfile = await account.getProfile();
@@ -141,7 +141,7 @@ export default function Skins() {
 
 				throw err;
             });
-        }*/
+        }
     }, [profile, account]);
     return <Grid height="100%" spacing={8} padding=".75rem 1rem" vertical>
         <TextHeader noSelect>
@@ -155,18 +155,12 @@ export default function Skins() {
                     </Typography>
                     {!loading && current ? <SkinFrame
                         walk
-                        zoom
+						slim={skinModel === 'slim'}
                         skin={current.startsWith('img') ? current : `data:image/png;base64,${current}`}
                         cape={capes.find(c => c.state === 'ACTIVE')?.url}
                         width={200}
-                        model={skinModel}
                         height={300}
                         control
-                        background="none"
-						css={{
-							overflow: 'hidden',
-							borderRadius: 16
-						}}
                     /> : <Grid width={200} height={300} alignItems="center" justifyContent="center">
                         <Spinner/>
                     </Grid>}
@@ -197,13 +191,12 @@ export default function Skins() {
             <Grid spacing={32} justifyContent="space-between">
                 <SkinFrame
                     walk
+					slim={addingModel === 'SLIM'}
                     skin={addingPath ? convertFileSrc(addingPath) : `img/skins/${addingModel}.png`}
                     cape={capes.find(c => c.id === addingCape)?.url}
                     width={150}
-                    model={SKIN_MODEL[addingModel]}
                     height={256}
                     control
-                    background="none"
                 />
                 <Grid vertical>
                     <InputLabel>{t('common.label.display_name')}</InputLabel>
@@ -264,13 +257,12 @@ export default function Skins() {
             <Grid spacing={32} justifyContent="space-between">
                 <SkinFrame
                     walk
+					slim={addingModel === 'SLIM'}
                     skin={addingPath.startsWith('data:') ? addingPath : convertFileSrc(addingPath)}
                     cape={capes.find(c => c.id === addingCape)?.url}
                     width={150}
-                    model={SKIN_MODEL[addingModel]}
                     height={256}
                     control
-                    background="none"
                 />
                 <Grid vertical>
                     <InputLabel>{t('common.label.display_name')}</InputLabel>
@@ -348,14 +340,11 @@ export function LibraryItem({ data, capes, index, loading, useSkin, editSkin }: 
         {loading ? <Grid width={100} height={128} alignItems="center" justifyContent="center">
             <Spinner/>
         </Grid> : <SkinFrame
+			slim={data.variant === 'SLIM'}
             skin={`data:image/png;base64,${data.image}`}
             cape={capes?.find(c => c.id === data.cape)?.url}
-            image
             width={100}
-            model={SKIN_MODEL[data.variant]}
             height={128}
-            stillWalk
-            background="none"
         />}
         <Grid spacing={8}>
             <Button size="smaller" theme="accent" onClick={() => useSkin(index)} disabled={loading}>
