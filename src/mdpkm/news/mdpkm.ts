@@ -24,6 +24,7 @@ export interface mdpkmNewsEntry {
 	url: string
 	tags: NewsTag[]
 	title: string
+	body?: string
 	authors: string[]
 	thumbnail_url: string
 }
@@ -32,6 +33,10 @@ export class mdpkmNewsItem extends NewsItem<mdpkmNewsEntry> {
     public get title() {
         return this.data.title;
     }
+
+	public get rawBody() {
+		return this.data.body;
+	}
 
     public get image() {
         return `${SITE_BASE}${this.data.thumbnail_url}`;

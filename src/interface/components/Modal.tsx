@@ -2,7 +2,7 @@ import { keyframes } from '@stitches/react';
 import { Grid, Portal } from 'voxeliface';
 import React, { ReactNode } from 'react';
 
-const openAnimation = keyframes({
+export const openAnimation = keyframes({
     '0%': {
         opacity: 0,
         transform: 'scale(1.05)'
@@ -12,7 +12,7 @@ const openAnimation = keyframes({
         transform: 'none'
     }
 });
-const openAnimation2 = keyframes({
+export const openAnimation2 = keyframes({
     '0%': {
         background: 'transparent'
     },

@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { open } from '@tauri-apps/api/shell';
+import { styled } from '@stitches/react';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import { useTranslation } from 'react-i18next';
-import { Grid, Image, Typography } from 'voxeliface';
+import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
+import { Grid, Image, Portal, Markdown, Typography } from 'voxeliface';
 
+import { openAnimation2 } from './Modal';
 import type NewsItem from '../../mdpkm/news/item';
 import { useAppSelector } from '../../store/hooks';
 export interface HomePostProps {
@@ -12,45 +15,149 @@ export interface HomePostProps {
 export default function HomePost({ item }: HomePostProps) {
 	const { t } = useTranslation('interface');
 	const showNews = useAppSelector(state => state.settings.showNews);
+	const [expanded, setExpanded] = useState(false);
+	const expand = () => setExpanded(v => !v);
+	const view = () => open(item.url);
 	return <Grid width="100%" margin={showNews ? '32px 0 0' : 'auto 0 24px'}>
 		<AspectRatio ratio={8 / 2}>
-			<Grid width="100%" height="100%" onClick={() => open(item.url)} smoothing={1} borderRadius={16} css={{
-				cursor: 'pointer',
-				position: 'relative',
-				transition: 'filter .25s',
-				'&:hover': {
-					filter: 'brightness(1.25)',
-					'& .thumbnail': {
-						opacity: 0.6,
-						backgroundSize: '110%'
-					}
-				}
-			}}>
-				<Image src={item.image} width="100%" height="100%" className="thumbnail" css={{
-					zIndex: -1,
-					opacity: 0.5,
-					position: 'absolute',
-					transition: 'opacity 1s, background-size 1s',
-					backgroundSize: '100%'
+			<StyledRoot layout onClick={item.rawBody ? expand : view} transition={{ duration: 0.6 }} expanded={expanded}>
+				<StyledImage layout="position" css={{
+					background: `url(${item.image}) center/100%`
 				}}/>
-				<Grid padding={16} vertical>
-					<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1} css={{
-						textTransform: 'uppercase'
-					}}>
-						{t('news.item.tag', { item })}
-					</Typography>
-					<Typography size={28} weight={700} family="$tertiary" noSelect css={{
-						textShadow: '#00000040 0 2px 4px'
-					}}>
-						{item.title}
-					</Typography>
-					<Typography size={16} family="$tertiary" weight={500} noSelect lineheight={0.5} css={{
-						textShadow: '#00000040 0 1px 2px'
-					}}>
-						{t('common.label.author', [item.authors])}
-					</Typography>
-				</Grid>
-			</Grid>
+				<StyledTag layout="position">
+					{t('news.item.tag', { item })}
+				</StyledTag>
+				<StyledTitle layout="position">
+					{item.title}
+				</StyledTitle>
+				<StyledAuthor layout="position">
+					{t('common.label.author', [item.authors])}
+				</StyledAuthor>
+			</StyledRoot>
+			<StyledContent layout expanded={expanded} transition={{ duration: 0.6 }}>
+				<Markdown text={item.rawBody?.split('\n---\n')[1]!}/>
+			</StyledContent>
+			<StyledCover onClick={expand} visible={expanded}/>
 		</AspectRatio>
 	</Grid>;
 }
+
+const StyledRoot = styled(motion.div, {
+	width: '100%',
+	height: 196,
+	cursor: 'pointer',
+	overflow: 'hidden',
+	transition: 'filter .25s',
+	'--squircle-smooth': 1,
+	'--squircle-radius': 16,
+	'-webkit-mask-image': 'paint(squircle)',
+
+	variants: {
+		expanded: {
+			true: {
+				top: 0,
+				left: 0,
+				right: 0,
+				width: '60%',
+				bottom: 0,
+				margin: 'auto auto 30%',
+				zIndex: 100,
+				position: 'fixed',
+				overflowY: 'auto',
+				background: '$secondaryBackground2',
+				borderRadius: '16px 16px 0 0',
+				pointerEvents: 'none',
+				'-webkit-mask-image': 'unset'
+			},
+			false: {
+				'&:hover': {
+					filter: 'brightness(1.25)'
+				}
+			}
+		}
+	}
+});
+const StyledImage = styled(motion.div, {
+	width: '100%',
+	height: 196,
+	zIndex: -2,
+	opacity: 0.5,
+	position: 'absolute',
+	transition: 'opacity 1s, background-size 1s',
+	'&:hover': {
+		opacity: 0.6,
+		backgroundSize: '110%'
+	}
+});
+const StyledTag = styled(motion.p, {
+	color: '$secondaryColor',
+	margin: '16px 0 0 16px',
+	fontSize: 12,
+	lineHeight: 1,
+	fontWeight: 400,
+	userSelect: 'none',
+	fontFamily: '$secondary',
+	pointerEvents: 'none',
+	textTransform: 'uppercase'
+});
+const StyledTitle = styled(motion.p, {
+	margin: '4px 16px 2px',
+	fontSize: 28,
+	lineHeight: 1,
+	fontWeight: 700,
+	userSelect: 'none',
+	fontFamily: '$tertiary',
+	textShadow: '#00000040 0 2px 4px',
+	pointerEvents: 'none'
+});
+const StyledAuthor = styled(motion.p, {
+	margin: '0 16px',
+	fontSize: 16,
+	lineHeight: 1,
+	fontWeight: 500,
+	userSelect: 'none',
+	fontFamily: '$tertiary',
+	textShadow: '#00000040 0 1px 2px',
+	pointerEvents: 'none'
+});
+const StyledContent = styled(motion.div, {
+	height: '60%',
+	overflow: 'hidden auto',
+	maxHeight: 0,
+	background: '$secondaryBackground2',
+
+	variants: {
+		expanded: {
+			true: {
+				top: 0,
+				left: 0,
+				right: 0,
+				width: '60%',
+				bottom: 0,
+				zIndex: 100,
+				margin: 'auto auto 0',
+				padding: 16,
+				position: 'fixed',
+				maxHeight: '100%'
+			}
+		}
+	}
+});
+const StyledCover = styled('div', {
+	top: 0,
+	left: 0,
+	width: '100%',
+	height: '100%',
+	zIndex: 99,
+	position: 'fixed',
+	background: '#00000040',
+	
+	variants: {
+		visible: {
+			false: {
+				background: 'unset',
+				pointerEvents: 'none'
+			}
+		}
+	}
+});

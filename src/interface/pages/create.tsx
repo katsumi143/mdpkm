@@ -1,8 +1,8 @@
 import { styled } from '@stitches/react';
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link, Grid, Button, Typography } from 'voxeliface';
-import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
 
 import Avatar from '../components/Avatar';
 
@@ -24,29 +24,27 @@ export default function Create() {
             <IconBiArrowLeft/>
             {t('common.action.return_to_instances')}
         </Link>
-        <AnimateSharedLayout>
-            <Grid height="100%" margin="16px 0 0" vertical spacing={16} css={{ position: 'relative' }}>
-                {Object.entries(INSTANCE_CREATORS.reduce((acc: Record<string, InstanceCreator[]>, val) => {
-					const { category } = val;
-					if (!acc[category])
-						acc[category] = [];
-	
-					acc[category].push(val);
-					return acc;
-				}, {})).map(([category, creators]) =>
-					<Grid key={category} spacing={4} vertical>
-						<Typography size={14} color="$secondaryColor" weight={400} family="$secondary" noSelect>
-							{t(`mdpkm:instance_creator.category.${category}`)}
-						</Typography>
-						<Grid spacing={8} vertical>
-							{creators.map(creator =>
-								<Component id={creator.id} key={creator.id} selected={selected === creator.id} setSelected={setSelected}/>
-							)}
-						</Grid>
+		<Grid height="100%" margin="16px 0 0" vertical spacing={16} css={{ position: 'relative' }}>
+			{Object.entries(INSTANCE_CREATORS.reduce((acc: Record<string, InstanceCreator[]>, val) => {
+				const { category } = val;
+				if (!acc[category])
+					acc[category] = [];
+
+				acc[category].push(val);
+				return acc;
+			}, {})).map(([category, creators]) =>
+				<Grid key={category} spacing={4} vertical>
+					<Typography size={14} color="$secondaryColor" weight={400} family="$secondary" noSelect>
+						{t(`mdpkm:instance_creator.category.${category}`)}
+					</Typography>
+					<Grid spacing={8} vertical>
+						{creators.map(creator =>
+							<Component id={creator.id} key={creator.id} selected={selected === creator.id} setSelected={setSelected}/>
+						)}
 					</Grid>
-				)}
-            </Grid>
-        </AnimateSharedLayout>
+				</Grid>
+			)}
+		</Grid>
     </Grid>;
 }
 
@@ -63,10 +61,10 @@ export function Component({ id, selected, setSelected }: ComponentProps) {
             <Grid height="fit-content" padding={8} spacing={12}>
 				<Avatar src={getImage(`component.${id}`)} size="sm" layoutId={`component-img-${id}`}/>
                 <Grid spacing={4} vertical justifyContent="center">
-                    <Typography noSelect layoutId={`component-title-${id}`} lineheight={1}>
+                    <Typography noFlex layout="position" noSelect layoutId={`component-title-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}`)}
                     </Typography>
-					<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect layoutId={`component-summary-${id}`} lineheight={1}>
+					<Typography size={12} color="$secondaryColor" noFlex weight={400} layout="position" family="$secondary" noSelect layoutId={`component-summary-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}.summary`)}
                     </Typography>
                 </Grid>
@@ -118,10 +116,10 @@ export function Setup({ id, cancel }: SetupProps) {
             <Grid padding={8} spacing={12}>
 				<Avatar src={getImage(`component.${id}`)} size="sm" layoutId={`component-img-${id}`}/>
             	<Grid spacing={4} vertical justifyContent="center">
-                    <Typography noSelect layoutId={`component-title-${id}`} lineheight={1}>
+                    <Typography noFlex layout="position" noSelect layoutId={`component-title-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}`)}
                     </Typography>
-					<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect layoutId={`component-summary-${id}`} lineheight={1}>
+					<Typography size={12} color="$secondaryColor" noFlex weight={400} layout="position" family="$secondary" noSelect layoutId={`component-summary-${id}`} lineheight={1}>
                         {t(`voxura:component.${id}.summary`)}
                     </Typography>
                 </Grid>

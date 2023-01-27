@@ -8,6 +8,9 @@ export default abstract class NewsItem<T> {
     }
 
     public abstract get title(): string
+	public get rawBody(): string | undefined {
+		return undefined;
+	}
     public abstract get image(): string
 	public get authors(): string[] {
 		return [];
