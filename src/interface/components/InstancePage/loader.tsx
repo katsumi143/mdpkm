@@ -77,10 +77,10 @@ export function ComponentUI({ disabled, instance, component }: ComponentProps) {
 		<Avatar src={component.icon ?? getImage(`component.${component.id}`)} size="sm"/>
 		<Grid spacing={2} vertical justifyContent="center">
 			<Grid spacing={8}>
-				<Typography noSelect lineheight={1}>
+				<Typography size={15} weight={450} noSelect lineheight={1}>
 					{component.name ?? t([`voxura:component.${component.id}`, 'missingno'])}
 				</Typography>
-				{component.name && <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
+				{component.name && <Typography size={12} color="$secondaryColor" family="$secondary" noSelect lineheight={1}>
 					{t(`voxura:component.${component.id}`)}
 				</Typography>}
 			</Grid>

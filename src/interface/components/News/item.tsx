@@ -36,7 +36,7 @@ export default function NewsItemComponent({ item }: NewsItemProps) {
 			}}>
 				{t('news.item.tag', { item })}
 			</Typography>
-			<Typography size={16} family="$tertiary" noSelect lineheight={1.1} css={{
+			<Typography weight={600} noSelect lineheight={1.1} css={{
 				display: 'block',
 				overflow: 'hidden',
 				textShadow: '#00000080 0 0 2px',

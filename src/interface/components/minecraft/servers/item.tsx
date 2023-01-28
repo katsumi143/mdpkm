@@ -28,10 +28,10 @@ export default function ServerItem({ name, icon, motd, type, players, address, i
         <Grid spacing={12}>
 			<Avatar src={serverIcon} size="sm" margin="8px 0 8px 8px"/>
             <Grid height="100%" spacing={2} vertical justifyContent="center">
-                <Typography noSelect lineheight={1} whitespace="nowrap">
+                <Typography size={15} weight={450} noSelect lineheight={1} whitespace="nowrap">
                     {name || t('server.no_name')}
                     {acceptTextures &&
-                        <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" margin="2px 0 0" noSelect lineheight={1}>
+                        <Typography size={12} color="$secondaryColor" family="$secondary" margin="2px 0 0" noSelect lineheight={1}>
                             {t('server.textures_accepted')}
                         </Typography>
                     }

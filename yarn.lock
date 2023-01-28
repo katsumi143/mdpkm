@@ -6935,7 +6935,7 @@ void-elements@3.1.0:
 
 "voxeliface@https://github.com/Excalware/react-voxeliface":
   version "1.0.0"
-  resolved "https://github.com/Excalware/react-voxeliface#53d877e0eda4693d93b85509f1d85b963fa86fe4"
+  resolved "https://github.com/Excalware/react-voxeliface#1c9a496a770ab9172b0528d4e07d2524f567bb8e"
   dependencies:
     "@radix-ui/react-context-menu" "^2.0.1"
     "@radix-ui/react-dialog" "^1.0.2"

@@ -60,7 +60,7 @@ export function Component({ id, selected, setSelected }: ComponentProps) {
         <ComponentContainer layoutId={`component-${id}`}>
             <Grid height="fit-content" padding={8} spacing={12}>
 				<Avatar src={getImage(`component.${id}`)} size="sm" layoutId={`component-img-${id}`}/>
-                <Grid spacing={4} vertical justifyContent="center">
+                <Grid spacing={2} vertical justifyContent="center">
                     <StyledTitle layoutId={`component-title-${id}`}>
                         {t(`voxura:component.${id}`)}
                     </StyledTitle>
@@ -115,7 +115,7 @@ export function Setup({ id, cancel }: SetupProps) {
         }}>
             <Grid padding={8} spacing={12}>
 				<Avatar src={getImage(`component.${id}`)} size="sm" layoutId={`component-img-${id}`}/>
-            	<Grid spacing={4} vertical justifyContent="center">
+            	<Grid spacing={2} vertical justifyContent="center">
                     <StyledTitle layoutId={`component-title-${id}`}>
                         {t(`voxura:component.${id}`)}
                     </StyledTitle>
@@ -178,7 +178,9 @@ const ComponentContainer = styled(motion.div, {
 const StyledTitle = styled(motion.p, {
 	color: '$primaryColor',
 	margin: 0,
+	fontSize: 15,
 	lineHeight: 1,
+	fontWeight: 450,
 	fontFamily: '$primary'
 });
 const StyledSummary = styled(motion.p, {
@@ -186,6 +188,5 @@ const StyledSummary = styled(motion.p, {
 	margin: 0,
 	fontSize: 12,
 	lineHeight: 1,
-	fontWeight: 400,
 	fontFamily: '$secondary'
 });

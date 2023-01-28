@@ -67,7 +67,7 @@ export default function Settings() {
 	const reportIssue = () => open('https://github.com/Blookerss/mdpkm/issues/new');
 	const openGithub = () => open('https://github.com/Blookerss/mdpkm');
 	const yippee = () => dispatch(setPage('developer'));
-	return <Grid width="100%" height="100%" padding=".75rem 1rem" vertical css={{
+	return <Grid width="100%" height="100%" padding={16} vertical css={{
 		overflow: 'auto'
 	}}>
 		<TextHeader noSelect>{t('settings.general')}</TextHeader>
@@ -216,7 +216,7 @@ export default function Settings() {
 
 		<TextHeader spacious noSelect>{t('settings.about')}</TextHeader>
 		<Grid spacing={8} padding="0 1rem" vertical>
-			<Grid spacing={8} alignItems="center">
+			<Grid spacing={12} alignItems="center">
 				<Image src={i('app_icon')} size={48} onClick={yippee} />
 				<Grid spacing={2} vertical>
 					<Typography noSelect lineheight={1}>
@@ -254,22 +254,20 @@ export interface SettingProps {
 export function Setting({ name, children, direction, noSummary }: SettingProps) {
 	const { t } = useTranslation('interface');
 	const stringBase = `settings.${name ?? 'placeholder'}`;
-	return <Grid width="30%" padding="0 1rem 16px">
-		<Grid width="100%" spacing={4} padding={4} vertical>
-			<Typography noSelect lineheight={1}>
-				{t(stringBase)}
+	return <Grid width="30%" margin="0 32px 24px" spacing={4} vertical>
+		<Typography noSelect lineheight={1}>
+			{t(stringBase)}
+		</Typography>
+		{!noSummary &&
+			<Typography size={14} color="$secondaryColor" weight={400} noSelect lineheight={1.2} textalign="start">
+				{t(`${stringBase}.summary`)}
 			</Typography>
-			{!noSummary &&
-				<Typography size={14} color="$secondaryColor" weight={400} noSelect lineheight={1.2} textalign="start">
-					{t(`${stringBase}.summary`)}
-				</Typography>
-			}
-			<Grid margin="8px 0 0" spacing={8} direction={direction ?? 'vertical'} css={{
-				minWidth: 196,
-				position: 'relative'
-			}}>
-				{children}
-			</Grid>
+		}
+		<Grid margin="8px 0 0" spacing={8} direction={direction ?? 'vertical'} css={{
+			minWidth: 196,
+			position: 'relative'
+		}}>
+			{children}
 		</Grid>
-	</Grid>
+	</Grid>;
 }

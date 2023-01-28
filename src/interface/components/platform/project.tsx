@@ -82,7 +82,7 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
 					<Grid spacing={4}>
 						<Tooltip.Root delayDuration={50}>
 							<Tooltip.Trigger asChild>
-								<Typography onClick={openWebsite} noSelect lineheight={1} css={{
+								<Typography size={15} weight={450} onClick={openWebsite} noSelect lineheight={1} css={{
 									cursor: 'pointer'
 								}}>
 									{project.displayName}

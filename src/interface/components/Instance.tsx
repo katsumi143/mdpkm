@@ -116,7 +116,6 @@ export default memo(({ id, selected }: InstanceProps) => {
 								<Typography
 									width="100%"
 									noFlex
-									family="$tertiary"
 									noSelect
 									lineheight={1}
 									whitespace="nowrap"

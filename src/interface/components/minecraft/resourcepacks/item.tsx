@@ -23,10 +23,10 @@ export default function ResourcePackItem({ item }: ResourcePackItemProps) {
     }}>
 		<Avatar src={packIcon} size="sm"/>
         <Grid spacing={2} vertical>
-            <Typography noSelect lineheight={1}>
+            <Typography size={15} weight={450} noSelect lineheight={1}>
                 {item.name}
             </Typography>
-            <Typography size={12} color="$secondaryColor" noSelect lineheight={1}>
+            <Typography size={12} color="$secondaryColor" family="$secondary" noSelect lineheight={1}>
                 {item.metadata.pack?.description}
             </Typography>
         </Grid>

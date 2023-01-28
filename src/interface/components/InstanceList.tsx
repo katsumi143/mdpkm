@@ -29,7 +29,7 @@ export default function InstanceList({ id, items }: InstanceListProps) {
     };
     return <React.Fragment>
         <Grid width="100%" padding="12px 16px" alignItems="center" background="$secondaryBackground" justifyContent="space-between">
-            <Grid spacing={1} vertical>
+            <Grid spacing={2} vertical>
                 <Typography size={14} noSelect lineheight={1}>
                     {t('instance_list')}
                 </Typography>

@@ -33,7 +33,7 @@ export default function InstanceMod({ mod, disabled, instance }: InstanceModProp
 				<Grid width="100%" spacing={8} alignItems="center">
 					<Avatar src={icon} size="sm" margin="8px 0 8px 8px"/>
 					<Grid margin="0 0 0 4px" spacing={2} vertical>
-						<Typography weight={400} family="$secondary" noSelect lineheight={1}>
+						<Typography size={15} weight={450} noSelect lineheight={1}>
 							{mod.name ?? mod.id}
 						</Typography>
 						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>

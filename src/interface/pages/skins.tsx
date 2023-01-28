@@ -143,49 +143,44 @@ export default function Skins() {
             });
         }
     }, [profile, account]);
-    return <Grid height="100%" spacing={8} padding=".75rem 1rem" vertical>
-        <TextHeader noSelect>
-            {t('skin_management')}
-        </TextHeader>
-        <Grid height="100%">
-            <Grid padding="0 32px 2rem" vertical alignItems="center" justifyContent="space-between">
-                <Grid spacing={16} vertical alignItems="center">
-                    <Typography size={18} noSelect>
-                        {t('skin_management.current')}
-                    </Typography>
-                    {!loading && current ? <SkinFrame
-                        walk
-						slim={skinModel === 'slim'}
-                        skin={current.startsWith('img') ? current : `data:image/png;base64,${current}`}
-                        cape={capes.find(c => c.state === 'ACTIVE')?.url}
-                        width={200}
-                        height={300}
-                        control
-                    /> : <Grid width={200} height={300} alignItems="center" justifyContent="center">
-                        <Spinner/>
-                    </Grid>}
-                </Grid>
-                <Button theme="accent" onClick={startAdding} disabled={loading}>
-                    <IconBiPlusLg/>
-                    {t('skin_management.add')}
-                </Button>
-            </Grid>
-            <Divider width={1} height="100%"/>
-            <Grid width="100%" height="100%" vertical alignItems="center">
-                <Typography size={18} margin="0 0 1rem" noSelect>
-                    {t('skin_management.library')}
-                </Typography>
-                <Grid spacing={8} css={{
-                    display: 'grid',
-                    overflow: 'hidden auto',
-                    gridTemplateColumns: 'repeat(6, auto)'
-                }}>
-                    {skins.map((skin, key) =>
-                        <LibraryItem key={skin.name} data={skin} capes={capes} index={key} useSkin={useSkin} editSkin={editSkin} loading={loading || setting}/>
-                    )}
-                </Grid>
-            </Grid>
-        </Grid>
+    return <Grid height="100%" padding={32}>
+        <Grid padding="24px 2rem 2rem" vertical alignItems="center" justifyContent="space-between">
+			<Grid spacing={16} vertical alignItems="center">
+				<Typography size={20} weight={600} family="$tertiary" noSelect>
+					{t('skin_management.current')}
+				</Typography>
+				{!loading && current ? <SkinFrame
+					walk
+					slim={skinModel === 'slim'}
+					skin={current.startsWith('img') ? current : `data:image/png;base64,${current}`}
+					cape={capes.find(c => c.state === 'ACTIVE')?.url}
+					width={200}
+					height={300}
+					control
+				/> : <Grid width={200} height={300} alignItems="center" justifyContent="center">
+					<Spinner/>
+				</Grid>}
+			</Grid>
+			<Button theme="accent" onClick={startAdding} disabled={loading}>
+				<IconBiPlusLg/>
+				{t('skin_management.add')}
+			</Button>
+		</Grid>
+		<Divider width={1} height="100%"/>
+		<Grid width="100%" height="100%" padding="24px 0 0" spacing={16} vertical alignItems="center">
+			<Typography size={20} weight={600} family="$tertiary" noSelect>
+				{t('skin_management.library')}
+			</Typography>
+			<Grid spacing={8} css={{
+				display: 'grid',
+				overflow: 'hidden auto',
+				gridTemplateColumns: 'repeat(6, auto)'
+			}}>
+				{skins.map((skin, key) =>
+					<LibraryItem key={skin.name} data={skin} capes={capes} index={key} useSkin={useSkin} editSkin={editSkin} loading={loading || setting}/>
+				)}
+			</Grid>
+		</Grid>
         {adding && <Modal>
             <TextHeader>{t('skin_management.add')}</TextHeader>
             <Grid spacing={32} justifyContent="space-between">

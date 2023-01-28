@@ -24,10 +24,10 @@ export default function Shader({ item }: ShaderProps) {
     }}>
 		<Avatar src={packIcon} size="sm"/>
         <Grid spacing={2} vertical>
-            <Typography noSelect lineheight={1}>
+            <Typography size={15} weight={450} noSelect lineheight={1}>
                 {item.name}
             </Typography>
-            <Typography size={12} color="$secondaryColor" noSelect lineheight={1}>
+            <Typography size={12} color="$secondaryColor" family="$secondary" noSelect lineheight={1}>
                 {t('common.label.version', [item.version])}
             </Typography>
         </Grid>
