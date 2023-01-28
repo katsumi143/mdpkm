@@ -49,10 +49,10 @@ export default function Home() {
 						backdropFilter: 'brightness(1.25)'
 					}}/>
 					<Grid vertical spacing={4}>
-						<Typography size={24} family="$tertiary" weight={600} noSelect lineheight={1}>
+						<Typography size={28} family="$tertiary" weight={700} noSelect lineheight={1}>
 							{t(`home.greeting.${greeting}`)}
 						</Typography>
-						<Typography size={20} color="$secondaryColor" family="$secondary" noSelect lineheight={1}>
+						<Typography size={22} color="$secondaryColor" weight={600} family="$tertiary" noSelect lineheight={1}>
 							{account?.primaryName}!
 						</Typography>
 					</Grid>
