@@ -61,19 +61,19 @@ export function Component({ id, selected, setSelected }: ComponentProps) {
             <Grid height="fit-content" padding={8} spacing={12}>
 				<Avatar src={getImage(`component.${id}`)} size="sm" layoutId={`component-img-${id}`}/>
                 <Grid spacing={4} vertical justifyContent="center">
-                    <Typography noFlex layout="position" noSelect layoutId={`component-title-${id}`} lineheight={1}>
+                    <StyledTitle layoutId={`component-title-${id}`}>
                         {t(`voxura:component.${id}`)}
-                    </Typography>
-					<Typography size={12} color="$secondaryColor" noFlex weight={400} layout="position" family="$secondary" noSelect layoutId={`component-summary-${id}`} lineheight={1}>
+                    </StyledTitle>
+					<StyledSummary layout="position" layoutId={`component-summary-${id}`}>
                         {t(`voxura:component.${id}.summary`)}
-                    </Typography>
+                    </StyledSummary>
                 </Grid>
             </Grid>
-            <Grid height="100%" layoutId={`component-link-${id}`} css={{
+            <Grid height="100%" css={{
                 right: 0,
                 position: 'absolute'
             }}>
-                <Link size={12} padding="0 16px" onClick={() => setSelected(id)}>
+                <Link size={12} layout="position" padding="0 16px" onClick={() => setSelected(id)} layoutId={`component-link-${id}`}>
                     {t('common.action.continue')}
                     <IconBiArrowRight/>
                 </Link>
@@ -116,19 +116,19 @@ export function Setup({ id, cancel }: SetupProps) {
             <Grid padding={8} spacing={12}>
 				<Avatar src={getImage(`component.${id}`)} size="sm" layoutId={`component-img-${id}`}/>
             	<Grid spacing={4} vertical justifyContent="center">
-                    <Typography noFlex layout="position" noSelect layoutId={`component-title-${id}`} lineheight={1}>
+                    <StyledTitle layoutId={`component-title-${id}`}>
                         {t(`voxura:component.${id}`)}
-                    </Typography>
-					<Typography size={12} color="$secondaryColor" noFlex weight={400} layout="position" family="$secondary" noSelect layoutId={`component-summary-${id}`} lineheight={1}>
+                    </StyledTitle>
+					<StyledSummary layout="position" layoutId={`component-summary-${id}`}>
                         {t(`voxura:component.${id}.summary`)}
-                    </Typography>
+                    </StyledSummary>
                 </Grid>
             </Grid>
-            <Grid height="100%" layoutId={`component-link-${id}`} css={{
+            <Grid height="100%" css={{
                 right: 0,
                 position: 'absolute'
             }}>
-                <Link size={12} padding="0 16px" onClick={cancel} disabled={creating}>
+                <Link size={12} layout="position" padding="0 16px" onClick={cancel} disabled={creating} layoutId={`component-link-${id}`}>
                     <IconBiArrowLeft/>
                     {t('common.action.back')}
                 </Link>
@@ -173,4 +173,19 @@ const ComponentContainer = styled(motion.div, {
             }
         }
     }
+});
+
+const StyledTitle = styled(motion.p, {
+	color: '$primaryColor',
+	margin: 0,
+	lineHeight: 1,
+	fontFamily: '$primary'
+});
+const StyledSummary = styled(motion.p, {
+	color: '$secondaryColor',
+	margin: 0,
+	fontSize: 12,
+	lineHeight: 1,
+	fontWeight: 400,
+	fontFamily: '$secondary'
 });
