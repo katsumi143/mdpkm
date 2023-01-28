@@ -1,7 +1,8 @@
+import { Buffer } from 'buffer';
 import { keyframes } from '@stitches/react';
 import { writeText } from '@tauri-apps/api/clipboard';
 import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useRef } from 'react';
+import React, { memo, useMemo, useEffect, useRef } from 'react';
 import { Link, Grid, Typography, ContextMenu } from 'voxeliface';
 
 import Avatar from './Avatar';
@@ -10,6 +11,7 @@ import { toast } from '../../util';
 import { useInstance } from '../../voxura';
 import { useAppDispatch } from '../../store/hooks';
 import { INSTANCE_STATE_ICONS } from '../../util/constants';
+import { getDefaultInstanceBanner } from '../../util';
 import { setPage, setInstanceTab, setCurrentInstance } from '../../store/slices/interface';
 const Animation = keyframes({
 	'0%': {
@@ -39,6 +41,12 @@ export default memo(({ id, selected }: InstanceProps) => {
 	const { t } = useTranslation('interface');
 	const dispatch = useAppDispatch();
 	const instance = useInstance(id);
+	const banner = useMemo(() => {
+		if (!instance)
+			return '';
+		const { name, banner, bannerFormat } = instance;
+		return banner ? `data:image/${bannerFormat};base64,${Buffer.from(banner).toString('base64')}` : getDefaultInstanceBanner(name);
+	}, [instance?.name, instance?.banner]);
 	useEffect(() => {
 		if (selected)
 			ref.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth'});
@@ -65,10 +73,37 @@ export default memo(({ id, selected }: InstanceProps) => {
 				animation: `${Animation} 500ms cubic-bezier(0.4, 0, 0.2, 1)`,
 				animationFillMode: 'forwards'
 			}}>
-				<Grid width="100%" height="100%" alignItems="center" borderRadius={16} justifyContent="space-between" css={{
-					border: selected ? 'transparent solid 1px' : '$secondaryBorder solid 1px',
+				<Grid width="100%" height="100%" onClick={view} smoothing={1} alignItems="center" borderRadius={16} justifyContent="space-between" css={{
+					cursor: selected ? 'unset' : 'pointer',
 					overflow: 'hidden',
-					background: selected ? '$gradientBackground2 padding-box, $gradientBorder2 border-box' : '$primaryBackground'
+					transition: 'transform .5s',
+					'&:before': {
+						width: '100%',
+						zIndex: -2,
+						height: '100%',
+						filter: selected ? 'brightness(1.2)' : undefined,
+						content: '',
+						opacity: selected ? 1 : 0.5,
+						position: 'absolute',
+						transition: 'background 1s',
+						background: selected ? '$secondaryBackground2' : `url(${banner}) right`,
+						backgroundSize: '75%'
+					},
+					'&:after': selected ? undefined : {
+						width: '100%',
+						zIndex: -1,
+						height: '100%',
+						content: '',
+						position: 'absolute',
+						transition: 'filter .5s',
+						background: 'linear-gradient(45deg, $secondaryBackground2 40%, #00000000 200%)'
+					},
+					'&:hover:after': {
+						filter: 'brightness(1.25)'
+					},
+					'&:active': {
+						transform: 'scale(0.95)'
+					}
 				}}>
 					<Grid padding={8} spacing={12} alignItems="center" css={{
 						overflow: 'hidden',
@@ -93,7 +128,6 @@ export default memo(({ id, selected }: InstanceProps) => {
 							<Typography
 								size={12}
 								color="$secondaryColor"
-								weight={400}
 								family="$secondary"
 								spacing={6}
 								noSelect
@@ -104,13 +138,6 @@ export default memo(({ id, selected }: InstanceProps) => {
 							</Typography>
 						</Grid>
 					</Grid>
-					<Link size={12} height="100%" onClick={view} padding="0 16px" css={{
-						animation: selected ? `${viewAnimation} .25s ease-in` : undefined,
-						animationFillMode: 'forwards'
-					}}>
-						{t('common.action.view')}
-						<IconBiArrowRight />
-					</Link>
 				</Grid>
 			</Grid>
 		</ContextMenu.Trigger>

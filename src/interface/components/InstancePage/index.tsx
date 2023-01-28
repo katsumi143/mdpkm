@@ -105,11 +105,10 @@ export default function InstancePage({ id }: InstancePageProps) {
 					</ImageWrapper>
 				</Grid>
 				<Grid spacing={4} vertical justifyContent="center">
-					<Typography size={22} family="$tertiary" noSelect lineheight={1} css={{ alignItems: 'start' }}>
-						{instance.isFavourite && <IconBiStarFill fontSize={16}/>}
+					<Typography size={24} weight={700} family="$tertiary" noSelect lineheight={1} css={{ alignItems: 'start' }}>
 						{instance.name}
 					</Typography>
-					<Typography color="$secondaryColor" weight={400} family="$secondary" spacing={6} noSelect lineheight={1}>
+					<Typography color="$secondaryColor" weight={600} family="$secondary" spacing={8} noSelect lineheight={1}>
 						<StateIcon fontSize={12}/>
 						{t(`instance.state.${instance.state}`)}
 					</Typography>

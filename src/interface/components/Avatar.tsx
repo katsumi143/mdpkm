@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { CSS, styled } from '@stitches/react';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, MouseEventHandler } from 'react';
 
 import ImagePreview from './ImagePreview';
 import { PLACEHOLDER_IMAGE } from '../../util/constants';
@@ -64,7 +64,10 @@ export default function Avatar({ css, src, size, blur, margin, circle, layoutId,
 	const img = useRef<HTMLImageElement>(null);
 	const imgSrc = src || PLACEHOLDER_IMAGE;
 	const [preview, setPreview] = useState(false);
-	const togglePreview = () => setPreview(p => !p);
+	const togglePreview: MouseEventHandler<HTMLDivElement> = event => {
+		event.stopPropagation();
+		setPreview(p => !p);
+	};
 	useEffect(() => {
 		const image = img.current;
 		if (image && !imgSrc.includes('svg')) {
