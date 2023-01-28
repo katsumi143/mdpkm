@@ -81,26 +81,28 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 								{t('common.action.delete')}
 							</Button>
 						</Dialog.Trigger>
-						<Dialog.Content>
-							<Dialog.Title>{t('dialog.delete_instance')}</Dialog.Title>
-							<Dialog.Description css={{ whiteSpace: 'pre' }}>
-								{t('dialog.delete_instance.body', [instance.name])}
-							</Dialog.Description>
-							<Grid spacing={16} justifyContent="end">
-								<Dialog.Close asChild>
-									<Button theme="accent" onClick={deleteInstance}>
-										<IconBiCheckLg/>
-										{t('common.action.confirm')}
-									</Button>
-								</Dialog.Close>
-								<Dialog.Close asChild>
-									<Button theme="secondary">
-										<IconBiXLg/>
-										{t('common.action.cancel')}
-									</Button>
-								</Dialog.Close>
-							</Grid>
-						</Dialog.Content>
+						<Dialog.Portal>
+							<Dialog.Content>
+								<Dialog.Title>{t('dialog.delete_instance')}</Dialog.Title>
+								<Dialog.Description css={{ whiteSpace: 'pre' }}>
+									{t('dialog.delete_instance.body', [instance.name])}
+								</Dialog.Description>
+								<Grid spacing={16} justifyContent="end">
+									<Dialog.Close asChild>
+										<Button theme="accent" onClick={deleteInstance}>
+											<IconBiCheckLg/>
+											{t('common.action.confirm')}
+										</Button>
+									</Dialog.Close>
+									<Dialog.Close asChild>
+										<Button theme="secondary">
+											<IconBiXLg/>
+											{t('common.action.cancel')}
+										</Button>
+									</Dialog.Close>
+								</Grid>
+							</Dialog.Content>
+						</Dialog.Portal>
 					</Dialog.Root>
 				</Grid>
 			</TabItem>

@@ -153,10 +153,9 @@ export function Setup({ id, cancel }: SetupProps) {
 }
 
 const ComponentContainer = styled(motion.div, {
-    border: 'transparent solid 1px',
     display: 'flex',
     position: 'relative',
-    background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box',
+    background: '$secondaryBackground2',
     flexDirection: 'column',
 	'--squircle-smooth': 1,
 	'--squircle-radius': 16,
