@@ -32,10 +32,9 @@ export default function Home() {
 	}, [showNews]);
 
 	const loadingInstances = voxura.instances.loading;
-	return <Grid width="100%" height="inherit" vertical css={{ overflow: 'hidden' }}>
+	return <>
 		<Grid height="100%" spacing={16} justifyContent="space-between" css={{ overflow: 'hidden' }}>
 			<Grid width="100%" height="60%" background={`url(img/banner/instance/banner1_${greeting + 1}.webp)`} css={{
-				zIndex: -1,
 				opacity: 0.5,
 				position: 'absolute',
 				backgroundSize: 'cover',
@@ -43,7 +42,7 @@ export default function Home() {
 			}}>
 				<Grid width="100%" height="100%" background="linear-gradient(transparent, $primaryBackground)"/>
 			</Grid>
-			<Grid width="65%" padding="12px 0 12px 1rem" vertical>
+			<Grid width="65%" padding="12px 0 12px 1rem" vertical css={{ zIndex: 1 }}>
 				<Grid height="fit-content" margin="24px 0 0" spacing={24} alignItems="center">
 					<Avatar src={account?.getAvatarUrl(MinecraftAvatarStyle.Bust, 128)} size="xl" circle transparent css={{
 						backdropFilter: 'brightness(1.25)'
@@ -68,7 +67,7 @@ export default function Home() {
 					</Grid>
 				</>}
 			</Grid>
-			<Grid width="35%" height="100%" padding="12px 1rem 12px 0" vertical>
+			<Grid width="35%" height="100%" padding="12px 1rem 12px 0" vertical css={{ zIndex: 1 }}>
 				<Grid padding="0 8px" justifyContent="space-between">
 					<Typography family="$tertiary" noSelect>{t('home.recent_instances.title')}</Typography>
 					<ViewAll onClick={() => dispatch(setPage('instances'))}/>
@@ -80,7 +79,7 @@ export default function Home() {
 				</Grid>
 			</Grid>
 		</Grid>
-	</Grid>;
+	</>;
 }
 
 function getGreeting() {

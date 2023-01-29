@@ -32,15 +32,14 @@ export default function Navigation() {
 			<Header/>
 			<Main css={{
 				padding: 0,
-				overflow: 'hidden auto',
-				flexDirection: 'row'
+				overflow: 'hidden'
 			}}>
 				<SideNavigation value={page} onChange={changePage} css={{
 					'& > *:first-child': {
 						display: SHOULD_HIDE_SIDE.some(p => p === page) ? 'none' : undefined
 					}
 				}}>
-					<NavigationItem name={t('navigation.home')} icon={<IconBiHouse/>} value="home" direction="horizontal">
+					<NavigationItem name={t('navigation.home')} icon={<IconBiHouse/>} value="home">
 						<Home/>
 					</NavigationItem>
 					<NavigationItem name={t('instance_list')} icon={<IconBiListUl/>} value="instances" direction="horizontal">

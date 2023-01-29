@@ -141,44 +141,44 @@ export default memo(({ id, selected }: InstanceProps) => {
 			</Grid>
 		</ContextMenu.Trigger>
 		<ContextMenu.Content>
-			<ContextMenu.MenuLabel>
+			<ContextMenu.Label>
 				Instance Options ({instance.name})
-			</ContextMenu.MenuLabel>
-			<ContextMenu.MenuItem>
+			</ContextMenu.Label>
+			<ContextMenu.Item>
 				<IconBiPlayFill/>
 				{t('common.action.launch')}
-			</ContextMenu.MenuItem>
-			<ContextMenu.MenuItem onClick={view}>
+			</ContextMenu.Item>
+			<ContextMenu.Item onClick={view}>
 				<IconBiZoomIn/>
 				{t('common.action.view')}
-			</ContextMenu.MenuItem>
-			<ContextMenu.MenuSeparator/>
-			<ContextMenu.MenuItem onClick={favorite}>
+			</ContextMenu.Item>
+			<ContextMenu.Separator/>
+			<ContextMenu.Item onClick={favorite}>
 				<IconBiStar/>
 				Add to Favourites
-			</ContextMenu.MenuItem>
-			<ContextMenu.MenuSeparator/>
-			<ContextMenu.MenuItem onClick={() => viewTab(0)}>
+			</ContextMenu.Item>
+			<ContextMenu.Separator/>
+			<ContextMenu.Item onClick={() => viewTab(0)}>
 				<IconBiInfoCircle/>
 				{t('instance_page.tab.home')}
-			</ContextMenu.MenuItem>
-			<ContextMenu.MenuItem onClick={() => viewTab(1)}>
+			</ContextMenu.Item>
+			<ContextMenu.Item onClick={() => viewTab(1)}>
 				<IconBiBox2/>
 				{t('instance_page.tab.content')}
-			</ContextMenu.MenuItem>
-			<ContextMenu.MenuItem onClick={() => viewTab(2)}>
+			</ContextMenu.Item>
+			<ContextMenu.Item onClick={() => viewTab(2)}>
 				<IconBiBox/>
 				{t('instance_page.tab.game')}
-			</ContextMenu.MenuItem>
-			<ContextMenu.MenuItem onClick={() => viewTab(3)}>
+			</ContextMenu.Item>
+			<ContextMenu.Item onClick={() => viewTab(3)}>
 				<IconBiGear/>
 				{t('instance_page.settings')}
-			</ContextMenu.MenuItem>
-			<ContextMenu.MenuSeparator/>
-			<ContextMenu.MenuItem onClick={copyId}>
+			</ContextMenu.Item>
+			<ContextMenu.Separator/>
+			<ContextMenu.Item onClick={copyId}>
 				<IconBiClipboardPlus/>
 				{t('common.action.copy_id')}
-			</ContextMenu.MenuItem>
+			</ContextMenu.Item>
 		</ContextMenu.Content>
 	</ContextMenu.Root>;
 });
