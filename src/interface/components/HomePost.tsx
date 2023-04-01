@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { open } from '@tauri-apps/api/shell';
+import { motion } from 'framer-motion';
 import { styled } from '@stitches/react';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
+import { Grid, Markdown } from 'voxeliface';
 import { useTranslation } from 'react-i18next';
-import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
-import { Grid, Image, Portal, Markdown, Typography } from 'voxeliface';
 
-import { openAnimation2 } from './Modal';
 import type NewsItem from '../../mdpkm/news/item';
 import { useAppSelector } from '../../store/hooks';
 export interface HomePostProps {
@@ -147,8 +146,8 @@ const StyledCover = styled('div', {
 	top: 0,
 	left: 0,
 	width: '100%',
-	height: '100%',
 	zIndex: 99,
+	height: '100%',
 	position: 'fixed',
 	background: '#00000040',
 	
