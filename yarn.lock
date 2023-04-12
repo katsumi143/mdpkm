@@ -5009,11 +5009,6 @@ p-locate@^6.0.0:
   dependencies:
     p-limit "^4.0.0"
 
-p-map-browser@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/p-map-browser/-/p-map-browser-1.2.0.tgz#7367d6b53e834f5ae49719c36f07b55db4949151"
-  integrity sha512-Rp2Up4TBDxDix4HBZiOo/OoJmi6O6UAPNL2VWUOAf9JsNxnpHxdIjUwJ3iUBKeNEX5C35lPAqhShf3BBDrQaEA==
-
 p-map-series@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/p-map-series/-/p-map-series-1.0.0.tgz#bf98fe575705658a9e1351befb85ae4c1f07bdca"
