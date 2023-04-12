@@ -217,7 +217,7 @@
 	"project.side.3": "Client and server",
 	"project.followers_one": "{{count, number}} Follower",
 	"project.followers_other": "{{count, number}} Followers",
-	"project.visit_site": "View on $t(voxura:platform.{{project.source.id}}) Website",
+	"project.visit_site": "View on $t(voxura:platform.{{project.source.id}})",
 	"project.issue.incompatible": "Incompatible",
 
 	"essential": "Essential",

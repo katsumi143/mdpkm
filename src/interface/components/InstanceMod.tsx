@@ -73,7 +73,7 @@ export default function InstanceMod({ mod, disabled, instance }: InstanceModProp
 								</Tooltip.Trigger>
 								<Tooltip.Portal>
 									<Tooltip.Content>
-										{t('mod.visit_site', {mod})}
+										{t('project.visit_site', { project: mod })}
 										<Tooltip.Arrow/>
 									</Tooltip.Content>
 								</Tooltip.Portal>
@@ -100,22 +100,22 @@ export default function InstanceMod({ mod, disabled, instance }: InstanceModProp
 			</Grid>
 		</ContextMenu.Trigger>
 		<ContextMenu.Content>
-			<ContextMenu.MenuLabel>
-				{mod.name} ({mod.md5})
-			</ContextMenu.MenuLabel>
-			{mod.source && <ContextMenu.MenuItem onClick={openWebsite}>
+			<ContextMenu.Label>
+				{mod.name} v{mod.version} ({mod.md5})
+			</ContextMenu.Label>
+			{mod.source && <ContextMenu.Item onClick={openWebsite}>
 				<IconBiBoxArrowUpRight/>
-				{t('mod.visit_site', {mod})}
-			</ContextMenu.MenuItem>}
-			<ContextMenu.MenuItem onClick={removeMod}>
-				<IconBiTrash3Fill/>
+				{t('project.visit_site', { project: mod })}
+			</ContextMenu.Item>}
+			<ContextMenu.Item onClick={removeMod}>
+				<IconBiTrash3/>
 				{t('common.action.delete')}
-			</ContextMenu.MenuItem>
-			<ContextMenu.MenuSeparator/>
-			<ContextMenu.MenuItem onClick={() => writeText(mod.path)}>
+			</ContextMenu.Item>
+			<ContextMenu.Separator/>
+			<ContextMenu.Item onClick={() => writeText(mod.path)}>
 				<IconBiClipboardPlus/>
 				{t('common.action.copy_path')}
-			</ContextMenu.MenuItem>
+			</ContextMenu.Item>
 		</ContextMenu.Content>
 	</ContextMenu.Root>;
 }

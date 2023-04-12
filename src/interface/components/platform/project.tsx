@@ -167,22 +167,22 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
 			</Grid>
 		</ContextMenu.Trigger>
 		<ContextMenu.Content>
-			<ContextMenu.MenuLabel>
-				{project.displayName} {t('mod.author', {project})} ({t(`voxura:platform.${project.source.id}`)})
-			</ContextMenu.MenuLabel>
-			{instance && <ContextMenu.MenuItem onClick={install} disabled={installing || installed}>
+			<ContextMenu.Label>
+				{project.displayName} {t('common.label.author', [[project.author]])}
+			</ContextMenu.Label>
+			{instance && <ContextMenu.Item onClick={install} disabled={installing || installed}>
 				{installing ? <BasicSpinner size={16}/> : <IconBiDownload/>}
 				{t('common.action.install')}
-			</ContextMenu.MenuItem>}
-			<ContextMenu.MenuItem onClick={openWebsite}>
+			</ContextMenu.Item>}
+			<ContextMenu.Item onClick={openWebsite}>
 				<IconBiBoxArrowUpRight/>
-				{t('common.action.view_website')}
-			</ContextMenu.MenuItem>
-			<ContextMenu.MenuSeparator/>
-			<ContextMenu.MenuItem onClick={() => writeText(project.id)}>
+				{t('project.visit_site', {project})}
+			</ContextMenu.Item>
+			<ContextMenu.Separator/>
+			<ContextMenu.Item onClick={() => writeText(project.id)}>
 				<IconBiClipboardPlus/>
 				{t('common.action.copy_id')}
-			</ContextMenu.MenuItem>
+			</ContextMenu.Item>
 		</ContextMenu.Content>
 	</ContextMenu.Root>;
 }
