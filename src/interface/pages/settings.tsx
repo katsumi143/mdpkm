@@ -223,21 +223,21 @@ export default function Settings() {
 						{t('settings.about.version', [APP_NAME, APP_VERSION])}
 					</Typography>
 					<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
-						{t('settings.about.version2', [TAURI_VERSION, VOXURA_VERSION])}
+						{GIT_REPOSITORY} {GIT_BRANCH}@{GIT_COMMIT_HASH}
 					</Typography>
 				</Grid>
 			</Grid>
 			<Grid spacing={8}>
 				<Button theme="accent" onClick={updateCheck} disabled={updating}>
-					{updating ? <BasicSpinner size={16} /> : <IconBiCloudArrowDown />}
+					{updating ? <BasicSpinner size={16}/> : <IconBiCloudArrowDown/>}
 					{t('common.action.check_for_updates')}
 				</Button>
 				<Button theme="accent" onClick={reportIssue}>
-					<IconBiEnvelopeOpen />
+					<IconBiEnvelopeOpen/>
 					{t('settings.about.report_bug')}
 				</Button>
 				<Button theme="secondary" onClick={openGithub}>
-					<IconBiGithub />
+					<IconBiGithub/>
 					{t('settings.about.github')}
 				</Button>
 			</Grid>

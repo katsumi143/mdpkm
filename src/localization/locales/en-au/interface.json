@@ -187,7 +187,6 @@
 
 	"settings.about": "About this build",
 	"settings.about.version": "{{0}} v{{1}}",
-	"settings.about.version2": "Tauri {{0}} & Voxura {{1}}",
 	"settings.about.report_bug": "Report Issue",
 	"settings.about.github": "Open GitHub Page",
 	

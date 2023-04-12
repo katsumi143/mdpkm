@@ -177,8 +177,6 @@
 	"settings.plugins.add": "Добавить плагин",
 
 	"settings.about": "Об этой сборке",
-	"settings.about.version": "{{0}} v{{1}}",
-	"settings.about.version2": "Tauri {{0}} и Voxura {{1}}",
 	"settings.about.report_bug": "Сообщить о проблеме",
 	"settings.about.github": "Открыть страницу GitHub",
 	
