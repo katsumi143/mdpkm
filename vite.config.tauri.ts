@@ -1,6 +1,7 @@
 import svgr from 'vite-plugin-svgr';
 import Icons from 'unplugin-icons/vite';
 import react from '@vitejs/plugin-react';
+import * as fs from 'fs';
 import { tauri } from 'vite-plugin-tauri';
 import * as child from 'child_process';
 import AutoImport from 'unplugin-auto-import/vite';
@@ -42,7 +43,16 @@ export default defineConfig({
             jsx: 'react',
             compiler: 'jsx'
         }),
-        tauri()
+        tauri(),
+		{
+			name: 'base64-loader',
+			transform(_,id) {
+				const [path, query] = id.split('?');
+				if (query !== 'raw-base64')
+					return null;
+				return `export default '${fs.readFileSync(path).toString('base64')}';`;
+			}
+		}
     ],
     esbuild: { keepNames: true },
     clearScreen: true

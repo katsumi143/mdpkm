@@ -16,7 +16,7 @@ export interface SkinFrameProps {
 	children?: ReactNode
 }
 export default function SkinFrame({ skin, slim = false, cape, walk = false, width = 64, height = 64, control = false }: SkinFrameProps) {
-	return <Grid width={width} height={height} alignItems="center" justifyContent="center">
+	return <Grid width={width} height={height} alignItems="center" justifyContent="center" css={{ userSelect: 'none' }}>
 		<Suspense fallback={<BasicSpinner/>}>
 			<StyledCanvas dpr={1} flat camera={{ fov: 8, far: 300, position: [0, 0, 260] }} linear frameloop="demand">
 				<ambientLight intensity={1}/>

@@ -9,6 +9,8 @@ import Modal from '../components/Modal';
 import SkinFrame from '../components/SkinFrame';
 import FileSelect from '../components/FileSelect';
 
+import AlexSkin from '../../skins/alex.png?raw-base64';
+import SteveSkin from '../../skins/steve.png?raw-base64';
 import { useMinecraftAccount } from '../../voxura';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { toast, getSkinData, getCapeData } from '../../util';
@@ -17,6 +19,16 @@ import { MinecraftCape, MinecraftProfile } from '../../../voxura';
 
 // TODO: rewrite
 const SKIN_MODEL = { CLASSIC: 'default', SLIM: 'slim' } as const;
+
+const textEncoder = new TextEncoder();
+const MODEL_IMAGES = {
+	SLIM: textEncoder.encode(AlexSkin),
+	CLASSIC: textEncoder.encode(SteveSkin)
+};
+const MODEL_IMAGES_BASE64 = {
+	SLIM: AlexSkin,
+	CLASSIC: SteveSkin
+};
 export default function Skins() {
     const { t } = useTranslation('interface');
     const skins = useAppSelector(state => state.skins.data);
@@ -42,9 +54,7 @@ export default function Skins() {
         setAddingModel('CLASSIC');
     };
     const addNewSkin = async() => {
-        const data = addingPath ? await readBinaryFile(addingPath) : await window.fetch(
-            `/img/skins/${addingModel}.png`
-        ).then(r => r.arrayBuffer()).then(v => [...new Uint8Array(v)]);
+        const data = addingPath ? await readBinaryFile(addingPath) : MODEL_IMAGES[addingModel];
         dispatch(addSkin({
             name: addingName,
             cape: addingCape,
@@ -136,7 +146,7 @@ export default function Skins() {
                 setLoading(false);
             }).catch(err => {
 				setLoading(false);
-                setCurrent('img/skins/CLASSIC.png');
+                setCurrent(MODEL_IMAGES_BASE64.CLASSIC);
 				toast('check_connection');
 
 				throw err;
@@ -152,7 +162,7 @@ export default function Skins() {
 				{!loading && current ? <SkinFrame
 					walk
 					slim={skinModel === 'slim'}
-					skin={current.startsWith('img') ? current : `data:image/png;base64,${current}`}
+					skin={`data:image/png;base64,${current}`}
 					cape={capes.find(c => c.state === 'ACTIVE')?.url}
 					width={200}
 					height={300}
@@ -187,7 +197,7 @@ export default function Skins() {
                 <SkinFrame
                     walk
 					slim={addingModel === 'SLIM'}
-                    skin={addingPath ? convertFileSrc(addingPath) : `img/skins/${addingModel}.png`}
+                    skin={addingPath ? convertFileSrc(addingPath) : `data:image/png;base64,${MODEL_IMAGES_BASE64[addingModel]}`}
                     cape={capes.find(c => c.id === addingCape)?.url}
                     width={150}
                     height={256}

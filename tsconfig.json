@@ -2,7 +2,8 @@
     "exclude": ["build", "src-tauri"],
     "compilerOptions": {
         "types": [
-            "unplugin-icons/types/react",
+			"vite/client",
+            "unplugin-icons/types/react"
         ],
         "jsx": "react",
         "strict": true,
