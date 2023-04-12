@@ -6,6 +6,7 @@ import { Link, Grid, Button, Typography } from 'voxeliface';
 
 import Avatar from '../components/Avatar';
 
+import voxura from '../../voxura';
 import { getImage } from '../../util';
 import InstanceCreator from '../../mdpkm/instance-creator';
 import { useAppDispatch } from '../../store/hooks';
@@ -44,6 +45,16 @@ export default function Create() {
 					</Grid>
 				</Grid>
 			)}
+			<Grid spacing={4} vertical>
+				<Typography size={14} color="$secondaryColor" weight={400} family="$secondary" noSelect>
+					{t('mdpkm:instance_creator.category.modpack')}
+				</Typography>
+				<Grid spacing={8} vertical>
+					{Object.values(voxura.platforms).filter(p => p.hasModpacks).map(platform =>
+						<Component id={platform.id} key={platform.id} selected={selected === platform.id} setSelected={setSelected}/>
+					)}
+				</Grid>
+			</Grid>
 		</Grid>
     </Grid>;
 }

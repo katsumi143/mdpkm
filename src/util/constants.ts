@@ -26,6 +26,7 @@ export const IMAGES = {
 
 	'component.quilt': 'img/icon/component/minecraft-quilt.svg',
 	'component.fabric': 'img/icon/component/minecraft-fabric.svg',
+	'component.modrinth': 'img/icon/platform/modrinth.svg',
 	'component.java-agent': 'img/icon/component/java-agent.svg',
 	'component.java-temurin': 'img/icon/component/java-temurin.png',
 	'component.minecraft-java-server': 'img/icon/minecraft/java.png',

@@ -63,6 +63,9 @@
 
 	"component.minecraft-java-client-extension-json": "Custom Component",
 
+	"component.modrinth": "Modrinth",
+	"component.modrinth.summary": "An open source modding platform, built to be performant and modern.",
+
 	"platform.modrinth": "Modrinth",
 	"platform.curseforge": "CurseForge",
 	"platform.feedthebeast": "Feed the Beast",

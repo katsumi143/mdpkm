@@ -203,7 +203,7 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 export interface ComponentEditorProps {
 	onClose: () => void
 	component: VersionedComponent
-};
+}
 export function ComponentEditor({ onClose, component }: ComponentEditorProps) {
 	const { t } = useTranslation('interface');
 	const versions = useComponentVersions(component);

@@ -146,7 +146,8 @@
 
 	"import_file": "Import from File",
 	"import_file.select": "Select Instance Archive",
-	"import_file.ext_name": "mdpkm Instance Archive",
+	"import_file.ext_name": "Instance Archive",
+	"import_file.components": "Required Instance Components",
 
 	"downloads": "Downloads",
 	"downloads.none": "There's nothing downloading right now.",

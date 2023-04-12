@@ -4,6 +4,7 @@
 
 	"instance_creator.category.minecraft": "Minecraft: Java Edition (Client)",
 	"instance_creator.category.minecraft2": "Minecraft: Java Edition (Server)",
+	"instance_creator.category.modpack": "Search for a Modpack",
 
 	"news_source.mdpkm": "mdpkm",
 	"news_source.minecraft": "Minecraft",
