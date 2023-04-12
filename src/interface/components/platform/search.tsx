@@ -37,7 +37,7 @@ export default function PlatformSearch({ instance }: PlatformSearchProps) {
         platform.search(query, projectType, {
             limit: pageLimit,
             offset: (page - 1) * pageLimit,
-            loaders: projectType === ProjectType.Mod ? components.map(l => l.getIdForPlatform(platform)) : undefined,
+            loaders: projectType === ProjectType.Mod ? components.map(l => l.getIdForPlatform(platform)).filter(c => c) as any : undefined,
             versions: [gameComponent.version, gameComponent.version.substring(0, Math.max(4, gameComponent.version.lastIndexOf('.')))]
         }).then(({ hits, limit, total }) => {
             const pageAmount = Math.ceil(total / limit);
