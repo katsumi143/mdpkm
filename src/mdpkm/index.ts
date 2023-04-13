@@ -28,6 +28,12 @@ export const INSTANCE_CREATORS: InstanceCreator[] = [
 	new MinecraftPaper()
 ]
 
+// these exports are for plugins
+export const MinecraftQuiltCreator = MinecraftQuilt;
+export const MinecraftPaperCreator = MinecraftPaper;
+export const MinecraftFabricCreator = MinecraftFabric;
+export const MinecraftJavaClientCreator = MinecraftJavaClient;
+export const MinecraftJavaServerCreator = MinecraftJavaServer;
 export { default as InstanceCreator } from './instance-creator';
 
 import IrisShaders from '../interface/components/IrisShaders';
