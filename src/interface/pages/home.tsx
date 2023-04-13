@@ -33,21 +33,21 @@ export default function Home() {
 
 	const loadingInstances = voxura.instances.loading;
 	return <>
+		<Grid width="100%" height="60%" background={`url(img/banner/instance/banner1_${greeting + 1}.webp)`} css={{
+			opacity: 0.5,
+			position: 'absolute',
+			maskImage: 'linear-gradient(#000, transparent)',
+			backgroundSize: 'cover',
+			backgroundPosition: 'center',
+			'-webkit-mask-image': '-webkit-linear-gradient(#000, transparent)'
+		}}/>
 		<Grid height="100%" spacing={16} justifyContent="space-between" css={{ overflow: 'hidden' }}>
-			<Grid width="100%" height="60%" background={`url(img/banner/instance/banner1_${greeting + 1}.webp)`} css={{
-				opacity: 0.5,
-				position: 'absolute',
-				maskImage: 'linear-gradient(#000, transparent)',
-				backgroundSize: 'cover',
-				backgroundPosition: 'center',
-				'-webkit-mask-image': '-webkit-linear-gradient(#000, transparent)'
-			}}/>
-			<Grid width="65%" padding="12px 0 12px 1rem" vertical css={{ zIndex: 1 }}>
+			<Grid width="65%" padding="12px 0 12px 1rem" vertical>
 				<Grid height="fit-content" margin="24px 0 0" spacing={24} alignItems="center">
 					<Avatar src={account?.getAvatarUrl(MinecraftAvatarStyle.Bust, 128)} size="xl" circle transparent css={{
 						backdropFilter: 'brightness(1.25)'
 					}}/>
-					<Grid vertical spacing={4}>
+					<Grid vertical spacing={4} css={{ zIndex: 0 }}>
 						<Typography size={28} family="$tertiary" weight={700} noSelect lineheight={1}>
 							{t(`home.greeting.${greeting}`)}
 						</Typography>
@@ -68,7 +68,7 @@ export default function Home() {
 				</>}
 			</Grid>
 			<Grid width="35%" height="100%" padding="12px 1rem 12px 0" vertical>
-				<Grid padding="0 8px" justifyContent="space-between" css={{ zIndex: 1 }}>
+				<Grid padding="0 8px" justifyContent="space-between" css={{ zIndex: 0 }}>
 					<Typography family="$tertiary" noSelect>{t('home.recent_instances.title')}</Typography>
 					<ViewAll onClick={() => dispatch(setPage('instances'))}/>
 				</Grid>

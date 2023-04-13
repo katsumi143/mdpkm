@@ -21,7 +21,7 @@ export default function HomePost({ item }: HomePostProps) {
 	return <Grid width="100%" margin={showNews ? '32px 0 0' : 'auto 0 24px'}>
 		<AspectRatio ratio={8 / 2}>
 			<StyledRoot layout onClick={item.rawBody ? expand : view} expanded={expanded}>
-				<StyledImage layout="position" css={{
+				<StyledImage layout="position" expanded={expanded} css={{
 					background: `url(${item.image}) center/100%`
 				}}/>
 				<StyledTag layout="position">
@@ -83,10 +83,16 @@ const StyledImage = styled(motion.div, {
 	zIndex: -2,
 	opacity: 0.5,
 	position: 'absolute',
-	transition: 'opacity 1s, background-size 1s',
-	'&:hover': {
-		opacity: 0.6,
-		backgroundSize: '110%'
+	variants: {
+		expanded: {
+			false: {
+				transition: 'opacity 1s, background-size 1s',
+				'&:hover': {
+					opacity: 0.6,
+					backgroundSize: '110%'
+				}
+			}
+		}
 	}
 });
 const StyledTag = styled(motion.p, {
