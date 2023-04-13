@@ -17,7 +17,7 @@ export const openAnimation2 = keyframes({
         background: 'transparent'
     },
     '100%': {
-        background: '#00000099'
+        background: '#00000080'
     }
 });
 export interface ModalProps {
@@ -27,10 +27,10 @@ export interface ModalProps {
 };
 export default function Modal({ width, height, children }: ModalProps) {
     return <Portal>
-        <Grid width="100vw" height="100vh" vertical alignItems="center" background="#00000099" justifyContent="center" css={{
+        <Grid width="100vw" height="100vh" vertical alignItems="center" background="#00000080" justifyContent="center" css={{
             top: 0,
             left: 0,
-			zIndex: 10,
+			zIndex: 100,
             position: 'absolute',
             animation: `${openAnimation2} .5s`
         }}>

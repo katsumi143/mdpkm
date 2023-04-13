@@ -25,6 +25,7 @@
 	"common.action.select_folder": "Select Folder",
     "common.action.create_instance": "Create Instance",
 	"common.action.import_instance": "Import Instance",
+	"common.action.accept_continue": "Accept & Continue",
 	"common.action.check_for_updates": "Check for Updates",
     "common.action.return_to_instances": "Return to your instances",
 
@@ -236,6 +237,7 @@
 	"instance.state.0": "Ready to launch",
 	"instance.state.1": "Launching client",
 	"instance.state.2": "Client is running",
+	"instance.state.3": "Running pre-launch tasks",
 	"instance.action.view_options": "Client Options",
 
 	"instance_list": "Your Instances",
@@ -288,6 +290,10 @@
 	"create_instance": "Create Instance",
 
 	"news.item.tag": "$t(mdpkm:news_source.{{item.source.id}}) • {{item.tags}}",
+
+	"dialog.accept_eula": "End User License Agreement",
+	"dialog.accept_eula.body": "You must accept the Minecraft End User License Agreement (EULA)\nbefore you can start your dedicated server.",
+	"dialog.accept_eula.link": "View Minecraft EULA",
 
 	"dialog.delete_instance": "Are you absolutely sure?",
 	"dialog.delete_instance.body": "This action cannot be undone.\n“{{0}}” will be lost forever! (A long time!)",

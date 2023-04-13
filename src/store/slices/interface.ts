@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ProjectType } from '../../../voxura';
 import { settingsSlice } from './settings';
+import type { Instance } from '../../../voxura';
 export const interfaceSlice = createSlice({
     name: 'interface',
     initialState: {
@@ -10,7 +11,8 @@ export const interfaceSlice = createSlice({
 		searchType: ProjectType.Mod,
 		instanceTab: 0,
 		launchError: null as [string, string, any[] | undefined] | null,
-        currentInstance: ''
+        currentInstance: '',
+		mcServerEulaDialog: null as string | null
     },
     reducers: {
         setPage: (state, { payload }: PayloadAction<string>) => {
@@ -30,9 +32,12 @@ export const interfaceSlice = createSlice({
 		},
         setCurrentInstance: (state, { payload }: PayloadAction<string>) => {
             state.currentInstance = payload;
-        }
+        },
+		setMcServerEulaDialog: (state, { payload }: PayloadAction<string | null>) => {
+			state.mcServerEulaDialog = payload;
+		}
     }
 });
 
-export const { setPage, setContentTab, setSearchType, setLaunchError, setInstanceTab, setCurrentInstance } = interfaceSlice.actions;
+export const { setPage, setContentTab, setSearchType, setLaunchError, setInstanceTab, setCurrentInstance, setMcServerEulaDialog } = interfaceSlice.actions;
 export default interfaceSlice.reducer;

@@ -17,8 +17,9 @@ export const PLACEHOLDER_IMAGE = 'img/icon/instance/default8.svg';
 export const INSTANCE_STATE_ICONS = [
     CheckSquare,
     Hourglass,
-    CaretRightSquare
-]
+    CaretRightSquare,
+	Hourglass
+];
 export const IMAGES = {
 	header: 'img/banner/brand_text.svg',
 	app_icon: 'img/icon/brand_default.svg',
@@ -54,7 +55,7 @@ export const IMAGES = {
 
 	'download.temurin': 'img/icon/temurin.png',
 	'download.minecraft_java': 'img/icon/minecraft/java.png'
-}
+};
 
 export const LANGUAGES = ['en-AU', 'lv', 'ru', 'en-LOL']
 

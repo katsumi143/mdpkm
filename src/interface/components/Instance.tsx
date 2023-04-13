@@ -2,8 +2,8 @@ import { Buffer } from 'buffer';
 import { keyframes } from '@stitches/react';
 import { writeText } from '@tauri-apps/api/clipboard';
 import { useTranslation } from 'react-i18next';
+import { Grid, Typography, ContextMenu } from 'voxeliface';
 import React, { memo, useMemo, useEffect, useRef } from 'react';
-import { Link, Grid, Typography, ContextMenu } from 'voxeliface';
 
 import Avatar from './Avatar';
 
@@ -21,14 +21,6 @@ const Animation = keyframes({
 	'100%': {
 		opacity: 1,
 		transform: 'none'
-	}
-});
-const viewAnimation = keyframes({
-	'100%': {
-		right: 0,
-		opacity: 0,
-		position: 'absolute',
-		transform: 'translateX(100%)'
 	}
 });
 
@@ -132,7 +124,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 								noSelect
 								lineheight={1}
 							>
-								<StateIcon fontSize={10} />
+								<StateIcon fontSize={10}/>
 								{t(`instance.state.${instance.state}`)}
 							</Typography>
 						</Grid>
