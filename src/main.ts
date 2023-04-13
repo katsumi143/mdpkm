@@ -4,11 +4,11 @@ import './interface';
 import './localization';
 import store from './store';
 import voxura from './voxura';
-import Plugins from './plugins';
+import { loadAllPlugins } from './plugins';
 import { setCurrentInstance, setMcServerEulaDialog } from './store/slices/interface';
 import { InstanceTaskType, MinecraftJavaServer, InstanceTaskResponse } from '../voxura';
 
-Plugins.init()
+loadAllPlugins()
 .then(() => voxura.init())
 .then(() => {
 	voxura.instances.addTask(InstanceTaskType.PreLaunch, async instance => {

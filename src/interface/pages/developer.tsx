@@ -4,7 +4,7 @@ import { Grid, Switch, Button, TextInput, Typography, TextHeader, InputLabel } f
 
 import ImageWrapper from '../components/ImageWrapper';
 
-import PluginSystem from '../../plugins';
+import { PLUGINS_DIR, LOADED_PLUGINS } from '../../plugins';
 import { useTimeString } from '../../util';
 import { set, saveSettings } from '../../store/slices/settings';
 import voxura, { useMinecraftAccount } from '../../voxura';
@@ -148,13 +148,13 @@ export default function Developer() {
 			)}
 		</Grid>
 
-		<InputLabel spaciouser>PluginSystem Information</InputLabel>
+		<InputLabel spaciouser>Plugin System Information</InputLabel>
 		<Grid vertical>
 			<Typography size={14} weight={400} family="$secondary">
-				Path: {PluginSystem.path}
+				Path: {PLUGINS_DIR}
 			</Typography>
 			<Typography size={14} weight={400} family="$secondary">
-				Loaded Plugins: {Object.keys(PluginSystem.loaded).length}
+				Loaded Plugins: {Object.keys(LOADED_PLUGINS).length}
 			</Typography>
 		</Grid>
 
@@ -189,13 +189,13 @@ export default function Developer() {
 		<InputLabel spaciouser>News Sources ({mdpkm.newsSources.length})</InputLabel>
 		<Grid vertical>
 			{mdpkm.newsSources.map(source => <Typography size={14} weight={400} family="$secondary">
-				{source.displayName} ({source.id})
+				{source.id}
 			</Typography>)}
 		</Grid>
 
-		<InputLabel spaciouser>Loaded Plugins ({Object.keys(PluginSystem.loaded).length})</InputLabel>
+		<InputLabel spaciouser>Loaded Plugins ({Object.keys(LOADED_PLUGINS).length})</InputLabel>
 		<Grid vertical>
-			{Object.values(PluginSystem.loaded).map(plugin => <Typography size={14} weight={400} family="$secondary">
+			{Object.values(LOADED_PLUGINS).map(plugin => <Typography size={14} weight={400} family="$secondary">
 				{plugin.id} v{plugin.version}
 			</Typography>)}
 		</Grid>

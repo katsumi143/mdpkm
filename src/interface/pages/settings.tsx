@@ -8,12 +8,11 @@ import { Grid, Image, Select, Switch, Button, Tooltip, GridProps, TextInput, Tex
 
 import Avatar from '../components/Avatar';
 import { setPage } from '../../store/slices/interface';
-import PluginSystem from '../../plugins';
-import { VOXURA_VERSION } from '../../../voxura';
+import { PLUGINS_DIR, LOADED_PLUGINS, loadPluginFromFile } from '../../plugins';
 import { set, saveSettings } from '../../store/slices/settings';
 import { i, toast, readTextFileInZip } from '../../util';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { APP_NAME, LANGUAGES, APP_VERSION, TAURI_VERSION, PLACEHOLDER_IMAGE } from '../../util/constants';
+import { APP_NAME, LANGUAGES, APP_VERSION, PLACEHOLDER_IMAGE } from '../../util/constants';
 export default function Settings() {
 	const { t, i18n } = useTranslation('interface');
 	const theme = useAppSelector(state => state.settings.theme);
@@ -39,17 +38,13 @@ export default function Settings() {
 		});
 		if (!path || Array.isArray(path))
 			return;
+			
 		const split = path.split(/\/+|\\+/);
-		const pluginPath = `${PluginSystem.path}/${split.reverse()[0]}`;
-		await createDir(PluginSystem.path, { recursive: true });
+		const pluginPath = `${PLUGINS_DIR}/${split.reverse()[0]}`;
+		await createDir(PLUGINS_DIR, { recursive: true });
 		await copyFile(path, pluginPath);
+		await loadPluginFromFile(pluginPath);
 
-		const manifest = await readTextFileInZip(pluginPath, 'manifest.json').then(JSON.parse).catch(console.warn);
-		if (!manifest || !manifest.id || !manifest.name) {
-			await removeFile(pluginPath);
-			return toast('unknown_error');
-		}
-		await PluginSystem.loadPluginFile(manifest.name, pluginPath);
 		setRerender(Date.now());
 	};
 	const updateCheck = () => {
@@ -170,7 +165,7 @@ export default function Settings() {
 		</Setting>
 
 		<TextHeader spacious noSelect>{t('settings.plugins')}</TextHeader>
-		{Object.values(PluginSystem.loaded).map(plugin =>
+		{Object.values(LOADED_PLUGINS).map(plugin =>
 			<Grid key={plugin.id} margin="0 0 8px" padding={8} spacing={12} smoothing={1} alignItems="center" borderRadius={16} css={{
 				border: 'transparent solid 1px',
 				position: 'relative',
@@ -208,7 +203,7 @@ export default function Settings() {
 				<IconBiPlusLg/>
 				{t('settings.plugins.add')}
 			</Button>
-			<Button theme="secondary" onClick={() => open(PluginSystem.path)}>
+			<Button theme="secondary" onClick={() => open(PLUGINS_DIR)}>
 				<IconBiFolder2Open/>
 				{t('common.action.open_folder')}
 			</Button>
