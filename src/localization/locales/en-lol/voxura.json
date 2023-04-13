@@ -46,14 +46,14 @@
     
     "component.fabric": "Fabric Loader",
     "component.fabric.summary": "Fabric is a lightweight, experimental modding toolchain.",
-    "component.fabric.versions": "Fabric Loader Versions",
+    "component.fabric.versions": "Fabric Versions",
 	"component.fabric.content_tab.0": "$t(interface:shaders)",
     "component.fabric.release_category.0": "Vershuns",
     "component.fabric.release_category.0.singular": "Vershun",
     
     "component.quilt": "Quilt Loader",
     "component.quilt.summary": "Quilt is an open-source, community-driven modding toolchain.",
-	"component.quilt.version": "Quilt Loader Versions",
+	"component.quilt.versions": "Quilt Versions",
     "component.quilt.release_category.0": "Vershuns",
     "component.quilt.release_category.0.singular": "Vershun",
 

@@ -32,14 +32,24 @@ export default function InstanceMod({ mod, disabled, instance }: InstanceModProp
 			}}>
 				<Grid width="100%" spacing={8} alignItems="center">
 					<Avatar src={icon} size="sm" margin="8px 0 8px 8px"/>
-					<Grid margin="0 0 0 4px" spacing={2} vertical>
-						<Typography size={15} weight={450} noSelect lineheight={1}>
-							{mod.name ?? mod.id}
-						</Typography>
-						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
-							{t('common.label.version', [mod.version])}
-						</Typography>
-					</Grid>
+					<Tooltip.Root delayDuration={100}>
+						<Tooltip.Trigger asChild>
+							<Grid margin="0 0 0 4px" spacing={2} vertical>
+								<Typography size={15} weight={450} noSelect lineheight={1}>
+									{mod.name ?? mod.id}
+								</Typography>
+								<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
+									{t('common.label.version', [mod.version])}
+								</Typography>
+							</Grid>
+						</Tooltip.Trigger>
+						<Tooltip.Portal>
+							<Tooltip.Content side="bottom" sideOffset={8}>
+								{mod.fileName} • {mod.id} • {mod.md5}
+								<Tooltip.Arrow/>
+							</Tooltip.Content>
+						</Tooltip.Portal>
+					</Tooltip.Root>
 					<Grid spacing={8} alignItems="center" css={{
 						right: 0,
 						position: 'absolute'

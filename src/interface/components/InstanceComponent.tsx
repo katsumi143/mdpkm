@@ -42,8 +42,8 @@ export default function InstanceComponent({ id, name, icon, version, disabled, i
 					{t(`voxura:component.${id}`)}
 				</Typography>}
 			</Grid>
-			{version && <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
-				{t('common.label.version', [version])}
+			{(version || isVersioned) && <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
+				{t('common.label.version', [version ?? (component as any)?.version])}
 			</Typography>}
 		</Grid>
 		{instance && <Grid height="100%" css={{ marginLeft: 'auto' }}>
@@ -67,7 +67,6 @@ export interface ComponentEditorProps {
 export function ComponentEditor({ onClose, component }: ComponentEditorProps) {
 	const { t } = useTranslation('interface');
 	const versions = useComponentVersions(component);
-	const versionMatcher = (v: ComponentVersion) => v.id === component.version;
 	const [saving, setSaving] = useState(false);
 	const [version, setVersion] = useState<ComponentVersion | null>(null);
 	const saveChanges = () => {
@@ -85,11 +84,17 @@ export function ComponentEditor({ onClose, component }: ComponentEditorProps) {
 		<TextHeader noSelect>Component Editor ({t(`voxura:component.${component.id}`)})</TextHeader>
 		<InputLabel>{t('add_component.version')}</InputLabel>
 		<Typography size={14} noSelect>
-			{version ? `${t(`voxura:component.${component.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
+			{version ? `${t(`voxura:component.${component.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.label.loading')}
 		</Typography>
 
 		<Grid height={256} margin="16px 0 0">
-			{versions && <VersionPicker id={component.id} value={version ?? versions?.filter(v => v.some(versionMatcher))[0]?.find(versionMatcher) ?? null} versions={versions} onChange={setVersion} />}
+			{versions && <VersionPicker
+				id={component.id}
+				value={version}
+				versions={versions}
+				onChange={setVersion}
+				defaultId={component.version}
+			/>}
 		</Grid>
 
 		<Grid margin="16px 0 0" spacing={8}>

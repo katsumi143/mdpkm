@@ -15,11 +15,12 @@ export default function HomePost({ item }: HomePostProps) {
 	const { t } = useTranslation('interface');
 	const showNews = useAppSelector(state => state.settings.showNews);
 	const [expanded, setExpanded] = useState(false);
-	const expand = () => setExpanded(v => !v);
+
 	const view = () => open(item.url);
+	const expand = () => setExpanded(v => !v);
 	return <Grid width="100%" margin={showNews ? '32px 0 0' : 'auto 0 24px'}>
 		<AspectRatio ratio={8 / 2}>
-			<StyledRoot layout onClick={item.rawBody ? expand : view} transition={{ duration: 0.6 }} expanded={expanded}>
+			<StyledRoot layout onClick={item.rawBody ? expand : view} expanded={expanded}>
 				<StyledImage layout="position" css={{
 					background: `url(${item.image}) center/100%`
 				}}/>
@@ -33,7 +34,7 @@ export default function HomePost({ item }: HomePostProps) {
 					{t('common.label.author', [item.authors])}
 				</StyledAuthor>
 			</StyledRoot>
-			<StyledContent layout expanded={expanded} transition={{ duration: 0.6 }}>
+			<StyledContent layout expanded={expanded}>
 				<Markdown text={item.rawBody?.split('\n---\n')[1]!}/>
 			</StyledContent>
 			<StyledCover onClick={expand} visible={expanded}/>

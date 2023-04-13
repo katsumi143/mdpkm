@@ -52,7 +52,7 @@
     
     "component.quilt": "Загрузчик Quilt",
     "component.quilt.summary": "Quilt - это инструментарий для моддинга с открытым исходным кодом, управляемый сообществом.",
-	"component.quilt.version": "Версии Quilt",
+	"component.quilt.versions": "Версии Quilt",
     "component.quilt.release_category.0": "Версии",
     "component.quilt.release_category.0.singular": "Версия",
 
