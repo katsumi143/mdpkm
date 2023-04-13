@@ -1,5 +1,4 @@
 import * as nbt from 'nbt-ts';
-import { open } from '@tauri-apps/api/shell';
 import { fetch } from '@tauri-apps/api/http';
 import { Buffer } from 'buffer';
 import { useTranslation } from 'react-i18next';

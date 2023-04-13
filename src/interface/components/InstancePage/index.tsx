@@ -1,11 +1,12 @@
 import { open } from '@tauri-apps/api/shell';
 import { Buffer } from 'buffer';
 import * as dialog from '@tauri-apps/api/dialog';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { CSS, keyframes } from '@stitches/react';
 import { copyFile, removeFile } from '@tauri-apps/api/fs';
-import React, { useMemo, useState, ReactNode, MouseEvent } from 'react';
-import { Grid, Link, Image, TabItem, Typography, BasicSpinner, DropdownMenu } from 'voxeliface';
+import React, { useMemo, ReactNode, MouseEvent } from 'react';
+import { Grid, Link, Image, TabItem, GridProps, Typography, BasicSpinner, DropdownMenu } from 'voxeliface';
 
 import Home from './home';
 import Game from './game';
@@ -13,8 +14,6 @@ import Tabs from '../Tabs';
 import Content from './content';
 import Settings from './settings';
 import ImageWrapper from '../ImageWrapper';
-import { useDispatch } from 'react-redux';
-import type { GridProps } from 'voxeliface';
 
 import { InstanceState } from '../../../../voxura';
 import { useAppSelector } from '../../../store/hooks';
@@ -23,7 +22,6 @@ import { INSTANCE_STATE_ICONS } from '../../../util/constants';
 import { setInstanceTab, setLaunchError } from '../../../store/slices/interface';
 import { toast, getDefaultInstanceBanner } from '../../../util';
 import { useInstance, useMinecraftAccount } from '../../../voxura';
-
 export interface InstancePageProps {
 	id: string
 }

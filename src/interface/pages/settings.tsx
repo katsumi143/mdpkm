@@ -2,16 +2,16 @@ import { open } from '@tauri-apps/api/shell';
 import { checkUpdate } from '@tauri-apps/api/updater';
 import { open as open2 } from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
+import { copyFile, createDir } from '@tauri-apps/api/fs';
 import React, { useState, ReactNode } from 'react';
-import { copyFile, createDir, removeFile } from '@tauri-apps/api/fs';
 import { Grid, Image, Select, Switch, Button, Tooltip, GridProps, TextInput, TextHeader, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
 import Avatar from '../components/Avatar';
 import { setPage } from '../../store/slices/interface';
-import { PLUGINS_DIR, LOADED_PLUGINS, loadPluginFromFile } from '../../plugins';
+import { i, toast } from '../../util';
 import { set, saveSettings } from '../../store/slices/settings';
-import { i, toast, readTextFileInZip } from '../../util';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { PLUGINS_DIR, LOADED_PLUGINS, loadPluginFromFile } from '../../plugins';
 import { APP_NAME, LANGUAGES, APP_VERSION, PLACEHOLDER_IMAGE } from '../../util/constants';
 export default function Settings() {
 	const { t, i18n } = useTranslation('interface');

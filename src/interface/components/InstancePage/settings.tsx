@@ -1,11 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
-import { Grid, Switch, Slider, Dialog, Button, TabItem, TextInput, Typography, InputLabel, BasicSpinner } from 'voxeliface';
+import { Grid, Slider, Dialog, Button, TabItem, TextInput, Typography, InputLabel } from 'voxeliface';
 
 import Tabs from '../Tabs';
 import JsonEditor from '../JsonEditor';
 
-import { toast } from '../../../util';
 import { useBind } from '../../../util/hooks';
 import { TOTAL_SYSTEM_MEMORY } from '../../../util/constants';
 import { Instance, InstanceState } from '../../../../voxura';

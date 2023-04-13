@@ -5,13 +5,12 @@ import React, { useState } from 'react';
 import { Link, Grid, Select, Button, Typography, TextHeader, InputLabel, BasicSpinner } from 'voxeliface';
 
 import Modal from '../Modal';
-import Avatar from '../Avatar';
 import VersionPicker from '../VersionPicker';
 import InstanceComponent from '../InstanceComponent';
 
-import { toast, getImage } from '../../../util';
+import { toast } from '../../../util';
 import { useComponentVersions } from '../../../voxura';
-import { Instance, Component, InstanceState, COMPONENT_MAP, ComponentType, GameComponent, ComponentVersion, VersionedComponent } from '../../../../voxura';
+import { Instance, InstanceState, COMPONENT_MAP, ComponentType, ComponentVersion, VersionedComponent } from '../../../../voxura';
 export interface InstanceLoaderProps {
 	instance: Instance
 }

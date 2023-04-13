@@ -1,7 +1,7 @@
 import * as shell from '@tauri-apps/api/shell';
 import { useTranslation } from 'react-i18next';
-import React, { useState, useEffect } from 'react';
 import { exists, readDir } from '@tauri-apps/api/fs';
+import React, { useState, useEffect } from 'react';
 import { Grid, Button, Spinner, TextInput, Typography, BasicSpinner } from 'voxeliface';
 
 import Shader, { ShaderItem } from './Shader';

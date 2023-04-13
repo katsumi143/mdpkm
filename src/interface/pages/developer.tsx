@@ -4,10 +4,10 @@ import { Grid, Switch, Button, TextInput, Typography, TextHeader, InputLabel } f
 
 import ImageWrapper from '../components/ImageWrapper';
 
-import { PLUGINS_DIR, LOADED_PLUGINS } from '../../plugins';
 import { useTimeString } from '../../util';
 import { set, saveSettings } from '../../store/slices/settings';
 import voxura, { useMinecraftAccount } from '../../voxura';
+import { PLUGINS_DIR, LOADED_PLUGINS } from '../../plugins';
 import { InstanceType, COMPONENT_MAP } from '../../../voxura';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import mdpkm, { COMPONENT_EXTRAS, INSTANCE_CREATORS } from '../../mdpkm';

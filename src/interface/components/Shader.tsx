@@ -1,6 +1,6 @@
 import { Buffer } from 'buffer';
-import { useTranslation } from 'react-i18next';
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, Grid, Typography } from 'voxeliface';
 
 import Avatar from './Avatar';

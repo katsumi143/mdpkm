@@ -1,6 +1,6 @@
 import { fetch } from '@tauri-apps/api/http';
 
-import { Project, Platform, Instance, ProjectType, ComponentType, GameComponent } from '../../voxura';
+import { Project, Platform, Instance, ProjectType, ComponentType } from '../../voxura';
 const mdpkmPlatform = new class mdpkmPlatform extends Platform<mdpkmProject> {
 	public id = 'mdpkm'
 	public instanceArchiveExts = ['mdpki']

@@ -3,13 +3,13 @@ import { open } from '@tauri-apps/api/dialog';
 import * as shell from '@tauri-apps/api/shell';
 import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
-import { exists, readDir, copyFile, createDir, readTextFile, readBinaryFile } from '@tauri-apps/api/fs';
 import { Grid, Button, Spinner, TextInput, Typography, BasicSpinner } from 'voxeliface';
+import { exists, readDir, copyFile, createDir, readTextFile, readBinaryFile } from '@tauri-apps/api/fs';
 
 import ResourcePackItem from './item';
+import { useAppDispatch } from '../../../../store/hooks';
 import { Instance, ProjectType } from '../../../../../voxura';
 import { setPage, setSearchType } from '../../../../store/slices/interface';
-import { useAppDispatch } from '../../../../store/hooks';
 import { readTextFileInZip, readBinaryFileInZip } from '../../../../util';
 export interface ResourcePackManagementProps {
     instance: Instance

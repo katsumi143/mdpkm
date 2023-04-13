@@ -14,8 +14,8 @@ import SteveSkin from '../../skins/steve.png?raw-base64';
 import { useMinecraftAccount } from '../../voxura';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { toast, getSkinData, getCapeData } from '../../util';
-import { Skin, addSkin, saveSkins, writeSkin } from '../../store/slices/skins';
 import { MinecraftCape, MinecraftProfile } from '../../../voxura';
+import { Skin, addSkin, saveSkins, writeSkin } from '../../store/slices/skins';
 
 // TODO: rewrite
 const SKIN_MODEL = { CLASSIC: 'default', SLIM: 'slim' } as const;

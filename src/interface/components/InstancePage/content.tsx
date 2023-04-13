@@ -1,5 +1,5 @@
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import React, { useState } from 'react';
 import { Grid, TabItem, Typography } from 'voxeliface';
 
 import Tabs from '../Tabs';
