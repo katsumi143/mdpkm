@@ -1,7 +1,7 @@
 {
     "name": "mdpkm",
     "type": "module",
-    "version": "2.0.0-beta.7",
+    "version": "2.0.0-beta.8",
     "description": "Simple all-in-one application for Minecraft",
     "author": "Blookerss (https://github.com/Blookerss)",
     "license": "MIT",
