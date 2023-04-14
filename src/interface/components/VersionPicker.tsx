@@ -66,7 +66,7 @@ export default function VersionPicker({ id, value, versions, onChange, defaultId
 						}
 					}}>
 						<Typography size={14} noSelect>
-							{t(`voxura:component.${id}.release_category.${category}.singular`)} {item.id}
+							{t([`voxura:component.${id}.release_category.${category}.singular`, 'common.label.version3'])} {item.id}
 						</Typography>
 						{item.dateCreated && <VersionDate date={item.dateCreated} color={value === item ? undefined : '$secondaryColor'}/>}
 					</Grid>

@@ -48,6 +48,8 @@
 	"common.label.version": "Версия {{0}}",
 	"common.label.category": "Категория",
 	"common.label.platform": "Платформа",
+	"common.label.version2": "{{0}} Версия",
+	"common.label.version3": "Версия",
 	"common.label.processes": "Процессы",
 	"common.label.installed": "Установлено",
 	"common.label.installing": "Установка",

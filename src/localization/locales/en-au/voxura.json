@@ -4,8 +4,6 @@
 	"component.java-temurin": "Eclipse Temurin (Java)",
 	"component.java-temurin.summary": "placeholder",
 	"component.java-temurin.versions": "Java Versions",
-	"component.java-temurin.release_category.0": "Releases",
-	"component.java-temurin.release_category.0.singular": "Release",
 
     "component.minecraft-java-vanilla": "Minecraft: Java Edition",
     "component.minecraft-java-vanilla.summary": "Simply Vanilla Minecraft, no mods or anything special.",
@@ -37,25 +35,21 @@
     "component.minecraft-bedrock-vanilla": "Minecraft Bedrock Edition",
     "component.minecraft-bedrock-vanilla.summary": "Simply Bedrock Edition with downloadable content.\nWindows 10+ only, requires a Microsoft Store account.",
     "component.minecraft-bedrock-vanilla.release_category.0": "Versions",
-    "component.minecraft-bedrock-vanilla.release_category.0.singular": "Version",
 
     "component.forge": "Forge Loader",
     "component.forge.summary": "Forge is a free, open-source modding API.",
     "component.forge.release_category.0": "Versions",
-    "component.forge.release_category.0.singular": "Version",
     
     "component.fabric": "Fabric Loader",
     "component.fabric.summary": "Fabric is a lightweight, experimental modding toolchain.",
     "component.fabric.versions": "Fabric Versions",
 	"component.fabric.content_tab.0": "$t(interface:shaders)",
     "component.fabric.release_category.0": "Versions",
-    "component.fabric.release_category.0.singular": "Version",
     
     "component.quilt": "Quilt Loader",
     "component.quilt.summary": "Quilt is an open-source, community-driven modding toolchain.",
 	"component.quilt.versions": "Quilt Versions",
     "component.quilt.release_category.0": "Versions",
-    "component.quilt.release_category.0.singular": "Version",
 
 	"component.minecraft-java-server-paper": "Paper",
 	"component.minecraft-java-server-paper.summary": "Paper is the next generation of Minecraft servers, offering uncompromising performance.",

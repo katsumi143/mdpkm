@@ -46,6 +46,8 @@
 	"common.label.version": "Vershun {{0}}",
 	"common.label.category": "Category",
 	"common.label.platform": "Pwatfolm",
+	"common.label.version2": "{{0}} Vershun",
+	"common.label.version3": "Vershun",
 	"common.label.processes": "Processes",
 	"common.label.installed": "Installd",
 	"common.label.installing": "Installing",

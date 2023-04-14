@@ -84,7 +84,7 @@ export function ComponentEditor({ onClose, component }: ComponentEditorProps) {
 		<TextHeader noSelect>Component Editor ({t(`voxura:component.${component.id}`)})</TextHeader>
 		<InputLabel>{t('add_component.version')}</InputLabel>
 		<Typography size={14} noSelect>
-			{version ? `${t(`voxura:component.${component.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.label.loading')}
+			{version ? `${t([`voxura:component.${component.id}.release_category.${version.category}.singular`, 'common.label.version3'])} ${version.id}` : t('common.label.loading')}
 		</Typography>
 
 		<Grid height={256} margin="16px 0 0">

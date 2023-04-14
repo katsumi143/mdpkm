@@ -4,8 +4,6 @@
 	"component.java-temurin": "Eclipse Temurin (Java)",
 	"component.java-temurin.summary": "место заполнения",
 	"component.java-temurin.versions": "Версии Java",
-	"component.java-temurin.release_category.0": "Релизы",
-	"component.java-temurin.release_category.0.singular": "Релиз",
 
     "component.minecraft-java-vanilla": "Minecraft: Java Edition",
     "component.minecraft-java-vanilla.summary": "Просто ванильный Minecraft, без модов или чего-то особенного.",
@@ -37,24 +35,20 @@
     "component.minecraft-bedrock-vanilla": "Minecraft Bedrock Edition",
     "component.minecraft-bedrock-vanilla.summary": "Простой Bedrock Edition со скачиванием контента.\nТолько для Windows 10+ требуется аккаунт Microsoft Store.",
     "component.minecraft-bedrock-vanilla.release_category.0": "Версии",
-    "component.minecraft-bedrock-vanilla.release_category.0.singular": "Версия",
 
     "component.forge": "Загрузчик Forge",
     "component.forge.summary": "Forge - это бесплатный API для моддинга с открытым исходным кодом.",
     "component.forge.release_category.0": "Версии",
-    "component.forge.release_category.0.singular": "Версия",
     
     "component.fabric": "Загрузчик Fabric",
     "component.fabric.summary": "Fabric - это легкий, экспериментальный инструментарий для моддинга.",
     "component.fabric.versions": "Версии Fabric",
     "component.fabric.release_category.0": "Версии",
-    "component.fabric.release_category.0.singular": "Версия",
     
     "component.quilt": "Загрузчик Quilt",
     "component.quilt.summary": "Quilt - это инструментарий для моддинга с открытым исходным кодом, управляемый сообществом.",
 	"component.quilt.versions": "Версии Quilt",
     "component.quilt.release_category.0": "Версии",
-    "component.quilt.release_category.0.singular": "Версия",
 
 	"component.minecraft-java-server-paper": "Paper",
 	"component.minecraft-java-server-paper.summary": "Paper - это следующее поколение серверов Minecraft, предлагающее бескомпромиссную производительность.",

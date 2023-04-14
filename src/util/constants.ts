@@ -53,7 +53,7 @@ export const IMAGES = {
 	unknown_pack: 'img/icon/minecraft/unknown_pack.png',
 	unknown_server: 'img/icon/minecraft/unknown_server.png',
 
-	'download.temurin': 'img/icon/temurin.png',
+	'download.temurin': 'img/icon/component/java-temurin.png',
 	'download.minecraft_java': 'img/icon/minecraft/java.png'
 };
 
