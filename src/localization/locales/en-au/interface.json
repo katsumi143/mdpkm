@@ -150,7 +150,9 @@
 	"import_file": "Import from File",
 	"import_file.select": "Select Instance Archive",
 	"import_file.ext_name": "Instance Archive",
-	"import_file.components": "Required Instance Components",
+	"import_file.components": "Instance Components",
+	"import_file.return_select": "Select a different file",
+	"import_file.finish": "Start Import",
 
 	"downloads": "Downloads",
 	"downloads.none": "There's nothing downloading right now.",
