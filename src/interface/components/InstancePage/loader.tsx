@@ -46,10 +46,12 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 				<InstanceComponent id={component.id} key={component.id} disabled={disabled} instance={instance} component={component}/>
 			)}
 		</Grid>
-		<Button theme="accent" onClick={() => setAdding(true)} disabled={disabled}>
-			<IconBiPlusLg/>
-			{t('common.action.add_component')}
-		</Button>
+		<Grid margin="0 0 16px">
+			<Button theme="accent" onClick={() => setAdding(true)} disabled={disabled}>
+				<IconBiPlusLg/>
+				{t('common.action.add_component')}
+			</Button>
+		</Grid>
 
 		{adding && <ComponentAdder onClose={() => setAdding(false)} instance={instance} />}
 	</React.Fragment>
