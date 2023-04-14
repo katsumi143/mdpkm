@@ -276,8 +276,6 @@
 	"toast.download_finished": "Скачивание завершено",
 	"toast.download_finished.body": "{{0}}",
 
-	"toast.launch_error": "$t(interface:launch_error)",
-	"toast.launch_error.body": "Произошла неизвестная ошибка при запуске “{{0}}”.",
 	"toast.instance_launched": "Экземпляр клиента запущен",
 	"toast.instance_launched.body": "{{0}}",
 

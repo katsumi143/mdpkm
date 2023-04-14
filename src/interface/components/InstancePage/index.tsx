@@ -43,15 +43,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 
 	const setTab = (tab: number) => dispatch(setInstanceTab(tab));
 	const StateIcon = INSTANCE_STATE_ICONS[instance.state];
-	const launchInstance = () => instance.launch().then(() => {
-		toast('instance_launched', [instance.name]);
-	}).catch(err => {
-		toast('launch_error', [instance.name]);
-		dispatch(setLaunchError([id, err.message, err.extraData]));
-
-		instance.setState(InstanceState.None);
-		throw err;
-	});
+	const launchInstance = () => instance.launch();
 	const openFolder = () => open(instance.path);
 	const changeImage = (name: string, event: MouseEvent) => {
 		event.stopPropagation();

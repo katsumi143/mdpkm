@@ -292,8 +292,6 @@
 	"toast.download_finished": "Download Finished",
 	"toast.download_finished.body": "{{0}}",
 
-	"toast.launch_error": "$t(interface:launch_error)",
-	"toast.launch_error.body": "An unknown error occurred while launching “{{0}}”.",
 	"toast.instance_launched": "Instance Client has launched",
 	"toast.instance_launched.body": "{{0}}",
 

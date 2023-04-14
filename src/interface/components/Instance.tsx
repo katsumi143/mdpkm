@@ -136,7 +136,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 			<ContextMenu.Label>
 				Instance Options ({instance.name})
 			</ContextMenu.Label>
-			<ContextMenu.Item>
+			<ContextMenu.Item onClick={() => instance.launch()} disabled={instance.isLaunching}>
 				<IconBiPlayFill/>
 				{t('common.action.launch')}
 			</ContextMenu.Item>

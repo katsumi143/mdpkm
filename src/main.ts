@@ -4,9 +4,10 @@ import './interface';
 import './localization';
 import store from './store';
 import voxura from './voxura';
+import { toast } from './util';
 import { loadAllPlugins } from './plugins';
-import { setCurrentInstance, setMcServerEulaDialog } from './store/slices/interface';
-import { InstanceTaskType, MinecraftJavaServer, InstanceTaskResponse } from '../voxura';
+import { setLaunchError, setCurrentInstance, setMcServerEulaDialog } from './store/slices/interface';
+import { LaunchError, InstanceTaskType, MinecraftJavaServer, InstanceTaskResponse } from '../voxura';
 
 loadAllPlugins()
 .then(() => voxura.init())
@@ -20,6 +21,13 @@ loadAllPlugins()
 			}
 		}
 	});
+	voxura.instances.addTask(InstanceTaskType.PostLaunch, instance => {
+		toast('instance_launched', [instance.name]);
+	});
+	voxura.instances.addTask(InstanceTaskType.LaunchError, (instance, error: LaunchError) => {
+		store.dispatch(setLaunchError([instance.id, error.message, error.extraData]));
+	});
+
 	voxura.startInstances().then(() =>
 		store.dispatch(setCurrentInstance(voxura.instances.store.recent[0] || voxura.instances.getAll()[0]?.id))
 	);
