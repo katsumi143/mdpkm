@@ -54,9 +54,7 @@ function Component({ setData, creator, setSatisfied }: ComponentProps) {
                 {version ? `${t(`voxura:component.${MinecraftJavaClient.id}.release_category.${version.category}.singular`)} ${version.id}` : t('common.input_placeholder.required')}
             </Typography>
 
-            <InputLabel spacious>{t('common.label.version', {
-                val: t(`voxura:component.${creator.component.id}`)
-            })}</InputLabel>
+            <InputLabel spacious>{t('common.label.version2', [t(`voxura:component.${creator.component.id}`)])}</InputLabel>
             <Select.Minimal value={version2} loading={!versions2} onChange={setVersion2}>
                 <Select.Group name={t('common.select_group.component_versions')}>
                     {versions2?.map((version, key) => <Select.Item key={version.id} value={key}>

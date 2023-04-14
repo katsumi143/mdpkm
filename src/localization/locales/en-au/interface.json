@@ -48,6 +48,7 @@
 	"common.label.version": "Version {{0}}",
 	"common.label.category": "Category",
 	"common.label.platform": "Platform",
+	"common.label.version2": "{{0}} Version",
 	"common.label.processes": "Processes",
 	"common.label.installed": "Installed",
 	"common.label.installing": "Installing",
