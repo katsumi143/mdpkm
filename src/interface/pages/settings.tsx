@@ -20,6 +20,7 @@ export default function Settings() {
 	const language = useAppSelector(state => state.settings.language);
 	const showNews = useAppSelector(state => state.settings.showNews);
 	const startPage = useAppSelector(state => state.settings.startPage);
+	const githubBase = `https://github.com/${GIT_REPOSITORY}`;
 	const instanceResolution = useAppSelector(state => state.settings.instances.resolution.size);
 	const [_, setRerender] = useState(0);
 	const [updating, setUpdating] = useState(false);
@@ -59,8 +60,9 @@ export default function Settings() {
 		dispatch(set([key, value]));
 		dispatch(saveSettings());
 	};
-	const reportIssue = () => open('https://github.com/Blookerss/mdpkm/issues/new');
-	const openGithub = () => open('https://github.com/Blookerss/mdpkm');
+	const reportIssue = () => open(`${githubBase}/issues/new`);
+	const openCommit = () => open(`${githubBase}/commit/${GIT_COMMIT_HASH}`);
+	const openGithub = () => open(githubBase);
 	const yippee = () => dispatch(setPage('developer'));
 	return <Grid width="100%" height="100%" padding={16} vertical css={{
 		overflow: 'auto'
@@ -217,9 +219,17 @@ export default function Settings() {
 					<Typography noSelect lineheight={1}>
 						{t('settings.about.version', [APP_NAME, APP_VERSION])}
 					</Typography>
-					<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
-						{GIT_REPOSITORY} {GIT_BRANCH}@{GIT_COMMIT_HASH}
-					</Typography>
+					<Grid spacing={4}>
+						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" onClick={openGithub} noSelect lineheight={1} css={{ cursor: 'pointer', '&:hover': { color: '$linkColor' }}}>
+							{GIT_REPOSITORY}
+						</Typography>
+						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
+							•
+						</Typography>
+						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" onClick={openCommit} noSelect lineheight={1} css={{ cursor: 'pointer', '&:hover': { color: '$linkColor' }}}>
+							{GIT_BRANCH}@{GIT_COMMIT_HASH}
+						</Typography>
+					</Grid>
 				</Grid>
 			</Grid>
 			<Grid spacing={8}>
@@ -227,7 +237,7 @@ export default function Settings() {
 					{updating ? <BasicSpinner size={16}/> : <IconBiCloudArrowDown/>}
 					{t('common.action.check_for_updates')}
 				</Button>
-				<Button theme="accent" onClick={reportIssue}>
+				<Button theme="secondary" onClick={reportIssue}>
 					<IconBiEnvelopeOpen/>
 					{t('settings.about.report_bug')}
 				</Button>
