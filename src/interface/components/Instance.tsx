@@ -32,31 +32,28 @@ export default memo(({ id, selected }: InstanceProps) => {
 	const ref = useRef<HTMLDivElement>(null);
 	const { t } = useTranslation('interface');
 	const dispatch = useAppDispatch();
-	const instance = useInstance(id);
-	const banner = useMemo(() => {
-		if (!instance)
-			return '';
-		const { name, banner, bannerFormat } = instance;
+	const instance = useInstance(id)!;
+	const { name, state, launch, banner, bannerFormat } = instance;
+	const bannerImage = useMemo(() => {
 		return banner ? `data:image/${bannerFormat};base64,${Buffer.from(banner).toString('base64')}` : getDefaultInstanceBanner(name);
-	}, [instance?.name, instance?.banner]);
+	}, [name, banner]);
+
 	useEffect(() => {
 		if (selected)
 			ref.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth'});
 	}, [selected]);
-	if (!instance)
-		return null;
 
-	const StateIcon = useMemo(() => INSTANCE_STATE_ICONS[instance.state], [instance.state]);
+	const StateIcon = useMemo(() => INSTANCE_STATE_ICONS[state], [state]);
 	const viewTab = useCallback((tab: number) => {
 		view();
 		dispatch(setInstanceTab(tab));
 	}, []);
 	const favorite = useCallback(() => instance.setCategory(t('mdpkm:instance_category.favorites')), [instance]);
-	const copyId = useCallback(() => writeText(instance.id).then(() => toast('copied_id', [instance.name])), [instance]);
+	const copyId = useCallback(() => writeText(id).then(() => toast('copied_id', [name])), [id]);
 	const view = useCallback(() => {
-		dispatch(setCurrentInstance(instance.id));
+		dispatch(setCurrentInstance(id));
 		dispatch(setPage('instances'));
-	}, [instance]);
+	}, [id]);
 	
 	return <ContextMenu.Root>
 		<ContextMenu.Trigger asChild>
@@ -77,8 +74,8 @@ export default memo(({ id, selected }: InstanceProps) => {
 						content: '',
 						opacity: selected ? 1 : 0.5,
 						position: 'absolute',
-						transition: 'background 1s',
-						background: selected ? '$secondaryBackground2' : `url(${banner}) right`,
+						transition: 'filter 1s, background 1s',
+						background: selected ? '$secondaryBackground2 right' : `url(${bannerImage}) right`,
 						backgroundSize: '75%'
 					},
 					'&:after': selected ? undefined : {
@@ -89,6 +86,9 @@ export default memo(({ id, selected }: InstanceProps) => {
 						position: 'absolute',
 						transition: 'filter .5s',
 						background: 'linear-gradient(45deg, $secondaryBackground2 40%, #00000000 200%)'
+					},
+					'&:hover:before': {
+						opacity: 0.75
 					},
 					'&:hover:after': {
 						filter: 'brightness(1.25)'
@@ -113,7 +113,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 									whitespace="nowrap"
 									css={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
 								>
-									{instance.name}
+									{name}
 								</Typography>
 							</Grid>
 							<Typography
@@ -125,7 +125,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 								lineheight={1}
 							>
 								<StateIcon fontSize={10}/>
-								{t(`instance.state.${instance.state}`)}
+								{t(`instance.state.${state}`)}
 							</Typography>
 						</Grid>
 					</Grid>
@@ -134,9 +134,9 @@ export default memo(({ id, selected }: InstanceProps) => {
 		</ContextMenu.Trigger>
 		<ContextMenu.Content>
 			<ContextMenu.Label>
-				Instance Options ({instance.name})
+				Instance Options ({name})
 			</ContextMenu.Label>
-			<ContextMenu.Item onClick={() => instance.launch()} disabled={instance.isLaunching}>
+			<ContextMenu.Item onClick={launch} disabled={instance.isLaunching}>
 				<IconBiPlayFill/>
 				{t('common.action.launch')}
 			</ContextMenu.Item>

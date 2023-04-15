@@ -28,21 +28,15 @@ export default function InstancePage({ id }: InstancePageProps) {
 	const tab = useAppSelector(state => state.interface.instanceTab);
 	const { t } = useTranslation('interface');
 	const dispatch = useDispatch();
-	const instance = useInstance(id);
-	const banner = useMemo(() => {
-		if (!instance)
-			return '';
-		const { name, banner, bannerFormat } = instance;
+	const instance = useInstance(id)!;
+	const { name, path, state, launch, banner, processes, isLaunching, bannerFormat } = instance;
+	const bannerImage = useMemo(() => {
 		return banner ? `data:image/${bannerFormat};base64,${Buffer.from(banner).toString('base64')}` : getDefaultInstanceBanner(name);
-	}, [instance?.name, instance?.banner]);
-
-	if (!instance)
-		return null;
+	}, [name, banner]);
 
 	const setTab = useCallback((tab: number) => dispatch(setInstanceTab(tab)), []);
-	const StateIcon = useMemo(() => INSTANCE_STATE_ICONS[instance.state], [instance.state]);
-	const launchInstance = useCallback(() => instance.launch(), [instance]);
-	const openFolder = useCallback(() => open(instance.path), [instance]);
+	const StateIcon = useMemo(() => INSTANCE_STATE_ICONS[state], [state]);
+	const openFolder = useCallback(() => open(path), [path]);
 	const changeImage = useCallback((name: string, event: MouseEvent) => {
 		event.stopPropagation();
 		dialog.open({
@@ -60,13 +54,13 @@ export default function InstancePage({ id }: InstancePageProps) {
 	}, [instance]);
 	const removeImage = useCallback((name: string, event: MouseEvent) => {
 		event.stopPropagation();
-		removeFile(`${instance.path}/${name}.png`).then(() => {
+		removeFile(`${path}/${name}.png`).then(() => {
 			(instance as any)[name] = null;
 			instance.emitEvent('changed');
 		});
 	}, [instance]);
 	return <Grid height="100%" vertical background="$primaryBackground" css={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
-		<Image src={banner} width="100%" height={144} css={{
+		<Image src={bannerImage} width="100%" height={144} css={{
 			opacity: 0.5,
 			position: 'absolute',
 			transition: 'background .5s',
@@ -94,11 +88,11 @@ export default function InstancePage({ id }: InstancePageProps) {
 				</Grid>
 				<Grid spacing={4} vertical justifyContent="center">
 					<Typography size={24} weight={700} family="$tertiary" noSelect lineheight={1} css={{ alignItems: 'start' }}>
-						{instance.name}
+						{name}
 					</Typography>
 					<Typography color="$secondaryColor" weight={600} family="$secondary" spacing={8} noSelect lineheight={1}>
 						<StateIcon fontSize={12}/>
-						{t(`instance.state.${instance.state}`)}
+						{t(`instance.state.${state}`)}
 					</Typography>
 				</Grid>
 				<Grid width="100%" height="100%" padding={8} justifyContent="end" css={{
@@ -108,7 +102,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 					position: 'absolute',
 					'&:hover': { '& > div': { opacity: 1 } }
 				}}>
-					<ImageOptions img={instance.banner} onEdit={e => changeImage('banner', e)} onRemove={e => removeImage('banner', e)}/>
+					<ImageOptions img={banner} onEdit={e => changeImage('banner', e)} onRemove={e => removeImage('banner', e)}/>
 				</Grid>
 			</Grid>
 			<Grid>
@@ -116,7 +110,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 					<IconBiFolder2Open/>
 					{t('common.action.open_folder')}
 				</Link>
-				{instance.processes.length ? <DropdownMenu.Root>
+				{processes.length ? <DropdownMenu.Root>
 					<DropdownMenu.Trigger asChild>
 						<Link size={12} padding="16px 24px 16px 16px">
 							{t('instance.action.view_options')}
@@ -126,14 +120,14 @@ export default function InstancePage({ id }: InstancePageProps) {
 					<DropdownMenu.Portal>
 						<DropdownMenu.Content>
 							<DropdownMenu.Label>{t('common.label.actions')}</DropdownMenu.Label>
-							<DropdownMenu.Item onClick={launchInstance}>
+							<DropdownMenu.Item onClick={launch}>
 								<IconBiPlayFill/>
 								{t('common.action.launch')}
 							</DropdownMenu.Item>
 							<DropdownMenu.Seperator/>
 							
 							<DropdownMenu.Label>{t('common.label.processes')}</DropdownMenu.Label>
-							{instance.processes.map((child, key) =>
+							{processes.map((child, key) =>
 								<DropdownMenu.Item key={key} onClick={() => instance.killProcess(child)}>
 									<IconBiXLg/>
 									{t('common.action.kill_process', [key + 1])}
@@ -143,8 +137,8 @@ export default function InstancePage({ id }: InstancePageProps) {
 						</DropdownMenu.Content>
 					</DropdownMenu.Portal>
 				</DropdownMenu.Root> :
-					<Link size={12} onClick={launchInstance} padding="16px 24px 16px 16px" disabled={instance.isLaunching || instance.isRunning}>
-						{instance.isLaunching ? <BasicSpinner size={16}/> : <IconBiPlayFill/>}
+					<Link size={12} onClick={launch} padding="16px 24px 16px 16px" disabled={isLaunching || instance.isRunning}>
+						{isLaunching ? <BasicSpinner size={16}/> : <IconBiPlayFill/>}
 						{t('common.action.launch')}
 					</Link>
 				}

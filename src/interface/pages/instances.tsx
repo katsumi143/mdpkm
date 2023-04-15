@@ -41,7 +41,7 @@ export default function Instances() {
                 <Buttons changePage={changePage}/>
             </Grid>
         </Grid>
-        <InstancePage id={instance}/>
+        {instance && <InstancePage id={instance}/>}
     </Grid>;
 }
 

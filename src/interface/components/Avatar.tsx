@@ -8,9 +8,10 @@ const StyledAvatar = styled(motion.img, {
 	width: '$$size',
 	height: '$$size',
 	cursor: 'zoom-in',
-	objectFit: 'fill',
+	objectFit: 'cover',
 	userSelect: 'none',
 	background: '$secondaryBackground',
+	imageRendering: '-webkit-optimize-contrast',
 	'--squircle-smooth': 1,
 	'-webkit-mask-image': 'paint(squircle)',
 
@@ -72,9 +73,10 @@ export default function Avatar({ css, src, size, blur, margin, circle, layoutId,
 		const image = img.current;
 		if (image && !imgSrc.includes('svg')) {
 			const isPixelated = () => {
-				if (image.naturalWidth !== image.clientWidth && image.naturalWidth <= 96 && image.naturalWidth > 0)
+				if (image.naturalWidth < image.clientWidth)
 					image.style.imageRendering = 'pixelated';
 			};
+			console.log(image.naturalWidth, image.clientWidth);
 			if (image.naturalWidth)
 				isPixelated();
 			else
