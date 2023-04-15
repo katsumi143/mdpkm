@@ -26,7 +26,7 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
     const [project, setProject] = useState(data);
     const [loading, setLoading] = useState(!data);
     const installed = instance ? Object.entries(projects).filter(e => instance.modifications.some(m => m.md5 === e[0])).some(e => e[1].id === (id ?? data?.id)) : false;
-    const installing = useDownloads().some(d => d.id === 'project' && d.extraData[0] === project?.displayName && !installed);
+    const installing = installed ? false : useDownloads().some(d => d.id === 'project' && d.extraData[0] === project?.displayName && !d.isDone);
     const install = () => instance?.installProject(project!).catch(err => {
 		if (err instanceof CompatibilityError)
 			toast('project_incompatible', [project?.displayName]);
