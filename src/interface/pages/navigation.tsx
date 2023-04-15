@@ -29,7 +29,7 @@ export default function Navigation() {
 	const showEulaDialog = useAppSelector(state => state.interface.mcServerEulaDialog);
 
 	const changePage = (page: string) => dispatch(setPage(page));
-    return <App>
+    return <App css={{ background: '$primaryBackground' }}>
 		<Container onContextMenu={event => event.preventDefault()}>
 			<Header/>
 			<Main css={{

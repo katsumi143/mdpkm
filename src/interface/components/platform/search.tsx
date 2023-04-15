@@ -137,7 +137,7 @@ const StyledPage = styled('button', {
     display: 'flex',
     fontSize: 12,
     alignItems: 'center',
-    fontFamily: 'Nunito',
+    fontFamily: '$primary',
     background: '$secondaryBackground2',
     borderRadius: 24,
     justifyContent: 'center',

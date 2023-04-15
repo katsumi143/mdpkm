@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { CSS, keyframes } from '@stitches/react';
 import { copyFile, removeFile } from '@tauri-apps/api/fs';
-import React, { useMemo, ReactNode, MouseEvent } from 'react';
+import React, { useMemo, ReactNode, MouseEvent, useCallback } from 'react';
 import { Grid, Link, Image, TabItem, GridProps, Typography, BasicSpinner, DropdownMenu } from 'voxeliface';
 
 import Home from './home';
@@ -15,20 +15,18 @@ import Content from './content';
 import Settings from './settings';
 import ImageWrapper from '../ImageWrapper';
 
-import { InstanceState } from '../../../../voxura';
+import { useInstance } from '../../../voxura';
 import { useAppSelector } from '../../../store/hooks';
+import { setInstanceTab } from '../../../store/slices/interface';
 import { COMPONENT_EXTRAS } from '../../../mdpkm';
 import { INSTANCE_STATE_ICONS } from '../../../util/constants';
-import { setInstanceTab, setLaunchError } from '../../../store/slices/interface';
-import { toast, getDefaultInstanceBanner } from '../../../util';
-import { useInstance, useMinecraftAccount } from '../../../voxura';
+import { getDefaultInstanceBanner } from '../../../util';
 export interface InstancePageProps {
 	id: string
 }
 export default function InstancePage({ id }: InstancePageProps) {
 	const tab = useAppSelector(state => state.interface.instanceTab);
 	const { t } = useTranslation('interface');
-	const account = useMinecraftAccount();
 	const dispatch = useDispatch();
 	const instance = useInstance(id);
 	const banner = useMemo(() => {
@@ -41,11 +39,11 @@ export default function InstancePage({ id }: InstancePageProps) {
 	if (!instance)
 		return null;
 
-	const setTab = (tab: number) => dispatch(setInstanceTab(tab));
-	const StateIcon = INSTANCE_STATE_ICONS[instance.state];
-	const launchInstance = () => instance.launch();
-	const openFolder = () => open(instance.path);
-	const changeImage = (name: string, event: MouseEvent) => {
+	const setTab = useCallback((tab: number) => dispatch(setInstanceTab(tab)), []);
+	const StateIcon = useMemo(() => INSTANCE_STATE_ICONS[instance.state], [instance.state]);
+	const launchInstance = useCallback(() => instance.launch(), [instance]);
+	const openFolder = useCallback(() => open(instance.path), [instance]);
+	const changeImage = useCallback((name: string, event: MouseEvent) => {
 		event.stopPropagation();
 		dialog.open({
 			filters: [{
@@ -59,23 +57,23 @@ export default function InstancePage({ id }: InstancePageProps) {
 				instance[name === 'icon' ? 'readIcon' : 'readBanner']().then(() => instance.emitEvent('changed'))
 			);
 		});
-	};
-	const removeImage = (name: string, event: MouseEvent) => {
+	}, [instance]);
+	const removeImage = useCallback((name: string, event: MouseEvent) => {
 		event.stopPropagation();
 		removeFile(`${instance.path}/${name}.png`).then(() => {
 			(instance as any)[name] = null;
 			instance.emitEvent('changed');
 		});
-	};
+	}, [instance]);
 	return <Grid height="100%" vertical background="$primaryBackground" css={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
 		<Image src={banner} width="100%" height={144} css={{
 			opacity: 0.5,
 			position: 'absolute',
+			transition: 'background .5s',
 			backgroundSize: 'cover',
-			backgroundPosition: 'center'
-		}}>
-			<Grid width="100%" height="100%" background="linear-gradient(transparent -20%, $primaryBackground 90%)"/>
-		</Image>
+			backgroundPosition: 'center',
+			'-webkit-mask-image': '-webkit-linear-gradient(#000 -20%, transparent)'
+		}}/>
 		<Grid alignItems="end" justifyContent="space-between" css={{
 			zIndex: 1,
 			position: 'relative',
@@ -145,7 +143,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 						</DropdownMenu.Content>
 					</DropdownMenu.Portal>
 				</DropdownMenu.Root> :
-					<Link size={12} onClick={launchInstance} padding="16px 24px 16px 16px" disabled={instance.isLaunching || instance.isRunning || !account}>
+					<Link size={12} onClick={launchInstance} padding="16px 24px 16px 16px" disabled={instance.isLaunching || instance.isRunning}>
 						{instance.isLaunching ? <BasicSpinner size={16}/> : <IconBiPlayFill/>}
 						{t('common.action.launch')}
 					</Link>
@@ -162,7 +160,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 			}}
 		>
 			<TabItem name={t('instance_page.tab.home')} icon={<IconBiInfoCircle/>} value={0}>
-				<Home setTab={setTab} instance={instance}/>
+				<Home store={instance.store} setTab={setTab}/>
 			</TabItem>
 			<TabItem name={t('instance_page.tab.content')} icon={<IconBiBox2/>} value={1} disabled={!instance.store.components.map(c => COMPONENT_EXTRAS[c.id]).some(e => e?.contentTabs?.length || e?.enabledContentTabs?.length)}>
 				<Content instance={instance}/>

@@ -3,7 +3,7 @@ import { keyframes } from '@stitches/react';
 import { writeText } from '@tauri-apps/api/clipboard';
 import { useTranslation } from 'react-i18next';
 import { Grid, Typography, ContextMenu } from 'voxeliface';
-import React, { memo, useMemo, useEffect, useRef } from 'react';
+import React, { memo, useRef, useMemo, useEffect, useCallback } from 'react';
 
 import Avatar from './Avatar';
 
@@ -46,17 +46,17 @@ export default memo(({ id, selected }: InstanceProps) => {
 	if (!instance)
 		return null;
 
-	const StateIcon = INSTANCE_STATE_ICONS[instance.state];
-	const viewTab = (tab: number) => {
+	const StateIcon = useMemo(() => INSTANCE_STATE_ICONS[instance.state], [instance.state]);
+	const viewTab = useCallback((tab: number) => {
 		view();
 		dispatch(setInstanceTab(tab));
-	};
-	const favorite = () => instance.setCategory(t('mdpkm:instance_category.favorites'));
-	const copyId = () => writeText(instance.id).then(() => toast('copied_id', [instance.name]));
-	const view = () => {
+	}, []);
+	const favorite = useCallback(() => instance.setCategory(t('mdpkm:instance_category.favorites')), [instance]);
+	const copyId = useCallback(() => writeText(instance.id).then(() => toast('copied_id', [instance.name])), [instance]);
+	const view = useCallback(() => {
 		dispatch(setCurrentInstance(instance.id));
 		dispatch(setPage('instances'));
-	};
+	}, [instance]);
 	
 	return <ContextMenu.Root>
 		<ContextMenu.Trigger asChild>
