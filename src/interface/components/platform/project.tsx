@@ -19,8 +19,9 @@ export interface ProjectProps {
 	platform?: Platform<any>
     instance?: Instance
     recommended?: boolean
+	setPickVersion?: (value: [Project<any>, any[]]) => void
 }
-export default function ProjectComponent({ id, data, featured, platform, instance, recommended }: ProjectProps) {
+export default function ProjectComponent({ id, data, featured, platform, instance, recommended, setPickVersion }: ProjectProps) {
     const { t } = useTranslation('interface');
 	const projects = useStoredValue<VoxuraStore["projects"]>('projects', {});
 	const downloads = useDownloads();
@@ -28,7 +29,10 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
     const [loading, setLoading] = useState(!data);
     const installed = instance ? Object.entries(projects).filter(e => instance.modifications.some(m => m.md5 === e[0])).some(e => e[1].id === (id ?? data?.id)) : false;
     const installing = installed ? false : downloads.some(d => d.id === 'project' && d.extraData[0] === project?.displayName && !d.isDone);
-    const install = () => instance?.installProject(project!).catch(err => {
+    const install = () => instance?.installProject(project!).then(pick => {
+		if (pick)
+			setPickVersion?.(pick);
+	}).catch(err => {
 		if (err instanceof CompatibilityError)
 			toast('project_incompatible', [project?.displayName]);
 		else
@@ -48,7 +52,6 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
         if(data && data !== project)
             setProject(data);
     }, [data]);
-	console.log(project);
 
 	if (loading || !project)
 		return <Grid padding={8} background="$secondaryBackground2" smoothing={1} borderRadius={16} css={{

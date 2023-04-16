@@ -3,19 +3,20 @@ import { useTranslation } from 'react-i18next';
 import React, { useRef, useMemo, useEffect, useState, MouseEventHandler } from 'react';
 import { Grid, Image, Select, Button, TextInput, Typography, InputLabel, BasicSpinner } from 'voxeliface';
 
+import Modal from '../Modal';
 import ListItem from './project';
 
 import voxura from '../../../voxura';
 import { i, toast } from '../../../util';
 import { useAppSelector } from '../../../store/hooks';
-import { Project, Instance, ProjectType } from '../../../../voxura';
+import { Project, Instance } from '../../../../voxura';
 export interface PlatformSearchProps {
 	onClose?: MouseEventHandler<HTMLAnchorElement>
     instance: Instance
 }
 export default function PlatformSearch({ instance }: PlatformSearchProps) {
     const { store } = instance;
-    const { components, gameComponent } = store;
+    const { gameComponent } = store;
 
 	const { t } = useTranslation('interface');
 	const container = useRef<HTMLDivElement>(null);
@@ -26,8 +27,10 @@ export default function PlatformSearch({ instance }: PlatformSearchProps) {
     const [query, setQuery] = useState('');
     const [pages, setPages] = useState<(string | number)[]>([]);
 	const [items, setItems] = useState<Project<any>[]>([]);
+	const [version, setVersion] = useState(0);
     const [pageLimit, setPageLimit] = useState(20);
     const [searching, setSearching] = useState(false);
+	const [pickVersion, setPickVersion] = useState<[Project<any>, any[]] | null>(null);
 	const platform = useMemo(() => voxura.getPlatform(api), [api]);
     const search = () => {
         if (searching)
@@ -37,7 +40,7 @@ export default function PlatformSearch({ instance }: PlatformSearchProps) {
         platform.search(query, projectType, {
             limit: pageLimit,
             offset: (page - 1) * pageLimit,
-            loaders: projectType === ProjectType.Mod ? components.map(l => l.getIdForPlatform(platform)).filter(c => c) as any : undefined,
+            //loaders: projectType === ProjectType.Mod ? components.map(l => l.getIdForPlatform(platform)).filter(c => c) as any : undefined,
             versions: [gameComponent.version, gameComponent.version.substring(0, Math.max(4, gameComponent.version.lastIndexOf('.')))]
         }).then(({ hits, limit, total }) => {
             const pageAmount = Math.ceil(total / limit);
@@ -77,13 +80,20 @@ export default function PlatformSearch({ instance }: PlatformSearchProps) {
 			throw err;
         });
     };
+	const finishPick = () => {
+		const [project, versions] = pickVersion!;
+		instance.installProject(project, versions[version]);
+		setPickVersion(null);
+	};
     useEffect(() => {
         search();
     }, [api, page, instance.id]);
 	useEffect(() => {
 		container.current?.scroll(0, 0);
 	}, [searching]);
-	
+	useEffect(() => {
+		setVersion(0);
+	}, [pickVersion]);
 	return <Grid width="100%" height="100%" spacing={8} vertical>
 		<Grid width="100%" spacing={8} justifyContent="space-between">
 			<Grid width="100%" vertical>
@@ -110,7 +120,7 @@ export default function PlatformSearch({ instance }: PlatformSearchProps) {
 			</Grid>
 		</Grid>
 		<Grid ref={container} height="100%" spacing={8} vertical borderRadius={16} css={{ overflow: 'hidden auto' }}>
-			{items.map(item => <ListItem key={item.id} data={item} instance={instance}/>)}
+			{items.map(item => <ListItem key={item.id} data={item} instance={instance} setPickVersion={setPickVersion}/>)}
 			{items.length === 0 && <Grid vertical>
 				<Typography color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>
 					{t('common.label.search_no_results')}
@@ -123,6 +133,32 @@ export default function PlatformSearch({ instance }: PlatformSearchProps) {
 				{t('platform_search.results', { count: hits })}
 			</InputLabel>
 		</Grid>
+		{pickVersion && <Modal>
+			<Typography size={24} family="$tertiary">
+				{t('compatibility_problem')}
+			</Typography>
+			<Typography color="$secondaryColor" weight={400} family="$secondary">
+				{t('compatibility_problem.body', [pickVersion[0].displayName])}
+			</Typography>
+			
+			<InputLabel spaciouser>{t('compatibility_problem.version')}</InputLabel>
+			<Select.Minimal value={version} onChange={setVersion}>
+				{pickVersion[1].map(({ id, name, loaders, game_versions }: any, key) => <Select.Item key={id} value={key}>
+					{name} ({loaders.map((l: any) => t(`voxura:platform_category.${l}`)).join(', ')}) ({game_versions.join(', ')})
+				</Select.Item>)}
+			</Select.Minimal>
+
+			<Grid margin="8px 0 0" spacing={8}>
+				<Button theme="accent" onClick={finishPick}>
+					<IconBiCheckLg/>
+					{t('common.action.continue')}
+				</Button>
+				<Button theme="secondary" onClick={() => setPickVersion(null)}>
+					<IconBiXLg/>
+					{t('common.action.cancel')}
+				</Button>
+			</Grid>
+		</Modal>}
 	</Grid>;
 }
 

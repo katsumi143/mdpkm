@@ -305,6 +305,9 @@
 
 	"create_instance": "Create Instance",
 
+	"compatibility_problem": "Compatibility Problem",
+	"compatibility_problem.body": "mdpkm could not find a compatible version of “{{0}}”.",
+	"compatibility_problem.version": "Choose a version",
 	"news.item.tag": "$t(mdpkm:news_source.{{item.source.id}}) • {{item.tags}}",
 
 	"dialog.accept_eula": "End User License Agreement",
