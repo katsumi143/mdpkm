@@ -33,7 +33,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 	const { t } = useTranslation('interface');
 	const dispatch = useAppDispatch();
 	const instance = useInstance(id)!;
-	const { name, state, launch, banner, bannerFormat } = instance;
+	const { name, state, banner, bannerFormat } = instance;
 	const bannerImage = useMemo(() => {
 		return banner ? `data:image/${bannerFormat};base64,${Buffer.from(banner).toString('base64')}` : getDefaultInstanceBanner(name);
 	}, [name, banner]);
@@ -43,18 +43,18 @@ export default memo(({ id, selected }: InstanceProps) => {
 			ref.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth'});
 	}, [selected]);
 
-	const StateIcon = useMemo(() => INSTANCE_STATE_ICONS[state], [state]);
+	const view = useCallback(() => {
+		dispatch(setCurrentInstance(id));
+		dispatch(setPage('instances'));
+	}, [id]);
+	const launch = useCallback(() => instance.launch(), [instance]);
+	const copyId = useCallback(() => writeText(id).then(() => toast('copied_id', [name])), [id]);
 	const viewTab = useCallback((tab: number) => {
 		view();
 		dispatch(setInstanceTab(tab));
 	}, []);
 	const favorite = useCallback(() => instance.setCategory(t('mdpkm:instance_category.favorites')), [instance]);
-	const copyId = useCallback(() => writeText(id).then(() => toast('copied_id', [name])), [id]);
-	const view = useCallback(() => {
-		dispatch(setCurrentInstance(id));
-		dispatch(setPage('instances'));
-	}, [id]);
-	
+	const StateIcon = useMemo(() => INSTANCE_STATE_ICONS[state], [state]);
 	return <ContextMenu.Root>
 		<ContextMenu.Trigger asChild>
 			<Grid ref={ref} width="100%" alignItems="start" css={{

@@ -29,11 +29,12 @@ export default function InstancePage({ id }: InstancePageProps) {
 	const { t } = useTranslation('interface');
 	const dispatch = useDispatch();
 	const instance = useInstance(id)!;
-	const { name, path, state, launch, banner, processes, isLaunching, bannerFormat } = instance;
+	const { name, path, state, banner, processes, isLaunching, bannerFormat } = instance;
 	const bannerImage = useMemo(() => {
 		return banner ? `data:image/${bannerFormat};base64,${Buffer.from(banner).toString('base64')}` : getDefaultInstanceBanner(name);
 	}, [name, banner]);
 
+	const launch = useCallback(() => instance.launch(), [instance]);
 	const setTab = useCallback((tab: number) => dispatch(setInstanceTab(tab)), []);
 	const StateIcon = useMemo(() => INSTANCE_STATE_ICONS[state], [state]);
 	const openFolder = useCallback(() => open(path), [path]);
