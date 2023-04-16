@@ -7,7 +7,7 @@ import voxura from './voxura';
 import { toast } from './util';
 import { loadAllPlugins } from './plugins';
 import { setLaunchError, setCurrentInstance, setMcServerEulaDialog } from './store/slices/interface';
-import { LaunchError, InstanceTaskType, MinecraftJavaServer, InstanceTaskResponse } from '../voxura';
+import { LaunchError, InstanceTaskType, MinecraftJavaServer, MinecraftJavaClient, InstanceTaskResponse } from '../voxura';
 
 loadAllPlugins()
 .then(() => voxura.init())
@@ -19,6 +19,10 @@ loadAllPlugins()
 				store.dispatch(setMcServerEulaDialog(instance.id));
 				return InstanceTaskResponse.CancelLaunch;
 			}
+		} else if (instance.gameComponent.id === MinecraftJavaClient.id) {
+			const account = voxura.auth.getProvider('minecraft')!.activeAccount;
+			if (!account)
+				throw new LaunchError('missing_account');
 		}
 	});
 	voxura.instances.addTask(InstanceTaskType.PostLaunch, instance => {

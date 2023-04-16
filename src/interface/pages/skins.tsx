@@ -11,6 +11,7 @@ import FileSelect from '../components/FileSelect';
 
 import AlexSkin from '../../skins/alex.png?raw-base64';
 import SteveSkin from '../../skins/steve.png?raw-base64';
+import { msProtect } from '../components/MicrosoftBlocker';
 import { useMinecraftAccount } from '../../voxura';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { toast, getSkinData, getCapeData } from '../../util';
@@ -29,7 +30,7 @@ const MODEL_IMAGES_BASE64 = {
 	SLIM: AlexSkin,
 	CLASSIC: SteveSkin
 };
-export default function Skins() {
+export default msProtect(function Skins() {
     const { t } = useTranslation('interface');
     const skins = useAppSelector(state => state.skins.data);
     const account = useMinecraftAccount();
@@ -324,7 +325,7 @@ export default function Skins() {
             </Grid>
         </Modal>}
     </Grid>;
-}
+});
 
 export interface LibraryItemProps {
     data: Skin

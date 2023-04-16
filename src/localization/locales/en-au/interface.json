@@ -308,6 +308,11 @@
 	"compatibility_problem": "Compatibility Problem",
 	"compatibility_problem.body": "mdpkm could not find a compatible version of “{{0}}”.",
 	"compatibility_problem.version": "Choose a version",
+
+	"ms_blocker.body": "You need to sign-in with a Microsoft Account before you can use this feature.",
+	"ms_blocker.view": "View Accounts",
+	"ms_blocker.back": "Back to Home",
+
 	"news.item.tag": "$t(mdpkm:news_source.{{item.source.id}}) • {{item.tags}}",
 
 	"dialog.accept_eula": "End User License Agreement",

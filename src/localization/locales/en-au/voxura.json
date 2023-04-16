@@ -150,6 +150,7 @@
 	"platform_category.colored-lighting": "Coloured Lighting",
 
 	"launch_error.missing_game": "Your Instance is missing a valid game component.",
+	"launch_error.missing_account": "$t(interface:ms_blocker.body)",
 	"launch_error.missing_dependency": "$t(voxura:component.{{0}}) requires $t(voxura:component.{{1}}) version {{2}}.",
 	"launch_error.manifest_download_failed": "Failed to download manifest for $t(voxura:component.{{0}}) v{{1}}",
 	"launch_error.dependency_version_unsatisfied": "$t(voxura:component.{{0}}) requires $t(voxura:component.{{1}}) version {{2}}, but only version {{3}} was found."

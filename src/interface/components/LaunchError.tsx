@@ -34,7 +34,7 @@ export default function LaunchError({ data }: LaunchErrorProps) {
 		</Typography>
 		<Grid margin="auto 0 0" padding="16px 0 0" alignItems="end" justifyContent="space-between">
 			<Typography size={12} color="$secondaryColor" weight={400} noFlex family="$secondary">
-				{t('launch_error.origin', [instance.name])}
+				{t('launch_error.origin', [instance.displayName])}
 			</Typography>
 			<Button theme="accent" onClick={() => dispatch(setLaunchError(null))}>
 				<IconBiXLg/>
