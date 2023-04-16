@@ -186,7 +186,10 @@ function ExportInstance({ onClose, instance }: ExportInstanceProps) {
 		});
 	};
 	useEffect(() => {
-		exists(exportPath).then(setWarning);
+		if (path)
+			exists(exportPath).then(setWarning);
+		else
+			setWarning(false);
 	}, [exportPath]);
 
 	return <Modal width="40%">
