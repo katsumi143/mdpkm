@@ -11,9 +11,9 @@ import { Voxura, Account, Instance, AuthProvider, MinecraftAccount, ComponentVer
 
 Object.defineProperty(Instance.prototype, 'defaultIcon', {
 	get: function() {
-		return getDefaultInstanceIcon(this.name);
+		return getDefaultInstanceIcon(this.displayName);
 	}
-})
+});
 
 const voxura = new Voxura(APP_DIR);
 voxura.addPlatform(mdpkmPlatform);

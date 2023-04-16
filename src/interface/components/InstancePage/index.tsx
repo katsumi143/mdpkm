@@ -29,10 +29,10 @@ export default function InstancePage({ id }: InstancePageProps) {
 	const { t } = useTranslation('interface');
 	const dispatch = useDispatch();
 	const instance = useInstance(id)!;
-	const { name, path, state, banner, processes, isLaunching, bannerFormat } = instance;
+	const { path, state, banner, processes, isLaunching, displayName, bannerFormat } = instance;
 	const bannerImage = useMemo(() => {
-		return banner ? `data:image/${bannerFormat};base64,${Buffer.from(banner).toString('base64')}` : getDefaultInstanceBanner(name);
-	}, [name, banner]);
+		return banner ? `data:image/${bannerFormat};base64,${Buffer.from(banner).toString('base64')}` : getDefaultInstanceBanner(displayName);
+	}, [displayName, banner]);
 
 	const launch = useCallback(() => instance.launch(), [instance]);
 	const setTab = useCallback((tab: number) => dispatch(setInstanceTab(tab)), []);
@@ -89,7 +89,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 				</Grid>
 				<Grid spacing={4} vertical justifyContent="center">
 					<Typography size={24} weight={700} family="$tertiary" noSelect lineheight={1} css={{ alignItems: 'start' }}>
-						{name}
+						{displayName}
 					</Typography>
 					<Typography color="$secondaryColor" weight={600} family="$secondary" spacing={8} noSelect lineheight={1}>
 						<StateIcon fontSize={12}/>

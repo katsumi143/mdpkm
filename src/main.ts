@@ -22,7 +22,7 @@ loadAllPlugins()
 		}
 	});
 	voxura.instances.addTask(InstanceTaskType.PostLaunch, instance => {
-		toast('instance_launched', [instance.name]);
+		toast('instance_launched', [instance.displayName]);
 	});
 	voxura.instances.addTask(InstanceTaskType.LaunchError, (instance, error: LaunchError) => {
 		store.dispatch(setLaunchError([instance.id, error.message, error.extraData]));

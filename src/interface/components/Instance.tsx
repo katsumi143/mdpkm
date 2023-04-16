@@ -33,9 +33,9 @@ export default memo(({ id, selected }: InstanceProps) => {
 	const { t } = useTranslation('interface');
 	const dispatch = useAppDispatch();
 	const instance = useInstance(id)!;
-	const { name, state, banner, bannerFormat } = instance;
+	const { state, banner, displayName, bannerFormat } = instance;
 	const bannerImage = useMemo(() => {
-		return banner ? `data:image/${bannerFormat};base64,${Buffer.from(banner).toString('base64')}` : getDefaultInstanceBanner(name);
+		return banner ? `data:image/${bannerFormat};base64,${Buffer.from(banner).toString('base64')}` : getDefaultInstanceBanner(displayName);
 	}, [name, banner]);
 
 	useEffect(() => {
@@ -48,7 +48,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 		dispatch(setPage('instances'));
 	}, [id]);
 	const launch = useCallback(() => instance.launch(), [instance]);
-	const copyId = useCallback(() => writeText(id).then(() => toast('copied_id', [name])), [id]);
+	const copyId = useCallback(() => writeText(id).then(() => toast('copied_id', [displayName])), [id]);
 	const viewTab = useCallback((tab: number) => {
 		view();
 		dispatch(setInstanceTab(tab));
@@ -113,7 +113,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 									whitespace="nowrap"
 									css={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
 								>
-									{name}
+									{displayName}
 								</Typography>
 							</Grid>
 							<Typography
@@ -134,7 +134,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 		</ContextMenu.Trigger>
 		<ContextMenu.Content>
 			<ContextMenu.Label>
-				Instance Options ({name})
+				Instance Options ({displayName})
 			</ContextMenu.Label>
 			<ContextMenu.Item onClick={launch} disabled={instance.isLaunching}>
 				<IconBiPlayFill/>

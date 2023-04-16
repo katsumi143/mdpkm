@@ -37,7 +37,7 @@ export default function SearchPage() {
 				<Avatar src={instance.webIcon} size="sm"/>
 				<Grid spacing={2} vertical>
 					<Typography noSelect lineheight={1}>
-						{instance.name}
+						{instance.displayName}
 					</Typography>
 					<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
 						{instance.store.components.filter(c => c.type === ComponentType.Loader).map(c => t(`voxura:component.${c.id}`)).join(', ')}

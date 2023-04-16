@@ -20,34 +20,54 @@ export interface InstanceSettingsProps {
 }
 export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 	const { t } = useTranslation('interface');
-	const name = useBind(instance.name);
 	const memory = useBind([instance.store.memoryAllocation]);
 	const dispatch = useAppDispatch();
 	const resolution = useBind(instance.store.gameResolution.size);
 	const [tab, setTab] = useState(0);
+	const [name, setName] = useState(instance.displayName);
+	const [saving, setSaving] = useState(false);
 	const [advanced, setAdvanced] = useState(false);
 	const [exporting, setExporting] = useState(false);
 
 	const disabled = instance.state !== InstanceState.None;
+	const saveName = () => {
+		setSaving(true);
+		instance.setDisplayName(name).then(() => setSaving(false));
+	};
 	const deleteInstance = () => {
 		dispatch(setCurrentInstance(''));
 		instance.delete();
 	};
 	useEffect(() => {
+		setName(instance.displayName);
+		memory.onChange([instance.store.memoryAllocation]);
+		resolution.onChange(instance.store.gameResolution.size);
+	}, [instance]);
+	useEffect(() => {
 		instance.store.gameResolution = { size: resolution.value };
 		instance.store.memoryAllocation = memory.value[0];
 		instance.store.save();
-	}, [name.value, memory.value, resolution.value]);
+	}, [memory.value, resolution.value]);
 
 	if (advanced)
 		return <JsonEditor value={instance.store.data}/>;
+
+	const nameInvalid = name.length <= 0 || name.length > 24;
 	return <>
 		<Tabs value={tab} onChange={setTab} css={{ height: '100%' }}>
 			<TabItem name="General" icon={<IconBiGear/>} value={0} spacing={0} padding="0 8px !important">
 				<InputLabel>
 					{t('common.label.display_name')}
 				</InputLabel>
-				<TextInput {...name} disabled/>
+				<Grid spacing={8}>
+					<TextInput value={name} onChange={v => setName(v.substring(0, 24))} disabled={saving}/>
+					{!saving && !nameInvalid && name !== instance.displayName && <Button theme="accent" onClick={saveName}>
+						<IconBiPencilFill/>
+						{t('common.action.save_changes')}
+					</Button>}
+					{saving && <BasicSpinner size={24} margin="2px 0"/>}
+					{nameInvalid && <WarningText text={t('instance_page.settings.name.invalid')} margin="6px 8px"/>}
+				</Grid>
 
 				<InputLabel spaciouser>
 					{t('instance_page.settings.resolution')}
@@ -62,7 +82,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 								const number = parseInt(value);
 								resolution.onChange(val => [number, val[1]]);
 							}}
-							disabled={disabled}
+							disabled={disabled || saving}
 						/>
 					</Grid>
 					<Grid vertical>
@@ -74,7 +94,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 								const number = parseInt(value);
 								resolution.onChange(val => [val[0], number]);
 							}}
-							disabled={disabled}
+							disabled={disabled || saving}
 						/>
 					</Grid>
 				</Grid>
@@ -84,13 +104,13 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 						{t('instance_page.settings.other')}
 					</InputLabel>
 					<Grid spacing={8}>
-						<Button theme="accent" onClick={() => setExporting(true)} disabled={disabled}>
+						<Button theme="accent" onClick={() => setExporting(true)} disabled={disabled || saving}>
 							<IconBiBoxSeam/>
 							{t('common.action.export')}
 						</Button>
 						<Dialog.Root>
 							<Dialog.Trigger asChild>
-								<Button theme="secondary" disabled={disabled}>
+								<Button theme="secondary" disabled={disabled || saving}>
 									<IconBiTrash3Fill fontSize={12}/>
 									{t('common.action.delete')}
 								</Button>
@@ -99,7 +119,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 								<Dialog.Content>
 									<Dialog.Title>{t('dialog.delete_instance')}</Dialog.Title>
 									<Dialog.Description css={{ whiteSpace: 'pre' }}>
-										{t('dialog.delete_instance.body', [instance.name])}
+										{t('dialog.delete_instance.body', [instance.displayName])}
 									</Dialog.Description>
 									<Grid spacing={16} justifyContent="end">
 										<Dialog.Close asChild>
@@ -150,7 +170,7 @@ export interface ExportInstanceProps {
 }
 function ExportInstance({ onClose, instance }: ExportInstanceProps) {
 	const { t } = useTranslation('interface');
-	const [name, setName] = useState(instance.name);
+	const [name, setName] = useState(instance.displayName);
 	const [path, setPath] = useState<string | null>(null);
 	const [warning, setWarning] = useState(false);
 	const [exporter, setExporter] = useState(InstanceExporters[0]);
@@ -160,8 +180,8 @@ function ExportInstance({ onClose, instance }: ExportInstanceProps) {
 	const exportPath = `${path}/${exportName}`;
 	const startExport = () => {
 		setExporting(true);
-		exporter.export(instance, name || instance.name, exportPath).then(() => {
-			toast('export_success', [instance.name, exportPath.split(/[\\\/]+/g).reverse()[1]]);
+		exporter.export(instance, name || instance.displayName, exportPath).then(() => {
+			toast('export_success', [instance.displayName, exportPath.split(/[\\\/]+/g).reverse()[1]]);
 			onClose();
 		});
 	};
