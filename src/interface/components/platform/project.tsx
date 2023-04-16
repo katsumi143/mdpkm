@@ -23,10 +23,11 @@ export interface ProjectProps {
 export default function ProjectComponent({ id, data, featured, platform, instance, recommended }: ProjectProps) {
     const { t } = useTranslation('interface');
 	const projects = useStoredValue<VoxuraStore["projects"]>('projects', {});
+	const downloads = useDownloads();
     const [project, setProject] = useState(data);
     const [loading, setLoading] = useState(!data);
     const installed = instance ? Object.entries(projects).filter(e => instance.modifications.some(m => m.md5 === e[0])).some(e => e[1].id === (id ?? data?.id)) : false;
-    const installing = installed ? false : useDownloads().some(d => d.id === 'project' && d.extraData[0] === project?.displayName && !d.isDone);
+    const installing = installed ? false : downloads.some(d => d.id === 'project' && d.extraData[0] === project?.displayName && !d.isDone);
     const install = () => instance?.installProject(project!).catch(err => {
 		if (err instanceof CompatibilityError)
 			toast('project_incompatible', [project?.displayName]);
@@ -47,6 +48,7 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
         if(data && data !== project)
             setProject(data);
     }, [data]);
+	console.log(project);
 
 	if (loading || !project)
 		return <Grid padding={8} background="$secondaryBackground2" smoothing={1} borderRadius={16} css={{
@@ -143,13 +145,13 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
 					right: 8,
 					position: 'absolute'
 				}}>
-					{project.followers &&
+					{project.followers !== undefined &&
 						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" margin="0 8px 0 0" spacing={6} noSelect>
 							<IconBiSuitHeartFill fontSize={10}/>
 							{t('project.followers', { count: project.followers })}
 						</Typography>
 					}
-					{project.downloads &&
+					{project.downloads !== undefined &&
 						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" margin="0 8px 0 0" spacing={6} noSelect>
 							<IconBiDownload/>
 							{t('common.label.downloads', { count: project.downloads })}

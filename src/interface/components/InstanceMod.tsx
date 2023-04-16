@@ -17,7 +17,7 @@ export interface InstanceModProps {
 	disabled?: boolean
 }
 export default function InstanceMod({ mod, disabled, instance }: InstanceModProps) {
-	const icon = useMemo(() => mod.webIcon ?? IMAGES.placeholder, [mod.id]);
+	const icon = useMemo(() => mod.icon ?? IMAGES.placeholder, [mod.id]);
     const { t } = useTranslation('interface');
 	const satisfied = mod.dependencies.every(d => instance.store.components.some(c => d.id.includes(c.id)));
 	
