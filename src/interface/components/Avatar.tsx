@@ -76,7 +76,6 @@ export default function Avatar({ css, src, size, blur, margin, circle, layoutId,
 				if (image.naturalWidth < image.clientWidth)
 					image.style.imageRendering = 'pixelated';
 			};
-			console.log(image.naturalWidth, image.clientWidth);
 			if (image.naturalWidth)
 				isPixelated();
 			else
