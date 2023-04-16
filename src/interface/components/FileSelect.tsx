@@ -5,15 +5,17 @@ import { Button, TextInput } from 'voxeliface';
 
 export interface FileSelectProps {
 	name: string
-	path?: string
+	path?: string | null
 	setPath: (path: string) => void
 	disabled?: boolean
+	directory?: boolean
 	extensions?: string[]
 }
-export default function FileSelect({ name, path, setPath, disabled, extensions = [] }: FileSelectProps) {
+export default function FileSelect({ name, path, setPath, disabled, directory, extensions = [] }: FileSelectProps) {
 	const { t } = useTranslation('interface');
 	const select = () => open({
-        filters: [{ name, extensions }]
+        filters: [{ name, extensions }],
+		directory
     }).then(path => {
         if (typeof path === 'string')
             setPath(path);

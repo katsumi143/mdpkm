@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, Grid, Typography } from 'voxeliface';
 
 import Avatar from '../components/Avatar';
+import WarningText from '../components/WarningText';
 import PlatformSearch from '../components/platform/search';
 
 import { setPage } from '../../store/slices/interface';
@@ -30,10 +31,7 @@ export default function SearchPage() {
 				</Link>
 			</Grid>
 			{projectType === ProjectType.Mod && instance.state !== InstanceState.None &&
-				<Typography size={14} color="#ffba64" noSelect>
-					<IconBiExclamationTriangleFill/>
-					{t('mod_management.warning')}
-				</Typography>
+				<WarningText text={t('mod_management.warning')} margin={0}/>
 			}
 			<Grid margin="0 16px" spacing={12} alignItems="center">
 				<Avatar src={instance.webIcon} size="sm"/>

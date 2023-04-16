@@ -69,6 +69,8 @@
 
 	"auth_provider.minecraft": "Microsoft",
 
+	"instance_exporter.modrinth": "Modrinth Modpack",
+
 	"platform_category.gui": "GUI",
 	"platform_category.low": "Low",
 	"platform_category.pbr": "PBR",

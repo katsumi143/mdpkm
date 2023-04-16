@@ -241,7 +241,6 @@
 	"instance_page.settings.name": "Display Name",
 	"instance_page.settings.memory": "Memory Allocation ({{0}} GB)",
 	"instance_page.settings.resolution": "Game Window Resolution",
-	"instance_page.settings.delete": "Delete Instance",
 	"instance_page.settings.disabled": "You can only edit the Instance when it's idle.",
 
 	"loading_instances": "Loading Instances",

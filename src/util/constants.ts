@@ -54,7 +54,9 @@ export const IMAGES = {
 	unknown_server: 'img/icon/minecraft/unknown_server.png',
 
 	'download.temurin': 'img/icon/component/java-temurin.png',
-	'download.minecraft_java': 'img/icon/minecraft/java.png'
+	'download.minecraft_java': 'img/icon/minecraft/java.png',
+
+	'instance_exporter.modrinth': 'img/icon/platform/modrinth.svg'
 };
 
 export const LANGUAGES = ['en-AU', 'lv', 'ru', 'en-LOL']

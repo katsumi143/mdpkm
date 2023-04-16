@@ -3,6 +3,7 @@
     "compilerOptions": {
         "types": [
 			"vite/client",
+			"vite-env.d.ts",
             "unplugin-icons/types/react"
         ],
         "jsx": "react",

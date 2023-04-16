@@ -4,6 +4,7 @@
     "common.action.view": "View",
 	"common.action.back": "Back",
 	"common.action.close": "Close",
+	"common.action.export": "Export",
 	"common.action.search": "Search",
     "common.action.select": "Select",
 	"common.action.launch": "Launch",
@@ -148,12 +149,21 @@
 	"skin_management.add_modal.submit": "Add Skin",
 
 	"import_file": "Import from File",
-	"import_file.select": "Select Instance Archive",
+	"import_file.select": "Archive Path",
 	"import_file.ext_name": "Instance Archive",
 	"import_file.components": "Instance Components",
 	"import_file.return_select": "Select a different file",
+	"import_file.name_error": "Another Instance already exists with this name.",
 	"import_file.finish": "Start Import",
-
+	
+	"export_instance": "Export Instance",
+	"export_instance.name": "Result Name",
+	"export_instance.path": "Result Path",
+	"export_instance.select": "Format Type",
+	"export_instance.select.group": "Instance Exporters",
+	"export_instance.finish": "Finish & Export",
+	"export_instance.warning": "A file already exists with this name!",
+	
 	"downloads": "Downloads",
 	"downloads.none": "There's nothing downloading right now.",
 	"downloads.completed": "Completed",
@@ -250,13 +260,12 @@
 	"instance_page.tab.home": "Information",
 	"instance_page.tab.game": "Game Settings",
 	"instance_page.tab.game.tab.0": "Components",
-	"instance_page.tab.export": "Export",
 	"instance_page.tab.content": "Game Content",
 
 	"instance_page.settings": "Settings",
 	"instance_page.settings.memory": "Memory Allocation ({{0}} GB)",
 	"instance_page.settings.resolution": "Game Resolution",
-	"instance_page.settings.delete": "Delete Instance",
+	"instance_page.settings.other": "Other Options",
 	"instance_page.settings.disabled": "You can only edit the instance when it's idle.",
 
 	"loading_instances": "Loading Instances",
@@ -303,6 +312,9 @@
 	"dialog.delete_instance.body": "This action cannot be undone.\n“{{0}}” will be lost forever! (A long time!)",
 
 	"error.generic": "Something went wrong!",
+
+	"toast.export_success": "Instance Exported",
+	"toast.export_success.body": "“{{0}}” has been exported, you can find it in “{{1}}”.",
 
 	"toast.plugin_error": "Plugin Error",
 	"toast.plugin_loaded": "Plugin Loaded",

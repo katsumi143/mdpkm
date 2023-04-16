@@ -226,7 +226,6 @@
 	"instance_page.settings": "Настройки",
 	"instance_page.settings.memory": "Выделение памяти ({{0}} ГБ)",
 	"instance_page.settings.resolution": "Разрешение игрового окна",
-	"instance_page.settings.delete": "Удалить экземпляр",
 	"instance_page.settings.disabled": "Экземпляр можно редактировать только когда он не запущен.",
 
 	"loading_instances": "Загрузка экземпляров",

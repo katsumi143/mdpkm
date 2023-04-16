@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, Grid, Button, Tooltip, Typography, ContextMenu } from 'voxeliface';
 
 import Avatar from './Avatar';
+import WarningText from './WarningText';
 
 import type Mod from '../../../voxura/src/util/mod';
 import { IMAGES } from '../../util/constants';
@@ -56,10 +57,7 @@ export default function InstanceMod({ mod, disabled, instance }: InstanceModProp
 					}}>
 						{!satisfied && <Tooltip.Root delayDuration={50}>
 							<Tooltip.Trigger asChild>
-								<Typography size={12} color="#ffba64" margin="0 16px" noSelect>
-									<IconBiExclamationTriangleFill/>
-									{t('mod.issue.incompatible')}
-								</Typography>
+								<WarningText text={t('mod.issue.incompatible')} margin="0 16px"/>
 							</Tooltip.Trigger>
 							<Tooltip.Portal>
 								<Tooltip.Content>

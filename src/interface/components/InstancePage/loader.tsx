@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { Link, Grid, Select, Button, Typography, TextHeader, InputLabel, BasicSpinner } from 'voxeliface';
 
 import Modal from '../Modal';
+import WarningText from '../WarningText';
 import VersionPicker from '../VersionPicker';
 import InstanceComponent from '../InstanceComponent';
 
@@ -24,10 +25,7 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 	const { components } = store;
 	const otherComponents = components.filter(c => c.type !== ComponentType.Game);
 	return <React.Fragment>
-		{disabled && <Typography size={12} color="#ffba64" margin="8px 16px" noSelect>
-			<IconBiExclamationTriangleFill/>
-			{t('instance_page.settings.disabled')}
-		</Typography>}
+		{disabled && <WarningText text={t('instance_page.settings.disabled')}/>}
 		<Link size={12} padding="4px 16px">
 			<IconBiQuestionLg/>
 			You may find this page confusing at first, click here for more information!

@@ -221,13 +221,13 @@ export default function Settings() {
 					</Typography>
 					<Grid spacing={4}>
 						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" onClick={openGithub} noSelect lineheight={1} css={{ cursor: 'pointer', '&:hover': { color: '$linkColor' }}}>
-							{GIT_REPOSITORY}
+							{globalThis.GIT_REPOSITORY}
 						</Typography>
 						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
 							•
 						</Typography>
 						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" onClick={openCommit} noSelect lineheight={1} css={{ cursor: 'pointer', '&:hover': { color: '$linkColor' }}}>
-							{GIT_BRANCH}@{GIT_COMMIT_HASH}
+							{globalThis.GIT_BRANCH}@{globalThis.GIT_COMMIT_HASH}
 						</Typography>
 					</Grid>
 				</Grid>

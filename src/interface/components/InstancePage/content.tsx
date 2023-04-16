@@ -4,6 +4,7 @@ import { Grid, TabItem, Typography } from 'voxeliface';
 
 import Tabs from '../Tabs';
 import Project from '../platform/project';
+import WarningText from '../WarningText';
 import ModManagement from '../ModManagement';
 
 import voxura from '../../../voxura';
@@ -43,10 +44,7 @@ export default function Content({ instance }: ContentProps) {
 				<Grid alignItems="end" justifyContent="space-between">
 					<EssentialBanner/>
 					{instance.state !== InstanceState.None &&
-						<Typography size={12} color="#ffba64" noSelect>
-							<IconBiExclamationTriangleFill/>
-							{t('mod_management.warning')}
-						</Typography>
+						<WarningText text={t('mod_management.warning')} margin={0}/>
 					}
 				</Grid>
 				<Typography size={12} color="$secondaryColor" margin="0 0 8px" weight={400} family="$secondary" noSelect textalign="start">

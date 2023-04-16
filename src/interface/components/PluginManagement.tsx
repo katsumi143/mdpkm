@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 import { Grid, Button, Spinner, TextInput, Typography, BasicSpinner } from 'voxeliface';
 
+import WarningText from './WarningText';
 import InstanceMod from './InstanceMod';
 
 import { useAppDispatch } from '../../store/hooks';
@@ -79,10 +80,7 @@ export default function PluginManagement({ instance }: PluginManagementProps) {
 				{t('common.action.check_for_updates')}
 			</Button>
 			{instance.state !== InstanceState.None &&
-				<Typography size={12} color="#ffba64" margin="0 8px 0 auto" noSelect>
-					<IconBiExclamationTriangleFill/>
-					{t('plugins.warning')}
-				</Typography>
+				<WarningText text={t('plugins.warning')} margin="0 8px 0 auto"/>
 			}
 		</Grid>
 	</React.Fragment>;
