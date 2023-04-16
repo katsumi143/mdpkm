@@ -21,7 +21,7 @@ export default function InstanceMod({ mod, disabled, instance }: InstanceModProp
     const { t } = useTranslation('interface');
 	const satisfied = mod.dependencies.every(d => instance.store.components.some(c => d.id.includes(c.id)));
 	
-	const update = null;
+	const updateData = instance.modUpdates.find(u => u.mod === mod);
 	const removeMod = () => instance.removeMod(mod);
 	const openWebsite = () => open(mod.source?.baseProjectURL + mod.id);
     return <ContextMenu.Root>
@@ -51,7 +51,7 @@ export default function InstanceMod({ mod, disabled, instance }: InstanceModProp
 							</Tooltip.Content>
 						</Tooltip.Portal>
 					</Tooltip.Root>
-					<Grid spacing={8} alignItems="center" css={{
+					<Grid alignItems="center" css={{
 						right: 0,
 						position: 'absolute'
 					}}>
@@ -66,7 +66,7 @@ export default function InstanceMod({ mod, disabled, instance }: InstanceModProp
 								</Tooltip.Content>
 							</Tooltip.Portal>
 						</Tooltip.Root>}
-						<Grid vertical alignItems="end">
+						{!updateData && <Grid margin="0 8px" vertical alignItems="end">
 							{mod.source && <Tooltip.Root delayDuration={50}>
 								<Tooltip.Trigger asChild>
 									<Typography size={12} color="$secondaryColor" spacing={6} onClick={openWebsite} noSelect css={{
@@ -86,17 +86,15 @@ export default function InstanceMod({ mod, disabled, instance }: InstanceModProp
 									</Tooltip.Content>
 								</Tooltip.Portal>
 							</Tooltip.Root>}
-							<Breakpoint customQuery="(min-width: 690px)">
-								{!update && <Typography size={12} color="$secondaryColor" spacing={6} noSelect>
-									<IconBiBoxFill fontSize={10}/>
-									{t(`voxura:component.${mod.dependencies[0]?.id[0]}`)}
-								</Typography>}
-							</Breakpoint>
-						</Grid>
-						{update && <Button theme="accent" disabled>
-							<IconBiCloudArrowDown/>
-							Update
-						</Button>}
+							<Typography size={12} color="$secondaryColor" spacing={6} noSelect>
+								<IconBiBoxFill fontSize={10}/>
+								{t(`voxura:component.${mod.dependencies[0]?.id[0]}`)}
+							</Typography>
+						</Grid>}
+						{updateData && <Link size={12} padding="0 16px">
+							<IconBiCloudArrowDownFill fontSize={14}/>
+							{t('project.update')}
+						</Link>}
 						<Link size={12} padding="0 16px" onClick={removeMod} disabled={disabled}>
 							<IconBiTrash3Fill/>
 							<Breakpoint customQuery="(min-width: 580px)">

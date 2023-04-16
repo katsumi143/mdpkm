@@ -18,6 +18,7 @@
     "common.action.view_all": "View all",
 	"common.action.continue": "Continue",
 	"common.action.copy_path": "Copy File Path",
+	"common.action.update_all": "Update All",
 	"common.action.open_folder": "Open Folder",
 	"common.action.save_changes": "Save Changes",
 	"common.action.view_website": "Visit Website",
@@ -234,6 +235,7 @@
 	"project.followers_other": "{{count, number}} Followers",
 	"project.visit_site": "View on $t(voxura:platform.{{project.source.id}})",
 	"project.issue.incompatible": "Incompatible",
+	"project.update": "Update Available!",
 
 	"essential": "Essential",
 

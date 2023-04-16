@@ -5,7 +5,6 @@ import { useMemo, useState, useEffect } from 'react';
 
 import { APP_DIR } from './util/constants';
 import { Download } from '../voxura/src/downloader';
-import mdpkmPlatform from './mdpkm/platform';
 import { toast, getDefaultInstanceIcon } from './util';
 import { Voxura, Account, Instance, AuthProvider, MinecraftAccount, ComponentVersions, VersionedComponent } from '../voxura';
 
@@ -16,7 +15,6 @@ Object.defineProperty(Instance.prototype, 'defaultIcon', {
 });
 
 const voxura = new Voxura(APP_DIR);
-voxura.addPlatform(mdpkmPlatform);
 
 const hiddenDownloads = ['', 'project', 'component_library'];
 voxura.downloader.listenForEvent('downloadStarted', (download: Download) => {

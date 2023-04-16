@@ -25,6 +25,12 @@ export default function ModManagement({ instance }: ModManagementProps) {
 	};
 	const refresh = () => instance.readMods();
 	const openFolder = () => open(instance.modsPath);
+	const getUpdates = () => {
+		instance.getModUpdates().then(console.log);
+	};
+	const updateAll = () => {
+		instance.updateMods();
+	};
 	useEffect(() => {
 		if (instance.modifications.length === 0)
 			instance.readMods();
@@ -76,10 +82,14 @@ export default function ModManagement({ instance }: ModManagementProps) {
 				<IconBiSearch/>
 				{t('mod_management.search')}
 			</Button>
-			<Button theme="accent" disabled={loading}>
-				<IconBiCloudArrowDown/>
+			<Button theme="accent" onClick={getUpdates} disabled={loading || instance.gettingModUpdates}>
+				{instance.gettingModUpdates ? <BasicSpinner size={16}/> : <IconBiCloudArrowDown/>}
 				{t('common.action.check_for_updates')}
 			</Button>
+			{instance.modUpdates.length > 0 && <Button theme="accent" onClick={updateAll} disabled={loading || instance.updatingMods}>
+				<IconBiCloudArrowDown/>
+				{t('common.action.update_all')}
+			</Button>}
 			{instance.state !== InstanceState.None &&
 				<WarningText text={t('mod_management.warning')} margin="0 8px 0 auto"/>
 			}

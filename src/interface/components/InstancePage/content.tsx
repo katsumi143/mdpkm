@@ -50,7 +50,7 @@ export default function Content({ instance }: ContentProps) {
 				<Typography size={12} color="$secondaryColor" margin="0 0 8px" weight={400} family="$secondary" noSelect textalign="start">
 					Essential is a quality of life mod that boosts Minecraft Java to the next level.
 				</Typography>
-				<Project id="essential-container" platform={voxura.getPlatform('mdpkm')} instance={instance}/>
+				<Project id="essential" platform={voxura.getPlatform('modrinth')} instance={instance}/>
 			</TabItem>
 			{extras.map(extra => extra[0]?.contentTabs?.map((ContentTab, key) =>
 				<TabItem key={key} name={t(`voxura:component.${extra[1]}.content_tab.${key}`)} icon={<IconBiList fontSize={11}/>} value={3 + tabCount++}>
