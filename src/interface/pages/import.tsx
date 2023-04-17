@@ -20,6 +20,7 @@ export default function Import() {
 	const [name, setName] = useState('');
 	const [path, setPath] = useState('');
 	const [data, setData] = useState<InstanceArchiveMetadata | null>(null);
+	const [state, setState] = useState<[number, number, any[]] | null>(null);
 	const [warning, setWarning] = useState(false);
 	const [reading, setReading] = useState(false);
 	const [importer, setImporter] = useState<InstanceImporter | undefined | null>(null);
@@ -29,9 +30,10 @@ export default function Import() {
 	const changePage = (page: string) => dispatch(setPage(page));
 	const finish = () => {
 		setImporting(true);
+		setState([0, 0, []]);
 		voxura.instances.createInstance(name || data!.name, data!.instanceType).then(instance => {
 			instance.store.components.push(...data!.components.map((c : any) => new c.target(instance, c)));
-			return importer!.import(instance, path, data!.metadata, voxura.downloader)
+			return importer!.import(instance, path, data!.metadata, voxura.downloader, (...a) => setState(a))
 				.then(() => instance);
 		}).then(instance => {
 			returnHome();
@@ -125,5 +127,16 @@ export default function Import() {
 				</Grid>
 			</Grid>}
 		</Grid>
+		{state && <>
+			<Typography size={14} color="$secondaryColor" noSelect>
+				{t(`voxura:instance_importer.${importer?.id}.state.${state[0]}`, state[2])}
+			</Typography>
+			<Grid width={`${state[1] * 100}%`} height="4px" background="$buttonBackground" css={{
+				left: 0,
+				bottom: 0,
+				position: 'absolute',
+				transition: 'width 1s'
+			}}/>
+		</>}
 	</Grid>;
 }

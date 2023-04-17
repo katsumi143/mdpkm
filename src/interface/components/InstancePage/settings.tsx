@@ -172,6 +172,7 @@ function ExportInstance({ onClose, instance }: ExportInstanceProps) {
 	const { t } = useTranslation('interface');
 	const [name, setName] = useState(instance.displayName);
 	const [path, setPath] = useState<string | null>(null);
+	const [state, setState] = useState<[number, number, any[]] | null>(null);
 	const [warning, setWarning] = useState(false);
 	const [exporter, setExporter] = useState(InstanceExporters[0]);
 	const [exporting, setExporting] = useState(false);
@@ -180,7 +181,7 @@ function ExportInstance({ onClose, instance }: ExportInstanceProps) {
 	const exportPath = `${path}/${exportName}`;
 	const startExport = () => {
 		setExporting(true);
-		exporter.export(instance, name || instance.displayName, exportPath).then(() => {
+		exporter.export(instance, name || instance.displayName, exportPath, (...a) => setState(a)).then(() => {
 			toast('export_success', [instance.displayName, exportPath.split(/[\\\/]+/g).reverse()[1]]);
 			onClose();
 		});
@@ -225,6 +226,9 @@ function ExportInstance({ onClose, instance }: ExportInstanceProps) {
 		/>
 
 		<Grid margin="auto 0 0" padding="16px 0 0" spacing={8} justifyContent="end">
+			{state && <Typography size={14} color="$secondaryColor" margin="10px auto 0 0" noSelect>
+				{t(`voxura:instance_exporter.${exporter.id}.state.${state[0]}`, state[2])}
+			</Typography>}
 			<Button theme="accent" onClick={startExport} disabled={!path || exporting}>
 				{exporting ? <BasicSpinner size={16}/> : <IconBiCheckLg/>}
 				{t('export_instance.finish')}
@@ -234,5 +238,12 @@ function ExportInstance({ onClose, instance }: ExportInstanceProps) {
 				{t('common.action.cancel')}
 			</Button>
 		</Grid>
+
+		{state && <Grid width={`${state[1] * 100}%`} height="4px" background="$buttonBackground" css={{
+			left: 0,
+			bottom: 0,
+			position: 'absolute',
+			transition: 'width 1s'
+		}}/>}
 	</Modal>;
 }

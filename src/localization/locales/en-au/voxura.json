@@ -69,7 +69,15 @@
 
 	"auth_provider.minecraft": "Microsoft",
 
+	"instance_importer.modrinth.state.0": "Preparing Instance",
+	"instance_importer.modrinth.state.1": "Downloading files {{0}}/{{1}}",
+	"instance_importer.modrinth.state.2": "Nearly done, extracting overrides",
+
 	"instance_exporter.modrinth": "Modrinth Modpack",
+	"instance_exporter.modrinth.state.0": "Preparing export",
+	"instance_exporter.modrinth.state.1": "Reading mods {{0}}/{{1}}",
+	"instance_exporter.modrinth.state.2": "Fetching version metadata",
+	"instance_exporter.modrinth.state.3": "Creating modpack archive",
 
 	"platform_category.gui": "GUI",
 	"platform_category.low": "Low",
