@@ -18,17 +18,20 @@ import Instances from './instances';
 import Developer from './developer';
 import EulaDialog from '../components/EulaDialog';
 import LaunchError from '../components/LaunchError';
+import ImagePreview from '../components/ImagePreview';
 
-import { setPage } from '../../store/slices/interface';
+import { setPage, setImagePreview } from '../../store/slices/interface';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 export default function Navigation() {
     const { t } = useTranslation('interface');
     const page = useAppSelector(state => state.interface.page);
 	const dispatch = useAppDispatch();
 	const launchError = useAppSelector(state => state.interface.launchError);
+	const imagePreview = useAppSelector(state => state.interface.imagePreview);
 	const showEulaDialog = useAppSelector(state => state.interface.mcServerEulaDialog);
 
 	const changePage = (page: string) => dispatch(setPage(page));
+	const closePreview = () => dispatch(setImagePreview(null));
     return <App css={{ background: '$primaryBackground' }}>
 		<Container onContextMenu={event => event.preventDefault()}>
 			<Header/>
@@ -75,6 +78,7 @@ export default function Navigation() {
 				<Toaster position="bottom-right"/>
 			</Main>
 			{launchError && <LaunchError data={launchError}/>}
+			{imagePreview && <ImagePreview {...imagePreview} onClose={closePreview}/>}
 			{showEulaDialog && <EulaDialog instanceId={showEulaDialog}/>}
 		</Container>
     </App>;

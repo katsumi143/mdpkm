@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ProjectType } from '../../../voxura';
 import { settingsSlice } from './settings';
-import type { Instance } from '../../../voxura';
+import type { ImagePreviewProps } from '../../interface/components/ImagePreview';
 export const interfaceSlice = createSlice({
     name: 'interface',
     initialState: {
@@ -11,6 +11,7 @@ export const interfaceSlice = createSlice({
 		searchType: ProjectType.Mod,
 		instanceTab: 0,
 		launchError: null as [string, string, any[] | undefined] | null,
+		imagePreview: null as ImagePreviewProps | null,
         currentInstance: '',
 		mcServerEulaDialog: null as string | null
     },
@@ -30,6 +31,9 @@ export const interfaceSlice = createSlice({
 		setInstanceTab: (state, { payload }: PayloadAction<number>) => {
 			state.instanceTab = payload;
 		},
+		setImagePreview: (state, { payload }: PayloadAction<ImagePreviewProps | null>) => {
+			state.imagePreview = payload;
+		},
         setCurrentInstance: (state, { payload }: PayloadAction<string>) => {
             state.currentInstance = payload;
         },
@@ -39,5 +43,5 @@ export const interfaceSlice = createSlice({
     }
 });
 
-export const { setPage, setContentTab, setSearchType, setLaunchError, setInstanceTab, setCurrentInstance, setMcServerEulaDialog } = interfaceSlice.actions;
+export const { setPage, setContentTab, setSearchType, setLaunchError, setInstanceTab, setImagePreview, setCurrentInstance, setMcServerEulaDialog } = interfaceSlice.actions;
 export default interfaceSlice.reducer;

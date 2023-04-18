@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
 import { CSS, styled } from '@stitches/react';
-import React, { useRef, useState, useEffect, MouseEventHandler } from 'react';
+import React, { useRef, useEffect, MouseEventHandler } from 'react';
 
-import ImagePreview from './ImagePreview';
+import { useAppDispatch } from '../../store/hooks';
+import { setImagePreview } from '../../store/slices/interface';
 import { PLACEHOLDER_IMAGE } from '../../util/constants';
 const StyledAvatar = styled(motion.img, {
 	width: '$$size',
@@ -64,10 +65,12 @@ export interface AvatarProps {
 export default function Avatar({ css, src, size, blur, margin, circle, layoutId, transparent }: AvatarProps) {
 	const img = useRef<HTMLImageElement>(null);
 	const imgSrc = src || PLACEHOLDER_IMAGE;
-	const [preview, setPreview] = useState(false);
-	const togglePreview: MouseEventHandler<HTMLDivElement> = event => {
+	const dispatch = useAppDispatch();
+	const preview: MouseEventHandler<HTMLDivElement> = event => {
 		event.stopPropagation();
-		setPreview(p => !p);
+		dispatch(setImagePreview({
+			src: imgSrc
+		}));
 	};
 	useEffect(() => {
 		const image = img.current;
@@ -84,8 +87,7 @@ export default function Avatar({ css, src, size, blur, margin, circle, layoutId,
 	}, []);
 
 	return <React.Fragment>
-		{preview && <ImagePreview src={imgSrc} onClose={togglePreview}/>}
-		<StyledAvatar src={imgSrc} ref={img} size={size} blur={blur} circle={circle} onClick={togglePreview} layoutId={layoutId} transparent={transparent} css={{
+		<StyledAvatar src={imgSrc} ref={img} size={size} blur={blur} circle={circle} onClick={preview} layoutId={layoutId} transparent={transparent} css={{
 			margin,
 			...css
 		}}/>
