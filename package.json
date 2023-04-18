@@ -32,7 +32,6 @@
     },
     "dependencies": {
         "@iconify-json/bi": "^1.1.16",
-        "@monaco-editor/react": "^4.5.0",
         "@radix-ui/colors": "^0.1.8",
         "@radix-ui/react-aspect-ratio": "^1.0.2",
         "@react-three/drei": "^9.65.3",
@@ -45,7 +44,6 @@
         "i18next": "^22.4.14",
         "joi": "^17.9.1",
         "js-base64": "^3.7.5",
-        "monaco-editor": "^0.37.1",
         "nbt-ts": "^1.3.5",
         "properties-file": "^2.2.3",
         "react": "^18.0.0",

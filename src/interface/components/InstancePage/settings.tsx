@@ -6,7 +6,6 @@ import { Grid, Image, Select, Slider, Dialog, Button, TabItem, TextInput, Typogr
 import Tabs from '../Tabs';
 import Modal from '../Modal';
 import FileSelect from '../FileSelect';
-import JsonEditor from '../JsonEditor';
 import WarningText from '../WarningText';
 
 import { useBind } from '../../../util/hooks';
@@ -14,7 +13,12 @@ import { i, toast } from '../../../util';
 import { useAppDispatch } from '../../../store';
 import { setCurrentInstance } from '../../../store/slices/interface';
 import { TOTAL_SYSTEM_MEMORY } from '../../../util/constants';
-import { Instance, InstanceState, InstanceExporters } from '../../../../voxura';
+import { Instance, InstanceState, InstanceExporters, ButtonSettingType, ComponentSettingType } from '../../../../voxura';
+
+const BUTTON_TYPE_MAP = {
+	[ButtonSettingType.Primary]: 'accent',
+	[ButtonSettingType.Secondary]: 'secondary'
+} as const;
 export interface InstanceSettingsProps {
 	instance: Instance
 }
@@ -26,7 +30,6 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 	const [tab, setTab] = useState(0);
 	const [name, setName] = useState(instance.displayName);
 	const [saving, setSaving] = useState(false);
-	const [advanced, setAdvanced] = useState(false);
 	const [exporting, setExporting] = useState(false);
 
 	const disabled = instance.state !== InstanceState.None;
@@ -48,9 +51,6 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 		instance.store.memoryAllocation = memory.value[0];
 		instance.store.save();
 	}, [memory.value, resolution.value]);
-
-	if (advanced)
-		return <JsonEditor value={instance.store.data}/>;
 
 	const nameInvalid = name.length <= 0 || name.length > 24;
 	return <>
@@ -141,7 +141,26 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 					</Grid>
 				</Grid>
 			</TabItem>
-			<TabItem name="Advanced" icon={<IconBiGear/>} value={1} spacing={0} padding="0 8px !important" disabled>
+			{instance.store.components.map(({ id, settings }, key) => {
+				if (settings.length > 0) {
+					const tstart = `voxura:component.${id}.settings`;
+					return <TabItem key={id} name={t(tstart)} icon={<IconBiGear/>} value={1 + key} spacing={0}>
+						{settings.map(({ id, items }) => <React.Fragment key={id}>
+							<InputLabel>{t(`${tstart}.${id}`)}</InputLabel>
+							<Grid spacing={8}>
+								{items.map((item, key) => {
+									if (item.type === ComponentSettingType.Button)
+										return <Button key={`${id}.key`} theme={BUTTON_TYPE_MAP[item.buttonType!] ?? 'accent'} onClick={item.onClick}>
+											<IconBiGear/>
+											{t(`${tstart}.${id}.item.${key}`)}
+										</Button>;
+								})}
+							</Grid>
+						</React.Fragment>)}
+					</TabItem>;
+				}
+			}).filter(c => c)}
+			<TabItem name="Advanced" icon={<IconBiGear/>} value={9999} spacing={0} padding="0 8px !important">
 				<InputLabel>
 					{t('instance_page.settings.memory', [memory.value[0].toLocaleString('en', { minimumFractionDigits: 1 })])}
 				</InputLabel>
@@ -151,12 +170,6 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 					step={.5}
 					{...memory}
 				/>
-
-				<Typography size={14} color="$linkColor" margin="32px 0 0" onClick={() => setAdvanced(true)} css={{
-					cursor: 'pointer'
-				}}>
-					Edit Store File
-				</Typography>
 			</TabItem>
 		</Tabs>
 		{disabled && <WarningText text={t('instance_page.settings.disabled')}/>}

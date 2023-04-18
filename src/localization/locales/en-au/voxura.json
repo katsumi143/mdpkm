@@ -18,6 +18,10 @@
     "component.minecraft-java-vanilla.release_category.3.singular": "Old Alpha",
 	"component.minecraft-java-vanilla.content_tab.0": "Resource Packs",
 	"component.minecraft-java-vanilla.settings_tab.0": "Servers",
+	"component.minecraft-java-vanilla.settings": "Minecraft Settings",
+	"component.minecraft-java-vanilla.settings.other-options": "Other Options",
+	"component.minecraft-java-vanilla.settings.other-options.item.0": "Reset Game Settings",
+	"component.minecraft-java-vanilla.settings.other-options.item.1": "View Latest Log",
 
 	"component.minecraft-java-server": "Minecraft: Java Edition Dedicated Server",
     "component.minecraft-java-server.summary": "$t(voxura:component.minecraft-java-vanilla.summary)",

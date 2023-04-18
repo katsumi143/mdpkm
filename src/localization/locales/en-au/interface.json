@@ -266,7 +266,7 @@
 
 	"instance_page.settings": "Settings",
 	"instance_page.settings.name.invalid": "You must enter a name between 1-24 characters.",
-	"instance_page.settings.memory": "Memory Allocation ({{0}} GB)",
+	"instance_page.settings.memory": "Memory Allocation ({{0}} GB of RAM)",
 	"instance_page.settings.resolution": "Game Resolution",
 	"instance_page.settings.other": "Other Options",
 	"instance_page.settings.disabled": "You can only edit the instance when it's idle.",
