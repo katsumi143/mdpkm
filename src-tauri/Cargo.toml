@@ -1,6 +1,6 @@
 [package]
 name = "mdpkm"
-version = "2.0.0-beta.9"
+version = "2.0.0-beta.10"
 description = "Simple all-in-one application for Minecraft"
 
 license = "MIT"

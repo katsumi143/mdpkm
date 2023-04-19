@@ -1571,7 +1571,7 @@ checksum = "490cc448043f947bae3cbee9c203358d62dbee0db12107a74be5c30ccfd09771"
 
 [[package]]
 name = "mdpkm"
-version = "2.0.0-beta.9"
+version = "2.0.0-beta.10"
 dependencies = [
  "fs_extra",
  "futures",
