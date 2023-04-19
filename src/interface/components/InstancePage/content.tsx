@@ -30,7 +30,7 @@ export default function Content({ instance }: ContentProps) {
 		<Tabs
 			value={tab}
 			onChange={setTab}
-			borderRadius={0}
+			cornerRadius={0}
 			css={{
 				height: '100%',
 				border: 'none',

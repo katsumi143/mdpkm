@@ -65,7 +65,7 @@ export default function ModManagement({ instance }: ModManagementProps) {
 				</Button>
 			</Grid>
 		</Grid>
-		<Grid spacing={8} vertical borderRadius={16} css={{ overflow: 'hidden auto' }}>
+		<Grid spacing={8} vertical cornerRadius={16} css={{ overflow: 'hidden auto' }}>
 			{!loading ? items.length ?
 				items.filter(({ id, name }) =>
 					id?.toLowerCase().includes(filter) ||

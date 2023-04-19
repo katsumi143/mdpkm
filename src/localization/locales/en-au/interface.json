@@ -33,6 +33,8 @@
 
 	"common.label.display_name": "Display Name",
     "common.label.instance_name": "Instance Name",
+	"common.label.instance_icon": "Instance Icon",
+	"common.label.instance_banner": "Instance Banner",
     "common.label.minecraft_version": "Minecraft Version",
 
 	"common.label.play_time": "Play time",

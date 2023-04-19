@@ -62,7 +62,7 @@ export default function Home() {
 						<Typography family="$tertiary" noSelect>{t('home.news.title')}</Typography>
 						<ViewAll/>
 					</Grid>
-					<Grid width="100%" spacing={8} smoothing={1} borderRadius={16} css={{ overflow: 'hidden' }}>
+					<Grid width="100%" spacing={8} smoothing={1} cornerRadius={16} css={{ overflow: 'hidden' }}>
 						{news?.map((item, key) => <NewsListItem key={key} item={item}/>)}
 					</Grid>
 				</>}

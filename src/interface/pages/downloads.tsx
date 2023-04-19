@@ -50,7 +50,7 @@ export interface DownloadComponentProps {
 export function DownloadComponent({ download }: DownloadComponentProps) {
 	const { t } = useTranslation('interface');
     const { progress } = download;
-    return <Grid padding={8} spacing={12} smoothing={1} alignItems="center" borderRadius={16} css={{
+    return <Grid padding={8} spacing={12} smoothing={1} alignItems="center" cornerRadius={16} css={{
 		border: 'transparent solid 1px',
         background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box',
 	}}>
@@ -85,8 +85,8 @@ export function DownloadComponent({ download }: DownloadComponentProps) {
                         {isNaN(download.percentage) ? t('download.calculating') : t('download.percentage', [Math.floor(download.percentage)])}
                     </Typography>
                 </Grid>
-                <Grid width="100%" height={6} background="$buttonBackground" borderRadius={3}>
-                    <Grid width={download.percentage + '%'} height="100%" background="$sliderTrackBackground" borderRadius={3} css={{
+                <Grid width="100%" height={6} background="$buttonBackground" cornerRadius={3}>
+                    <Grid width={download.percentage + '%'} height="100%" background="$sliderTrackBackground" cornerRadius={3} css={{
                         transition: 'width .5s'
                     }}/>
                 </Grid>

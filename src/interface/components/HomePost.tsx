@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { open } from '@tauri-apps/api/shell';
 import { motion } from 'framer-motion';
 import { styled } from '@stitches/react';
+import { squircle } from 'corner-smoothing';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import { Grid, Markdown } from 'voxeliface';
 import { useTranslation } from 'react-i18next';
@@ -42,15 +43,12 @@ export default function HomePost({ item }: HomePostProps) {
 	</Grid>;
 }
 
-const StyledRoot = styled(motion.div, {
+const StyledRoot = squircle(styled(motion.div, {
 	width: '100%',
 	height: 196,
 	cursor: 'pointer',
 	overflow: 'hidden',
 	transition: 'filter .25s',
-	'--squircle-smooth': 1,
-	'--squircle-radius': 16,
-	'-webkit-mask-image': 'paint(squircle)',
 
 	variants: {
 		expanded: {
@@ -76,7 +74,7 @@ const StyledRoot = styled(motion.div, {
 			}
 		}
 	}
-});
+}), { cornerRadius: 16, cornerSmoothing: 1 });
 const StyledImage = styled(motion.div, {
 	width: '100%',
 	height: 196,

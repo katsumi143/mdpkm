@@ -4,13 +4,14 @@ import { Grid, Switch, Button, TextInput, Typography, TextHeader, InputLabel } f
 
 import ImageWrapper from '../components/ImageWrapper';
 
+import InstanceCreators from '../../mdpkm/instance-creator';
 import { useTimeString } from '../../util';
 import { set, saveSettings } from '../../store/slices/settings';
+import mdpkm, { COMPONENT_EXTRAS } from '../../mdpkm';
 import voxura, { useMinecraftAccount } from '../../voxura';
 import { PLUGINS_DIR, LOADED_PLUGINS } from '../../plugins';
 import { InstanceType, COMPONENT_MAP } from '../../../voxura';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import mdpkm, { COMPONENT_EXTRAS, INSTANCE_CREATORS } from '../../mdpkm';
 import { APP_DIR, APP_NAME, APP_VERSION, TAURI_VERSION } from '../../util/constants';
 import { getDefaultInstanceIcon, getDefaultInstanceBanner } from '../../util';
 export default function Developer() {
@@ -116,7 +117,7 @@ export default function Developer() {
 				News Sources: {mdpkm.newsSources.map(n => n.id).join(', ')}
 			</Typography>
 			<Typography size={14} weight={400} family="$secondary">
-				Instance Creators: {INSTANCE_CREATORS.map(c => c.id).join(', ')}
+				Instance Creators: {InstanceCreators.map(c => c.id).join(', ')}
 			</Typography>
 		</Grid>
 
@@ -177,11 +178,11 @@ export default function Developer() {
 			</Typography>)}
 		</Grid>
 
-		<InputLabel spaciouser>INSTANCE_CREATORS ({INSTANCE_CREATORS.length})</InputLabel>
+		<InputLabel spaciouser>Instance Creators ({InstanceCreators.length})</InputLabel>
 		<Grid spacing={16} vertical>
-			{INSTANCE_CREATORS.map(({ id, category }) => <Typography size={14} weight={400} family="$secondary">
+			{InstanceCreators.map(({ id, categoryId }) => <Typography size={14} weight={400} family="$secondary">
 				[{id}]<br/>
-				category: {category}<br/>
+				category: {categoryId}<br/>
 				translation: {t('voxura:component.' + id)}
 			</Typography>)}
 		</Grid>

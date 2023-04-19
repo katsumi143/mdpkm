@@ -27,13 +27,20 @@ export const IMAGES = {
 
 	'component.quilt': 'img/icon/component/minecraft-quilt.svg',
 	'component.fabric': 'img/icon/component/minecraft-fabric.svg',
-	'component.modrinth': 'img/icon/platform/modrinth.svg',
 	'component.java-agent': 'img/icon/component/java-agent.svg',
 	'component.java-temurin': 'img/icon/component/java-temurin.png',
 	'component.minecraft-java-server': 'img/icon/minecraft/java.png',
     'component.minecraft-java-vanilla': 'img/icon/minecraft/java.png',
     'component.minecraft-bedrock-vanilla': 'img/icon/minecraft/bedrock.png',
 	'component.minecraft-java-server-paper': 'img/icon/component/minecraft-paper.svg',
+
+	'instance_creator.modrinth': 'img/icon/platform/modrinth.svg',
+	'instance_creator.minecraft-quilt': '$(component.quilt)',
+	'instance_creator.minecraft-fabric': '$(component.fabric)',
+	'instance_creator.minecraft-java-server': '$(component.minecraft-java-server)',
+    'instance_creator.minecraft-java-client': '$(component.minecraft-java-vanilla)',
+    'instance_creator.minecraft-bedrock-client': '$(component.minecraft-bedrock-vanilla)',
+	'instance_creator.minecraft-java-server-paper': '$(component.minecraft-java-server-paper)',
 
 	'platform.modrinth': 'img/icon/platform/modrinth.svg',
 	'platform.curseforge': 'img/icon/platform/curseforge.svg',

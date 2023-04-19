@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Tabs, TabsProps } from 'voxeliface';
 export default function StyledTabs(props: TabsProps) {
 	return <Tabs {...props} css={{
@@ -6,14 +6,14 @@ export default function StyledTabs(props: TabsProps) {
 		border: 'none',
 		'& > *:first-child': {
 			gap: 0,
+			height: 36,
 			border: 'none',
 			padding: 0,
 			overflow: 'hidden',
-			'--squircle-smooth': 1,
-			'--squircle-radius': 16,
-			'-webkit-mask-image': 'paint(squircle)',
+			minHeight: 36,
+			borderRadius: 12,
 			'& > button': {
-				padding: '12px 16px',
+				padding: '0 16px',
 				boxShadow: 'none',
 				borderRadius: 0
 			},

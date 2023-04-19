@@ -8,16 +8,16 @@ import PlatformSearch from '../components/platform/search';
 
 import { setPage } from '../../store/slices/interface';
 import { useInstance } from '../../voxura';
+import { getInstanceIcon } from '../../util';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { ProjectType, ComponentType, InstanceState } from '../../../voxura';
 export default function SearchPage() {
 	const { t } = useTranslation('interface');
 	const dispatch = useAppDispatch();
-	const instance = useInstance(useAppSelector(state => state.interface.currentInstance));
+	const instance = useInstance(useAppSelector(state => state.interface.currentInstance))!;
 	const projectType = useAppSelector(state => state.interface.searchType);
+	const [instanceIcon] = getInstanceIcon(instance);
 
-	if (!instance)
-		return null;
 	const changePage = (page: string) => dispatch(setPage(page));
 	return <Grid width="100%" height="inherit" padding=".75rem 1rem" vertical>
 		<Grid justifyContent="space-between">
@@ -34,7 +34,7 @@ export default function SearchPage() {
 				<WarningText text={t('mod_management.warning')} margin={0}/>
 			}
 			<Grid margin="0 16px" spacing={12} alignItems="center">
-				<Avatar src={instance.webIcon} size="sm"/>
+				<Avatar src={instanceIcon} size="sm"/>
 				<Grid spacing={2} vertical>
 					<Typography noSelect lineheight={1}>
 						{instance.displayName}

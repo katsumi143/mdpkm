@@ -34,7 +34,7 @@ export default function Modal({ width, height, children }: ModalProps) {
             position: 'absolute',
             animation: `${openAnimation2} .5s`
         }}>
-            <Grid width={width} height={height} padding={16} vertical smoothing={1} background="$secondaryBackground2" borderRadius={16} css={{
+            <Grid width={width} height={height} padding={16} vertical smoothing={1} background="$secondaryBackground2" cornerRadius={16} css={{
                 position: 'relative',
                 animation: `${openAnimation} .5s cubic-bezier(0, 0, 0, 1.0)`
             }}>

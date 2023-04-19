@@ -1,17 +1,25 @@
 import { styled } from '@stitches/react';
+import { squircle } from 'corner-smoothing';
+import { copyFile } from '@tauri-apps/api/fs';
 import { useTranslation } from 'react-i18next';
-import React, { useState } from 'react';
+import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link, Grid, Button, Typography } from 'voxeliface';
+import React, { useMemo, useState } from 'react';
+import { Link, Grid, Button, TextInput, Typography, InputLabel } from 'voxeliface';
 
 import Avatar from '../components/Avatar';
+import FileSelect from '../components/FileSelect';
+import WarningText from '../components/WarningText';
+import VersionPicker from '../components/VersionPicker';
 
 import voxura from '../../voxura';
-import { getImage } from '../../util';
-import InstanceCreator from '../../mdpkm/instance-creator';
+import { InstanceType } from '../../../voxura';
+import InstanceCreators from '../../mdpkm/instance-creator';
 import { useAppDispatch } from '../../store/hooks';
-import { INSTANCE_CREATORS } from '../../mdpkm';
+import type { InstanceCreator } from '../../types';
+import { InstanceCreatorOptionType } from '../../enums';
 import { setPage, setCurrentInstance } from '../../store/slices/interface';
+import { getImage, IMAGE_EXISTS, getDefaultInstanceIcon } from '../../util';
 export default function Create() {
     const { t } = useTranslation('interface');
     const dispatch = useAppDispatch();
@@ -26,13 +34,9 @@ export default function Create() {
             {t('common.action.return_to_instances')}
         </Link>
 		<Grid height="100%" margin="16px 0 0" vertical spacing={16} css={{ position: 'relative' }}>
-			{Object.entries(INSTANCE_CREATORS.reduce((acc: Record<string, InstanceCreator[]>, val) => {
-				const { category } = val;
-				if (!acc[category])
-					acc[category] = [];
-
-				acc[category].push(val);
-				return acc;
+			{Object.entries(InstanceCreators.reduce((record: Record<string, InstanceCreator[]>, creator) => {
+				(record[creator.categoryId] ??= []).push(creator);
+				return record;
 			}, {})).map(([category, creators]) =>
 				<Grid key={category} spacing={4} vertical>
 					<Typography size={14} color="$secondaryColor" weight={400} family="$secondary" noSelect>
@@ -70,13 +74,13 @@ export function Component({ id, selected, setSelected }: ComponentProps) {
     return <React.Fragment>
         <ComponentContainer layoutId={`component-${id}`}>
             <Grid height="fit-content" padding={8} spacing={12}>
-				<Avatar src={getImage(`component.${id}`)} size="sm" layoutId={`component-img-${id}`}/>
+				<Avatar src={getImage(`instance_creator.${id}`)} size="sm" layoutId={`component-img-${id}`}/>
                 <Grid spacing={2} vertical justifyContent="center">
                     <StyledTitle layoutId={`component-title-${id}`}>
-                        {t(`voxura:component.${id}`)}
+                        {t(`mdpkm:instance_creator.${id}`)}
                     </StyledTitle>
 					<StyledSummary layout="position" layoutId={`component-summary-${id}`}>
-                        {t(`voxura:component.${id}.summary`)}
+                        {t(`mdpkm:instance_creator.${id}.summary`)}
                     </StyledSummary>
                 </Grid>
             </Grid>
@@ -97,80 +101,107 @@ export function Component({ id, selected, setSelected }: ComponentProps) {
 }
 
 export interface SetupProps {
-    id: string
-    cancel: () => void
+	id: string
+	cancel: () => void
 }
 export function Setup({ id, cancel }: SetupProps) {
-    const { t } = useTranslation('interface');
-    const creator = INSTANCE_CREATORS.find(c => c.id === id);
-    const dispatch = useAppDispatch();
-    const [data, setData] = useState<any[]>([]);
-    const [creating, setCreating] = useState(false);
-    const [satisfied, setSatisfied] = useState(false);
-    const createInstance = async() => {
-        setCreating(true);
-        const instance = await creator!.create(data);
+	const { t } = useTranslation('interface');
+	const creator = InstanceCreators.find(c => c.id === id)!;
+	const dispatch = useAppDispatch();
+	const [name, setName] = useState('New Instance');
+	const [icon, setIcon] = useState<string | null>(null);
+	const [data, setData] = useState<Record<string, any>>([]);
+	const [creating, setCreating] = useState(false);
+	const createInstance = async () => {
+		setCreating(true);
+		const instance = await voxura.instances.createInstance(name, InstanceType.Client);
+		if (icon)
+			await copyFile(icon, `${instance.path}/mdpkm-icon`)
+				.then(() => IMAGE_EXISTS.set(`${instance.id}-banner`, true));
+		await creator.execute(instance, data);
 
-        cancel();
-        dispatch(setPage('instances'));
-        dispatch(setCurrentInstance(instance.id));
-    };
-    if (!creator)
-        throw new Error();
+		cancel();
+		dispatch(setPage('instances'));
+		dispatch(setCurrentInstance(instance.id));
+	};
 
-	const { ReactComponent } = creator;
-    return <ComponentContainer selected layoutId={`component-${id}`}>
-        <Grid width="100%" height="fit-content" css={{
-            position: 'relative',
-            borderBottom: '1px solid $secondaryBorder2'
-        }}>
-            <Grid padding={8} spacing={12}>
-				<Avatar src={getImage(`component.${id}`)} size="sm" layoutId={`component-img-${id}`}/>
-            	<Grid spacing={2} vertical justifyContent="center">
-                    <StyledTitle layoutId={`component-title-${id}`}>
-                        {t(`voxura:component.${id}`)}
-                    </StyledTitle>
+	const iconSrc = useMemo(() => icon ? convertFileSrc(icon) : getDefaultInstanceIcon(name), [name, icon]);
+	const nameInvalid = name.length <= 0 || name.length > 24;
+	return <ComponentContainer selected layoutId={`component-${id}`}>
+		<Grid width="100%" height="fit-content" css={{
+			position: 'relative',
+			borderBottom: '1px solid $secondaryBorder2'
+		}}>
+			<Grid padding={8} spacing={12}>
+				<Avatar src={getImage(`instance_creator.${id}`)} size="sm" layoutId={`component-img-${id}`}/>
+				<Grid spacing={2} vertical justifyContent="center">
+					<StyledTitle layoutId={`component-title-${id}`}>
+						{t(`mdpkm:instance_creator.${id}`)}
+					</StyledTitle>
 					<StyledSummary layout="position" layoutId={`component-summary-${id}`}>
-                        {t(`voxura:component.${id}.summary`)}
-                    </StyledSummary>
-                </Grid>
-            </Grid>
-            <Grid height="100%" css={{
-                right: 0,
-                position: 'absolute'
-            }}>
-                <Link size={12} layout="position" padding="0 16px" onClick={cancel} disabled={creating} layoutId={`component-link-${id}`}>
-                    <IconBiArrowLeft/>
-                    {t('common.action.back')}
-                </Link>
-            </Grid>
-        </Grid>
-        <Grid height="100%" animate padding={16} css={{
-            overflow: 'hidden',
-            position: 'relative'
-        }}>
-            {<ReactComponent creator={creator} setData={setData} setSatisfied={setSatisfied}/>}
-            <Grid css={{
-                bottom: 16,
-                position: 'absolute'
-            }}>
-                <Button theme="accent" onClick={createInstance} disabled={!satisfied || creating}>
-                    <IconBiPlusLg/>
-                    {t('common.action.create_instance')}
-                </Button>
-            </Grid>
-        </Grid>
-    </ComponentContainer>;
+						{t(`mdpkm:instance_creator.${id}.summary`)}
+					</StyledSummary>
+				</Grid>
+			</Grid>
+			<Grid height="100%" css={{
+				right: 0,
+				position: 'absolute'
+			}}>
+				<Link size={12} layout="position" padding="0 16px" onClick={cancel} disabled={creating} layoutId={`component-link-${id}`}>
+					<IconBiArrowLeft/>
+					{t('common.action.back')}
+				</Link>
+			</Grid>
+		</Grid>
+		<Grid height="100%" animate padding={16} vertical css={{ overflow: 'hidden' }}>
+			<Grid spacing={32}>
+				<Grid vertical>
+					<InputLabel>{t('common.label.instance_name')}</InputLabel>
+					<Grid>
+						<TextInput value={name} onChange={setName}/>
+						{nameInvalid && <WarningText text={t('instance_page.settings.name.invalid')} margin="6px 16px"/>}
+					</Grid>
+				</Grid>
+				<Grid vertical>
+					<InputLabel>{t('common.label.instance_icon')}</InputLabel>
+					<Grid spacing={8}>
+						<Avatar src={iconSrc} size="xs"/>
+						<FileSelect name="Image" path={icon} setPath={setIcon} extensions={['png', 'gif']}/>
+					</Grid>
+				</Grid>
+			</Grid>
+
+			{creator.options.map(option => <React.Fragment key={option.id}>
+				<InputLabel spaciouser>{t(`mdpkm:instance_creator.${creator.id}.option.${option.id}`)}</InputLabel>
+				<CreatorOption value={data[option.id]} option={option} onChange={value => setData(data => ({ ...data, [option.id]: value }))}/>
+			</React.Fragment>)}
+
+			<Grid margin="auto 0 0">
+				<Button theme="accent" onClick={createInstance} disabled={nameInvalid || creating}>
+					<IconBiPlusLg/>
+					{t('common.action.create_instance')}
+				</Button>
+			</Grid>
+		</Grid>
+	</ComponentContainer>;
 }
 
-const ComponentContainer = styled(motion.div, {
+export interface CreationOptionTypes {
+	value: any
+	option: InstanceCreator['options'][0]
+	onChange: (newValue: any) => void
+}
+export function CreatorOption({ value, option, onChange }: CreationOptionTypes) {
+	if (option.type === InstanceCreatorOptionType.VersionPicker)
+		return <VersionPicker value={value} onChange={onChange} componentId={option.targetId}/>;
+	return null;
+}
+
+const ComponentContainer = squircle(styled(motion.div, {
     display: 'flex',
     position: 'relative',
     background: '$secondaryBackground2',
     flexDirection: 'column',
-	'--squircle-smooth': 1,
-	'--squircle-radius': 16,
-	'-webkit-mask-image': 'paint(squircle)',
 
     variants: {
         selected: {
@@ -184,6 +215,9 @@ const ComponentContainer = styled(motion.div, {
             }
         }
     }
+}), {
+	cornerRadius: 16,
+	cornerSmoothing: 1
 });
 
 const StyledTitle = styled(motion.p, {

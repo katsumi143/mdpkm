@@ -1,22 +1,11 @@
-import { JSXElementConstructor } from 'react';
+import MinecraftPaper from './minecraft-paper';
+import MinecraftQuiltCreator from './minecraft-quilt';
+import MinecraftFabricCreator from './minecraft-fabric';
+import MinecraftJavaServerCreator from './minecraft-java-server';
+import MinecraftJavaClientCreator from './minecraft-java-client';
 
-import type { Instance } from '../../../voxura';
-export default abstract class InstanceCreator {
-    public static id: string
-	public static category: string
-
-    public abstract create(data: any[]): Promise<Instance>
-    
-	public get id() {
-        return (<typeof InstanceCreator>this.constructor).id;
-    }
-	public get category() {
-        return (<typeof InstanceCreator>this.constructor).category;
-    }
-
-	public abstract ReactComponent: JSXElementConstructor<{
-		creator: any
-		setData: (value: any[]) => void
-		setSatisfied: (value: boolean) => void
-	}>
-}
+import type { InstanceCreator } from '../../types';
+export default [
+	MinecraftJavaClientCreator, MinecraftQuiltCreator, MinecraftFabricCreator,
+	MinecraftJavaServerCreator, MinecraftPaper
+] as InstanceCreator[];

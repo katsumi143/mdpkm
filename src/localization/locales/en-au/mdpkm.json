@@ -2,6 +2,29 @@
 	"instance_category.default": "Your Instances",
 	"instance_category.favorites": "Your Favourites",
 
+	"instance_creator.minecraft-java-server": "$t(voxura:component.minecraft-java-server)",
+	"instance_creator.minecraft-java-server.summary": "$t(mdpkm:instance_creator.minecraft-java-client.summary)",
+	"instance_creator.minecraft-java-server.option.version": "$t(mdpkm:instance_creator.minecraft-java-client.option.version)",
+
+	"instance_creator.minecraft-java-client": "$t(voxura:component.minecraft-java-vanilla)",
+	"instance_creator.minecraft-java-client.summary": "Simply Vanilla Minecraft, no mods or anything special.",
+	"instance_creator.minecraft-java-client.option.version": "Minecraft Version",
+
+	"instance_creator.minecraft-quilt": "$t(voxura:component.quilt)",
+	"instance_creator.minecraft-quilt.summary": "Quilt is an open-source, community-driven modding toolchain.",
+	"instance_creator.minecraft-quilt.option.mcVersion": "$t(mdpkm:instance_creator.minecraft-java-client.option.version)",
+	"instance_creator.minecraft-quilt.option.version": "Quilt Version",
+
+	"instance_creator.minecraft-fabric": "$t(voxura:component.fabric)",
+	"instance_creator.minecraft-fabric.summary": "Fabric is a lightweight, experimental modding toolchain.",
+	"instance_creator.minecraft-fabric.option.mcVersion": "$t(mdpkm:instance_creator.minecraft-java-client.option.version)",
+	"instance_creator.minecraft-fabric.option.version": "Fabric Version",
+
+	"instance_creator.minecraft-paper": "$t(voxura:component.minecraft-java-server-paper)",
+	"instance_creator.minecraft-paper.summary": "Paper is the next generation of Minecraft servers, offering uncompromising performance.",
+	"instance_creator.minecraft-paper.option.mcVersion": "$t(mdpkm:instance_creator.minecraft-java-client.option.version)",
+	"instance_creator.minecraft-paper.option.version": "Paper Version",
+
 	"instance_creator.category.minecraft": "Minecraft: Java Edition (Client)",
 	"instance_creator.category.minecraft2": "Minecraft: Java Edition (Server)",
 	"instance_creator.category.modpack": "Search for a Modpack",

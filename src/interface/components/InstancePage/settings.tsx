@@ -60,7 +60,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 					{t('common.label.display_name')}
 				</InputLabel>
 				<Grid spacing={8}>
-					<TextInput value={name} onChange={v => setName(v.substring(0, 24))} disabled={saving}/>
+					<TextInput value={name} onChange={setName} disabled={saving}/>
 					{!saving && !nameInvalid && name !== instance.displayName && <Button theme="accent" onClick={saveName}>
 						<IconBiPencilFill/>
 						{t('common.action.save_changes')}
@@ -111,7 +111,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 						<Dialog.Root>
 							<Dialog.Trigger asChild>
 								<Button theme="secondary" disabled={disabled || saving}>
-									<IconBiTrash3Fill fontSize={12}/>
+									<IconBiTrash3Fill fontSize={14}/>
 									{t('common.action.delete')}
 								</Button>
 							</Dialog.Trigger>
@@ -150,7 +150,7 @@ export default function InstanceSettings({ instance }: InstanceSettingsProps) {
 							<Grid spacing={8}>
 								{items.map((item, key) => {
 									if (item.type === ComponentSettingType.Button)
-										return <Button key={`${id}.key`} theme={BUTTON_TYPE_MAP[item.buttonType!] ?? 'accent'} onClick={item.onClick}>
+										return <Button key={`${id}.item.${key}`} theme={BUTTON_TYPE_MAP[item.buttonType!] ?? 'accent'} onClick={item.onClick}>
 											<IconBiGear/>
 											{t(`${tstart}.${id}.item.${key}`)}
 										</Button>;

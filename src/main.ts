@@ -4,8 +4,8 @@ import './interface';
 import './localization';
 import store from './store';
 import voxura from './voxura';
-import { toast } from './util';
 import { loadAllPlugins } from './plugins';
+import { toast, IMAGE_EXISTS } from './util';
 import { setLaunchError, setCurrentInstance, setMcServerEulaDialog } from './store/slices/interface';
 import { LaunchError, InstanceTaskType, MinecraftJavaServer, MinecraftJavaClient, InstanceTaskResponse } from '../voxura';
 
@@ -32,8 +32,14 @@ loadAllPlugins()
 		store.dispatch(setLaunchError([instance.id, error.message, error.extraData]));
 	});
 
-	voxura.startInstances().then(() =>
-		store.dispatch(setCurrentInstance(voxura.instances.store.recent[0] || voxura.instances.getAll()[0]?.id))
-	);
+	voxura.startInstances().then(() => {
+		const instances = voxura.getInstances();
+		store.dispatch(setCurrentInstance(voxura.instances.store.recent[0] || instances[0]?.id));
+		
+		for (const instance of instances) {
+			exists(`${instance.path}/mdpkm-icon`).then(value => IMAGE_EXISTS.set(`${instance.id}-icon`, value));
+			exists(`${instance.path}/mdpkm-banner`).then(value => IMAGE_EXISTS.set(`${instance.id}-banner`, value));
+		}
+	});
 	voxura.auth.refreshProviders();
 });

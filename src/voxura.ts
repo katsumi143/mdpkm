@@ -8,12 +8,6 @@ import { Download } from '../voxura/src/downloader';
 import { toast, getDefaultInstanceIcon } from './util';
 import { Voxura, Account, Instance, AuthProvider, MinecraftAccount, ComponentVersions, VersionedComponent } from '../voxura';
 
-Object.defineProperty(Instance.prototype, 'defaultIcon', {
-	get: function() {
-		return getDefaultInstanceIcon(this.displayName);
-	}
-});
-
 const voxura = new Voxura(APP_DIR);
 
 const hiddenDownloads = ['', 'project', 'component_library'];

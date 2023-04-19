@@ -14,7 +14,7 @@ export function UserAccount({ active, account }: UserAccountProps) {
 	const refresh = () => account.refresh();
 	const select = () => account.setActive();
 	const remove = () => account.remove();
-	return <Grid width="50%" border={`1px solid $secondaryBorder${active ? 2 : ''}`} padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" borderRadius={16} css={{
+	return <Grid width="50%" border={`1px solid $secondaryBorder${active ? 2 : ''}`} padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" cornerRadius={16} css={{
 		position: 'relative'
 	}}>
 		<Avatar src={account.avatarUrl} size="sm" circle/>
@@ -37,9 +37,7 @@ export function UserAccount({ active, account }: UserAccountProps) {
 			</Button>}
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger asChild>
-					<Button theme="secondary">
-						<IconBiThreeDots fontSize={14}/>
-					</Button>
+					<Button theme="secondary"><IconBiThreeDots/></Button>
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Portal>
 					<DropdownMenu.Content sideOffset={8}>

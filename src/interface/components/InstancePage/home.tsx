@@ -19,14 +19,14 @@ export default function InstanceHome({ store, setTab }: InstanceHomeProps) {
 			<Information fill icon={<Image src={getImage('component.' + componentId)} size={32}/>} text={t('voxura:component.' + componentId)} buttons={
 				<Button theme="accent" onClick={() => setTab(2)}>
 					{t('common.action.view')}
-					<IconBiCaretRightFill fontSize={11}/>
+					<IconBiCaretRightFill fontSize={14}/>
 				</Button>
 			}>
 				{t('common.label.version', [gameComponent.version])}
 			</Information>
-			<DateThing icon={<IconBiCalendarPlus/>} title={t('common.label.instance_created')} value={store.dateCreated}/>
-			<DateThing icon={<IconBiCalendarHeart/>} title={t('common.label.last_launched')} value={store.dateLaunched}/>
-			<Information icon={<IconBiStopwatch/>} text={t('common.label.play_time')}>
+			<DateThing icon={<IconBiCalendarPlus fontSize={20}/>} title={t('common.label.instance_created')} value={store.dateCreated}/>
+			<DateThing icon={<IconBiCalendarHeart fontSize={20}/>} title={t('common.label.last_launched')} value={store.dateLaunched}/>
+			<Information icon={<IconBiStopwatch fontSize={20}/>} text={t('common.label.play_time')}>
 				{useTimeString(store.playTime)}
 			</Information>
 		</Grid>
@@ -41,7 +41,7 @@ export interface InformationProps {
 	children?: ReactNode
 };
 function Information({ fill, icon, text, buttons, children }: InformationProps) {
-	return <Grid width="100%" padding="12px 16px" spacing={16} smoothing={1} alignItems="center" background="$secondaryBackground2" borderRadius={16} css={{
+	return <Grid width="100%" padding="12px 20px" spacing={20} smoothing={1} alignItems="center" background="$secondaryBackground2" cornerRadius={16} css={{
 		flexGrow: 1,
 		position: 'relative',
 		flexBasis: fill ? null : 'calc(50% - .5rem)'

@@ -1,80 +1,94 @@
+import { styled } from '@stitches/react';
 import { useTranslation } from 'react-i18next';
 import React, { useMemo, useEffect, useState } from 'react';
-import { Grid, Typography, InputLabel, TypographyProps } from 'voxeliface';
+import { Grid, Image, Button, Typography, InputLabel, DropdownMenu, BasicSpinner, TypographyProps } from 'voxeliface';
 
+import { i } from '../../util';
+import { COMPONENT_MAP } from '../../../voxura';
+import { useComponentVersions } from '../../voxura';
 import type { ComponentVersion, ComponentVersions } from '../../../voxura/src/types';
 export interface VersionPickerProps {
-    id: string
     value: ComponentVersion | null
-    versions: ComponentVersions
     onChange: (value: ComponentVersion) => void
-	defaultId?: string
+	componentId: string
 }
-export default function VersionPicker({ id, value, versions, onChange, defaultId }: VersionPickerProps) {
+export default function VersionPicker({ value, onChange, componentId }: VersionPickerProps) {
     const { t } = useTranslation('interface');
-	const itemNodes = useMemo<HTMLDivElement[]>(() => [], []);
-    const [category, setCategory] = useState(0);
-	useEffect(() => onChange(versions[category][0]), [id]);
-    useEffect(() => {
-        if (!value) {
-			const version = (defaultId ? versions.filter(v => v.some(v => v.id === defaultId))[0]?.find(v => v.id === defaultId) : null) ?? versions[category][0];
-            onChange(version);
-
-			itemNodes[versions[category].indexOf(version)]?.scrollIntoView({ block: 'center', behavior: 'smooth' });
-		}
-    }, [category]);
-	return <Grid width="100%" height="100%" vertical>
-		<InputLabel>
-			{t(`voxura:component.${id}.versions`)}
-		</InputLabel>
-		<Grid width="100%" height="100%" smoothing={1} background="$secondaryBackground" borderRadius={16} css={{ overflow: 'hidden' }}>
-			{versions.length > 1 && <Grid width="40%" spacing={4} padding={8} vertical css={{
-				overflow: 'hidden auto',
-				borderRight: '$secondaryBorder2 1px solid'
-			}}>
-				{versions.map((items, key) =>
-					<Grid key={key} padding="4px 12px" onClick={() => setCategory(key)} smoothing={1} borderRadius={8} justifyContent="space-between" css={{
-						cursor: 'pointer',
-						boxShadow: category === key ? '$buttonShadow' : undefined,
-						background: category === key ? '$buttonBackground' : undefined,
-						'&:hover': {
-							background: '$buttonBackground'
-						}
-					}}>
-						<Typography size={14} noSelect>
-							{t(`voxura:component.${id}.release_category.${key}`)}
-						</Typography>
-						<Typography size={12} color={category === key ? undefined : '$secondaryColor'} family="$secondary" noSelect>
-							{t('common.label.items', { count: items.length })}
-						</Typography>
-					</Grid>
-				)}
-			</Grid>}
-			<Grid width={versions.length > 1 ? '60%' : '100%'} spacing={4} padding={8} vertical css={{
-				overflow: 'hidden auto'
-			}}>
-				{versions[category].map((item, key) =>
-					<Grid key={item.id} ref={node => {
-						if (node)
-							itemNodes[key] = node;
-					}} padding="4px 12px" onClick={() => onChange(item)} smoothing={1} borderRadius={8} justifyContent="space-between" css={{
-						cursor: 'pointer',
-						boxShadow: value === item ? '$buttonShadow' : undefined,
-						background: value === item ? '$buttonBackground' : '$secondaryBackground',
-						'&:hover': {
-							background: '$buttonBackground'
-						}
-					}}>
-						<Typography size={14} noSelect>
-							{t([`voxura:component.${id}.release_category.${category}.singular`, 'common.label.version3'])} {item.id}
-						</Typography>
-						{item.dateCreated && <VersionDate date={item.dateCreated} color={value === item ? undefined : '$secondaryColor'}/>}
-					</Grid>
-				)}
-			</Grid>
-		</Grid>
-	</Grid>;
+	const versions = useComponentVersions(COMPONENT_MAP.find(c => c.id === componentId) as any);
+	useEffect(() => {
+		if (versions && !value)
+			onChange(versions[0][0]);
+	}, [versions]);
+	return <DropdownMenu.Root>
+		<DropdownMenu.Trigger asChild>
+			<StyledTrigger disabled={!versions}>
+				{versions ? <Image src={i(`component.${componentId}`)} size={16}/> : <BasicSpinner size={16}/>}
+				{value ? `${t([`voxura:component.${componentId}.versions.category.${value.category}.singular`, 'common.label.version3'])} ${value.id}` : t('common.label.loading')}
+				<IconBiChevronDown/>
+			</StyledTrigger>
+		</DropdownMenu.Trigger>
+		{versions && <DropdownMenu.Portal>
+			<DropdownMenu.Content side="right" sideOffset={8} style={{ zIndex: 1000 }}>
+				<DropdownMenu.Label>{t(`voxura:component.${componentId}.versions`)}</DropdownMenu.Label>
+				{versions.map((versions, key) => <DropdownMenu.Sub key={`category.${key}`}>
+					<DropdownMenu.SubTrigger>
+						{t(`voxura:component.${componentId}.versions.category.${key}`)}
+						<IconBiCaretRightFill fontSize={14} style={{ margin: '0 0 0 auto' }}/>
+					</DropdownMenu.SubTrigger>
+					<DropdownMenu.Portal>
+						<DropdownMenu.SubContent alignOffset={-33} style={{ zIndex: 1000, overflow: 'auto', maxHeight: 256 }}>
+							<DropdownMenu.Label>{t(`voxura:component.${componentId}.versions.category.${key}`)}</DropdownMenu.Label>
+							{versions.map(version => <DropdownMenu.Item key={version.id} onClick={() => onChange(version)}>
+								{version.id}
+								{value === version && <StyledItemIndicator>
+									<IconBiCheckLg/>
+								</StyledItemIndicator>}
+							</DropdownMenu.Item>)}
+						</DropdownMenu.SubContent>
+					</DropdownMenu.Portal>
+				</DropdownMenu.Sub>)}
+				<DropdownMenu.Arrow/>
+			</DropdownMenu.Content>
+		</DropdownMenu.Portal>}
+	</DropdownMenu.Root>;
 }
+
+const StyledTrigger = styled('button', {
+	all: 'unset',
+	gap: 8,
+	width: 'fit-content',
+	color: '$primaryColor',
+	height: 32,
+	border: '1px solid $secondaryBorder',
+	display: 'inline-flex',
+	padding: '0 16px',
+	minWidth: 196,
+	fontSize: 12,
+	boxSizing: 'border-box',
+	fontWeight: 450,
+	userSelect: 'none',
+	fontFamily: '$primary',
+	alignItems: 'center',
+	background: '$primaryBackground',
+	transition: 'border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, background 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+	borderRadius: 4,
+
+	'& svg': {
+		marginLeft: 'auto'
+	},
+	'&:not(:disabled):hover, &:not(:disabled):focus': {
+		borderColor: '$secondaryBorder2'
+	},
+	'&:disabled': {
+		color: '$secondaryColor',
+		cursor: 'not-allowed'
+	}
+});
+const StyledItemIndicator = styled('div', {
+	right: 8,
+	display: 'inline-flex',
+	position: 'absolute'
+});
 
 export interface VersionDateProps extends TypographyProps {
 	date: Date

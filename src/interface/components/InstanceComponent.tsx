@@ -28,7 +28,7 @@ export default function InstanceComponent({ id, name, icon, version, disabled, i
 		store.components = store.components.filter(c => c !== component);
 		store.save().then(() => instance!.emitEvent('changed'));
 	};
-	return <Grid spacing={12} padding="8px 0 8px 8px" smoothing={1} alignItems="center" borderRadius={16} css={{
+	return <Grid spacing={12} padding="8px 0 8px 8px" smoothing={1} alignItems="center" cornerRadius={16} css={{
 		border: 'transparent solid 1px',
 		background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
 	}}>
@@ -84,7 +84,7 @@ export function ComponentEditor({ onClose, component }: ComponentEditorProps) {
 		<TextHeader noSelect>Component Editor ({t(`voxura:component.${component.id}`)})</TextHeader>
 		<InputLabel>{t('add_component.version')}</InputLabel>
 		<Typography size={14} noSelect>
-			{version ? `${t([`voxura:component.${component.id}.release_category.${version.category}.singular`, 'common.label.version3'])} ${version.id}` : t('common.label.loading')}
+			{version ? `${t([`voxura:component.${component.id}.versions.category.${version.category}.singular`, 'common.label.version3'])} ${version.id}` : t('common.label.loading')}
 		</Typography>
 
 		<Grid height={256} margin="16px 0 0">

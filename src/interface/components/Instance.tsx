@@ -7,11 +7,10 @@ import React, { memo, useRef, useMemo, useEffect, useCallback } from 'react';
 
 import Avatar from './Avatar';
 
-import { toast } from '../../util';
 import { useInstance } from '../../voxura';
 import { useAppDispatch } from '../../store/hooks';
 import { INSTANCE_STATE_ICONS } from '../../util/constants';
-import { getDefaultInstanceBanner } from '../../util';
+import { toast, getInstanceIcon, getInstanceBanner } from '../../util';
 import { setPage, setInstanceTab, setCurrentInstance } from '../../store/slices/interface';
 const Animation = keyframes({
 	'0%': {
@@ -33,11 +32,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 	const { t } = useTranslation('interface');
 	const dispatch = useAppDispatch();
 	const instance = useInstance(id)!;
-	const { state, banner, displayName, bannerFormat } = instance;
-	const bannerImage = useMemo(() => {
-		return banner ? `data:image/${bannerFormat};base64,${Buffer.from(banner).toString('base64')}` : getDefaultInstanceBanner(displayName);
-	}, [name, banner]);
-
+	const { state, displayName } = instance;
 	useEffect(() => {
 		if (selected)
 			ref.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth'});
@@ -54,6 +49,9 @@ export default memo(({ id, selected }: InstanceProps) => {
 		dispatch(setInstanceTab(tab));
 	}, []);
 	const favorite = useCallback(() => instance.setCategory(t('mdpkm:instance_category.favorites')), [instance]);
+	
+	const [icon] = getInstanceIcon(instance);
+	const [banner] = getInstanceBanner(instance);
 	const StateIcon = useMemo(() => INSTANCE_STATE_ICONS[state], [state]);
 	return <ContextMenu.Root>
 		<ContextMenu.Trigger asChild>
@@ -62,7 +60,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 				animation: `${Animation} 500ms cubic-bezier(0.4, 0, 0.2, 1)`,
 				animationFillMode: 'forwards'
 			}}>
-				<Grid width="100%" height="100%" onClick={view} smoothing={1} alignItems="center" borderRadius={16} justifyContent="space-between" css={{
+				<Grid width="100%" height="100%" onClick={view} smoothing={1} alignItems="center" cornerRadius={16} justifyContent="space-between" css={{
 					cursor: selected ? 'unset' : 'pointer',
 					overflow: 'hidden',
 					transition: 'transform .5s',
@@ -75,7 +73,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 						opacity: selected ? 1 : 0.5,
 						position: 'absolute',
 						transition: 'filter 1s, background 1s',
-						background: selected ? '$secondaryBackground2 right' : `url(${bannerImage}) right`,
+						background: selected ? '$secondaryBackground2 right' : `url(${banner}) right`,
 						backgroundSize: '75%'
 					},
 					'&:after': selected ? undefined : {
@@ -101,7 +99,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 						overflow: 'hidden',
 						position: 'relative'
 					}}>
-						<Avatar src={instance.webIcon} size="md"/>
+						<Avatar src={icon} size="md"/>
 						<Grid spacing={4} vertical alignItems="start" css={{ overflow: 'hidden' }}>
 							<Grid spacing={4} alignItems="center">
 								{instance.isFavourite && <IconBiStarFill fontSize={14}/>}

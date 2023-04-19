@@ -106,7 +106,7 @@ export default function MinecraftServers({ instance }: MinecraftServersProps) {
                 </Button>
             </Grid>
         </Grid>
-        <Grid spacing={8} vertical borderRadius={16} css={{ overflow: 'hidden auto' }}>
+        <Grid spacing={8} vertical cornerRadius={16} css={{ overflow: 'hidden auto' }}>
             {Array.isArray(items) && items?.filter(({ ip, name, hidden }) =>
 				!hidden?.value &&
                 (ip?.toLowerCase().includes(filter) ||

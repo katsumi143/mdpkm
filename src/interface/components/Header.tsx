@@ -23,7 +23,7 @@ export default function DefaultHeader(props: HeaderProps) {
 		}}>
 			BETA
 		</Typography>}
-		{account && <Grid spacing={12} onClick={viewAccounts} borderRadius={8} css={{
+		{account && <Grid spacing={12} onClick={viewAccounts} css={{
 			right: 144,
 			cursor: 'pointer',
 			position: 'absolute'

@@ -337,7 +337,7 @@ export interface LibraryItemProps {
 }
 export function LibraryItem({ data, capes, index, loading, useSkin, editSkin }: LibraryItemProps) {
     const { t } = useTranslation('interface');
-    return <Grid padding={8} spacing={4} vertical alignItems="center" background="$primaryBackground" borderRadius="8px" justifyContent="space-between" css={{
+    return <Grid padding={8} spacing={4} vertical alignItems="center" background="$primaryBackground" cornerRadius={8} justifyContent="space-between" css={{
         border: '$secondaryBorder solid 1px'
     }}>
         <Typography noSelect>
@@ -353,10 +353,10 @@ export function LibraryItem({ data, capes, index, loading, useSkin, editSkin }: 
             height={128}
         />}
         <Grid spacing={8}>
-            <Button size="smaller" theme="accent" onClick={() => useSkin(index)} disabled={loading}>
+            <Button size="sm" theme="accent" onClick={() => useSkin(index)} disabled={loading}>
                 {t('common.action.use')}
             </Button>
-            <Button size="smaller" theme="secondary" onClick={() => editSkin(index)} disabled={loading}>
+            <Button size="sm" theme="secondary" onClick={() => editSkin(index)} disabled={loading}>
                 <IconBiPencilFill/>
                 {t('common.action.edit')}
             </Button>

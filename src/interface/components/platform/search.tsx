@@ -119,7 +119,7 @@ export default function PlatformSearch({ instance }: PlatformSearchProps) {
 				</Select.Minimal>
 			</Grid>
 		</Grid>
-		<Grid ref={container} height="100%" spacing={8} vertical borderRadius={16} css={{ overflow: 'hidden auto' }}>
+		<Grid ref={container} height="100%" spacing={8} vertical cornerRadius={16} css={{ overflow: 'hidden auto' }}>
 			{items.map(item => <ListItem key={item.id} data={item} instance={instance} setPickVersion={setPickVersion}/>)}
 			{items.length === 0 && <Grid vertical>
 				<Typography color="$secondaryColor" weight={400} family="$secondary" lineheight={1}>

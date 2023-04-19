@@ -47,11 +47,12 @@ export default function ImagePreview({ src, ratio = 1, width = 256, onClose, pix
             zIndex: 100000,
             cursor: 'default',
             position: 'absolute',
-            animation: `${openAnimation2} 1s`
+            animation: `${openAnimation2} 1s`,
+			willChange: 'background'
         }}>
 			<Grid width={width}>
 				<AspectRatio.Root ratio={ratio}>
-					<Image src={src} width="100%" height="100%" smoothing={1} borderRadius={16} css={{
+					<Image src={src} width="100%" height="100%" smoothing={1} cornerRadius={16} css={{
 						animation: `${openAnimation} .5s cubic-bezier(0, 0, 0, 1.0)`,
 						imageRendering: pixelated && 'pixelated'
 					}}/>

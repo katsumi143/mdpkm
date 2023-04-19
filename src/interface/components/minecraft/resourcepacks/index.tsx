@@ -105,7 +105,7 @@ export default function ResourePacks({ instance }: ResourcePackManagementProps) 
 				</Button>
 			</Grid>
         </Grid>
-		<Grid spacing={8} vertical borderRadius={16} css={{ overflow: 'hidden auto' }}>
+		<Grid spacing={8} vertical cornerRadius={16} css={{ overflow: 'hidden auto' }}>
 			{Array.isArray(items) ? items.length ?
 				items?.filter(({ name }) =>
 					name.toLowerCase().includes(filter)

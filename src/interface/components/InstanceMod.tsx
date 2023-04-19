@@ -26,7 +26,7 @@ export default function InstanceMod({ mod, disabled, instance }: InstanceModProp
 	const openWebsite = () => open(mod.source?.baseProjectURL + mod.id);
     return <ContextMenu.Root>
 		<ContextMenu.Trigger asChild>
-			<Grid spacing={8} vertical smoothing={1} borderRadius={16} css={{
+			<Grid spacing={8} vertical smoothing={1} cornerRadius={16} css={{
 				border: 'transparent solid 1px',
 				position: 'relative',
 				background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'
@@ -75,7 +75,7 @@ export default function InstanceMod({ mod, disabled, instance }: InstanceModProp
 											color: '$primaryColor'
 										}
 									}}>
-										<IconBiCloudFill/>
+										<IconBiCloudFill fontSize={14}/>
 										{t(`voxura:platform.${mod.source.id}`)}
 									</Typography>
 								</Tooltip.Trigger>
@@ -87,7 +87,7 @@ export default function InstanceMod({ mod, disabled, instance }: InstanceModProp
 								</Tooltip.Portal>
 							</Tooltip.Root>}
 							<Typography size={12} color="$secondaryColor" spacing={6} noSelect>
-								<IconBiBoxFill fontSize={10}/>
+								<IconBiBoxFill fontSize={12}/>
 								{t(`voxura:component.${mod.dependencies[0]?.id[0]}`)}
 							</Typography>
 						</Grid>}
@@ -96,7 +96,7 @@ export default function InstanceMod({ mod, disabled, instance }: InstanceModProp
 							{t('project.update')}
 						</Link>}
 						<Link size={12} padding="0 16px" onClick={removeMod} disabled={disabled}>
-							<IconBiTrash3Fill/>
+							<IconBiTrash3Fill fontSize={14}/>
 							<Breakpoint customQuery="(min-width: 580px)">
 								{t('common.action.delete')}
 							</Breakpoint>

@@ -58,7 +58,7 @@ export default function PluginManagement({ instance }: PluginManagementProps) {
 				</Button>
 			</Grid>
 		</Grid>
-		<Grid vertical spacing={8} smoothing={1} borderRadius={16} css={{ overflow: 'auto' }}>
+		<Grid vertical spacing={8} smoothing={1} cornerRadius={16} css={{ overflow: 'auto' }}>
 			{!loading ? items.length ?
 				items.filter(({ id, name }) =>
 					id?.toLowerCase().includes(filter) ||

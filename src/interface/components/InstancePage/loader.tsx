@@ -123,7 +123,7 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 		{versions?.length !== 0 && <React.Fragment>
 			<InputLabel spacious>{t('add_component.version')}</InputLabel>
 			<Typography size={14} noSelect>
-				{version ? `${t([`voxura:component.${components[component!]?.id}.release_category.${version.category}.singular`, 'common.label.version3'])} ${version.id}` : t('common.input_placeholder.required')}
+				{version ? `${t([`voxura:component.${components[component!]?.id}.versions.category.${version.category}.singular`, 'common.label.version3'])} ${version.id}` : t('common.input_placeholder.required')}
 			</Typography>
 
 			<Grid height={256} margin="16px 0 0">

@@ -19,7 +19,7 @@ export interface ServerItemProps {
 export default function ServerItem({ name, icon, motd, type, players, address, instance, acceptTextures }: ServerItemProps) {
     const { t } = useTranslation('interface');
     const serverIcon = icon ? icon.startsWith('data:') ? icon : `data:image/png;base64,${icon}` : i('unknown_server');
-    return <Grid height="fit-content" spacing={12} smoothing={1} borderRadius={16} css={{
+    return <Grid height="fit-content" spacing={12} smoothing={1} cornerRadius={16} css={{
 		border: 'transparent solid 1px',
 		minWidth: '24rem',
 		position: 'relative',

@@ -3,6 +3,7 @@ import { decode } from 'nbt-ts';
 import { Buffer } from 'buffer';
 import { invoke } from '@tauri-apps/api';
 import { useTranslation } from 'react-i18next';
+import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { fetch, ResponseType } from '@tauri-apps/api/http';
 import { exists, readBinaryFile } from '@tauri-apps/api/fs';
 import React, { useState, useEffect } from 'react';
@@ -16,12 +17,24 @@ export function toast(id: string, data: any[] = [], icon?: any, duration?: numbe
     });
 }
 
-export function getImage(name?: string) {
+export function getImage(name?: string): string {
     if (!name)
         return IMAGES.placeholder;
-    return IMAGES[name as keyof typeof IMAGES] ?? IMAGES.placeholder;
+    return (IMAGES[name as keyof typeof IMAGES] ?? IMAGES.placeholder).replace(/\$\((.*?)\)/g, (_,name) => getImage(name));
 }
 export const i = getImage;
+
+export const IMAGE_EXISTS = new Map<string, boolean>();
+export function getInstanceIcon(instance: Instance) {
+	return getInstanceImage(instance, 'icon', getDefaultInstanceIcon);
+}
+export function getInstanceBanner(instance: Instance) {
+	return getInstanceImage(instance, 'banner', getDefaultInstanceBanner);
+}
+export function getInstanceImage(instance: Instance, name: string, getDefault: (name: string) => string): [string, boolean] {
+	const exists = IMAGE_EXISTS.get(`${instance.id}-${name}`) ?? false;
+	return [exists ? convertFileSrc(`${instance.path}/mdpkm-${name}`) : getDefault(instance.name), exists];
+}
 
 const DEFAULT_ICON_PATH = 'img/icon/instance/default#.svg';
 export function getDefaultInstanceIcon(name?: string) {

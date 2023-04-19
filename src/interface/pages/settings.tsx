@@ -168,7 +168,7 @@ export default function Settings() {
 
 		<TextHeader spacious noSelect>{t('settings.plugins')}</TextHeader>
 		{Object.values(LOADED_PLUGINS).map(plugin =>
-			<Grid key={plugin.id} margin="0 0 8px" padding={8} spacing={12} smoothing={1} alignItems="center" borderRadius={16} css={{
+			<Grid key={plugin.id} margin="0 0 8px" padding={8} spacing={12} smoothing={1} alignItems="center" cornerRadius={16} css={{
 				border: 'transparent solid 1px',
 				position: 'relative',
 				background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'

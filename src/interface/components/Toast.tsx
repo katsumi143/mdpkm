@@ -39,7 +39,7 @@ export interface ToastProps {
 }
 export default function Toast({ t, id, data, icon: Icon = IconBiInfoCircle }: ToastProps) {
 	const key = `interface:toast.${id}`;
-    return <StyledToast visible={t.visible} smoothing={1} borderRadius={16}>
+    return <StyledToast visible={t.visible} smoothing={1} cornerRadius={16}>
         <Typography noSelect>
             <Icon/>
         </Typography>

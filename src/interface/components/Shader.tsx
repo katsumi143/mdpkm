@@ -17,7 +17,7 @@ export default function Shader({ item }: ShaderProps) {
     const { t } = useTranslation('interface');
 	const icon = useMemo(() => item.icon ? Buffer.from(item.icon).toString('base64') : null, [item.icon]);
     const packIcon = icon ? `data:image/png;base64,${icon}` : 'img/icon/minecraft/unknown_pack.png';
-    return <Grid padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" borderRadius={16} css={{
+    return <Grid padding={8} spacing={12} alignItems="center" background="$secondaryBackground2" cornerRadius={16} css={{
         border: 'transparent solid 1px',
         position: 'relative',
         background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box'

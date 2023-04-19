@@ -54,7 +54,7 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
     }, [data]);
 
 	if (loading || !project)
-		return <Grid padding={8} background="$secondaryBackground2" smoothing={1} borderRadius={16} css={{
+		return <Grid padding={8} background="$secondaryBackground2" smoothing={1} cornerRadius={16} css={{
 			border: 'transparent solid 1px',
 			position: 'relative',
 			background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box',
@@ -77,7 +77,7 @@ export default function ProjectComponent({ id, data, featured, platform, instanc
 
     return <ContextMenu.Root>
 		<ContextMenu.Trigger asChild>
-			<Grid padding={8} background="$secondaryBackground2" smoothing={1} borderRadius={16} css={{
+			<Grid padding={8} background="$secondaryBackground2" smoothing={1} cornerRadius={16} css={{
 				border: 'transparent solid 1px',
 				position: 'relative',
 				background: 'linear-gradient($secondaryBackground2, $secondaryBackground2) padding-box, $gradientBackground2 border-box',

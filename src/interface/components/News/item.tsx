@@ -10,7 +10,7 @@ export interface NewsItemProps {
 export default function NewsItemComponent({ item }: NewsItemProps) {
 	const { t } = useTranslation('interface');
 	const view = () => open(item.url);
-    return <Grid height={128} onClick={view} vertical smoothing={1} borderRadius={12} justifyContent="space-between" css={{
+    return <Grid height={128} onClick={view} vertical smoothing={1} cornerRadius={12} justifyContent="space-between" css={{
 		cursor: 'pointer',
 		minWidth: 192,
 		position: 'relative',

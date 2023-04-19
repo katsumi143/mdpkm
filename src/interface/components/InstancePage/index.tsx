@@ -1,5 +1,4 @@
 import { open } from '@tauri-apps/api/shell';
-import { Buffer } from 'buffer';
 import * as dialog from '@tauri-apps/api/dialog';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +19,7 @@ import { useAppSelector } from '../../../store/hooks';
 import { setInstanceTab } from '../../../store/slices/interface';
 import { COMPONENT_EXTRAS } from '../../../mdpkm';
 import { INSTANCE_STATE_ICONS } from '../../../util/constants';
-import { getDefaultInstanceBanner } from '../../../util';
+import { IMAGE_EXISTS, getInstanceIcon, getInstanceBanner } from '../../../util';
 export interface InstancePageProps {
 	id: string
 }
@@ -29,11 +28,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 	const { t } = useTranslation('interface');
 	const dispatch = useDispatch();
 	const instance = useInstance(id)!;
-	const { path, state, banner, processes, isLaunching, displayName, bannerFormat } = instance;
-	const bannerImage = useMemo(() => {
-		return banner ? `data:image/${bannerFormat};base64,${Buffer.from(banner).toString('base64')}` : getDefaultInstanceBanner(displayName);
-	}, [displayName, banner]);
-
+	const { path, state, processes, isLaunching, displayName } = instance;
 	const launch = useCallback(() => instance.launch(), [instance]);
 	const setTab = useCallback((tab: number) => dispatch(setInstanceTab(tab)), []);
 	const StateIcon = useMemo(() => INSTANCE_STATE_ICONS[state], [state]);
@@ -48,20 +43,24 @@ export default function InstancePage({ id }: InstancePageProps) {
 		}).then(path => {
 			if (typeof path !== 'string')
 				return;
-			copyFile(path, `${instance.path}/${name}.${path.split('.').reverse()[0]}`).then(() =>
-				instance[name === 'icon' ? 'readIcon' : 'readBanner']().then(() => instance.emitEvent('changed'))
-			);
+			copyFile(path, `${instance.path}/mdpkm-${name}`).then(() => {
+				IMAGE_EXISTS.set(`${instance.id}-${name}`, true);
+				instance.emitEvent('changed');
+			});
 		});
 	}, [instance]);
 	const removeImage = useCallback((name: string, event: MouseEvent) => {
 		event.stopPropagation();
-		removeFile(`${path}/${name}.png`).then(() => {
-			(instance as any)[name] = null;
+		removeFile(`${path}/mdpkm-${name}`).then(() => {
+			IMAGE_EXISTS.set(`${instance.id}-${name}`, false);
 			instance.emitEvent('changed');
 		});
 	}, [instance]);
+
+	const icon = getInstanceIcon(instance);
+	const banner = getInstanceBanner(instance);
 	return <Grid height="100%" vertical background="$primaryBackground" css={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
-		<Image src={bannerImage} width="100%" height={144} css={{
+		<Image src={banner[0]} width="100%" height={144} css={{
 			opacity: 0.5,
 			position: 'absolute',
 			transition: 'background .5s',
@@ -75,16 +74,16 @@ export default function InstancePage({ id }: InstancePageProps) {
 			minHeight: 144
 		}}>
 			<Grid padding={16} spacing={24}>
-				<Grid borderRadius={8} css={{
+				<Grid cornerRadius={8} css={{
 					boxShadow: '0 8px 16px 2px #00000040'
 				}}>
-					<ImageWrapper src={instance.webIcon} size={80} smoothing={1} canPreview background="$secondaryBackground2" borderRadius={8} css={{
+					<ImageWrapper src={icon[0]} size={80} smoothing={1} canPreview background="$secondaryBackground2" cornerRadius={8} css={{
 						alignItems: 'end',
 						justifyContent: 'end',
 						backgroundSize: 'cover',
 						'&:hover': { '& > div': { opacity: 1 } }
 					}}>
-						<ImageOptions img={instance.icon} onEdit={e => changeImage('icon', e)} onRemove={e => removeImage('icon', e)}/>
+						<ImageOptions exists={icon[1]} onEdit={e => changeImage('icon', e)} onRemove={e => removeImage('icon', e)}/>
 					</ImageWrapper>
 				</Grid>
 				<Grid spacing={4} vertical justifyContent="center">
@@ -103,7 +102,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 					position: 'absolute',
 					'&:hover': { '& > div': { opacity: 1 } }
 				}}>
-					<ImageOptions img={banner} onEdit={e => changeImage('banner', e)} onRemove={e => removeImage('banner', e)}/>
+					<ImageOptions exists={banner[1]} onEdit={e => changeImage('banner', e)} onRemove={e => removeImage('banner', e)}/>
 				</Grid>
 			</Grid>
 			<Grid>
@@ -125,7 +124,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 								<IconBiPlayFill/>
 								{t('common.action.launch')}
 							</DropdownMenu.Item>
-							<DropdownMenu.Seperator/>
+							<DropdownMenu.Separator/>
 							
 							<DropdownMenu.Label>{t('common.label.processes')}</DropdownMenu.Label>
 							{processes.map((child, key) =>
@@ -185,7 +184,7 @@ export interface InstanceInfoProps {
 	children: ReactNode
 }
 export function InstanceInfo({ css, animate, children }: InstanceInfoProps) {
-	return <Grid margin="0 1rem 1rem" spacing={16} padding="16px 24px" alignItems="center" background="$secondaryBackground2" borderRadius="1rem" css={{
+	return <Grid margin="0 1rem 1rem" spacing={16} padding="16px 24px" alignItems="center" background="$secondaryBackground2" cornerRadius={16} css={{
 		position: 'relative',
 		animation: animate ? `${InstanceInfoAnimation} .5s cubic-bezier(0.4, 0, 0.2, 1)` : null,
 		...css
@@ -195,16 +194,16 @@ export function InstanceInfo({ css, animate, children }: InstanceInfoProps) {
 }
 
 export interface ImageOptionsProps {
-	img?: Uint8Array | void
+	exists: boolean
 	onEdit: GridProps["onClick"]
 	onRemove: GridProps["onClick"]
 }
-export function ImageOptions({ img, onEdit, onRemove }: ImageOptionsProps) {
+export function ImageOptions({ exists, onEdit, onRemove }: ImageOptionsProps) {
 	return <Grid height="fit-content" css={{
 		opacity: 0,
 		transition: 'opacity .5s'
 	}}>
-		{(!!img && onRemove) && <ImageOption icon={<IconBiXLg fontSize={10}/>} onClick={onRemove}/>}
+		{(exists && onRemove) && <ImageOption icon={<IconBiXLg fontSize={10}/>} onClick={onRemove}/>}
 		{onEdit && <ImageOption icon={<IconBiPencilFill fontSize={10}/>} onClick={onEdit}/>}
 	</Grid>;
 }
@@ -214,7 +213,7 @@ export interface ImageOptionProps {
 	onClick: GridProps["onClick"]
 }
 export function ImageOption({ icon, onClick }: ImageOptionProps) {
-	return <Grid margin={4} padding={4} onClick={onClick} background="#00000080" borderRadius="50%" css={{
+	return <Grid margin={4} padding={4} onClick={onClick} background="#00000080" cornerRadius={9999} css={{
 		cursor: 'pointer'
 	}}>
 		<Typography color="#fff">{icon}</Typography>
