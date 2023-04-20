@@ -2,15 +2,14 @@ import { open } from '@tauri-apps/api/dialog';
 import { readJsonFile } from 'voxelified-commons/tauri';
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
-import { Link, Grid, Select, Button, Typography, TextHeader, InputLabel, BasicSpinner } from 'voxeliface';
+import { Link, Grid, Image, Select, Button, Typography, TextHeader, InputLabel, BasicSpinner } from 'voxeliface';
 
 import Modal from '../Modal';
 import WarningText from '../WarningText';
 import VersionPicker from '../VersionPicker';
 import InstanceComponent from '../InstanceComponent';
 
-import { toast } from '../../../util';
-import { useComponentVersions } from '../../../voxura';
+import { i, toast } from '../../../util';
 import { Instance, InstanceState, COMPONENT_MAP, ComponentType, ComponentVersion, VersionedComponent } from '../../../../voxura';
 export interface InstanceLoaderProps {
 	instance: Instance
@@ -41,7 +40,13 @@ export default function InstanceLoader({ instance }: InstanceLoaderProps) {
 		</Typography>}
 		<Grid spacing={8} vertical>
 			{otherComponents.map(component =>
-				<InstanceComponent id={component.id} key={component.id} disabled={disabled} instance={instance} component={component}/>
+				<InstanceComponent
+					id={component.id}
+					key={component.id}
+					disabled={disabled}
+					instance={instance}
+					component={component}
+				/>
 			)}
 		</Grid>
 		<Grid margin="0 0 16px">
@@ -62,7 +67,7 @@ export interface ComponentAdderProps {
 export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 	const { t } = useTranslation('interface');
 	const [saving, setSaving] = useState(false);
-	const [version, setVersion] = useState<ComponentVersion | null>(null);
+	const [version, setVersion] = useState<ComponentVersion | undefined>();
 	const [component, setComponent] = useState<number | null>(null);
 	const [importError, setImportError] = useState<string | null>(null);
 	const components = COMPONENT_MAP.filter(c => c.instanceTypes.includes(instance.type) && c.type !== ComponentType.Game && !instance.store.components.some(s => s.id === c.id));
@@ -71,7 +76,6 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 		return null;
 	}
 
-	const versions = useComponentVersions(components[component!] as typeof VersionedComponent);
 	const importFile = async() => {
 		const path = await open({ filters: [{ name: 'JSON File', extensions: ['json'] }]});
 		if (typeof path !== 'string')
@@ -94,9 +98,6 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 	};
 	const saveChanges = () => {
 		setSaving(true);
-		if (!versions)
-			throw new Error();
-
 		instance.store.components.push(new (components[component!] as any)(instance, {
 			version: version?.id
 		}));
@@ -109,10 +110,11 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 	return <Modal width="60%">
 		<TextHeader noSelect>{t('add_component')}</TextHeader>
 		<InputLabel>{t('common.label.component')}</InputLabel>
-		<Select.Minimal value={component} onChange={setComponent} loading={!versions && component !== null} disabled={(!versions || saving) && component !== null}>
+		<Select.Minimal value={component} onChange={setComponent} disabled={saving && component !== null}>
 			<Select.Group name={t('add_component.component.group')}>
-				{components.map((component, key) => <Select.Item key={component.id} value={key}>
-					{t(`voxura:component.${component.id}`)}
+				{components.map(({ id }, key) => <Select.Item key={id} value={key}>
+					<Image src={i(`component.${id}`)} size={16}/>
+					{t(`voxura:component.${id}`)}
 				</Select.Item>)}
 			</Select.Group>
 			<Select.Item value={null} disabled>
@@ -120,23 +122,17 @@ export function ComponentAdder({ onClose, instance }: ComponentAdderProps) {
 			</Select.Item>
 		</Select.Minimal>
 
-		{versions?.length !== 0 && <React.Fragment>
+		{(components[component!] as any)?.getVersions && <React.Fragment>
 			<InputLabel spacious>{t('add_component.version')}</InputLabel>
-			<Typography size={14} noSelect>
-				{version ? `${t([`voxura:component.${components[component!]?.id}.versions.category.${version.category}.singular`, 'common.label.version3'])} ${version.id}` : t('common.input_placeholder.required')}
-			</Typography>
-
-			<Grid height={256} margin="16px 0 0">
-				{versions && <VersionPicker id={components[component!]?.id} value={version} versions={versions} onChange={setVersion} />}
-			</Grid>
+			<VersionPicker value={version} onChange={setVersion} componentId={components[component!]?.id}/>
 		</React.Fragment>}
 
 		<Grid margin="16px 0 0" spacing={8}>
-			<Button theme="accent" onClick={saveChanges} disabled={!versions || saving}>
+			<Button theme="accent" onClick={saveChanges} disabled={saving}>
 				{saving ? <BasicSpinner size={16} /> : <IconBiPlusLg />}
 				{t('common.action.add_component')}
 			</Button>
-			<Button theme="secondary" onClick={onClose} disabled={(!versions || saving) && component !== null}>
+			<Button theme="secondary" onClick={onClose} disabled={saving && component !== null}>
 				<IconBiXLg/>
 				{t(`common.action.cancel`)}
 			</Button>

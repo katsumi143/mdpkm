@@ -6,8 +6,7 @@ import Modal from './Modal';
 import Avatar from './Avatar';
 import VersionPicker from './VersionPicker';
 
-import { toast, getImage } from '../../util';
-import { useComponentVersions } from '../../voxura';
+import { toast, getImage, prettifySemver } from '../../util';
 import { Instance, Component, GameComponent, ComponentVersion, VersionedComponent } from '../../../voxura';
 export interface ComponentProps {
 	id: string
@@ -17,8 +16,9 @@ export interface ComponentProps {
 	disabled?: boolean
 	instance?: Instance
 	component?: Component
+	versionCategory?: number
 }
-export default function InstanceComponent({ id, name, icon, version, disabled, instance, component }: ComponentProps) {
+export default function InstanceComponent({ id, name, icon, version, disabled, instance, component, versionCategory }: ComponentProps) {
 	const { t } = useTranslation('interface');
 	const [editing, setEditing] = useState(false);
 	const isGame = component instanceof GameComponent;
@@ -43,7 +43,7 @@ export default function InstanceComponent({ id, name, icon, version, disabled, i
 				</Typography>}
 			</Grid>
 			{(version || isVersioned) && <Typography size={12} color="$secondaryColor" weight={400} family="$secondary" noSelect lineheight={1}>
-				{t('common.label.version', [version ?? (component as any)?.version])}
+				{t([`voxura:component.${id}.versions.category.${(component as any)?.versionCategory ?? versionCategory}.singular`, 'common.label.version3'])} {prettifySemver(version ?? (component as any)?.version, t)}
 			</Typography>}
 		</Grid>
 		{instance && <Grid height="100%" css={{ marginLeft: 'auto' }}>
@@ -66,12 +66,12 @@ export interface ComponentEditorProps {
 }
 export function ComponentEditor({ onClose, component }: ComponentEditorProps) {
 	const { t } = useTranslation('interface');
-	const versions = useComponentVersions(component);
 	const [saving, setSaving] = useState(false);
-	const [version, setVersion] = useState<ComponentVersion | null>(null);
+	const [version, setVersion] = useState<ComponentVersion | undefined>();
 	const saveChanges = () => {
 		setSaving(true);
 		component.version = version!.id;
+		component.versionCategory = version!.category;
 
 		const { instance } = component;
 		instance.store.save().then(() => {
@@ -83,26 +83,19 @@ export function ComponentEditor({ onClose, component }: ComponentEditorProps) {
 	return <Modal width="60%">
 		<TextHeader noSelect>Component Editor ({t(`voxura:component.${component.id}`)})</TextHeader>
 		<InputLabel>{t('add_component.version')}</InputLabel>
-		<Typography size={14} noSelect>
-			{version ? `${t([`voxura:component.${component.id}.versions.category.${version.category}.singular`, 'common.label.version3'])} ${version.id}` : t('common.label.loading')}
-		</Typography>
-
-		<Grid height={256} margin="16px 0 0">
-			{versions && <VersionPicker
-				id={component.id}
-				value={version}
-				versions={versions}
-				onChange={setVersion}
-				defaultId={component.version}
-			/>}
-		</Grid>
+		<VersionPicker
+			value={version}
+			onChange={setVersion}
+			defaultId={component.version}
+			componentId={component.id}
+		/>
 
 		<Grid margin="16px 0 0" spacing={8}>
-			<Button theme="accent" onClick={saveChanges} disabled={!versions || saving}>
+			<Button theme="accent" onClick={saveChanges} disabled={saving}>
 				{saving ? <BasicSpinner size={16}/> : <IconBiPencilFill/>}
 				{t('common.action.save_changes')}
 			</Button>
-			<Button theme="secondary" onClick={onClose} disabled={!versions || saving}>
+			<Button theme="secondary" onClick={onClose} disabled={saving}>
 				<IconBiXLg/>
 				{t('common.action.cancel')}
 			</Button>

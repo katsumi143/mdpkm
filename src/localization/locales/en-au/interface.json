@@ -204,7 +204,6 @@
 	"settings.plugins.add": "Add Plugin",
 
 	"settings.about": "About this build",
-	"settings.about.version": "{{0}} v{{1}}",
 	"settings.about.report_bug": "Report Issue",
 	"settings.about.github": "Open GitHub Page",
 	
@@ -325,6 +324,9 @@
 	"dialog.delete_instance.body": "This action cannot be undone.\n“{{0}}” will be lost forever! (A long time!)",
 
 	"error.generic": "Something went wrong!",
+
+	"semver.beta": " • Beta {{0}}",
+	"semver.build": " • Build {{0}}",
 
 	"toast.export_success": "Instance Exported",
 	"toast.export_success.body": "“{{0}}” has been exported, you can find it in “{{1}}”.",

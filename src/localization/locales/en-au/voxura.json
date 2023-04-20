@@ -4,6 +4,8 @@
 	"component.java-temurin": "Eclipse Temurin (Java)",
 	"component.java-temurin.summary": "placeholder",
 	"component.java-temurin.versions": "Java Versions",
+	"component.java-temurin.versions.category.0": "GA Releases",
+	"component.java-temurin.versions.category.0.singular": "GA Release",
 
     "component.minecraft-java-vanilla": "Minecraft: Java Edition",
     "component.minecraft-java-vanilla.versions": "Minecraft Versions",

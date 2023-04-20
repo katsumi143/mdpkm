@@ -14,15 +14,18 @@ export default {
 	}],
 	categoryId: 'minecraft',
 
-	async execute(instance, data: { version: ComponentVersion }) {
+	async execute(instance, { version }: { version: ComponentVersion }) {
 		const manifests = await fetch<VersionManifestResponse>(MANIFESTS_URL);
-		const manifestData = manifests.data.versions.find(m => m.id === data.version.id);
+		const manifestData = manifests.data.versions.find(m => m.id === version.id);
 		if (!manifestData)
 			throw new Error('manifest not found');
 
 		const manifest = await fetch<MinecraftJavaManifest>(manifestData.url);
 		instance.store.components.push(
-			new MinecraftJavaClient(instance, { version: data.version.id }),
+			new MinecraftJavaClient(instance, {
+				version: version.id,
+				versionCategory: version.category
+			}),
 			new JavaTemurin(instance, {
 				version: await JavaTemurin.getLatestVersion(manifest.data.javaVersion.majorVersion)
 			})

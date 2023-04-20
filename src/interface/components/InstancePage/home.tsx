@@ -22,7 +22,7 @@ export default function InstanceHome({ store, setTab }: InstanceHomeProps) {
 					<IconBiCaretRightFill fontSize={14}/>
 				</Button>
 			}>
-				{t('common.label.version', [gameComponent.version])}
+				{t([`voxura:component.${gameComponent.id}.versions.category.${gameComponent.versionCategory}.singular`, 'common.label.version3'])} {gameComponent.version}
 			</Information>
 			<DateThing icon={<IconBiCalendarPlus fontSize={20}/>} title={t('common.label.instance_created')} value={store.dateCreated}/>
 			<DateThing icon={<IconBiCalendarHeart fontSize={20}/>} title={t('common.label.last_launched')} value={store.dateLaunched}/>

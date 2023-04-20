@@ -8,8 +8,8 @@ import { Grid, Image, Select, Switch, Button, Tooltip, GridProps, TextInput, Tex
 
 import Avatar from '../components/Avatar';
 import { setPage } from '../../store/slices/interface';
-import { i, toast } from '../../util';
 import { set, saveSettings } from '../../store/slices/settings';
+import { i, toast, prettifySemver } from '../../util';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { PLUGINS_DIR, LOADED_PLUGINS, loadPluginFromFile } from '../../plugins';
 import { APP_NAME, LANGUAGES, APP_VERSION, PLACEHOLDER_IMAGE } from '../../util/constants';
@@ -217,7 +217,7 @@ export default function Settings() {
 				<Image src={i('app_icon')} size={48} onClick={yippee} />
 				<Grid spacing={2} vertical>
 					<Typography noSelect lineheight={1}>
-						{t('settings.about.version', [APP_NAME, APP_VERSION])}
+						{APP_NAME} {prettifySemver(APP_VERSION, t)}
 					</Typography>
 					<Grid spacing={4}>
 						<Typography size={12} color="$secondaryColor" weight={400} family="$secondary" onClick={openGithub} noSelect lineheight={1} css={{ cursor: 'pointer', '&:hover': { color: '$linkColor' }}}>

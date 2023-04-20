@@ -16,8 +16,11 @@ export default {
 	}],
 	categoryId: 'minecraft',
 
-	execute(instance, data: { version: ComponentVersion, mcVersion: ComponentVersion }) {
-		MinecraftJavaClientCreator.execute(instance, { version: data.mcVersion });
-		instance.store.components.push(new MinecraftFabric(instance, { version: data.version.id }));
+	execute(instance, { version, mcVersion }: { version: ComponentVersion, mcVersion: ComponentVersion }) {
+		MinecraftJavaClientCreator.execute(instance, { version: mcVersion });
+		instance.store.components.push(new MinecraftFabric(instance, {
+			version: version.id,
+			versionCategory: version.category
+		}));
 	}
 } satisfies InstanceCreator;

@@ -2,6 +2,7 @@ import hotToast from 'react-hot-toast';
 import { decode } from 'nbt-ts';
 import { Buffer } from 'buffer';
 import { invoke } from '@tauri-apps/api';
+import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { fetch, ResponseType } from '@tauri-apps/api/http';
@@ -142,4 +143,9 @@ export function useTimeString(date?: number) {
 	else if (Math.abs(minutes) > 0)
 		return t('common.time.minutes', { count: minutes });
     return t('common.time.seconds', { count: seconds });
+}
+
+export function prettifySemver(value: string, t: TFunction) {
+	return value.replace(/-beta\.(\d+)/g, (_,v) => t('semver.beta', [v]))
+		.replace(/\+(\d+)/g, (_,v) => t('semver.build', [v]));
 }

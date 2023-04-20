@@ -1,35 +1,38 @@
 import { styled } from '@stitches/react';
 import { useTranslation } from 'react-i18next';
-import React, { useMemo, useEffect, useState } from 'react';
-import { Grid, Image, Button, Typography, InputLabel, DropdownMenu, BasicSpinner, TypographyProps } from 'voxeliface';
+import React, { useEffect } from 'react';
+import { Image, Typography, DropdownMenu, BasicSpinner, TypographyProps } from 'voxeliface';
 
-import { i } from '../../util';
 import { COMPONENT_MAP } from '../../../voxura';
+import { i, prettifySemver } from '../../util';
 import { useComponentVersions } from '../../voxura';
-import type { ComponentVersion, ComponentVersions } from '../../../voxura/src/types';
+import type { ComponentVersion } from '../../../voxura/src/types';
 export interface VersionPickerProps {
-    value: ComponentVersion | null
-    onChange: (value: ComponentVersion) => void
+    value?: ComponentVersion
+    onChange: (value?: ComponentVersion) => void
+	defaultId?: string
 	componentId: string
 }
-export default function VersionPicker({ value, onChange, componentId }: VersionPickerProps) {
+export default function VersionPicker({ value, onChange, defaultId, componentId }: VersionPickerProps) {
     const { t } = useTranslation('interface');
 	const versions = useComponentVersions(COMPONENT_MAP.find(c => c.id === componentId) as any);
 	useEffect(() => {
-		if (versions && !value)
-			onChange(versions[0][0]);
+		if (versions)
+			onChange(defaultId ? versions.flat().find(v => v.id === defaultId) : versions[0][0] ?? versions[0][0]);
+		else if (value)
+			onChange(undefined);
 	}, [versions]);
 	return <DropdownMenu.Root>
 		<DropdownMenu.Trigger asChild>
 			<StyledTrigger disabled={!versions}>
 				{versions ? <Image src={i(`component.${componentId}`)} size={16}/> : <BasicSpinner size={16}/>}
-				{value ? `${t([`voxura:component.${componentId}.versions.category.${value.category}.singular`, 'common.label.version3'])} ${value.id}` : t('common.label.loading')}
+				{value ? `${t([`voxura:component.${componentId}.versions.category.${value.category}.singular`, 'common.label.version3'])} ${prettifySemver(value.id, t)}` : t('common.label.loading')}
 				<IconBiChevronDown/>
 			</StyledTrigger>
 		</DropdownMenu.Trigger>
 		{versions && <DropdownMenu.Portal>
 			<DropdownMenu.Content side="right" sideOffset={8} style={{ zIndex: 1000 }}>
-				<DropdownMenu.Label>{t(`voxura:component.${componentId}.versions`)}</DropdownMenu.Label>
+				<DropdownMenu.Label>{t([`voxura:component.${componentId}.versions`, 'common.label.versions'])}</DropdownMenu.Label>
 				{versions.map((versions, key) => <DropdownMenu.Sub key={`category.${key}`}>
 					<DropdownMenu.SubTrigger>
 						{t(`voxura:component.${componentId}.versions.category.${key}`)}
@@ -38,12 +41,12 @@ export default function VersionPicker({ value, onChange, componentId }: VersionP
 					<DropdownMenu.Portal>
 						<DropdownMenu.SubContent alignOffset={-33} style={{ zIndex: 1000, overflow: 'auto', maxHeight: 256 }}>
 							<DropdownMenu.Label>{t(`voxura:component.${componentId}.versions.category.${key}`)}</DropdownMenu.Label>
-							{versions.map(version => <DropdownMenu.Item key={version.id} onClick={() => onChange(version)}>
-								{version.id}
-								{value === version && <StyledItemIndicator>
-									<IconBiCheckLg/>
-								</StyledItemIndicator>}
-							</DropdownMenu.Item>)}
+							{versions.map((version, key) => <VersionItem
+								key={`${version.id}-${key}`}
+								version={version}
+								onClick={onChange}
+								isSelected={value === version}
+							/>)}
 						</DropdownMenu.SubContent>
 					</DropdownMenu.Portal>
 				</DropdownMenu.Sub>)}
@@ -51,6 +54,21 @@ export default function VersionPicker({ value, onChange, componentId }: VersionP
 			</DropdownMenu.Content>
 		</DropdownMenu.Portal>}
 	</DropdownMenu.Root>;
+}
+
+export interface VersionItemProps {
+	version: ComponentVersion
+	onClick: (version: ComponentVersion) => void
+	isSelected: boolean
+}
+export function VersionItem({ version, onClick, isSelected }: VersionItemProps) {
+	const { t } = useTranslation('interface');
+	return <DropdownMenu.Item key={version.id} onClick={() => onClick(version)}>
+		{prettifySemver(version.id, t)}
+		{isSelected && <StyledItemIndicator>
+			<IconBiCheckLg/>
+		</StyledItemIndicator>}
+	</DropdownMenu.Item>;
 }
 
 const StyledTrigger = styled('button', {
