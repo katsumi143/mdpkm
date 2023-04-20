@@ -106,13 +106,13 @@ export default function InstancePage({ id }: InstancePageProps) {
 				</Grid>
 			</Grid>
 			<Grid>
-				<Link size={12} onClick={openFolder} padding={16}>
+				<Link size={14} onClick={openFolder} padding={16}>
 					<IconBiFolder2Open/>
 					{t('common.action.open_folder')}
 				</Link>
 				{processes.length ? <DropdownMenu.Root>
 					<DropdownMenu.Trigger asChild>
-						<Link size={12} padding="16px 24px 16px 16px">
+						<Link size={14} padding="16px 24px 16px 16px">
 							{t('instance.action.view_options')}
 							<IconBiChevronDown/>
 						</Link>
@@ -137,7 +137,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 						</DropdownMenu.Content>
 					</DropdownMenu.Portal>
 				</DropdownMenu.Root> :
-					<Link size={12} onClick={launch} padding="16px 24px 16px 16px" disabled={isLaunching || instance.isRunning}>
+					<Link size={14} onClick={launch} padding="16px 24px 16px 16px" disabled={isLaunching || instance.isRunning}>
 						{isLaunching ? <BasicSpinner size={16}/> : <IconBiPlayFill/>}
 						{t('common.action.launch')}
 					</Link>
