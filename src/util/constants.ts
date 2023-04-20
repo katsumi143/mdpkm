@@ -35,12 +35,12 @@ export const IMAGES = {
 	'component.minecraft-java-server-paper': 'img/icon/component/minecraft-paper.svg',
 
 	'instance_creator.modrinth': 'img/icon/platform/modrinth.svg',
+	'instance_creator.minecraft-paper': '$(component.minecraft-java-server-paper)',
 	'instance_creator.minecraft-quilt': '$(component.quilt)',
 	'instance_creator.minecraft-fabric': '$(component.fabric)',
 	'instance_creator.minecraft-java-server': '$(component.minecraft-java-server)',
     'instance_creator.minecraft-java-client': '$(component.minecraft-java-vanilla)',
     'instance_creator.minecraft-bedrock-client': '$(component.minecraft-bedrock-vanilla)',
-	'instance_creator.minecraft-java-server-paper': '$(component.minecraft-java-server-paper)',
 
 	'platform.modrinth': 'img/icon/platform/modrinth.svg',
 	'platform.curseforge': 'img/icon/platform/curseforge.svg',

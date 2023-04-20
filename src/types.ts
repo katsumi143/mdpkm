@@ -14,4 +14,5 @@ export interface InstanceCreatorOption {
 export interface VersionPickerInstanceCreatorOption extends InstanceCreatorOption {
 	type: InstanceCreatorOptionType.VersionPicker
 	targetId: string
+	passArguments?: [string, string?][]
 }

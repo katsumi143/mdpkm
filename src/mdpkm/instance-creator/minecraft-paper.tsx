@@ -12,7 +12,8 @@ export default {
 	}, {
 		id: 'version',
 		type: InstanceCreatorOptionType.VersionPicker,
-		targetId: MinecraftPaper.id
+		targetId: MinecraftPaper.id,
+		passArguments: [['mcVersion', 'id']]
 	}],
 	categoryId: 'minecraft2',
 

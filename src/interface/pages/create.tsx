@@ -110,7 +110,7 @@ export function Setup({ id, cancel }: SetupProps) {
 	const dispatch = useAppDispatch();
 	const [name, setName] = useState('New Instance');
 	const [icon, setIcon] = useState<string | null>(null);
-	const [data, setData] = useState<Record<string, any>>([]);
+	const [data, setData] = useState<Record<string, any>>({});
 	const [creating, setCreating] = useState(false);
 	const createInstance = async () => {
 		setCreating(true);
@@ -126,6 +126,7 @@ export function Setup({ id, cancel }: SetupProps) {
 	};
 
 	const iconSrc = useMemo(() => icon ? convertFileSrc(icon) : getDefaultInstanceIcon(name), [name, icon]);
+	const complete = creator.options.every(o => data[o.id]);
 	const nameInvalid = name.length <= 0 || name.length > 24;
 	return <ComponentContainer selected layoutId={`component-${id}`}>
 		<Grid width="100%" height="fit-content" css={{
@@ -173,11 +174,16 @@ export function Setup({ id, cancel }: SetupProps) {
 
 			{creator.options.map(option => <React.Fragment key={option.id}>
 				<InputLabel spaciouser>{t(`mdpkm:instance_creator.${creator.id}.option.${option.id}`)}</InputLabel>
-				<CreatorOption value={data[option.id]} option={option} onChange={value => setData(data => ({ ...data, [option.id]: value }))}/>
+				<CreatorOption
+					data={data}
+					value={data[option.id]}
+					option={option}
+					onChange={value => setData(data => ({ ...data, [option.id]: value }))}
+				/>
 			</React.Fragment>)}
 
 			<Grid margin="auto 0 0">
-				<Button theme="accent" onClick={createInstance} disabled={nameInvalid || creating}>
+				<Button theme="accent" onClick={createInstance} disabled={!complete || nameInvalid || creating}>
 					<IconBiPlusLg/>
 					{t('common.action.create_instance')}
 				</Button>
@@ -187,13 +193,22 @@ export function Setup({ id, cancel }: SetupProps) {
 }
 
 export interface CreationOptionTypes {
+	data: Record<string, any>
 	value: any
 	option: InstanceCreator['options'][0]
 	onChange: (newValue: any) => void
 }
-export function CreatorOption({ value, option, onChange }: CreationOptionTypes) {
-	if (option.type === InstanceCreatorOptionType.VersionPicker)
-		return <VersionPicker value={value} onChange={onChange} componentId={option.targetId}/>;
+export function CreatorOption({ data, value, option, onChange }: CreationOptionTypes) {
+	if (option.type === InstanceCreatorOptionType.VersionPicker) {
+		const args = option.passArguments?.map(([opt, key]) => key ? data[opt]?.[key] : data[opt]);
+		if (!args || args.every(v => v))
+			return <VersionPicker
+				value={value}
+				onChange={onChange}
+				componentId={option.targetId}
+				passArguments={args}
+			/>;
+	}
 	return null;
 }
 

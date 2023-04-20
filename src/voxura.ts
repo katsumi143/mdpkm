@@ -73,12 +73,12 @@ export function useDownloads() {
 	return useSubscription(subscription);
 }
 
-export function useComponentVersions(component?: VersionedComponent | typeof VersionedComponent) {
+export function useComponentVersions(component?: VersionedComponent | typeof VersionedComponent, ...args: any[]) {
 	const [value, setValue] = useState<ComponentVersions | null>(null);
 	useEffect(() => {
 		if (component?.getVersions) {
 			setValue(null);
-			component?.getVersions().then(setValue);
+			component?.getVersions(...args).then(setValue);
 		} else
 			setValue([]);
 	}, [component]);

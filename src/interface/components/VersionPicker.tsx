@@ -12,10 +12,11 @@ export interface VersionPickerProps {
     onChange: (value?: ComponentVersion) => void
 	defaultId?: string
 	componentId: string
+	passArguments?: any[]
 }
-export default function VersionPicker({ value, onChange, defaultId, componentId }: VersionPickerProps) {
+export default function VersionPicker({ value, onChange, defaultId, componentId, passArguments = [] }: VersionPickerProps) {
     const { t } = useTranslation('interface');
-	const versions = useComponentVersions(COMPONENT_MAP.find(c => c.id === componentId) as any);
+	const versions = useComponentVersions(COMPONENT_MAP.find(c => c.id === componentId) as any, ...passArguments);
 	useEffect(() => {
 		if (versions)
 			onChange(defaultId ? versions.flat().find(v => v.id === defaultId) : versions[0][0] ?? versions[0][0]);
