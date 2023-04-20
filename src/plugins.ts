@@ -9,10 +9,12 @@ import { readDir, createDir, readTextFile } from '@tauri-apps/api/fs';
 import Store from './store';
 import * as Util from './util';
 import * as mdpkm from './mdpkm';
+import * as Enums from './enums';
 import { APP_DIR } from './util/constants';
 import * as Voxura from '../voxura';
 import * as Constants from './util/constants';
 import * as Voxeliface from 'voxeliface';
+import InstanceCreators from './mdpkm/instance-creator';
 
 // For plugin developers:
 // https://docs.mdpkm.voxelified.com/docs/category/plugin-api
@@ -69,6 +71,7 @@ const global = globalThis as any;
 global.Util = Util;
 global.Store = Store;
 global.mdpkm = mdpkm;
+global.Enums = Enums;
 global.React = React;
 global.Voxura = Voxura;
 global.i18next = i18next;
@@ -77,3 +80,4 @@ global.TauriAPI = TauriAPI;
 global.Reacti18n = Reacti18n;
 global.Constants = Constants;
 global.Voxeliface = Voxeliface;
+global.InstanceCreators = InstanceCreators;
