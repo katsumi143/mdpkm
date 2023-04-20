@@ -91,7 +91,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 						{displayName}
 					</Typography>
 					<Typography color="$secondaryColor" weight={600} family="$secondary" spacing={8} noSelect lineheight={1}>
-						<StateIcon fontSize={12}/>
+						<StateIcon fontSize={14}/>
 						{t(`instance.state.${state}`)}
 					</Typography>
 				</Grid>

@@ -101,7 +101,9 @@ export default memo(({ id, selected }: InstanceProps) => {
 					}}>
 						<Avatar src={icon} size="md"/>
 						<Grid spacing={4} vertical alignItems="start" css={{ overflow: 'hidden' }}>
-							<Grid spacing={4} alignItems="center">
+							<Grid spacing={6} alignItems="center" css={{
+								'& svg': { minWidth: 'fit-content' }
+							}}>
 								{instance.isFavourite && <IconBiStarFill fontSize={14}/>}
 								<Typography
 									width="100%"
@@ -122,7 +124,7 @@ export default memo(({ id, selected }: InstanceProps) => {
 								noSelect
 								lineheight={1}
 							>
-								<StateIcon fontSize={10}/>
+								<StateIcon fontSize={12}/>
 								{t(`instance.state.${state}`)}
 							</Typography>
 						</Grid>

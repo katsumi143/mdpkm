@@ -35,13 +35,13 @@ export interface ToastProps {
     t: HotToast
 	id: string
 	data: any[]
-    icon: FunctionComponent
+    icon: FunctionComponent<any>
 }
 export default function Toast({ t, id, data, icon: Icon = IconBiInfoCircle }: ToastProps) {
 	const key = `interface:toast.${id}`;
     return <StyledToast visible={t.visible} smoothing={1} cornerRadius={16}>
         <Typography noSelect>
-            <Icon/>
+            <Icon fontSize={20}/>
         </Typography>
         <Grid spacing={4} vertical>
             <Typography size={14} noFlex noSelect lineheight={1}>
