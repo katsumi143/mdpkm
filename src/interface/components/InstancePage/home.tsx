@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 import { Grid, Image, Button, Typography } from 'voxeliface';
 
 import type { InstanceStore } from '../../../../voxura';
-import { getImage, useDayString, useTimeString } from '../../../util';
+import { getImage, useDayString, useTimeString, useWindowSize } from '../../../util';
 export interface InstanceHomeProps {
 	store: InstanceStore,
 	setTab: (tab: number) => void,
@@ -41,10 +41,11 @@ export interface InformationProps {
 	children?: ReactNode
 };
 function Information({ fill, icon, text, buttons, children }: InformationProps) {
+	const windowSize = useWindowSize();
 	return <Grid width="100%" padding="12px 20px" spacing={20} smoothing={1} alignItems="center" background="$secondaryBackground2" cornerRadius={16} css={{
 		flexGrow: 1,
 		position: 'relative',
-		flexBasis: fill ? null : 'calc(50% - .5rem)'
+		flexBasis: (fill || windowSize.width <= 500) ? null : 'calc(50% - .5rem)'
 	}}>
 		<Typography noSelect lineheight={1}>{icon}</Typography>
 		<Grid spacing={2} vertical>

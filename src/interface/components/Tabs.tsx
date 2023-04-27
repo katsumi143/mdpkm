@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Tabs, TabsProps } from 'voxeliface';
 export default function StyledTabs(props: TabsProps) {
 	return <Tabs {...props} css={{

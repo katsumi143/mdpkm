@@ -269,9 +269,11 @@
 	"instance_list.empty": "You don't have any instances.",
 
 	"instance_page.tab.home": "Information",
+	"instance_page.tab.home.small": "Info",
+	"instance_page.tab.content": "Game Content",
+	"instance_page.tab.content.small": "Content",
 	"instance_page.tab.game": "Game Settings",
 	"instance_page.tab.game.tab.0": "Components",
-	"instance_page.tab.content": "Game Content",
 
 	"instance_page.settings": "Settings",
 	"instance_page.settings.name.invalid": "You must enter a name between 1-24 characters.",

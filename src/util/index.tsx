@@ -90,6 +90,24 @@ export function readBinaryFileInZip(path: string, target: string) {
 	return invoke<number[]>('read_binary_file_in_zip', { path, target });
 }
 
+export function useWindowSize() {
+	const [size, setSize] = useState({
+		width: window.innerWidth,
+		height: window.innerHeight,
+	});
+	useEffect(() => {
+		const handle = () => setSize({
+			width: window.innerWidth,
+			height: window.innerHeight,
+		});
+
+		window.addEventListener('resize', handle);
+		return () => window.removeEventListener('resize', handle);
+	}, []);
+
+	return size;
+}
+
 interface NbtString {
 	type: 'string'
 	value: string

@@ -9,7 +9,7 @@ import Avatar from '../components/Avatar';
 import { setPage } from '../../store/slices/interface';
 import { set, saveSettings } from '../../store/slices/settings';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { i, toast, prettifySemver, checkForUpdate } from '../../util';
+import { i, useWindowSize, prettifySemver, checkForUpdate } from '../../util';
 import { PLUGINS_DIR, LOADED_PLUGINS, loadPluginFromFile } from '../../plugins';
 import { APP_NAME, LANGUAGES, APP_VERSION, PLACEHOLDER_IMAGE } from '../../util/constants';
 export default function Settings() {
@@ -268,8 +268,11 @@ export interface SettingProps {
 }
 export function Setting({ name, children, direction, noSummary }: SettingProps) {
 	const { t } = useTranslation('interface');
+	const windowSize = useWindowSize();
+
+	const windowBig = windowSize.width > 600;
 	const stringBase = `settings.${name ?? 'placeholder'}`;
-	return <Grid width="30%" margin="0 32px 24px" spacing={4} vertical>
+	return <Grid width={windowBig ? 256 : 'calc(100% - 64px)'} margin="0 32px 24px" spacing={4} vertical>
 		<Typography noSelect lineheight={1}>
 			{t(stringBase)}
 		</Typography>
@@ -278,8 +281,7 @@ export function Setting({ name, children, direction, noSummary }: SettingProps) 
 				{t(`${stringBase}.summary`)}
 			</Typography>
 		}
-		<Grid margin="8px 0 0" spacing={8} direction={direction ?? 'vertical'} css={{
-			minWidth: 196,
+		<Grid width="100%" margin="8px 0 0" spacing={8} direction={direction ?? 'vertical'} css={{
 			position: 'relative'
 		}}>
 			{children}

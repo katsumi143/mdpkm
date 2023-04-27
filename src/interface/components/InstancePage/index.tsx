@@ -2,7 +2,7 @@ import { open } from '@tauri-apps/api/shell';
 import * as dialog from '@tauri-apps/api/dialog';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { CSS, keyframes } from '@stitches/react';
+import { CSS, styled, keyframes } from '@stitches/react';
 import { copyFile, removeFile } from '@tauri-apps/api/fs';
 import React, { useMemo, ReactNode, MouseEvent, useCallback } from 'react';
 import { Grid, Link, Image, TabItem, GridProps, Typography, BasicSpinner, DropdownMenu } from 'voxeliface';
@@ -16,10 +16,10 @@ import ImageWrapper from '../ImageWrapper';
 
 import { useInstance } from '../../../voxura';
 import { useAppSelector } from '../../../store/hooks';
-import { setInstanceTab } from '../../../store/slices/interface';
 import { COMPONENT_EXTRAS } from '../../../mdpkm';
 import { INSTANCE_STATE_ICONS } from '../../../util/constants';
-import { IMAGE_EXISTS, getInstanceIcon, getInstanceBanner } from '../../../util';
+import { setInstanceTab, setCurrentInstance } from '../../../store/slices/interface';
+import { IMAGE_EXISTS, useWindowSize, getInstanceIcon, getInstanceBanner } from '../../../util';
 export interface InstancePageProps {
 	id: string
 }
@@ -59,7 +59,20 @@ export default function InstancePage({ id }: InstancePageProps) {
 
 	const icon = getInstanceIcon(instance);
 	const banner = getInstanceBanner(instance);
+	const windowSize = useWindowSize();
+
+	const windowSmall = windowSize.width <= 500;
+	const mainButtonSize = windowSize.width <= 600 ? 12 : 14;
 	return <Grid height="100%" vertical background="$primaryBackground" css={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
+		{windowSize.width <= 1116 && <Link size={12} onClick={() => dispatch(setCurrentInstance(''))} css={{
+			top: 16,
+			left: 16,
+			zIndex: 2,
+			position: 'absolute'
+		}}>
+			<IconBiArrowLeft/>
+			{t('common.action.return_to_instances')}
+		</Link>}
 		<Image src={banner[0]} width="100%" height={144} css={{
 			opacity: 0.5,
 			position: 'absolute',
@@ -87,7 +100,7 @@ export default function InstancePage({ id }: InstancePageProps) {
 					</ImageWrapper>
 				</Grid>
 				<Grid spacing={4} vertical justifyContent="center">
-					<Typography size={24} weight={700} family="$tertiary" noSelect lineheight={1} css={{ alignItems: 'start' }}>
+					<Typography size={24} weight={700} family="$tertiary" noSelect whitespace="nowrap" lineheight={1} css={{ alignItems: 'start' }}>
 						{displayName}
 					</Typography>
 					<Typography color="$secondaryColor" weight={600} family="$secondary" spacing={8} noSelect lineheight={1}>
@@ -105,17 +118,17 @@ export default function InstancePage({ id }: InstancePageProps) {
 					<ImageOptions exists={banner[1]} onEdit={e => changeImage('banner', e)} onRemove={e => removeImage('banner', e)}/>
 				</Grid>
 			</Grid>
-			<Grid>
-				<Link size={14} onClick={openFolder} padding={16}>
+			<Grid padding="0 8px 0 0">
+				<MainButton size={mainButtonSize} onClick={openFolder}>
 					<IconBiFolder2Open/>
-					{t('common.action.open_folder')}
-				</Link>
+					{windowSize.width > 575 && t('common.action.open_folder')}
+				</MainButton>
 				{processes.length ? <DropdownMenu.Root>
 					<DropdownMenu.Trigger asChild>
-						<Link size={14} padding="16px 24px 16px 16px">
-							{t('instance.action.view_options')}
+						<MainButton size={mainButtonSize}>
+							{windowSize.width > 500 && t('instance.action.view_options')}
 							<IconBiChevronDown/>
-						</Link>
+						</MainButton>
 					</DropdownMenu.Trigger>
 					<DropdownMenu.Portal>
 						<DropdownMenu.Content>
@@ -137,10 +150,10 @@ export default function InstancePage({ id }: InstancePageProps) {
 						</DropdownMenu.Content>
 					</DropdownMenu.Portal>
 				</DropdownMenu.Root> :
-					<Link size={14} onClick={launch} padding="16px 24px 16px 16px" disabled={isLaunching || instance.isRunning}>
+					<MainButton size={mainButtonSize} onClick={launch} disabled={isLaunching || instance.isRunning}>
 						{isLaunching ? <BasicSpinner size={16}/> : <IconBiPlayFill/>}
-						{t('common.action.launch')}
-					</Link>
+						{windowSize.width > 500 && t('common.action.launch')}
+					</MainButton>
 				}
 			</Grid>
 		</Grid>
@@ -153,10 +166,10 @@ export default function InstancePage({ id }: InstancePageProps) {
 				margin: '8px 16px 0'
 			}}
 		>
-			<TabItem name={t('instance_page.tab.home')} icon={<IconBiInfoCircle/>} value={0}>
+			<TabItem name={windowSmall ? '' : t('instance_page.tab.home')} icon={<IconBiInfoCircle/>} value={0}>
 				<Home store={instance.store} setTab={setTab}/>
 			</TabItem>
-			<TabItem name={t('instance_page.tab.content')} icon={<IconBiBox2/>} value={1} disabled={!instance.store.components.map(c => COMPONENT_EXTRAS[c.id]).some(e => e?.contentTabs?.length || e?.enabledContentTabs?.length)}>
+			<TabItem name={windowSmall ? t('instance_page.tab.content.small') : t('instance_page.tab.content')} icon={<IconBiBox2/>} value={1} disabled={!instance.store.components.map(c => COMPONENT_EXTRAS[c.id]).some(e => e?.contentTabs?.length || e?.enabledContentTabs?.length)}>
 				<Content instance={instance}/>
 			</TabItem>
 			<TabItem name={t('instance_page.tab.game')} icon={<IconBiBox/>} value={2}>
@@ -168,6 +181,11 @@ export default function InstancePage({ id }: InstancePageProps) {
 		</Tabs>
 	</Grid>;
 }
+
+const MainButton = styled(Link, {
+	padding: 16,
+	transition: 'font-size .5s'
+});
 
 const InstanceInfoAnimation = keyframes({
 	from: {

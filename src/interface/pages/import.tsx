@@ -65,8 +65,8 @@ export default function Import() {
 			<IconBiArrowLeft/>
 			{t(data ? 'import_file.return_select' : 'common.action.return_to_instances')}
 		</Link>
-		<Grid width="100%" height="100%" spacing={16} alignItems="center">
-			{!data ? <Grid width="100%" margin="0 30%" padding="0 0 64px" vertical>
+		<Grid width="100%" height="100%" spacing={16} alignItems="center" justifyContent="center">
+			{!data ? <Grid width={512} margin="0 48px" padding="0 0 64px" vertical>
 				<InputLabel spacious>{t('import_file.select')}</InputLabel>
 				<FileSelect name={t('import_file.ext_name')} path={path} setPath={setPath} extensions={InstanceImporters.flatMap(i => i.extensions)}/>
 

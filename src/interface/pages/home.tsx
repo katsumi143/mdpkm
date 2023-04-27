@@ -11,6 +11,7 @@ import LoadingInstances from '../components/LoadingInstances';
 import mdpkm from '../../mdpkm';
 import NewsItem from '../../mdpkm/news/item';
 import { setPage } from '../../store/slices/interface';
+import { useWindowSize } from '../../util';
 import { MinecraftAvatarStyle } from '../../../voxura';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import voxura, { useMinecraftAccount, useRecentInstances } from '../../voxura';
@@ -21,6 +22,7 @@ export default function Home() {
 	const dispatch = useAppDispatch();
 	const greeting = useMemo(() => getGreeting(), []);
 	const showNews = useAppSelector(state => state.settings.showNews);
+	const windowSize = useWindowSize();
 	const [news, setNews] = useState<any[] | null>(null);
 	const [mdpkmPost, setMdpkmPost] = useState<NewsItem<any> | null>(null);
 	useEffect(() => {
@@ -33,6 +35,7 @@ export default function Home() {
 		}
 	}, [showNews]);
 
+	const windowBig = windowSize.width > 800;
 	const loadingInstances = voxura.instances.loading;
 	return <>
 		<Grid width="100%" height="60%" background={`url(img/banner/instance/banner1_${greeting + 1}.webp)`} css={{
@@ -44,7 +47,7 @@ export default function Home() {
 			'-webkit-mask-image': '-webkit-linear-gradient(#000, transparent)'
 		}}/>
 		<Grid height="100%" spacing={16} justifyContent="space-between" css={{ overflow: 'hidden' }}>
-			<Grid width="65%" padding="12px 0 12px 1rem" vertical>
+			<Grid width={windowBig ? '60%' : 'calc(100% - 1rem)'} padding="12px 0 12px 1rem" vertical>
 				<Grid height="fit-content" margin="24px 0 0" spacing={24} alignItems="center">
 					<Avatar src={account?.getAvatarUrl(MinecraftAvatarStyle.Bust, 128)} size="xl" circle transparent css={{
 						backdropFilter: 'brightness(1.25)'
@@ -69,7 +72,7 @@ export default function Home() {
 					</Grid>
 				</>}
 			</Grid>
-			<Grid width="35%" height="100%" padding="12px 1rem 12px 0" vertical>
+			{windowBig && <Grid width="35%" height="100%" padding="12px 1rem 12px 0" vertical>
 				<Grid padding="0 8px" justifyContent="space-between" css={{ zIndex: 0 }}>
 					<Typography family="$tertiary" noSelect>{t('home.recent_instances.title')}</Typography>
 					<ViewAll onClick={() => dispatch(setPage('instances'))}/>
@@ -79,7 +82,7 @@ export default function Home() {
 						<Instance id={instance.id} key={instance.id}/>
 					)}
 				</Grid>
-			</Grid>
+			</Grid>}
 		</Grid>
 	</>;
 }

@@ -6,6 +6,7 @@ import InstanceList from '../components/InstanceList';
 import InstancePage from '../components/InstancePage';
 
 import { setPage } from '../../store/slices/interface';
+import { useWindowSize } from '../../util';
 import voxura, { useInstances } from '../../voxura';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 export default function Instances() {
@@ -13,6 +14,7 @@ export default function Instances() {
 	const { t } = useTranslation('interface');
     const dispatch = useAppDispatch();
     const instance = useAppSelector(state => state.interface.currentInstance);
+	const windowSize = useWindowSize();
 	const [loading, setLoading] = useState(false);
     const changePage = (page: string) => dispatch(setPage(page));
 	const refresh = () => {
@@ -34,13 +36,15 @@ export default function Instances() {
 				</Link>
 			</Grid>
 		</Grid>;
+
+	const windowBig = windowSize.width > 1116;
     return <Grid width="100%" height="100%">
-        <Grid width="30%" vertical>
+        {(windowBig || !instance) && <Grid width={windowBig ? '30%': '100%'} vertical>
             <InstanceList id={instance} items={items}/>
             <Grid width="100%" padding={16} background="$secondaryBackground" alignItems="center" justifyContent="space-between">
                 <Buttons changePage={changePage}/>
             </Grid>
-        </Grid>
+        </Grid>}
         {instance && items.some(i => i.id === instance) && <InstancePage id={instance}/>}
     </Grid>;
 }
