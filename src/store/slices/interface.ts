@@ -1,3 +1,4 @@
+import type { UpdateManifest } from '@tauri-apps/api/updater';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ProjectType } from '../../../voxura';
@@ -7,6 +8,7 @@ export const interfaceSlice = createSlice({
     name: 'interface',
     initialState: {
         page: settingsSlice.getInitialState().startPage as string,
+		appUpdate: null as UpdateManifest | null,
 		contentTab: 0,
 		searchType: ProjectType.Mod,
 		instanceTab: 0,
@@ -19,6 +21,9 @@ export const interfaceSlice = createSlice({
         setPage: (state, { payload }: PayloadAction<string>) => {
             state.page = payload;
         },
+		setAppUpdate: (state, { payload }: PayloadAction<UpdateManifest | null>) => {
+			state.appUpdate = payload;
+		},
 		setContentTab: (state, { payload }: PayloadAction<number>) => {
 			state.contentTab = payload;
 		},
@@ -43,5 +48,5 @@ export const interfaceSlice = createSlice({
     }
 });
 
-export const { setPage, setContentTab, setSearchType, setLaunchError, setInstanceTab, setImagePreview, setCurrentInstance, setMcServerEulaDialog } = interfaceSlice.actions;
+export const { setPage, setAppUpdate, setContentTab, setSearchType, setLaunchError, setInstanceTab, setImagePreview, setCurrentInstance, setMcServerEulaDialog } = interfaceSlice.actions;
 export default interfaceSlice.reducer;

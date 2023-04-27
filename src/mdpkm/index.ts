@@ -2,7 +2,7 @@ import NewsSource from './news/source';
 import { NEWS_SOURCES } from './news';
 import { Instance, Component, MinecraftPaper, MinecraftQuilt, MinecraftFabric, MinecraftJavaClient, MinecraftJavaServer } from '../../voxura';
 export default new class mdpkm {
-    public readonly newsSources: NewsSource<unknown>[] = [];
+    public newsSources: NewsSource<unknown>[] = [];
     public constructor() {
         for (const source of NEWS_SOURCES)
             this.newsSources.push(new source());

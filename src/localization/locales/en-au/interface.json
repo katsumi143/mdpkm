@@ -116,6 +116,9 @@
 	"common.theme.green": "Green",
 	"common.theme.blue": "Blue",
 	"common.theme.purple": "Purple",
+
+	"common.release_channel.stable": "Stable",
+	"common.release_channel.beta": "Beta",
 	
 	"common.pages.servers": "Servers",
 	"common.pages.resource_packs": "Resource Packs",
@@ -202,6 +205,11 @@
 
 	"settings.plugins": "Plugin Settings",
 	"settings.plugins.add": "Add Plugin",
+
+	"settings.advanced": "Advanced Settings",
+	"settings.advanced.releaseChannel": "Release Channel",
+	"settings.advanced.releaseChannel.summary": "Lorem ipsum dolor sit amet\nYou must restart mdpkm after changing the release channel.",
+	"settings.advanced.releaseChannel.category": "Release Channels",
 
 	"settings.about": "About this build",
 	"settings.about.report_bug": "Report Issue",
@@ -313,6 +321,17 @@
 	"ms_blocker.body": "You need to sign-in with a Microsoft Account before you can use this feature.",
 	"ms_blocker.view": "View Accounts",
 	"ms_blocker.back": "Back to Home",
+
+	"app_update": "Update Available",
+	"app_update.view": "View Online",
+	"app_update.install": "Install Update",
+	"app_update.ignore": "Later",
+	"app_update.warning": "This update will downgrade mdpkm!",
+
+	"app_update.status.1": "Shutting down mdpkm",
+	"app_update.status.2": "Downloading update",
+	"app_update.status.3": "Installing update",
+	"app_update.status.4": "Restarting mdpkm",
 
 	"news.item.tag": "$t(mdpkm:news_source.{{item.source.id}}) • {{item.tags}}",
 

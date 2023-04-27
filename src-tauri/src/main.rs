@@ -5,14 +5,26 @@
 
 pub mod cmd;
 
+use std::fs;
 use tauri::{ window::WindowBuilder, WindowUrl };
 use sysinfo::{ System, SystemExt };
 fn main() {
+	let mut context = tauri::generate_context!();
+	if let Some(data_dir) = tauri::api::path::app_data_dir(context.config()) {
+		if let Ok(channel) = fs::read_to_string(data_dir.join("updater_channel")) {
+			println!("[mdpkm]: Setting release channel to \"{}\"", channel);
+			let updater = &mut context.config_mut().tauri.updater;
+			updater.endpoints.replace(vec![tauri::utils::config::UpdaterEndpoint(
+				format!("https://api.voxelified.com/v1/app/mdpkm/release/{}/tauri?version={{{{current_version}}}}", channel).parse().expect("invalid updater URL"),
+			)]);
+		}
+	}
     tauri::Builder::default()
         .plugin(voxura::init())
         .invoke_handler(tauri::generate_handler![
             move_dir,
             fs_read_dir,
+			check_for_update,
             get_total_memory,
             fs_create_dir_all,
             fs_read_file_in_zip,
@@ -37,8 +49,22 @@ fn main() {
 				.build()?;
 			Ok(())
 		})
-        .run(tauri::generate_context!())
+        .run(context)
         .expect("error while running tauri application");
+}
+
+#[derive(Clone, serde::Serialize)]
+struct UpdateManifest {
+	body: String,
+	date: Option<String>,
+	version: String
+}
+
+#[tauri::command]
+fn check_for_update(app_handle: tauri::AppHandle) {
+	tauri::async_runtime::spawn(async move {
+		tauri::updater::builder(app_handle.clone()).should_install(|_current, _latest| true).check().await.unwrap();
+	});
 }
 
 #[tauri::command]

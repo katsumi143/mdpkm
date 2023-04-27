@@ -149,3 +149,7 @@ export function prettifySemver(value: string, t: TFunction) {
 	return value.replace(/-beta\.(\d+)/g, (_,v) => t('semver.beta', [v]))
 		.replace(/\+(\d+)/g, (_,v) => t('semver.build', [v]));
 }
+
+export function checkForUpdate() {
+	invoke('check_for_update');
+}

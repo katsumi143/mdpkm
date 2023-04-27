@@ -24,11 +24,13 @@ export default function Home() {
 	const [news, setNews] = useState<any[] | null>(null);
 	const [mdpkmPost, setMdpkmPost] = useState<NewsItem<any> | null>(null);
 	useEffect(() => {
-		mdpkm.getNewsSource('mdpkm')?.getNews().then(news => setMdpkmPost(news[0]));
-	}, []);
-	useEffect(() => {
-		if (showNews)
+		if (showNews) {
+			mdpkm.getNewsSource('mdpkm')?.getNews().then(news => setMdpkmPost(news[0]));
 			mdpkm.getNewsSource('minecraft')?.getNews().then(news => setNews(news.slice(0, 5)));
+		} else {
+			setNews(null);
+			setMdpkmPost(null);
+		}
 	}, [showNews]);
 
 	const loadingInstances = voxura.instances.loading;

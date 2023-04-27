@@ -16,6 +16,7 @@ import Accounts from './accounts';
 import Downloads from './downloads';
 import Instances from './instances';
 import Developer from './developer';
+import AppUpdate from '../components/AppUpdate';
 import EulaDialog from '../components/EulaDialog';
 import LaunchError from '../components/LaunchError';
 import ImagePreview from '../components/ImagePreview';
@@ -26,6 +27,7 @@ export default function Navigation() {
     const { t } = useTranslation('interface');
     const page = useAppSelector(state => state.interface.page);
 	const dispatch = useAppDispatch();
+	const appUpdate = useAppSelector(state => state.interface.appUpdate);
 	const launchError = useAppSelector(state => state.interface.launchError);
 	const imagePreview = useAppSelector(state => state.interface.imagePreview);
 	const showEulaDialog = useAppSelector(state => state.interface.mcServerEulaDialog);
@@ -77,6 +79,7 @@ export default function Navigation() {
 				</SideNavigation>
 				<Toaster position="bottom-right"/>
 			</Main>
+			{appUpdate && <AppUpdate update={appUpdate}/>}
 			{launchError && <LaunchError data={launchError}/>}
 			{imagePreview && <ImagePreview {...imagePreview} onClose={closePreview}/>}
 			{showEulaDialog && <EulaDialog instanceId={showEulaDialog}/>}

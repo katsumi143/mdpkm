@@ -1,12 +1,15 @@
+import { listen } from '@tauri-apps/api/event';
+import type { UpdateManifest } from '@tauri-apps/api/updater';
 import { exists, readTextFile } from '@tauri-apps/api/fs';
 
 import './interface';
 import './localization';
 import store from './store';
 import voxura from './voxura';
+import { APP_VERSION } from './util/constants';
 import { loadAllPlugins } from './plugins';
-import { toast, IMAGE_EXISTS } from './util';
-import { setLaunchError, setCurrentInstance, setMcServerEulaDialog } from './store/slices/interface';
+import { toast, IMAGE_EXISTS, checkForUpdate } from './util';
+import { setAppUpdate, setLaunchError, setCurrentInstance, setMcServerEulaDialog } from './store/slices/interface';
 import { LaunchError, InstanceTaskType, MinecraftJavaServer, MinecraftJavaClient, InstanceTaskResponse } from '../voxura';
 
 loadAllPlugins()
@@ -43,3 +46,10 @@ loadAllPlugins()
 	});
 	voxura.auth.refreshProviders();
 });
+
+listen<UpdateManifest>('tauri://update-available', ({ payload }) => {
+	if (payload.version !== APP_VERSION)
+		store.dispatch(setAppUpdate(payload));
+});
+
+checkForUpdate();

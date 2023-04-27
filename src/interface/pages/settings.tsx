@@ -1,5 +1,4 @@
 import { open } from '@tauri-apps/api/shell';
-import { checkUpdate } from '@tauri-apps/api/updater';
 import { open as open2 } from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
 import { copyFile, createDir } from '@tauri-apps/api/fs';
@@ -9,8 +8,8 @@ import { Grid, Image, Select, Switch, Button, Tooltip, GridProps, TextInput, Tex
 import Avatar from '../components/Avatar';
 import { setPage } from '../../store/slices/interface';
 import { set, saveSettings } from '../../store/slices/settings';
-import { i, toast, prettifySemver } from '../../util';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { i, toast, prettifySemver, checkForUpdate } from '../../util';
 import { PLUGINS_DIR, LOADED_PLUGINS, loadPluginFromFile } from '../../plugins';
 import { APP_NAME, LANGUAGES, APP_VERSION, PLACEHOLDER_IMAGE } from '../../util/constants';
 export default function Settings() {
@@ -21,6 +20,7 @@ export default function Settings() {
 	const showNews = useAppSelector(state => state.settings.showNews);
 	const startPage = useAppSelector(state => state.settings.startPage);
 	const githubBase = `https://github.com/${GIT_REPOSITORY}`;
+	const releaseChannel = useAppSelector(state => state.settings.releaseChannel);
 	const instanceResolution = useAppSelector(state => state.settings.instances.resolution.size);
 	const [_, setRerender] = useState(0);
 	const [updating, setUpdating] = useState(false);
@@ -49,12 +49,8 @@ export default function Settings() {
 		setRerender(Date.now());
 	};
 	const updateCheck = () => {
-		setUpdating(true);
-		checkUpdate().then(({ shouldUpdate }) => {
-			if (!shouldUpdate)
-				toast('no_update');
-			setUpdating(false);
-		});
+		//setUpdating(true);
+		checkForUpdate();
 	};
 	const setSetting = (key: any, value: any) => {
 		dispatch(set([key, value]));
@@ -211,6 +207,20 @@ export default function Settings() {
 			</Button>
 		</Grid>
 
+		<TextHeader spacious noSelect>{t('settings.advanced')}</TextHeader>
+		<Setting name="advanced.releaseChannel">
+			<Select.Minimal value={releaseChannel} onChange={v => setSetting('releaseChannel', v)}>
+				<Select.Group name={t('settings.advanced.releaseChannel.category')}>
+					<Select.Item value="stable">
+						{t('common.release_channel.stable')}
+					</Select.Item>
+					<Select.Item value="beta">
+						{t('common.release_channel.beta')}
+					</Select.Item>
+				</Select.Group>
+			</Select.Minimal>
+		</Setting>
+
 		<TextHeader spacious noSelect>{t('settings.about')}</TextHeader>
 		<Grid spacing={8} padding="0 1rem" vertical>
 			<Grid spacing={12} alignItems="center">
@@ -264,7 +274,7 @@ export function Setting({ name, children, direction, noSummary }: SettingProps) 
 			{t(stringBase)}
 		</Typography>
 		{!noSummary &&
-			<Typography size={14} color="$secondaryColor" weight={400} noSelect lineheight={1.2} textalign="start">
+			<Typography size={14} color="$secondaryColor" weight={400} noSelect lineheight={1.2} textalign="start" whitespace="pre">
 				{t(`${stringBase}.summary`)}
 			</Typography>
 		}
