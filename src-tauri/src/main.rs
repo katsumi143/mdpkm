@@ -58,6 +58,7 @@ struct UpdateManifest {
 
 #[tauri::command]
 fn check_for_update(app_handle: tauri::AppHandle) {
+	println!("[mdpkm]: Checking for updates");
 	tauri::async_runtime::spawn(async move {
 		tauri::updater::builder(app_handle.clone()).should_install(|_current, _latest| true).check().await.unwrap();
 	});
