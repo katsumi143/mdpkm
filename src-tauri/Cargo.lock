@@ -1631,14 +1631,11 @@ name = "mdpkm"
 version = "2.0.0-beta.10"
 dependencies = [
  "fs_extra",
- "futures",
  "serde",
- "serde_json",
  "sysinfo",
  "tauri",
  "tauri-build",
  "voxura",
- "walkdir",
  "zip",
 ]
 
